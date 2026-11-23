@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { MapPin } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { NEWS_EVENTS } from '@/data/mockData';
@@ -52,7 +53,10 @@ export default function NewsPage() {
                       : lang === 'bn' ? 'প্রেস রিলিজ' : 'Press News'}
                   </span>
                   <p className="text-xs font-bold text-stone-900">{lang === 'bn' ? item.dateBn : item.dateEn}</p>
-                  <p className="text-xs text-stone-500 mt-1">📍 {lang === 'bn' ? item.locationBn : item.locationEn}</p>
+                  <p className="text-xs text-stone-500 mt-1 flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-stone-400 shrink-0" />
+                    <span>{lang === 'bn' ? item.locationBn : item.locationEn}</span>
+                  </p>
                 </div>
 
                 <div className="flex-1">

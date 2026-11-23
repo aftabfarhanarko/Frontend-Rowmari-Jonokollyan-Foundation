@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { User, Users, CheckCircle2 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { TEAM_MEMBERS } from '@/data/mockData';
@@ -43,8 +44,8 @@ export default function TeamPage() {
                 >
                   <div>
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center text-2xl font-bold shrink-0">
-                        👤
+                      <div className="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center shrink-0">
+                        <User className="w-8 h-8 text-emerald-800" />
                       </div>
                       <div>
                         <h3 className="text-lg font-bold text-stone-900 leading-snug">
@@ -63,7 +64,10 @@ export default function TeamPage() {
 
                   <div className="pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500">
                     <span className="font-mono text-emerald-800 font-semibold">{member.phone}</span>
-                    <span className="text-emerald-700 font-bold">✓ অনুমোদিত দায়িত্ব</span>
+                    <span className="text-emerald-700 font-bold flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+                      <span>অনুমোদিত দায়িত্ব</span>
+                    </span>
                   </div>
                 </div>
               ))}
@@ -83,7 +87,7 @@ export default function TeamPage() {
                 href="/volunteer"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-emerald-900 font-bold text-sm shadow-md hover:bg-stone-100 transition"
               >
-                <span>👥</span>
+                <Users className="w-4 h-4 text-emerald-900" />
                 <span>{lang === 'bn' ? 'স্বেচ্ছাসেবক আবেদন করুন' : 'Apply as Volunteer'}</span>
               </Link>
             </div>

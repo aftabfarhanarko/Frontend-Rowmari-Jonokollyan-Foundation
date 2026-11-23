@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { X, Droplet, PhoneCall } from 'lucide-react';
 import { Language } from '@/types';
 
 interface BloodRequestModalProps {
@@ -57,15 +58,15 @@ export default function BloodRequestModal({
         <button
           onClick={handleClose}
           aria-label="Close"
-          className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-800 transition"
+          className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-800 transition cursor-pointer"
         >
-          ✕
+          <X className="w-4 h-4 text-stone-600" />
         </button>
 
         {requestId ? (
           <div className="text-center py-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-3xl font-bold">
-              🩸
+            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+              <Droplet className="w-8 h-8 text-red-600 fill-red-100" />
             </div>
             <h3 className="text-2xl font-bold text-red-900 mb-2">
               {lang === 'bn' ? 'জরুরি রক্তের অনুরোধ গৃহীত হয়েছে!' : 'Emergency Blood Request Received!'}
@@ -83,12 +84,13 @@ export default function BloodRequestModal({
                 {requestId}
               </span>
             </div>
-            <div className="p-3 bg-amber-50 rounded-xl text-amber-900 text-xs text-left mb-6 border border-amber-200">
-              📞 <strong>{lang === 'bn' ? 'তাৎক্ষণিক জরুরি হটলাইন:' : 'Immediate Emergency Hotline:'}</strong> +880 1812-987654 (ব্লাড উইং কো-অর্ডিনেটর)
+            <div className="p-3 bg-amber-50 rounded-xl text-amber-900 text-xs text-left mb-6 border border-amber-200 flex items-center gap-1.5">
+              <PhoneCall className="w-4 h-4 text-amber-900 shrink-0" />
+              <span><strong>{lang === 'bn' ? 'তাৎক্ষণিক জরুরি হটলাইন:' : 'Immediate Emergency Hotline:'}</strong> +880 1812-987654 (ব্লাড উইং কো-অর্ডিনেটর)</span>
             </div>
             <button
               onClick={handleClose}
-              className="px-6 py-2.5 bg-red-700 hover:bg-red-800 text-white rounded-xl font-medium transition shadow-md"
+              className="px-6 py-2.5 bg-red-700 hover:bg-red-800 text-white rounded-xl font-medium transition shadow-md cursor-pointer"
             >
               {lang === 'bn' ? 'ঠিক আছে' : 'Done'}
             </button>
@@ -96,8 +98,8 @@ export default function BloodRequestModal({
         ) : (
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-red-100 text-red-700 flex items-center justify-center text-xl font-bold">
-                🩸
+              <div className="w-11 h-11 rounded-xl bg-red-100 text-red-700 flex items-center justify-center">
+                <Droplet className="w-6 h-6 text-red-700 fill-red-100" />
               </div>
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-stone-900">

@@ -2,6 +2,19 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { 
+  Snowflake, 
+  Stethoscope, 
+  GraduationCap, 
+  Droplet, 
+  Wheat, 
+  Users, 
+  Calendar, 
+  MapPin, 
+  Search, 
+  X, 
+  CheckCircle2 
+} from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { ACTIVITIES_DATA } from '@/data/mockData';
@@ -30,6 +43,23 @@ export default function ActivitiesPage() {
       act.locationBn.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesQuery;
   });
+
+  const getActivityIcon = (cat: string) => {
+    switch (cat) {
+      case 'winter':
+        return <Snowflake className="w-12 h-12 text-cyan-700" />;
+      case 'medical':
+        return <Stethoscope className="w-12 h-12 text-emerald-700" />;
+      case 'education':
+        return <GraduationCap className="w-12 h-12 text-blue-700" />;
+      case 'emergency':
+        return <Droplet className="w-12 h-12 text-red-600" />;
+      case 'food':
+        return <Wheat className="w-12 h-12 text-amber-700" />;
+      default:
+        return <Users className="w-12 h-12 text-emerald-700" />;
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBF9] text-[#1E293B]">
@@ -98,9 +128,9 @@ export default function ActivitiesPage() {
                     <div>
                       {/* Placeholder Card Art */}
                       <div className="aspect-16/10 bg-emerald-950/10 flex flex-col items-center justify-center p-6 text-center relative">
-                        <span className="text-5xl mb-2">
-                          {act.category === 'winter' ? '🧣' : act.category === 'medical' ? '🩺' : act.category === 'education' ? '📚' : act.category === 'emergency' ? '🩸' : '🌾'}
-                        </span>
+                        <div className="mb-2">
+                          {getActivityIcon(act.category)}
+                        </div>
                         <span className="text-xs font-mono text-stone-600 font-semibold">[রৌমারী জনকল্যাণ মাঠকর্ম]</span>
                         <div className="absolute top-3 right-3 bg-red-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow-xs">
                           {lang === 'bn' ? act.categoryBn : act.categoryEn}
@@ -108,7 +138,10 @@ export default function ActivitiesPage() {
                       </div>
 
                       <div className="p-6">
-                        <div className="text-xs text-stone-500 mb-2">📅 {lang === 'bn' ? act.dateBn : act.dateEn}</div>
+                        <div className="text-xs text-stone-500 mb-2 flex items-center gap-1.5">
+                          <Calendar className="w-3.5 h-3.5 text-stone-400" />
+                          <span>{lang === 'bn' ? act.dateBn : act.dateEn}</span>
+                        </div>
                         <h3 className="text-lg font-bold text-stone-900 leading-snug mb-3">
                           {lang === 'bn' ? act.titleBn : act.titleEn}
                         </h3>
@@ -119,7 +152,10 @@ export default function ActivitiesPage() {
                     </div>
 
                     <div className="px-6 pb-6 pt-0 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mt-2">
-                      <span className="font-medium text-emerald-800 truncate max-w-[170px]">📍 {lang === 'bn' ? act.locationBn : act.locationEn}</span>
+                      <span className="font-medium text-emerald-800 truncate max-w-[170px] flex items-center gap-1">
+                        <MapPin className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                        <span>{lang === 'bn' ? act.locationBn : act.locationEn}</span>
+                      </span>
                       <button
                         onClick={() => setSelectedActivity(act)}
                         className="text-emerald-800 font-bold hover:underline cursor-pointer"
@@ -132,7 +168,7 @@ export default function ActivitiesPage() {
               </div>
             ) : (
               <div className="text-center py-16 bg-white rounded-2xl border border-stone-200">
-                <span className="text-4xl block mb-2">🔍</span>
+                <Search className="w-12 h-12 text-stone-300 mx-auto mb-2" />
                 <p className="text-stone-500 text-sm font-medium">
                   {lang === 'bn' ? 'কোনো কার্যক্রম খুঁজে পাওয়া যায়নি।' : 'No activities matched your search.'}
                 </p>
@@ -155,9 +191,9 @@ export default function ActivitiesPage() {
             >
               <button
                 onClick={() => setSelectedActivity(null)}
-                className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 text-lg w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center"
+                className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 text-lg w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center cursor-pointer"
               >
-                ✕
+                <X className="w-4 h-4 text-stone-600" />
               </button>
               <span className="inline-block bg-red-700 text-white text-xs font-bold px-2.5 py-1 rounded-md mb-2">
                 {lang === 'bn' ? selectedActivity.categoryBn : selectedActivity.categoryEn} • {lang === 'bn' ? selectedActivity.dateBn : selectedActivity.dateEn}
@@ -168,10 +204,19 @@ export default function ActivitiesPage() {
               <p className="text-sm text-stone-600 leading-relaxed mb-4">
                 {lang === 'bn' ? selectedActivity.descriptionBn : selectedActivity.descriptionEn}
               </p>
-              <div className="p-3 bg-stone-50 rounded-xl text-xs space-y-1 mb-6 border border-stone-200">
-                <p>📍 <strong>স্থান:</strong> {selectedActivity.locationBn}</p>
-                <p>👥 <strong>সুবিধাভোগী সংখ্যা:</strong> {selectedActivity.beneficiariesCount} জন মানুষ</p>
-                <p>✓ <strong>তত্ত্বাবধানে:</strong> রৌমারী জনকল্যাণ ফাউন্ডেশন কার্যনির্বাহী কমিটি</p>
+              <div className="p-3 bg-stone-50 rounded-xl text-xs space-y-1.5 mb-6 border border-stone-200">
+                <p className="flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                  <span><strong>স্থান:</strong> {selectedActivity.locationBn}</span>
+                </p>
+                <p className="flex items-center gap-1.5">
+                  <Users className="w-3.5 h-3.5 text-stone-500 shrink-0" />
+                  <span><strong>সুবিধাভোগী সংখ্যা:</strong> {selectedActivity.beneficiariesCount} জন মানুষ</span>
+                </p>
+                <p className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span><strong>তত্ত্বাবধানে:</strong> রৌমারী জনকল্যাণ ফাউন্ডেশন কার্যনির্বাহী কমিটি</span>
+                </p>
               </div>
               <div className="flex justify-end gap-3">
                 <button

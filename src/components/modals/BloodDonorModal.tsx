@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { X, CheckCircle2, Heart, ShieldCheck } from 'lucide-react';
 import { Language } from '@/types';
 
 interface BloodDonorModalProps {
@@ -54,15 +55,15 @@ export default function BloodDonorModal({
         <button
           onClick={handleClose}
           aria-label="Close"
-          className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-800 transition"
+          className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-800 transition cursor-pointer"
         >
-          ✕
+          <X className="w-4 h-4 text-stone-600" />
         </button>
 
         {isSuccess ? (
           <div className="text-center py-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-3xl font-bold">
-              ✓
+            <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center">
+              <CheckCircle2 className="w-10 h-10 text-emerald-700" />
             </div>
             <h3 className="text-2xl font-bold text-stone-900 mb-2">
               {lang === 'bn' ? 'স্বেচ্ছায় রক্তদাতা হিসেবে নিবন্ধন সম্পন্ন!' : 'Donor Registration Complete!'}
@@ -85,7 +86,7 @@ export default function BloodDonorModal({
             </div>
             <button
               onClick={handleClose}
-              className="px-6 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-medium transition shadow-md"
+              className="px-6 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-medium transition shadow-md cursor-pointer"
             >
               {lang === 'bn' ? 'ঠিক আছে' : 'Done'}
             </button>
@@ -93,8 +94,8 @@ export default function BloodDonorModal({
         ) : (
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-red-100 text-red-700 flex items-center justify-center text-xl font-bold">
-                ❤️
+              <div className="w-11 h-11 rounded-xl bg-red-100 text-red-700 flex items-center justify-center">
+                <Heart className="w-6 h-6 text-red-600 fill-red-100" />
               </div>
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-stone-900">
@@ -108,11 +109,12 @@ export default function BloodDonorModal({
               </div>
             </div>
 
-            <div className="mb-5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-950 text-xs">
-              🛡️ <strong>{lang === 'bn' ? 'কঠোর গোপনীয়তা সুরক্ষা:' : 'Strict Privacy Policy:'}</strong>{' '}
+            <div className="mb-5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-950 text-xs flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-rose-700 shrink-0" />
+              <span><strong>{lang === 'bn' ? 'কঠোর গোপনীয়তা সুরক্ষা:' : 'Strict Privacy Policy:'}</strong>{' '}
               {lang === 'bn'
                 ? 'আপনার ফোন নম্বর কোনো পাবলিক লিস্টে প্রকাশ করা হবে না। রক্তের জরুরি প্রয়োজনে কেবল অনুমোদিত ব্লাড সমন্বয়ক আপনার সম্মতি নিয়ে যোগাযোগ করবেন।'
-                : 'Your contact number is NEVER published publicly. Only authorized coordinators contact you when needed.'}
+                : 'Your contact number is NEVER published publicly. Only authorized coordinators contact you when needed.'}</span>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">

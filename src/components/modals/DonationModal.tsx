@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { X, CheckCircle2, HeartHandshake } from 'lucide-react';
 import { Language } from '@/types';
 
 interface DonationModalProps {
@@ -67,16 +68,16 @@ export default function DonationModal({
         <button
           onClick={handleClose}
           aria-label="Close"
-          className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-800 transition"
+          className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-800 transition cursor-pointer"
         >
-          ✕
+          <X className="w-4 h-4 text-stone-600" />
         </button>
 
         {submittedReceipt ? (
           <div className="py-2">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 mx-auto mb-3 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-3xl font-bold">
-                ✓
+              <div className="w-16 h-16 mx-auto mb-3 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center">
+                <CheckCircle2 className="w-10 h-10 text-emerald-700" />
               </div>
               <h3 className="text-2xl font-bold text-stone-900">
                 {lang === 'bn' ? 'অসংখ্য ধন্যবাদ ও কৃতজ্ঞতা!' : 'Thank You For Your Support!'}
@@ -151,8 +152,8 @@ export default function DonationModal({
         ) : (
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl font-bold">
-                🤲
+              <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                <HeartHandshake className="w-6 h-6 text-emerald-800" />
               </div>
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-stone-900">

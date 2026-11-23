@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Heart, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import DonationModal from '@/components/modals/DonationModal';
-import { FOUNDATION_INFO } from '@/data/mockData';
 import { Language } from '@/types';
 
 export default function DonatePage() {
@@ -36,9 +36,10 @@ export default function DonatePage() {
                 setSelectedCampaign('general');
                 setModalOpen(true);
               }}
-              className="px-8 py-3.5 rounded-full bg-red-700 hover:bg-red-800 text-white font-bold text-sm shadow-xl transition cursor-pointer"
+              className="px-8 py-3.5 rounded-full bg-red-700 hover:bg-red-800 text-white font-bold text-sm shadow-xl transition cursor-pointer inline-flex items-center gap-2"
             >
-              ❤️ {lang === 'bn' ? 'এখনই অনলাইন অনুদান দিন ও রসিদ পান' : 'Donate Now & Get Receipt'}
+              <Heart className="w-4 h-4 fill-white text-white" />
+              <span>{lang === 'bn' ? 'এখনই অনলাইন অনুদান দিন ও রসিদ পান' : 'Donate Now & Get Receipt'}</span>
             </button>
           </div>
         </section>
@@ -92,20 +93,20 @@ export default function DonatePage() {
             {/* Transparency statement */}
             <div className="bg-stone-50 border border-stone-200 rounded-3xl p-8 sm:p-10 max-w-4xl mx-auto space-y-4">
               <h2 className="text-xl sm:text-2xl font-bold text-stone-900 flex items-center gap-2">
-                <span>🛡️</span>
+                <ShieldCheck className="w-6 h-6 text-emerald-700 shrink-0" />
                 <span>{lang === 'bn' ? 'আমাদের আর্থিক স্বচ্ছতা ও জবাবদিহিতা নীতি' : 'Financial Transparency & Accountability'}</span>
               </h2>
               <ul className="text-xs sm:text-sm text-stone-600 space-y-2.5">
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-700 font-bold">✓</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
                   <span><strong>ডিজিটাল রসিদ:</strong> প্রত্যেক দাতাকে তাৎক্ষণিক ইউনিক রসিদ নম্বরসহ ডিজিটাল মানি রিসিপ্ট প্রদান করা হয়।</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-700 font-bold">✓</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
                   <span><strong>নিরীক্ষিত হিসাব:</strong> প্রতিটি ক্যাম্পেইনের সংগ্রহ ও ব্যয়ের হিসাব চার্টার্ড একাউন্ট্যান্ট বা অনুমোদিত অডিট কমিটি দ্বারা নিরীক্ষিত হয়।</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-700 font-bold">✓</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
                   <span><strong>গোপনীয়তার অধিকার:</strong> কোনো দাতা চাইলে নিজের নাম-পরিচয় সম্পূর্ণ গোপন রেখে অনুদান দিতে পারেন (Anonymous Donation)।</span>
                 </li>
               </ul>

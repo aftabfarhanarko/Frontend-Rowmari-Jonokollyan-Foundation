@@ -2,6 +2,14 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { 
+  Handshake, 
+  Heart, 
+  ShieldCheck, 
+  Clock, 
+  Landmark, 
+  MapPin 
+} from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { FOUNDATION_INFO } from '@/data/mockData';
@@ -89,17 +97,17 @@ export default function AboutPage() {
                 {/* Core Values */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
                   <div className="p-4 bg-white rounded-xl border border-stone-200 shadow-2xs">
-                    <span className="text-2xl block mb-1">🤝</span>
+                    <Handshake className="w-6 h-6 text-emerald-800 mb-2" />
                     <h4 className="font-bold text-stone-900 text-sm mb-1">{lang === 'bn' ? 'স্বচ্ছতা' : 'Transparency'}</h4>
                     <p className="text-xs text-stone-500">{lang === 'bn' ? 'প্রতিটি অনুদান ও ব্যয়ের পাই-টু-পাই নিরীক্ষিত হিসাব।' : 'Strict accounting and verified audit records for all funds.'}</p>
                   </div>
                   <div className="p-4 bg-white rounded-xl border border-stone-200 shadow-2xs">
-                    <span className="text-2xl block mb-1">❤️</span>
+                    <Heart className="w-6 h-6 text-red-700 mb-2 fill-red-100" />
                     <h4 className="font-bold text-stone-900 text-sm mb-1">{lang === 'bn' ? 'সহমর্মিতা' : 'Compassion'}</h4>
                     <p className="text-xs text-stone-500">{lang === 'bn' ? 'অসহায় মানুষের সম্মান ও মর্যাদাকে অগ্রাধিকার।' : 'Prioritizing dignity and privacy of beneficiaries.'}</p>
                   </div>
                   <div className="p-4 bg-white rounded-xl border border-stone-200 shadow-2xs">
-                    <span className="text-2xl block mb-1">🛡️</span>
+                    <ShieldCheck className="w-6 h-6 text-emerald-800 mb-2" />
                     <h4 className="font-bold text-stone-900 text-sm mb-1">{lang === 'bn' ? 'নিরাপত্তা' : 'Data Privacy'}</h4>
                     <p className="text-xs text-stone-500">{lang === 'bn' ? 'রক্তদাতা ও সহায়তা প্রার্থীদের তথ্যের সর্বোচ্চ সুরক্ষা।' : 'Strict confidentiality of donor and applicant information.'}</p>
                   </div>
@@ -110,7 +118,7 @@ export default function AboutPage() {
               <div className="lg:col-span-5 space-y-6">
                 <div className="bg-white p-6 sm:p-8 rounded-2xl border border-stone-200 shadow-md">
                   <h3 className="text-lg font-bold text-stone-900 mb-6 flex items-center gap-2">
-                    <span>⏱️</span>
+                    <Clock className="w-4 h-4 text-emerald-800" />
                     <span>{lang === 'bn' ? 'প্রতিষ্ঠার ঐতিহাসিক সময়রেখা' : 'Timeline of Milestones'}</span>
                   </h3>
                   <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-emerald-200">
@@ -128,9 +136,15 @@ export default function AboutPage() {
                     ))}
                   </div>
 
-                  <div className="mt-8 pt-4 border-t border-stone-100 text-xs text-stone-500 space-y-1">
-                    <p>🏛️ <strong>নিবন্ধন:</strong> {FOUNDATION_INFO.registrationNoBn}</p>
-                    <p>📍 <strong>কার্যালয়:</strong> {FOUNDATION_INFO.addressBn}</p>
+                  <div className="mt-8 pt-4 border-t border-stone-100 text-xs text-stone-500 space-y-1.5">
+                    <p className="flex items-center gap-1.5">
+                      <Landmark className="w-3.5 h-3.5 text-stone-600 shrink-0" />
+                      <span><strong>নিবন্ধন:</strong> {FOUNDATION_INFO.registrationNoBn}</span>
+                    </p>
+                    <p className="flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-stone-600 shrink-0" />
+                      <span><strong>কার্যালয়:</strong> {FOUNDATION_INFO.addressBn}</span>
+                    </p>
                   </div>
                 </div>
 

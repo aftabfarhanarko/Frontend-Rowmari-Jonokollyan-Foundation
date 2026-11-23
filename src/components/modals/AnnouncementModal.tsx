@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Megaphone, X } from 'lucide-react';
 import { Language } from '@/types';
 
 interface AnnouncementModalProps {
@@ -41,14 +42,15 @@ export default function AnnouncementModal({
         <div className="bg-red-700 text-white p-4 flex items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-sm md:text-base">
             <span className="animate-ping inline-flex h-2.5 w-2.5 rounded-full bg-white opacity-75 mr-1" />
-            <span>📢 {lang === 'bn' ? 'জরুরি জনকল্যাণ নোটিশ ও ঘোষণা' : 'Urgent Humanitarian Notice'}</span>
+            <Megaphone className="w-4 h-4 text-white shrink-0" />
+            <span>{lang === 'bn' ? 'জরুরি জনকল্যাণ নোটিশ ও ঘোষণা' : 'Urgent Humanitarian Notice'}</span>
           </div>
           <button
             onClick={onClose}
             aria-label="Close"
-            className="w-8 h-8 rounded-full bg-red-800 text-red-100 flex items-center justify-center hover:bg-red-900 transition"
+            className="w-8 h-8 rounded-full bg-red-800 text-red-100 flex items-center justify-center hover:bg-red-900 transition cursor-pointer"
           >
-            ✕
+            <X className="w-4 h-4" />
           </button>
         </div>
 

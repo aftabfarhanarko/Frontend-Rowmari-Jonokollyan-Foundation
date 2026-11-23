@@ -1,6 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
+import { 
+  MapPin, 
+  Phone, 
+  Droplet, 
+  Mail, 
+  Clock, 
+  Map, 
+  CheckCircle2 
+} from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { FOUNDATION_INFO } from '@/data/mockData';
@@ -55,7 +64,7 @@ export default function ContactPage() {
 
                   <div className="space-y-4 text-xs sm:text-sm text-stone-600">
                     <div className="flex items-start gap-3">
-                      <span className="text-xl">📍</span>
+                      <MapPin className="w-5 h-5 text-emerald-800 shrink-0 mt-0.5" />
                       <div>
                         <strong className="text-stone-900 block">{lang === 'bn' ? 'কেন্দ্রীয় কার্যালয়:' : 'Head Office:'}</strong>
                         <span>{lang === 'bn' ? FOUNDATION_INFO.addressBn : FOUNDATION_INFO.addressEn}</span>
@@ -63,7 +72,7 @@ export default function ContactPage() {
                     </div>
 
                     <div className="flex items-start gap-3">
-                      <span className="text-xl">📞</span>
+                      <Phone className="w-5 h-5 text-emerald-800 shrink-0 mt-0.5" />
                       <div>
                         <strong className="text-stone-900 block">{lang === 'bn' ? 'সাধারণ হটলাইন:' : 'General Helpline:'}</strong>
                         <span className="font-mono text-emerald-800 font-bold">{FOUNDATION_INFO.hotline}</span>
@@ -71,7 +80,7 @@ export default function ContactPage() {
                     </div>
 
                     <div className="flex items-start gap-3">
-                      <span className="text-xl">🩸</span>
+                      <Droplet className="w-5 h-5 text-red-600 fill-red-100 shrink-0 mt-0.5" />
                       <div>
                         <strong className="text-stone-900 block">{lang === 'bn' ? '২৪/৭ রক্তদান জরুরি হটলাইন:' : '24/7 Emergency Blood Helpline:'}</strong>
                         <span className="font-mono text-red-600 font-bold">{FOUNDATION_INFO.emergencyBloodHotline}</span>
@@ -79,7 +88,7 @@ export default function ContactPage() {
                     </div>
 
                     <div className="flex items-start gap-3">
-                      <span className="text-xl">✉️</span>
+                      <Mail className="w-5 h-5 text-emerald-800 shrink-0 mt-0.5" />
                       <div>
                         <strong className="text-stone-900 block">{lang === 'bn' ? 'অফিসিয়াল ইমেইল:' : 'Official Email:'}</strong>
                         <span className="font-mono text-stone-700">{FOUNDATION_INFO.email}</span>
@@ -87,7 +96,7 @@ export default function ContactPage() {
                     </div>
 
                     <div className="flex items-start gap-3">
-                      <span className="text-xl">🕒</span>
+                      <Clock className="w-5 h-5 text-emerald-800 shrink-0 mt-0.5" />
                       <div>
                         <strong className="text-stone-900 block">{lang === 'bn' ? 'অফিস সময়:' : 'Office Hours:'}</strong>
                         <span>সকাল ৯:০০ টা — বিকাল ৫:০০ টা (শুক্রবার বন্ধ)</span>
@@ -98,7 +107,7 @@ export default function ContactPage() {
 
                 {/* Location Map Placeholder */}
                 <div className="bg-emerald-950/10 p-6 rounded-2xl border border-emerald-200 text-center space-y-2">
-                  <span className="text-4xl block">🗺️</span>
+                  <Map className="w-10 h-10 text-emerald-700 mx-auto" />
                   <h4 className="font-bold text-emerald-900 text-sm">
                     {lang === 'bn' ? 'রৌমারী ডাকবাংলো মোড়, কুড়িগ্রাম' : 'Rowmari Dakbangla Mor, Kurigram'}
                   </h4>
@@ -113,8 +122,8 @@ export default function ContactPage() {
                 <div className="bg-white p-6 sm:p-8 rounded-2xl border border-stone-200 shadow-md">
                   {submitted ? (
                     <div className="text-center py-10">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center text-3xl font-bold">
-                        ✓
+                      <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center">
+                        <CheckCircle2 className="w-10 h-10 text-emerald-700" />
                       </div>
                       <h3 className="text-2xl font-bold text-stone-900 mb-2">
                         {lang === 'bn' ? 'আপনার বার্তা গৃহীত হয়েছে!' : 'Message Sent Successfully!'}

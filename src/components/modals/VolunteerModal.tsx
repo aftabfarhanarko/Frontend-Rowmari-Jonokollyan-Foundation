@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { X, CheckCircle2, Users } from 'lucide-react';
 import { Language } from '@/types';
 
 interface VolunteerModalProps {
@@ -52,15 +53,15 @@ export default function VolunteerModal({
         <button
           onClick={handleClose}
           aria-label="Close"
-          className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-800 transition"
+          className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-800 transition cursor-pointer"
         >
-          ✕
+          <X className="w-4 h-4 text-stone-600" />
         </button>
 
         {isSuccess ? (
           <div className="text-center py-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center text-3xl font-bold">
-              ✓
+            <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center">
+              <CheckCircle2 className="w-10 h-10 text-emerald-700" />
             </div>
             <h3 className="text-2xl font-bold text-stone-900 mb-2">
               {lang === 'bn' ? 'স্বেচ্ছাসেবক আবেদন সফল!' : 'Volunteer Application Received!'}
@@ -72,7 +73,7 @@ export default function VolunteerModal({
             </p>
             <button
               onClick={handleClose}
-              className="px-6 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-medium transition shadow-md"
+              className="px-6 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-medium transition shadow-md cursor-pointer"
             >
               {lang === 'bn' ? 'ঠিক আছে' : 'Done'}
             </button>
@@ -80,8 +81,8 @@ export default function VolunteerModal({
         ) : (
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl font-bold">
-                👥
+              <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                <Users className="w-6 h-6 text-emerald-800" />
               </div>
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-stone-900">

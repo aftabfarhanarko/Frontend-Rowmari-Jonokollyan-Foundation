@@ -1,6 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import { 
+  X, 
+  CheckCircle2, 
+  HeartHandshake, 
+  AlertCircle, 
+  Upload, 
+  Check 
+} from 'lucide-react';
 import { Language } from '@/types';
 
 interface AssistanceModalProps {
@@ -65,15 +73,15 @@ export default function AssistanceModal({
         <button
           onClick={handleResetAndClose}
           aria-label="Close"
-          className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-800 transition"
+          className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-800 transition cursor-pointer"
         >
-          ✕
+          <X className="w-4 h-4 text-stone-600" />
         </button>
 
         {generatedId ? (
           <div className="text-center py-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-3xl font-bold">
-              ✓
+            <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center">
+              <CheckCircle2 className="w-10 h-10 text-emerald-700" />
             </div>
             <h3 className="text-2xl font-bold text-emerald-900 mb-2">
               {lang === 'bn' ? 'আবেদন সফলভাবে গৃহীত হয়েছে!' : 'Application Submitted Successfully!'}
@@ -98,7 +106,7 @@ export default function AssistanceModal({
             </p>
             <button
               onClick={handleResetAndClose}
-              className="px-6 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-medium transition shadow-md"
+              className="px-6 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-medium transition shadow-md cursor-pointer"
             >
               {lang === 'bn' ? 'ঠিক আছে' : 'Done'}
             </button>
@@ -106,8 +114,8 @@ export default function AssistanceModal({
         ) : (
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl font-bold">
-                🤝
+              <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                <HeartHandshake className="w-6 h-6 text-emerald-800" />
               </div>
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-stone-900">
@@ -122,7 +130,7 @@ export default function AssistanceModal({
             </div>
 
             <div className="mb-5 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-start gap-2">
-              <span className="text-amber-700 font-bold">ℹ</span>
+              <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
               <span>
                 {lang === 'bn'
                   ? 'গোপনীয়তার নিশ্চয়তা: আবেদনকারীর ব্যক্তিগত ও পারিবারিক তথ্য সর্বোচ্চ সুরক্ষায় রাখা হয় এবং কেবল যাচাই কমিটির অনুমোদনপ্রাপ্ত সদস্যগণ দেখতে পারেন।'
@@ -155,7 +163,7 @@ export default function AssistanceModal({
                       }`}
                     >
                       <span>{lang === 'bn' ? cat.labelBn : cat.labelEn}</span>
-                      {category === cat.id && <span className="text-emerald-700">✓</span>}
+                      {category === cat.id && <Check className="w-3.5 h-3.5 text-emerald-700" />}
                     </button>
                   ))}
                 </div>
@@ -281,8 +289,9 @@ export default function AssistanceModal({
                     ? 'সংযুক্ত প্রমাণাদি / ডকুমেন্টস (চিকিৎসাপত্র, ছবি বা প্রত্যয়ন)'
                     : 'Supporting Documents (Prescription, Photo or Letter)'}
                 </label>
-                <div className="border border-dashed border-stone-300 rounded-lg p-3 text-center bg-white text-xs text-stone-500 hover:border-emerald-500 transition cursor-pointer">
-                  📁 {lang === 'bn' ? 'ফাইল সিলেক্ট করতে ক্লিক করুন (PDF, JPG, PNG - সর্বোচ্চ ৫ এমবি)' : 'Click to attach file (Max 5MB)'}
+                <div className="border border-dashed border-stone-300 rounded-lg p-3 text-center bg-white text-xs text-stone-500 hover:border-emerald-500 transition cursor-pointer flex items-center justify-center gap-2">
+                  <Upload className="w-4 h-4 text-stone-500" />
+                  <span>{lang === 'bn' ? 'ফাইল সিলেক্ট করতে ক্লিক করুন (PDF, JPG, PNG - সর্বোচ্চ ৫ এমবি)' : 'Click to attach file (Max 5MB)'}</span>
                 </div>
               </div>
 

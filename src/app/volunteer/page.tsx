@@ -1,6 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
+import { 
+  Users, 
+  Package, 
+  Stethoscope, 
+  Droplet, 
+  Camera, 
+  Laptop, 
+  GraduationCap 
+} from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import VolunteerModal from '@/components/modals/VolunteerModal';
@@ -31,9 +40,10 @@ export default function VolunteerPage() {
             </p>
             <button
               onClick={() => setModalOpen(true)}
-              className="px-8 py-3.5 rounded-xl bg-white text-emerald-950 font-bold text-sm shadow-xl hover:bg-stone-100 transition cursor-pointer"
+              className="px-8 py-3.5 rounded-xl bg-white text-emerald-950 font-bold text-sm shadow-xl hover:bg-stone-100 transition cursor-pointer inline-flex items-center gap-2"
             >
-              👥 {lang === 'bn' ? 'স্বেচ্ছাসেবক নিবন্ধন ফর্ম পূরণ করুন' : 'Fill Volunteer Application'}
+              <Users className="w-4 h-4 text-emerald-950" />
+              <span>{lang === 'bn' ? 'স্বেচ্ছাসেবক নিবন্ধন ফর্ম পূরণ করুন' : 'Fill Volunteer Application'}</span>
             </button>
           </div>
         </section>
@@ -52,19 +62,22 @@ export default function VolunteerPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
               {[
-                { icon: '📦', title: 'ত্রাণ ও শীতবস্ত্র বিতরণ', desc: 'চরাঞ্চলে বাড়ি বাড়ি গিয়ে সুবিধাভোগী তালিকা তৈরি এবং সুষ্ঠুভাবে কম্বল ও খাদ্যসামগ্রী বিতরণ।' },
-                { icon: '🩺', title: 'মেডিকেল ক্যাম্প সহায়তা', desc: 'স্বাস্থ্য ক্যাম্পে ডাক্তারদের সহায়তা, রোগী শৃঙ্খলা রক্ষা ও বিনামূল্যে ওষুধ বিতরণ কার্যক্রম পরিচালনা।' },
-                { icon: '🩸', title: 'রক্তদাতা সমন্বয় উইং', desc: 'রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্সের জন্য জরুরি রক্তদাতা খোঁজা ও ডোনারদের সাথে যোগাযোগ রক্ষা।' },
-                { icon: '📷', title: 'মিডিয়া, ফটোগ্রাফি ও প্রচার', desc: 'কার্যক্রমের ছবি/ভিডিও ডকুমেন্টেশন, সোশাল মিডিয়া আপডেট এবং গ্রাফিক ডিজাইন তৈরি।' },
-                { icon: '💻', title: 'আইটি ও ডেটাবেজ ম্যানেজমেন্ট', desc: 'অনলাইন আবেদন পর্যালোচনা, ডোনার ডেটাবেজ হালনাগাদ ও ডিজিটাল সিস্টেম পরিচালনায় সহায়তা।' },
-                { icon: '🎓', title: 'শিক্ষা ও শিশুকল্যাণ কর্মসূচি', desc: 'চরাঞ্চলের স্কুলে শিক্ষাসামগ্রী পৌঁছানো, শিশু অধিকার ও ঝরে পড়া শিক্ষার্থী জরিপ।' },
-              ].map((role, idx) => (
-                <div key={idx} className="p-6 bg-white rounded-2xl border border-stone-200 shadow-2xs hover:shadow-lg transition">
-                  <span className="text-4xl block mb-3">{role.icon}</span>
-                  <h3 className="text-base font-bold text-stone-900 mb-2">{role.title}</h3>
-                  <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">{role.desc}</p>
-                </div>
-              ))}
+                { icon: Package, title: 'ত্রাণ ও শীতবস্ত্র বিতরণ', desc: 'চরাঞ্চলে বাড়ি বাড়ি গিয়ে সুবিধাভোগী তালিকা তৈরি এবং সুষ্ঠুভাবে কম্বল ও খাদ্যসামগ্রী বিতরণ।' },
+                { icon: Stethoscope, title: 'মেডিকেল ক্যাম্প সহায়তা', desc: 'স্বাস্থ্য ক্যাম্পে ডাক্তারদের সহায়তা, রোগী শৃঙ্খলা রক্ষা ও বিনামূল্যে ওষুধ বিতরণ কার্যক্রম পরিচালনা।' },
+                { icon: Droplet, title: 'রক্তদাতা সমন্বয় উইং', desc: 'রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্সের জন্য জরুরি রক্তদাতা খোঁজা ও ডোনারদের সাথে যোগাযোগ রক্ষা।', color: 'text-red-700' },
+                { icon: Camera, title: 'মিডিয়া, ফটোগ্রাফি ও প্রচার', desc: 'কার্যক্রমের ছবি/ভিডিও ডকুমেন্টেশন, সোশাল মিডিয়া আপডেট এবং গ্রাফিক ডিজাইন তৈরি।' },
+                { icon: Laptop, title: 'আইটি ও ডেটাবেজ ম্যানেজমেন্ট', desc: 'অনলাইন আবেদন পর্যালোচনা, ডোনার ডেটাবেজ হালনাগাদ ও ডিজিটাল সিস্টেম পরিচালনায় সহায়তা।' },
+                { icon: GraduationCap, title: 'শিক্ষা ও শিশুকল্যাণ কর্মসূচি', desc: 'চরাঞ্চলের স্কুলে শিক্ষাসামগ্রী পৌঁছানো, শিশু অধিকার ও ঝরে পড়া শিক্ষার্থী জরিপ।' },
+              ].map((role, idx) => {
+                const Icon = role.icon;
+                return (
+                  <div key={idx} className="p-6 bg-white rounded-2xl border border-stone-200 shadow-2xs hover:shadow-lg transition">
+                    <Icon className={`w-8 h-8 mb-3 ${role.color || 'text-emerald-800'}`} />
+                    <h3 className="text-base font-bold text-stone-900 mb-2">{role.title}</h3>
+                    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">{role.desc}</p>
+                  </div>
+                );
+              })}
             </div>
 
             {/* Why volunteer box */}

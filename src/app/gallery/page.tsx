@@ -1,6 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
+import { 
+  Snowflake, 
+  Stethoscope, 
+  Droplet, 
+  GraduationCap, 
+  Wheat, 
+  Users, 
+  Calendar, 
+  Camera, 
+  X 
+} from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { GALLERY_ITEMS } from '@/data/mockData';
@@ -23,6 +34,23 @@ export default function GalleryPage() {
   const filteredItems = selectedTag === 'all'
     ? GALLERY_ITEMS
     : GALLERY_ITEMS.filter(item => item.category === selectedTag);
+
+  const getGalleryIcon = (cat: string) => {
+    switch (cat) {
+      case 'winter':
+        return <Snowflake className="w-12 h-12 text-cyan-700 mb-2" />;
+      case 'medical':
+        return <Stethoscope className="w-12 h-12 text-emerald-700 mb-2" />;
+      case 'blood':
+        return <Droplet className="w-12 h-12 text-red-600 mb-2" />;
+      case 'education':
+        return <GraduationCap className="w-12 h-12 text-blue-700 mb-2" />;
+      case 'flood':
+        return <Wheat className="w-12 h-12 text-amber-700 mb-2" />;
+      default:
+        return <Users className="w-12 h-12 text-emerald-700 mb-2" />;
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBF9] text-[#1E293B]">
@@ -75,9 +103,7 @@ export default function GalleryPage() {
                   className="group bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between"
                 >
                   <div className="aspect-4/3 bg-stone-100 flex flex-col items-center justify-center p-6 relative group-hover:scale-105 transition-transform duration-300">
-                    <span className="text-5xl mb-2">
-                      {item.category === 'winter' ? '🧣' : item.category === 'medical' ? '🩺' : item.category === 'blood' ? '🩸' : item.category === 'education' ? '📚' : item.category === 'flood' ? '🌾' : '👥'}
-                    </span>
+                    {getGalleryIcon(item.category)}
                     <span className="text-xs font-mono text-stone-500 font-semibold">[রৌমারী জনকল্যাণ ফটো]</span>
                     <div className="absolute top-3 left-3 bg-red-700 text-white text-[10px] font-bold px-2 py-0.5 rounded">
                       {lang === 'bn' ? item.tagBn : item.tagEn}
@@ -88,7 +114,10 @@ export default function GalleryPage() {
                     <h3 className="text-sm sm:text-base font-bold text-stone-900 group-hover:text-emerald-800 transition line-clamp-2 leading-snug mb-1">
                       {lang === 'bn' ? item.titleBn : item.titleEn}
                     </h3>
-                    <p className="text-xs text-stone-400">📅 {lang === 'bn' ? item.dateBn : item.dateEn}</p>
+                    <p className="text-xs text-stone-400 flex items-center gap-1">
+                      <Calendar className="w-3.5 h-3.5 text-stone-400" />
+                      <span>{lang === 'bn' ? item.dateBn : item.dateEn}</span>
+                    </p>
                   </div>
                 </div>
               ))}
@@ -110,12 +139,13 @@ export default function GalleryPage() {
             >
               <button
                 onClick={() => setPreviewItem(null)}
-                className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 text-lg w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center"
+                aria-label="Close"
+                className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 text-lg w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center cursor-pointer"
               >
-                ✕
+                <X className="w-4 h-4 text-stone-600" />
               </button>
               <div className="aspect-16/10 bg-emerald-950/10 rounded-xl flex flex-col items-center justify-center mb-4 text-center">
-                <span className="text-6xl mb-2">📸</span>
+                <Camera className="w-16 h-16 text-emerald-800 mb-2" />
                 <span className="text-xs text-stone-500 font-mono">[উচ্চ রেজোলিউশন ফটো ভিউ]</span>
               </div>
               <h3 className="text-lg font-bold text-stone-900 mb-1">

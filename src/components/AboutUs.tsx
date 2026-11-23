@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Landmark, Target, Eye, Clock } from 'lucide-react';
 import { Language } from '@/types';
 import { FOUNDATION_INFO } from '@/data/mockData';
 
@@ -57,7 +58,7 @@ export default function AboutUs({
           {/* Left Column: Organization Story */}
           <div className="lg:col-span-6 space-y-6">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
-              <span>🏛️</span>
+              <Landmark className="w-3.5 h-3.5" />
               <span>{lang === 'bn' ? 'আমাদের পরিচিতি ও অঙ্গীকার' : 'About Our Foundation'}</span>
             </div>
 
@@ -76,7 +77,7 @@ export default function AboutUs({
             {/* Mission & Vision Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div className="p-4 bg-white rounded-xl border border-emerald-100 shadow-2xs">
-                <span className="text-2xl block mb-2">🎯</span>
+                <Target className="w-6 h-6 text-emerald-700 mb-2" />
                 <h3 className="font-bold text-stone-900 text-sm mb-1">
                   {lang === 'bn' ? 'আমাদের লক্ষ্য (Mission)' : 'Our Mission'}
                 </h3>
@@ -88,7 +89,7 @@ export default function AboutUs({
               </div>
 
               <div className="p-4 bg-white rounded-xl border border-emerald-100 shadow-2xs">
-                <span className="text-2xl block mb-2">👁️</span>
+                <Eye className="w-6 h-6 text-emerald-700 mb-2" />
                 <h3 className="font-bold text-stone-900 text-sm mb-1">
                   {lang === 'bn' ? 'আমাদের স্বপ্ন (Vision)' : 'Our Vision'}
                 </h3>
@@ -120,7 +121,7 @@ export default function AboutUs({
           <div className="lg:col-span-6">
             <div className="bg-white p-6 sm:p-8 rounded-2xl border border-stone-200 shadow-md">
               <h3 className="text-lg font-bold text-stone-900 mb-6 flex items-center gap-2">
-                <span>⏱️</span>
+                <Clock className="w-4 h-4 text-emerald-800" />
                 <span>{lang === 'bn' ? 'প্রতিষ্ঠার ঐতিহাসিক সময়রেখা' : 'Our Timeline & Milestones'}</span>
               </h3>
 

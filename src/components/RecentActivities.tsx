@@ -1,6 +1,19 @@
 'use client';
 
 import React, { useState } from 'react';
+import { 
+  Snowflake, 
+  Stethoscope, 
+  GraduationCap, 
+  Droplet, 
+  Wheat, 
+  MapPin, 
+  Calendar, 
+  ArrowRight, 
+  X,
+  Users,
+  CheckCircle2
+} from 'lucide-react';
 import { Language, ActivityCategory, ActivityItem } from '@/types';
 import { ACTIVITIES_DATA } from '@/data/mockData';
 
@@ -25,6 +38,23 @@ export default function RecentActivities({
     { key: 'food' as ActivityCategory, labelBn: 'খাদ্য সহায়তা', labelEn: 'Food Aid' },
   ];
 
+  const getActivityIcon = (cat: string) => {
+    switch (cat) {
+      case 'winter':
+        return <Snowflake className="w-10 h-10 text-cyan-700" />;
+      case 'medical':
+        return <Stethoscope className="w-10 h-10 text-emerald-700" />;
+      case 'education':
+        return <GraduationCap className="w-10 h-10 text-blue-700" />;
+      case 'emergency':
+        return <Droplet className="w-10 h-10 text-red-600" />;
+      case 'food':
+        return <Wheat className="w-10 h-10 text-amber-700" />;
+      default:
+        return <Users className="w-10 h-10 text-emerald-700" />;
+    }
+  };
+
   const filteredActivities =
     activeCategory === 'all'
       ? ACTIVITIES_DATA
@@ -33,7 +63,7 @@ export default function RecentActivities({
   return (
     <section id="activities" className="py-16 md:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header matching wireframe with "সব দেখুন" button on right */}
+        {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0D5C35] tracking-tight">
@@ -48,9 +78,10 @@ export default function RecentActivities({
 
           <button
             onClick={() => setActiveCategory('all')}
-            className="text-xs sm:text-sm font-semibold text-emerald-800 hover:text-emerald-950 underline underline-offset-4 self-start sm:self-auto cursor-pointer"
+            className="text-xs sm:text-sm font-semibold text-emerald-800 hover:text-emerald-950 underline underline-offset-4 self-start sm:self-auto cursor-pointer flex items-center gap-1"
           >
-            {lang === 'bn' ? 'সব দেখুন →' : 'View All →'}
+            <span>{lang === 'bn' ? 'সব দেখুন' : 'View All'}</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
@@ -71,7 +102,7 @@ export default function RecentActivities({
           ))}
         </div>
 
-        {/* 3-Column Activities Grid matching the wireframe */}
+        {/* 3-Column Activities Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
           {filteredActivities.slice(0, 6).map((activity) => (
             <div
@@ -79,32 +110,26 @@ export default function RecentActivities({
               className="group bg-white rounded-2xl border border-stone-200/90 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
             >
               <div>
-                {/* Image Placeholder with realistic charity aesthetic matching wireframe */}
+                {/* Visual Header */}
                 <div className="relative aspect-16/10 bg-stone-100 overflow-hidden flex items-center justify-center">
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent z-10" />
 
-                  {/* Iconography placeholder */}
-                  <div className="w-full h-full bg-emerald-950/10 flex flex-col items-center justify-center p-4 text-center group-hover:scale-105 transition-transform duration-300">
-                    <span className="text-4xl mb-1">
-                      {activity.category === 'winter'
-                        ? '🧣'
-                        : activity.category === 'medical'
-                        ? '🩺'
-                        : activity.category === 'education'
-                        ? '📚'
-                        : activity.category === 'emergency'
-                        ? '🩸'
-                        : '🌾'}
-                    </span>
-                    <span className="text-[11px] font-mono text-stone-500 font-medium">
+                  <div className="w-full h-full bg-emerald-950/5 flex flex-col items-center justify-center p-4 text-center group-hover:scale-105 transition-transform duration-300">
+                    <div className="mb-2 p-3 bg-white/80 rounded-2xl shadow-xs">
+                      {getActivityIcon(activity.category)}
+                    </div>
+                    <span className="text-[11px] font-mono text-stone-600 font-semibold">
                       [রৌমারী জনকল্যাণ মাঠকর্ম চিত্র]
                     </span>
                   </div>
 
-                  {/* Category Pill Tag matching wireframe: শীতবস্ত্র • [তারিখ] */}
+                  {/* Category Pill Tag */}
                   <div className="absolute bottom-3 left-3 z-20">
-                    <span className="inline-block bg-red-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-md shadow-xs">
-                      {lang === 'bn' ? activity.categoryBn : activity.categoryEn} • {lang === 'bn' ? activity.dateBn : activity.dateEn}
+                    <span className="inline-flex items-center gap-1.5 bg-red-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-md shadow-xs">
+                      <span>{lang === 'bn' ? activity.categoryBn : activity.categoryEn}</span>
+                      <span>•</span>
+                      <Calendar className="w-3 h-3 text-red-100" />
+                      <span>{lang === 'bn' ? activity.dateBn : activity.dateEn}</span>
                     </span>
                   </div>
                 </div>
@@ -123,18 +148,19 @@ export default function RecentActivities({
 
               {/* Card Footer */}
               <div className="px-5 pb-5 pt-0 flex items-center justify-between text-xs text-stone-500 border-t border-stone-100 mt-2">
-                <span className="flex items-center gap-1 text-emerald-800 font-medium">
-                  <span>📍</span>
-                  <span className="truncate max-w-[150px]">
+                <span className="flex items-center gap-1.5 text-emerald-800 font-medium truncate max-w-[170px]">
+                  <MapPin className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">
                     {lang === 'bn' ? activity.locationBn : activity.locationEn}
                   </span>
                 </span>
 
                 <button
                   onClick={() => setSelectedActivity(activity)}
-                  className="text-emerald-800 font-bold hover:text-emerald-950 hover:underline cursor-pointer"
+                  className="text-emerald-800 font-bold hover:text-emerald-950 hover:underline cursor-pointer flex items-center gap-1"
                 >
-                  {lang === 'bn' ? 'বিস্তারিত →' : 'Details →'}
+                  <span>{lang === 'bn' ? 'বিস্তারিত' : 'Details'}</span>
+                  <ArrowRight className="w-3 h-3" />
                 </button>
               </div>
             </div>
@@ -155,9 +181,10 @@ export default function RecentActivities({
             >
               <button
                 onClick={() => setSelectedActivity(null)}
-                className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 text-lg w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center"
+                aria-label="Close"
+                className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 text-lg w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center cursor-pointer"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
               <span className="inline-block bg-red-700 text-white text-xs font-bold px-2.5 py-1 rounded-md mb-2">
                 {lang === 'bn' ? selectedActivity.categoryBn : selectedActivity.categoryEn} • {lang === 'bn' ? selectedActivity.dateBn : selectedActivity.dateEn}
@@ -168,15 +195,24 @@ export default function RecentActivities({
               <p className="text-sm text-stone-600 leading-relaxed mb-4">
                 {lang === 'bn' ? selectedActivity.descriptionBn : selectedActivity.descriptionEn}
               </p>
-              <div className="p-3 bg-stone-50 rounded-xl text-xs space-y-1 mb-6 border border-stone-200">
-                <p>📍 <strong>স্থান:</strong> {selectedActivity.locationBn}</p>
-                <p>👥 <strong>সুবিধাভোগী সংখ্যা:</strong> {selectedActivity.beneficiariesCount} জন মানুষ</p>
-                <p>✓ <strong>যাচাইকরণ:</strong> রৌমারী জনকল্যাণ ফাউন্ডেশন এক্সিকিউটিভ টিম</p>
+              <div className="p-3 bg-stone-50 rounded-xl text-xs space-y-1.5 mb-6 border border-stone-200">
+                <p className="flex items-center gap-2">
+                  <MapPin className="w-3.5 h-3.5 text-stone-500" />
+                  <span><strong>স্থান:</strong> {selectedActivity.locationBn}</span>
+                </p>
+                <p className="flex items-center gap-2">
+                  <Users className="w-3.5 h-3.5 text-stone-500" />
+                  <span><strong>সুবিধাভোগী সংখ্যা:</strong> {selectedActivity.beneficiariesCount} জন মানুষ</span>
+                </p>
+                <p className="flex items-center gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span><strong>যাচাইকরণ:</strong> রৌমারী জনকল্যাণ ফাউন্ডেশন এক্সিকিউটিভ টিম</span>
+                </p>
               </div>
               <div className="flex justify-end gap-3">
                 <button
                   onClick={() => setSelectedActivity(null)}
-                  className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs font-semibold"
+                  className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs font-semibold cursor-pointer"
                 >
                   {lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
                 </button>
@@ -185,7 +221,7 @@ export default function RecentActivities({
                     setSelectedActivity(null);
                     onOpenAssistance();
                   }}
-                  className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-semibold"
+                  className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-semibold cursor-pointer"
                 >
                   {lang === 'bn' ? 'সহায়তা চান?' : 'Need Help?'}
                 </button>

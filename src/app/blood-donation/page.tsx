@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Heart, Droplet, AlertTriangle, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import BloodRequestModal from '@/components/modals/BloodRequestModal';
@@ -37,15 +38,17 @@ export default function BloodDonationPage() {
             <div className="flex flex-wrap justify-center gap-3">
               <button
                 onClick={() => setBloodDonorOpen(true)}
-                className="px-6 py-3 rounded-xl bg-white text-red-900 font-bold text-sm shadow-md hover:bg-red-50 transition cursor-pointer"
+                className="px-6 py-3 rounded-xl bg-white text-red-900 font-bold text-sm shadow-md hover:bg-red-50 transition cursor-pointer inline-flex items-center gap-2"
               >
-                ❤️ {lang === 'bn' ? 'স্বেচ্ছায় রক্তদাতা হন' : 'Register as Donor'}
+                <Heart className="w-4 h-4 fill-red-700 text-red-700" />
+                <span>{lang === 'bn' ? 'স্বেচ্ছায় রক্তদাতা হন' : 'Register as Donor'}</span>
               </button>
               <button
                 onClick={() => setBloodRequestOpen(true)}
-                className="px-6 py-3 rounded-xl border-2 border-white text-white font-bold text-sm hover:bg-white/10 transition cursor-pointer"
+                className="px-6 py-3 rounded-xl border-2 border-white text-white font-bold text-sm hover:bg-white/10 transition cursor-pointer inline-flex items-center gap-2"
               >
-                🩸 {lang === 'bn' ? 'জরুরি রক্তের অনুরোধ পাঠান' : 'Request Blood'}
+                <Droplet className="w-4 h-4 fill-white text-white" />
+                <span>{lang === 'bn' ? 'জরুরি রক্তের অনুরোধ পাঠান' : 'Request Blood'}</span>
               </button>
             </div>
           </div>
@@ -54,7 +57,10 @@ export default function BloodDonationPage() {
         {/* 24/7 Hotline Bar */}
         <section className="bg-red-50 border-b border-red-200 py-4 px-4 text-center">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-red-900">
-            <span>🚨 <strong>{lang === 'bn' ? 'জরুরি রক্তের প্রয়োজনে হটলাইন:' : 'Emergency Blood Hotline:'}</strong> {FOUNDATION_INFO.emergencyBloodHotline}</span>
+            <span className="flex items-center gap-1.5">
+              <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
+              <span><strong>{lang === 'bn' ? 'জরুরি রক্তের প্রয়োজনে হটলাইন:' : 'Emergency Blood Hotline:'}</strong> {FOUNDATION_INFO.emergencyBloodHotline}</span>
+            </span>
             <span className="text-red-700">{lang === 'bn' ? '২৪ ঘণ্টা দায়িত্বপ্রাপ্ত সমন্বয়ক সক্রিয়' : '24/7 Coordinator On Call'}</span>
           </div>
         </section>
@@ -79,7 +85,7 @@ export default function BloodDonationPage() {
                 {/* Privacy Guarantee Box */}
                 <div className="p-6 bg-emerald-50 rounded-2xl border border-emerald-200 text-emerald-950 space-y-2">
                   <h3 className="font-bold text-base flex items-center gap-2">
-                    <span>🛡️</span>
+                    <ShieldCheck className="w-5 h-5 text-emerald-700 shrink-0" />
                     <span>{lang === 'bn' ? 'কঠোর তথ্যের গোপনীয়তা নীতি (PRD Compliant)' : 'Strict Privacy Assurance'}</span>
                   </h3>
                   <p className="text-xs sm:text-sm text-emerald-900 leading-relaxed">
@@ -95,10 +101,22 @@ export default function BloodDonationPage() {
                     {lang === 'bn' ? 'রক্তদানের প্রাথমিক শর্তাবলী' : 'Donor Eligibility Checklist'}
                   </h3>
                   <ul className="text-xs sm:text-sm text-stone-600 space-y-2">
-                    <li className="flex items-center gap-2">✓ বয়স ১৮ থেকে ৬০ বছরের মধ্যে হতে হবে।</li>
-                    <li className="flex items-center gap-2">✓ শারীরিক ওজন নূন্যতম ৫০ কেজি (পুরুষ) ও ৪৫ কেজি (নারী)।</li>
-                    <li className="flex items-center gap-2">✓ সর্বশেষ রক্তদানের পর কমপক্ষে ৩ থেকে ৪ মাস অতিবাহিত হওয়া আবশ্যক।</li>
-                    <li className="flex items-center gap-2">✓ রক্তচাপ, হিমোগ্লোবিনের মাত্রা ও সাধারণ স্বাস্থ্য স্বাভাবিক থাকা প্রয়োজন।</li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>বয়স ১৮ থেকে ৬০ বছরের মধ্যে হতে হবে।</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>শারীরিক ওজন নূন্যতম ৫০ কেজি (পুরুষ) ও ৪৫ কেজি (নারী)।</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>সর্বশেষ রক্তদানের পর কমপক্ষে ৩ থেকে ৪ মাস অতিবাহিত হওয়া আবশ্যক।</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>রক্তচাপ, হিমোগ্লোবিনের মাত্রা ও সাধারণ স্বাস্থ্য স্বাভাবিক থাকা প্রয়োজন।</span>
+                    </li>
                   </ul>
                 </div>
               </div>

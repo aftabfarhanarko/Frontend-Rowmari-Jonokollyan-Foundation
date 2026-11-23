@@ -1,6 +1,14 @@
 'use client';
 
 import React from 'react';
+import { 
+  X, 
+  Search, 
+  Check, 
+  ClipboardList, 
+  AlertCircle, 
+  Lightbulb 
+} from 'lucide-react';
 import { Language, ApplicationTrackingStatus } from '@/types';
 
 interface TrackingResultModalProps {
@@ -56,14 +64,14 @@ export default function TrackingResultModal({
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-800 transition"
+          className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-800 transition cursor-pointer"
         >
-          ✕
+          <X className="w-4 h-4 text-stone-600" />
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl font-bold">
-            🔍
+          <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+            <Search className="w-6 h-6 text-emerald-800" />
           </div>
           <div>
             <h2 className="text-xl md:text-2xl font-bold text-stone-900">
@@ -141,7 +149,7 @@ export default function TrackingResultModal({
                             : 'bg-stone-200 text-stone-400'
                         }`}
                       >
-                        {state === 'completed' ? '✓' : state === 'current' ? '•' : ''}
+                        {state === 'completed' ? <Check className="w-3 h-3 text-white" /> : state === 'current' ? '•' : ''}
                       </div>
                       <div>
                         <p
@@ -165,7 +173,8 @@ export default function TrackingResultModal({
             {/* Verification Note Box */}
             <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-stone-700 space-y-2">
               <span className="font-bold text-emerald-900 block flex items-center gap-1.5">
-                <span>📝</span> {lang === 'bn' ? 'রিভিউ কমিটির মন্তব্য ও আপডেট:' : 'Review Committee Note:'}
+                <ClipboardList className="w-4 h-4 text-emerald-900 shrink-0" />
+                <span>{lang === 'bn' ? 'রিভিউ কমিটির মন্তব্য ও আপডেট:' : 'Review Committee Note:'}</span>
               </span>
               <p className="text-stone-700 leading-relaxed">
                 {lang === 'bn' ? application.statusNoteBn : application.statusNoteEn}
@@ -186,15 +195,15 @@ export default function TrackingResultModal({
 
             <button
               onClick={onClose}
-              className="w-full py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl font-medium text-sm transition"
+              className="w-full py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl font-medium text-sm transition cursor-pointer"
             >
               {lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
             </button>
           </div>
         ) : (
           <div className="text-center py-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center text-3xl font-bold">
-              ℹ
+            <div className="w-16 h-16 mx-auto mb-4 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center">
+              <AlertCircle className="w-8 h-8 text-amber-700" />
             </div>
             <h3 className="text-lg font-bold text-stone-900 mb-2">
               {lang === 'bn' ? 'আবেদন পাওয়া যায়নি' : 'No Record Found'}
@@ -204,8 +213,9 @@ export default function TrackingResultModal({
                 ? `"${searchedId}" আইডি বা মোবাইল নম্বরে কোনো আবেদন খুঁজে পাওয়া যায়নি। অনুগ্রহ করে সঠিক আইডি লিখুন (যেমন: RJF-2026-0842 বা RJF-2026-0915)।`
                 : `No matching application found for ID "${searchedId}". Please check your tracking reference.`}
             </p>
-            <div className="p-3 bg-stone-50 rounded-xl text-xs text-stone-600 mb-6 text-left border border-stone-200">
-              💡 <strong>{lang === 'bn' ? 'টিপস:' : 'Tip:'}</strong> {lang === 'bn' ? 'আপনি যদি সম্প্রতি নতুন আবেদন করে থাকেন, তবে প্রাপ্ত কনফার্মেশন কোডটি ব্যবহার করুন। প্রয়োজনে হেল্পলাইনে যোগাযোগ করতে পারেন।' : 'Use the tracking ID received after submitting your aid form.'}
+            <div className="p-3 bg-stone-50 rounded-xl text-xs text-stone-600 mb-6 text-left border border-stone-200 flex items-start gap-1.5">
+              <Lightbulb className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+              <div><strong>{lang === 'bn' ? 'টিপস:' : 'Tip:'}</strong> {lang === 'bn' ? 'আপনি যদি সম্প্রতি নতুন আবেদন করে থাকেন, তবে প্রাপ্ত কনফার্মেশন কোডটি ব্যবহার করুন। প্রয়োজনে হেল্পলাইনে যোগাযোগ করতে পারেন।' : 'Use the tracking ID received after submitting your aid form.'}</div>
             </div>
             <button
               onClick={onClose}

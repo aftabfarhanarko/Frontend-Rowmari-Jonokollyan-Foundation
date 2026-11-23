@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { Clock, Users, CheckCircle2, Heart } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { CAMPAIGNS_DATA } from '@/data/mockData';
@@ -51,8 +52,9 @@ export default function CampaignsPage() {
                         <span className="bg-emerald-50 text-emerald-800 px-3 py-1 rounded-md font-bold text-xs">
                           {camp.category === 'winter' ? 'শীতবস্ত্র তহবিল' : camp.category === 'medical' ? 'স্বাস্থ্যসেবা ও অ্যাম্বুলেন্স' : 'শিক্ষাবৃত্তি'}
                         </span>
-                        <span className="text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md">
-                          ⏳ {lang === 'bn' ? `মেয়াদ: ${camp.deadlineBn}` : `Deadline: ${camp.deadlineEn}`}
+                        <span className="text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5 text-amber-700" />
+                          <span>{lang === 'bn' ? `মেয়াদ: ${camp.deadlineBn}` : `Deadline: ${camp.deadlineEn}`}</span>
                         </span>
                       </div>
 
@@ -83,8 +85,14 @@ export default function CampaignsPage() {
                         </div>
 
                         <div className="flex justify-between text-[11px] text-stone-500 pt-1">
-                          <span>👥 {camp.donorsCount} জন মহানুভব দাতা অনুদান দিয়েছেন</span>
-                          <span className="text-emerald-700 font-semibold">✓ অডিটযোগ্য রেকর্ড</span>
+                          <span className="flex items-center gap-1.5">
+                            <Users className="w-3.5 h-3.5 text-stone-500 shrink-0" />
+                            <span>{camp.donorsCount} জন মহানুভব দাতা অনুদান দিয়েছেন</span>
+                          </span>
+                          <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                            <span>অডিটযোগ্য রেকর্ড</span>
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -97,7 +105,7 @@ export default function CampaignsPage() {
                         href="/donate"
                         className="px-6 py-3 rounded-xl bg-red-700 hover:bg-red-800 text-white font-bold text-xs sm:text-sm transition shadow-md flex items-center gap-2"
                       >
-                        <span>❤️</span>
+                        <Heart className="w-4 h-4 fill-white text-white shrink-0" />
                         <span>{lang === 'bn' ? 'এই তহবিলে অনুদান দিন' : 'Donate Now'}</span>
                       </Link>
                     </div>

@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { MapPin, Phone, Mail, Droplet, ShieldCheck } from 'lucide-react';
 import { Language } from '@/types';
 import { FOUNDATION_INFO } from '@/data/mockData';
 
@@ -51,24 +52,24 @@ export default function Footer({
                 : 'A non-political, voluntary humanitarian foundation serving vulnerable communities in Rowmari and Kurigram.'}
             </p>
 
-            <div className="space-y-1.5 text-xs text-stone-300 pt-2">
-              <p className="flex items-start gap-2">
-                <span>📍</span>
+            <div className="space-y-2 text-xs text-stone-300 pt-2">
+              <p className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <span>{lang === 'bn' ? FOUNDATION_INFO.addressBn : FOUNDATION_INFO.addressEn}</span>
               </p>
-              <p className="flex items-center gap-2">
-                <span>📞</span>
+              <p className="flex items-center gap-2.5">
+                <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span className="font-mono">{FOUNDATION_INFO.hotline}</span>
               </p>
-              <p className="flex items-center gap-2">
-                <span>🩸</span>
+              <p className="flex items-center gap-2.5">
+                <Droplet className="w-4 h-4 text-red-400 shrink-0" />
                 <span>
                   {lang === 'bn' ? 'জরুরি ব্লাড হটলাইন:' : 'Blood Hotline:'}{' '}
                   <span className="font-mono font-bold text-red-400">{FOUNDATION_INFO.emergencyBloodHotline}</span>
                 </span>
               </p>
-              <p className="flex items-center gap-2">
-                <span>✉️</span>
+              <p className="flex items-center gap-2.5">
+                <Mail className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span className="font-mono">{FOUNDATION_INFO.email}</span>
               </p>
             </div>
@@ -195,8 +196,9 @@ export default function Footer({
           <p>
             © 2026 {lang === 'bn' ? FOUNDATION_INFO.nameBn : FOUNDATION_INFO.nameEn}। সর্বস্বত্ব সংরক্ষিত।
           </p>
-          <div className="flex items-center gap-4 text-xs">
-            <span className="text-emerald-400">● {lang === 'bn' ? 'স্বচ্ছতা ও জবাবদিহিতায় অঙ্গীকারবদ্ধ' : 'Committed to Full Accountability'}</span>
+          <div className="flex items-center gap-2 text-xs text-emerald-400">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>{lang === 'bn' ? 'স্বচ্ছতা ও জবাবদিহিতায় অঙ্গীকারবদ্ধ' : 'Committed to Full Accountability'}</span>
           </div>
         </div>
       </div>

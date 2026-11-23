@@ -1,6 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
+import { 
+  FileText, 
+  Search, 
+  Stethoscope, 
+  Shirt, 
+  GraduationCap, 
+  Wheat, 
+  Banknote, 
+  Ambulance 
+} from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AssistanceModal from '@/components/modals/AssistanceModal';
@@ -61,9 +71,10 @@ export default function GetHelpPage() {
             </p>
             <button
               onClick={() => setAssistanceModalOpen(true)}
-              className="px-7 py-3 rounded-xl bg-white text-emerald-950 font-bold text-sm shadow-md hover:bg-stone-100 transition cursor-pointer"
+              className="px-7 py-3 rounded-xl bg-white text-emerald-950 font-bold text-sm shadow-md hover:bg-stone-100 transition cursor-pointer inline-flex items-center gap-2"
             >
-              📝 {lang === 'bn' ? 'নতুন সহায়তার আবেদন করুন' : 'Submit Assistance Application'}
+              <FileText className="w-4 h-4 text-emerald-950" />
+              <span>{lang === 'bn' ? 'নতুন সহায়তার আবেদন করুন' : 'Submit Assistance Application'}</span>
             </button>
           </div>
         </section>
@@ -88,9 +99,10 @@ export default function GetHelpPage() {
               />
               <button
                 type="submit"
-                className="px-6 py-3 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-sm transition cursor-pointer"
+                className="px-6 py-3 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-sm transition cursor-pointer flex items-center justify-center gap-1.5"
               >
-                {lang === 'bn' ? 'খুঁজুন' : 'Track'}
+                <Search className="w-4 h-4" />
+                <span>{lang === 'bn' ? 'খুঁজুন' : 'Track'}</span>
               </button>
             </form>
 
@@ -128,27 +140,31 @@ export default function GetHelpPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { icon: '🩺', title: 'চিকিৎসা সহায়তা', desc: 'মুমূর্ষু ও অসচ্ছল রোগীর ওষুধ, অস্ত্রোপচার ও পরীক্ষা-নিরীক্ষার খরচ।' },
-                { icon: '🧣', title: 'শীতবস্ত্র ও কম্বল', desc: 'চরাঞ্চলের ছিন্নমূল পরিবার ও শিশুদের জন্য শীতবস্ত্র ও কম্বল বিতরণ।' },
-                { icon: '📚', title: 'শিক্ষা সহায়তা', desc: 'দরিদ্র মেধাবী শিক্ষার্থীদের পরীক্ষার ফি, বই ও শিক্ষা উপকরণ অনুদান।' },
-                { icon: '🌾', title: 'জরুরি খাদ্য সহায়তা', desc: 'বন্যা, নদীভাঙন ও কর্মহীন সময়ে জরুরি খাদ্যসামগ্রীর প্যাকেট পৌঁছে দেওয়া।' },
-                { icon: '💰', title: 'এককালীন আর্থিক অনুদান', desc: 'আকস্মিক দুর্যোগ বা মারাত্মক আর্থিক সংকটে থাকা পরিবারের পাশে এককালীন নগদ সহায়তা।' },
-                { icon: '🚑', title: 'জরুরি স্থানান্তর', desc: 'দুর্গম চরাঞ্চল থেকে সদর বা মেডিকেল কলেজে আশঙ্কাজনক রোগী স্থানান্তরে সহায়তা।' },
-              ].map((item, idx) => (
-                <div key={idx} className="p-6 bg-white rounded-2xl border border-stone-200 shadow-2xs hover:shadow-md transition">
-                  <span className="text-4xl block mb-3">{item.icon}</span>
-                  <h3 className="text-base font-bold text-stone-900 mb-2">{item.title}</h3>
-                  <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">{item.desc}</p>
-                </div>
-              ))}
+                { icon: Stethoscope, title: 'চিকিৎসা সহায়তা', desc: 'মুমূর্ষু ও অসচ্ছল রোগীর ওষুধ, অস্ত্রোপচার ও পরীক্ষা-নিরীক্ষার খরচ।' },
+                { icon: Shirt, title: 'শীতবস্ত্র ও কম্বল', desc: 'চরাঞ্চলের ছিন্নমূল পরিবার ও শিশুদের জন্য শীতবস্ত্র ও কম্বল বিতরণ।' },
+                { icon: GraduationCap, title: 'শিক্ষা সহায়তা', desc: 'দরিদ্র মেধাবী শিক্ষার্থীদের পরীক্ষার ফি, বই ও শিক্ষা উপকরণ অনুদান।' },
+                { icon: Wheat, title: 'জরুরি খাদ্য সহায়তা', desc: 'বন্যা, নদীভাঙন ও কর্মহীন সময়ে জরুরি খাদ্যসামগ্রীর প্যাকেট পৌঁছে দেওয়া।' },
+                { icon: Banknote, title: 'এককালীন আর্থিক অনুদান', desc: 'আকস্মিক দুর্যোগ বা মারাত্মক আর্থিক সংকটে থাকা পরিবারের পাশে এককালীন নগদ সহায়তা।' },
+                { icon: Ambulance, title: 'জরুরি স্থানান্তর', desc: 'দুর্গম চরাঞ্চল থেকে সদর বা মেডিকেল কলেজে আশঙ্কাজনক রোগী স্থানান্তরে সহায়তা।' },
+              ].map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <div key={idx} className="p-6 bg-white rounded-2xl border border-stone-200 shadow-2xs hover:shadow-md transition">
+                    <Icon className="w-8 h-8 text-emerald-800 mb-3" />
+                    <h3 className="text-base font-bold text-stone-900 mb-2">{item.title}</h3>
+                    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">{item.desc}</p>
+                  </div>
+                );
+              })}
             </div>
 
             <div className="mt-12 text-center">
               <button
                 onClick={() => setAssistanceModalOpen(true)}
-                className="px-8 py-3.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-sm shadow-md transition cursor-pointer"
+                className="px-8 py-3.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-sm shadow-md transition cursor-pointer inline-flex items-center gap-2"
               >
-                📝 {lang === 'bn' ? 'অনলাইনে সহায়তার আবেদন ফর্ম পূরণ করুন' : 'Fill Assistance Application Online'}
+                <FileText className="w-4 h-4 text-white" />
+                <span>{lang === 'bn' ? 'অনলাইনে সহায়তার আবেদন ফর্ম পূরণ করুন' : 'Fill Assistance Application Online'}</span>
               </button>
             </div>
           </div>

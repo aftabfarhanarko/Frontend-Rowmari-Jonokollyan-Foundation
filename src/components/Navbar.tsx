@@ -4,7 +4,22 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Globe, Heart, Menu, X, Users } from 'lucide-react';
+import {
+  Globe,
+  Heart,
+  Menu,
+  X,
+  Users,
+  Home,
+  Info,
+  Activity,
+  Target,
+  Droplet,
+  HandHeart,
+  Image as ImageIcon,
+  Newspaper,
+  Phone,
+} from 'lucide-react';
 import { Language } from '@/types';
 
 interface NavbarProps {
@@ -22,16 +37,16 @@ export default function Navbar({
   const pathname = usePathname();
 
   const navLinks = [
-    { href: '/', labelBn: 'হোম', labelEn: 'Home' },
-    { href: '/about', labelBn: 'আমাদের কথা', labelEn: 'About Us' },
-    { href: '/team', labelBn: 'টিম ও কমিটি', labelEn: 'Our Team' },
-    { href: '/activities', labelBn: 'কার্যক্রম', labelEn: 'Activities' },
-    { href: '/campaigns', labelBn: 'ক্যাম্পেইন', labelEn: 'Campaigns' },
-    { href: '/blood-donation', labelBn: 'রক্তদান', labelEn: 'Blood' },
-    { href: '/get-help', labelBn: 'সহায়তা চাই', labelEn: 'Get Help' },
-    { href: '/gallery', labelBn: 'গ্যালারি', labelEn: 'Gallery' },
-    { href: '/news', labelBn: 'সংবাদ ও ইভেন্ট', labelEn: 'News' },
-    { href: '/contact', labelBn: 'যোগাযোগ', labelEn: 'Contact' },
+    { href: '/', labelBn: 'হোম', labelEn: 'Home', icon: Home },
+    { href: '/about', labelBn: 'আমাদের কথা', labelEn: 'About Us', icon: Info },
+    { href: '/team', labelBn: 'টিম ও কমিটি', labelEn: 'Our Team', icon: Users },
+    { href: '/activities', labelBn: 'কার্যক্রম', labelEn: 'Activities', icon: Activity },
+    { href: '/campaigns', labelBn: 'ক্যাম্পেইন', labelEn: 'Campaigns', icon: Target },
+    { href: '/blood-donation', labelBn: 'রক্তদান', labelEn: 'Blood', icon: Droplet },
+    { href: '/get-help', labelBn: 'সহায়তা চাই', labelEn: 'Get Help', icon: HandHeart },
+    { href: '/gallery', labelBn: 'গ্যালারি', labelEn: 'Gallery', icon: ImageIcon },
+    { href: '/news', labelBn: 'সংবাদ ও ইভেন্ট', labelEn: 'News', icon: Newspaper },
+    { href: '/contact', labelBn: 'যোগাযোগ', labelEn: 'Contact', icon: Phone },
   ];
 
   return (
@@ -61,20 +76,22 @@ export default function Navbar({
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden xl:flex items-center gap-5">
+          <nav className="hidden xl:flex items-center gap-4">
             {navLinks.map((link) => {
+              const Icon = link.icon;
               const isActive = pathname === link.href;
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-xs font-semibold transition duration-150 py-1.5 px-1 ${
+                  className={`text-xs font-semibold transition duration-150 py-1.5 px-1 flex items-center gap-1.5 ${
                     isActive
                       ? 'text-emerald-800 border-b-2 border-emerald-800'
                       : 'text-stone-600 hover:text-emerald-800'
                   }`}
                 >
-                  {lang === 'bn' ? link.labelBn : link.labelEn}
+                  <Icon className="w-3.5 h-3.5 shrink-0" />
+                  <span>{lang === 'bn' ? link.labelBn : link.labelEn}</span>
                 </Link>
               );
             })}
@@ -142,21 +159,23 @@ export default function Navbar({
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="xl:hidden border-t border-stone-200 bg-white px-4 pt-3 pb-6 space-y-2 animate-in slide-in-from-top duration-200 shadow-lg">
-          <nav className="grid grid-cols-2 gap-1">
+          <nav className="grid grid-cols-2 gap-1.5">
             {navLinks.map((link) => {
+              const Icon = link.icon;
               const isActive = pathname === link.href;
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`px-3 py-2 rounded-lg font-medium text-xs transition ${
+                  className={`px-3 py-2 rounded-lg font-medium text-xs transition flex items-center gap-2 ${
                     isActive
                       ? 'bg-emerald-50 text-emerald-900 font-bold'
                       : 'text-stone-700 hover:bg-stone-50'
                   }`}
                 >
-                  {lang === 'bn' ? link.labelBn : link.labelEn}
+                  <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-emerald-800' : 'text-stone-500'}`} />
+                  <span>{lang === 'bn' ? link.labelBn : link.labelEn}</span>
                 </Link>
               );
             })}

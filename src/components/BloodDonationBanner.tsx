@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Droplet, Heart, ShieldCheck } from 'lucide-react';
+import { Droplet, Heart } from 'lucide-react';
 import { Language } from '@/types';
 
 interface BloodDonationBannerProps {
