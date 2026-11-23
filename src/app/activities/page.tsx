@@ -2,17 +2,27 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Calendar, 
   MapPin, 
   X, 
-  ArrowRight
+  ArrowRight, 
+  Search, 
+  Sparkles, 
+  ShieldCheck, 
+  Users, 
+  Droplet, 
+  HeartHandshake,
+  CheckCircle2
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
+import BackToTop from '@/components/BackToTop';
 import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
+import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { ACTIVITIES_DATA } from '@/data/mockData';
 import { Language, ActivityCategory, ActivityItem } from '@/types';
 
@@ -24,11 +34,13 @@ export default function ActivitiesPage() {
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
 
+  const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
+
   const categories = [
     { key: 'all' as ActivityCategory, labelBn: 'সকল কার্যক্রম', labelEn: 'All Activities' },
-    { key: 'winter' as ActivityCategory, labelBn: 'শীতবস্ত্র বিতরণ', labelEn: 'Winter Relief' },
+    { key: 'winter' as ActivityCategory, labelBn: 'শীতবস্ত্র ত্রাণ', labelEn: 'Winter Relief' },
     { key: 'medical' as ActivityCategory, labelBn: 'মেডিকেল ক্যাম্প', labelEn: 'Medical Camps' },
-    { key: 'education' as ActivityCategory, labelBn: 'শিক্ষা সহায়তা', labelEn: 'Education Aid' },
+    { key: 'education' as ActivityCategory, labelBn: 'শিক্ষা উপবৃত্তি', labelEn: 'Education Aid' },
     { key: 'emergency' as ActivityCategory, labelBn: 'জরুরি রক্তদান', labelEn: 'Blood Support' },
     { key: 'food' as ActivityCategory, labelBn: 'খাদ্য সহায়তা', labelEn: 'Food Aid' },
   ];
@@ -38,217 +50,253 @@ export default function ActivitiesPage() {
     const matchesQuery =
       act.titleBn.toLowerCase().includes(searchQuery.toLowerCase()) ||
       act.titleEn.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      act.locationBn.toLowerCase().includes(searchQuery.toLowerCase());
+      act.locationBn.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      act.locationEn.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesQuery;
   });
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-[#1E293B]">
+    <div className="min-h-screen flex flex-col bg-[#FAFBF9] text-[#1E293B]">
       <Navbar 
         lang={lang} 
         onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} 
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
-      <main className="flex-1 pb-24 sm:pb-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          
-          {/* Header Title Matching Wireframe */}
-          <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#E53935] tracking-tight mb-2">
-              {lang === 'bn' ? 'আমাদের কার্যক্রম' : 'Our Activities'}
-            </h1>
-            <p className="text-sm sm:text-base text-stone-500 font-medium">
-              {lang === 'bn' 
-                ? 'রৌমারীর চরাঞ্চল ও নদীভাঙনে ক্ষতিগ্রস্ত মানুষের পাশে শীতবস্ত্র, খাদ্য, চিকিৎসা ও শিক্ষা সহায়তা।' 
-                : 'Comprehensive overview of field relief drives and health programs conducted in Rowmari.'}
-            </p>
+      <main className="flex-1 pb-20 sm:pb-24">
+        {/* Header Hero Banner */}
+        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-emerald-50/50 via-white to-[#FAFBF9]">
+          <div aria-hidden className="pointer-events-none absolute inset-0">
+            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-emerald-300/30 blur-3xl" />
+            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
           </div>
 
-          {/* Search and Filters Bar */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
-            {/* Category Pills */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 w-full md:w-auto no-scrollbar">
-              {categories.map((cat) => (
-                <button
-                  key={cat.key}
-                  onClick={() => setActiveCategory(cat.key)}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
-                    activeCategory === cat.key
-                      ? 'bg-[#0D5C35] text-white shadow-sm'
-                      : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-                  }`}
-                >
-                  {lang === 'bn' ? cat.labelBn : cat.labelEn}
-                </button>
-              ))}
-            </div>
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div 
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="max-w-3xl"
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0D5C35] text-xs font-bold mb-3 shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-[#0D5C35]" />
+                <span>{t('মাঠপর্যায়ের মানবিক কার্যক্রম ও ফটো আর্কাইভ', 'Live Fieldwork Archive & Impact')}</span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
+                {t('রৌমারী ও দুর্গম চরাঞ্চলে আমাদের মানবিক কার্যক্রম', 'Frontline Relief Across River Island Chars')}
+              </h1>
+              <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed">
+                {t(
+                  'শীতবস্ত্র বিতরণ, বিনামূল্যে চিকিৎসা ক্যাম্প, মুমূর্ষু রোগীর জন্য রক্তদান এবং দরিদ্র শিক্ষার্থীদের শিক্ষাবৃত্তি—আমাদের প্রতিটি উদ্যোগের স্বচ্ছ চিত্র।',
+                  'Verified field relief initiatives in remote chars of Rowmari and Kurigram: winter blankets, physician clinics, donor network, and student scholarships.'
+                )}
+              </p>
+            </motion.div>
 
-            {/* Search Box */}
-            <div className="w-full md:w-72">
-              <input
-                type="text"
-                placeholder={lang === 'bn' ? 'কার্যক্রম বা স্থান দিয়ে খুঁজুন...' : 'Search by title or place...'}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 rounded-xl border border-stone-300 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] bg-stone-50 focus:bg-white transition"
-              />
+            {/* Filter and Search Bar */}
+            <div className="mt-8 pt-6 border-t border-stone-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              {/* Category Pills */}
+              <div className="flex flex-wrap items-center gap-2">
+                {categories.map((c) => (
+                  <button
+                    key={c.key}
+                    onClick={() => setActiveCategory(c.key)}
+                    className={`px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                      activeCategory === c.key
+                        ? 'bg-[#0D5C35] text-white shadow-md'
+                        : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
+                    }`}
+                  >
+                    {t(c.labelBn, c.labelEn)}
+                  </button>
+                ))}
+              </div>
+
+              {/* Search Box */}
+              <div className="relative w-full md:w-72">
+                <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={t('কার্যক্রম বা চরের নাম খুঁজুন...', 'Search activity or location...')}
+                  className="w-full pl-10 pr-4 py-2 rounded-xl bg-white border border-stone-200 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 shadow-2xs"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Activities Grid */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8">
+          <div className="flex items-center justify-between text-xs sm:text-sm text-stone-500 mb-6 font-medium">
+            <span>{t(`${filteredActivities.length} টি কার্যক্রম প্রদর্শিত হচ্ছে`, `Showing ${filteredActivities.length} activities`)}</span>
+            <div className="flex items-center gap-1.5 text-[#0D5C35] font-bold">
+              <ShieldCheck className="w-4 h-4" />
+              <span>{t('১০০% যাচাইকৃত মাঠপর্যায়ের কাজ', '100% On-ground Verified')}</span>
             </div>
           </div>
 
-          {/* Activities Grid */}
-          {filteredActivities.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {filteredActivities.map((act) => (
-                <div
-                  key={act.id}
-                  className="group bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
-                >
-                  <div>
-                    {/* Visual Header with Real Photo */}
-                    <div className="relative aspect-16/10 bg-stone-100 overflow-hidden">
-                      <Image
-                        src={act.imageUrl || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=800&auto=format&fit=crop'}
-                        alt={lang === 'bn' ? act.titleBn : act.titleEn}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent z-10" />
-
-                      {/* Category Pill Tag */}
-                      <div className="absolute top-3 left-3 z-20">
-                        <span className="inline-flex items-center gap-1.5 bg-[#E53935] text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow-sm">
-                          {lang === 'bn' ? act.categoryBn : act.categoryEn}
-                        </span>
-                      </div>
-
-                      <div className="absolute bottom-3 left-3 z-20 text-white text-xs flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5 text-red-200" />
-                        <span className="font-semibold">{lang === 'bn' ? act.dateBn : act.dateEn}</span>
-                      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredActivities.map((act) => (
+              <motion.div
+                key={act.id}
+                layout
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                onClick={() => setSelectedActivity(act)}
+                className={`${glassCardHover} overflow-hidden cursor-pointer flex flex-col justify-between group`}
+              >
+                <div>
+                  <div className="relative w-full h-52 sm:h-56 overflow-hidden">
+                    <Image
+                      src={act.imageUrl || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80'}
+                      alt={t(act.titleBn, act.titleEn)}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-108 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-transparent" />
+                    
+                    {/* Category Tag */}
+                    <div className="absolute top-3 left-3 z-10">
+                      <span className="px-2.5 py-1 rounded-md text-[11px] font-bold text-white bg-[#0D5C35] shadow-md backdrop-blur-md">
+                        {act.category === 'winter' ? t('শীতবস্ত্র', 'Winter') :
+                         act.category === 'medical' ? t('চিকিৎসা', 'Medical') :
+                         act.category === 'education' ? t('শিক্ষা', 'Education') :
+                         act.category === 'emergency' ? t('রক্তদান', 'Blood') : t('ত্রাণ', 'Relief')}
+                      </span>
                     </div>
 
-                    <div className="p-5 sm:p-6">
-                      <h3 className="text-lg font-bold text-stone-900 group-hover:text-[#E53935] transition leading-snug mb-2">
-                        {lang === 'bn' ? act.titleBn : act.titleEn}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-stone-600 line-clamp-3 leading-relaxed mb-4">
-                        {lang === 'bn' ? act.descriptionBn : act.descriptionEn}
-                      </p>
-
-                      <div className="space-y-1.5 text-xs text-stone-500 pt-3 border-t border-stone-100">
-                        <div className="flex items-center justify-between">
-                          <span className="flex items-center gap-1 text-[#0D5C35] font-medium">
-                            <MapPin className="w-3.5 h-3.5 shrink-0" />
-                            <span>{lang === 'bn' ? act.locationBn : act.locationEn}</span>
-                          </span>
-                          <span className="font-bold text-[#0D5C35]">
-                            {act.beneficiariesCount} জন
-                          </span>
-                        </div>
-                      </div>
+                    <div className="absolute bottom-3 left-3 right-3 text-white text-xs flex items-center justify-between">
+                      <span className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/20">
+                        <MapPin className="w-3 h-3 text-emerald-400 shrink-0" />
+                        <span className="truncate max-w-[150px]">{t(act.locationBn, act.locationEn)}</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/20">
+                        <Calendar className="w-3 h-3 text-white/80 shrink-0" />
+                        <span>{t(act.dateBn, act.dateEn)}</span>
+                      </span>
                     </div>
                   </div>
 
-                  <div className="p-5 sm:p-6 pt-0">
-                    <button
-                      onClick={() => setSelectedActivity(act)}
-                      className="w-full py-2.5 rounded-xl border border-stone-200 text-stone-700 hover:text-white hover:bg-[#0D5C35] hover:border-[#0D5C35] text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
-                    >
-                      <span>{lang === 'bn' ? 'বিস্তারিত তথ্য' : 'View Full Details'}</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
+                  <div className="p-5 sm:p-6">
+                    <h2 className="text-base sm:text-lg font-bold text-stone-900 group-hover:text-[#0D5C35] transition-colors line-clamp-2 leading-snug mb-2">
+                      {t(act.titleBn, act.titleEn)}
+                    </h2>
+                    <p className="text-xs sm:text-sm text-stone-600 line-clamp-3 leading-relaxed mb-4">
+                      {t(act.descriptionBn, act.descriptionEn)}
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16 bg-stone-50 rounded-2xl border border-stone-200">
-              <p className="text-stone-500 text-sm">
-                {lang === 'bn' ? 'এই ক্যাটাগরিতে কোনো কার্যক্রম খুঁজে পাওয়া যায়নি।' : 'No activities found matching your criteria.'}
-              </p>
+
+                <div className="px-5 sm:px-6 pb-5 pt-3 border-t border-stone-200/70 flex items-center justify-between text-xs font-bold text-[#0D5C35]">
+                  <span>{t('বিস্তারিত ছবি ও তথ্য দেখুন', 'View Details & Gallery')}</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {filteredActivities.length === 0 && (
+            <div className={`${glassCard} p-12 text-center max-w-md mx-auto my-12`}>
+              <div className="text-stone-400 mb-2 font-bold">{t('কোনো কার্যক্রম পাওয়া যায়নি', 'No activities found')}</div>
+              <p className="text-xs text-stone-500 mb-4">{t('অন্য ক্যাটাগরি নির্বাচন করুন অথবা নতুন শব্দ দিয়ে খুঁজুন।', 'Try selecting another category or clear the search input.')}</p>
+              <button
+                onClick={() => { setActiveCategory('all'); setSearchQuery(''); }}
+                className="px-4 py-2 rounded-full bg-[#0D5C35] text-white text-xs font-bold cursor-pointer"
+              >
+                {t('সকল কার্যক্রম দেখুন', 'Reset Filter')}
+              </button>
             </div>
           )}
-
-        </div>
+        </section>
       </main>
 
-      {/* Detail Modal */}
-      {selectedActivity && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
-          onClick={() => setSelectedActivity(null)}
-        >
-          <div
-            className="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-stone-200 relative overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setSelectedActivity(null)}
-              className="absolute top-4 right-4 p-1.5 rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 transition"
-              aria-label="Close"
+      {/* Activity Details Modal */}
+      <AnimatePresence>
+        {selectedActivity && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 16 }}
+              className="relative w-full max-w-2xl bg-white rounded-3xl overflow-hidden shadow-2xl border border-stone-200 max-h-[90vh] flex flex-col"
             >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="relative aspect-16/9 rounded-xl overflow-hidden mb-4">
-              <Image
-                src={selectedActivity.imageUrl || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=800&auto=format&fit=crop'}
-                alt={lang === 'bn' ? selectedActivity.titleBn : selectedActivity.titleEn}
-                fill
-                className="object-cover"
-              />
-            </div>
-
-            <div className="inline-block bg-[#E53935] text-white text-xs font-bold px-2.5 py-0.5 rounded mb-2">
-              {lang === 'bn' ? selectedActivity.categoryBn : selectedActivity.categoryEn}
-            </div>
-
-            <h3 className="text-xl font-bold text-stone-900 mb-2">
-              {lang === 'bn' ? selectedActivity.titleBn : selectedActivity.titleEn}
-            </h3>
-
-            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-6">
-              {lang === 'bn' ? selectedActivity.descriptionBn : selectedActivity.descriptionEn}
-            </p>
-
-            <div className="grid grid-cols-2 gap-3 p-3 bg-stone-50 rounded-xl border border-stone-200 text-xs mb-6">
-              <div>
-                <span className="text-stone-400 block">{lang === 'bn' ? 'তারিখ:' : 'Date:'}</span>
-                <span className="font-bold text-stone-800">{lang === 'bn' ? selectedActivity.dateBn : selectedActivity.dateEn}</span>
-              </div>
-              <div>
-                <span className="text-stone-400 block">{lang === 'bn' ? 'স্থান:' : 'Location:'}</span>
-                <span className="font-bold text-stone-800">{lang === 'bn' ? selectedActivity.locationBn : selectedActivity.locationEn}</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
               <button
-                onClick={() => {
-                  setSelectedActivity(null);
-                  setAssistanceModalOpen(true);
-                }}
-                className="flex-1 py-2.5 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs transition"
+                onClick={() => setSelectedActivity(null)}
+                className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition cursor-pointer"
               >
-                {lang === 'bn' ? 'এই খাতে সহায়তা চান?' : 'Need Help in this Area?'}
+                <X className="w-5 h-5" />
               </button>
-              <button
-                onClick={() => {
-                  setSelectedActivity(null);
-                  setDonationModalOpen(true);
-                }}
-                className="flex-1 py-2.5 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs transition"
-              >
-                {lang === 'bn' ? 'অনুদান দিন' : 'Donate to this Cause'}
-              </button>
-            </div>
+
+              <div className="relative w-full h-64 sm:h-72 shrink-0">
+                <Image
+                  src={selectedActivity.imageUrl || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80'}
+                  alt={t(selectedActivity.titleBn, selectedActivity.titleEn)}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4 text-white">
+                  <span className="text-xs font-bold bg-[#0D5C35] px-2.5 py-1 rounded-md inline-block mb-1.5">
+                    {t(selectedActivity.locationBn, selectedActivity.locationEn)}
+                  </span>
+                  <h2 className="text-lg sm:text-2xl font-black leading-tight drop-shadow-md">
+                    {t(selectedActivity.titleBn, selectedActivity.titleEn)}
+                  </h2>
+                </div>
+              </div>
+
+              <div className="p-6 overflow-y-auto space-y-4">
+                <div className="flex items-center gap-4 text-xs text-stone-500 font-medium">
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4 text-emerald-700" />
+                    <span>{t(selectedActivity.dateBn, selectedActivity.dateEn)}</span>
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <MapPin className="w-4 h-4 text-red-600" />
+                    <span>{t(selectedActivity.locationBn, selectedActivity.locationEn)}</span>
+                  </span>
+                </div>
+
+                <p className="text-sm text-stone-700 leading-relaxed font-normal">
+                  {t(selectedActivity.descriptionBn, selectedActivity.descriptionEn)}
+                </p>
+
+                <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200/70 text-xs text-[#0D5C35] font-medium leading-relaxed">
+                  {t(
+                    'এই কার্যক্রমটি রৌমারী জনকল্যাণ ফাউন্ডেশনের স্বেচ্ছাসেবকদের সরাসরি অংশগ্রহণে শতভাগ স্বচ্ছতার সাথে সম্পন্ন হয়েছে।',
+                    'This field initiative was directly executed with zero overhead by registered RJF humanitarian volunteers.'
+                  )}
+                </div>
+
+                <div className="flex flex-wrap gap-3 pt-2">
+                  <button
+                    onClick={() => {
+                      setSelectedActivity(null);
+                      setDonationModalOpen(true);
+                    }}
+                    className="flex-1 py-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center shadow-md"
+                  >
+                    {t('অনুরূপ কার্যক্রমে অনুদান দিন', 'Donate to this Wing')}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedActivity(null);
+                      setAssistanceModalOpen(true);
+                    }}
+                    className="flex-1 py-3 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center shadow-md"
+                  >
+                    {t('সহায়তার আবেদন করুন', 'Request Help in Area')}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
 
       <Footer 
         lang={lang} 
@@ -261,6 +309,8 @@ export default function ActivitiesPage() {
         onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
+
+      <BackToTop />
 
       <AssistanceModal
         isOpen={assistanceModalOpen}

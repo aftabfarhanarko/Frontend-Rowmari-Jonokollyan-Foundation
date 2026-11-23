@@ -46,6 +46,8 @@ export interface GalleryItem {
   tagBn: string;
   tagEn: string;
   imageUrl?: string;
+  locationBn?: string;
+  locationEn?: string;
 }
 
 export interface NewsItem {

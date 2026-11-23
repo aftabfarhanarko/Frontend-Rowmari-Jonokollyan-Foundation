@@ -2,16 +2,27 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { 
   Users, 
-  ShieldCheck
+  ShieldCheck, 
+  HeartHandshake, 
+  Sparkles, 
+  Award, 
+  Clock, 
+  CheckCircle2, 
+  ArrowRight,
+  Droplet,
+  FileText
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
+import BackToTop from '@/components/BackToTop';
 import VolunteerModal from '@/components/modals/VolunteerModal';
 import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
+import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { Language } from '@/types';
 
 export default function VolunteerPage() {
@@ -20,108 +31,210 @@ export default function VolunteerPage() {
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
 
+  const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
+
+  const wings = [
+    {
+      icon: Droplet,
+      titleBn: 'জরুরি রক্তদান সমন্বয় সেল',
+      titleEn: 'Blood Donation Coordination',
+      descBn: 'রৌমারী হাসপাতালের সাথে সমন্বয় করে মুমূর্ষু রোগীর জন্য রক্তদাতা খুঁজে দেওয়া ও ডোনার ক্যাম্পে সহায়তা।',
+      descEn: 'Assisting hospital patients by matching donors from our 24/7 volunteer database and donor camps.',
+      color: 'bg-red-100 text-[#E53935]',
+    },
+    {
+      icon: HeartHandshake,
+      titleBn: 'মাঠপর্যায়ের ত্রাণ ও পুনর্বাসন টিম',
+      titleEn: 'Field Relief & Logistics Team',
+      descBn: 'দুর্গম চরাঞ্চলে বাড়ি বাড়ি গিয়ে প্রকৃত দুস্থ পরিবার যাচাই, শীতবস্ত্র প্যাকিং ও সরাসরি বিতরণ পরিচালনা।',
+      descEn: 'Surveying remote char households, packing winter clothes/relief kits, and executing direct distributions.',
+      color: 'bg-emerald-100 text-[#0D5C35]',
+    },
+    {
+      icon: FileText,
+      titleBn: 'চিকিৎসা ক্যাম্প ও রোগী সহায়তা সেল',
+      titleEn: 'Medical Camps & Healthcare Cell',
+      descBn: 'বিশেষজ্ঞ ডাক্তার ক্যাম্পে রোগী নিবন্ধন, প্রেসক্রিপশন বিতরণ ও জরুরি ওষুধ ব্যবস্থাপনায় সহায়তা।',
+      descEn: 'Managing patient registration, crowd flow, and prescription medicine distribution during clinics.',
+      color: 'bg-teal-100 text-teal-700',
+    },
+    {
+      icon: Sparkles,
+      titleBn: 'মিডিয়া, আইটি ও ডকুমেন্টেশন ডেস্ক',
+      titleEn: 'Media, IT & Public Relations',
+      descBn: 'মাঠপর্যায়ের কাজের স্থিরচিত্র ও ভিডিও ধারণ, সোশ্যাল মিডিয়ায় সচেতনতা সৃষ্টি ও ডিজিটাল ডাটা এন্ট্রি।',
+      descEn: 'Photographic documentation, social awareness publishing, and beneficiary application records.',
+      color: 'bg-indigo-100 text-indigo-700',
+    },
+  ];
+
+  const benefits = [
+    {
+      titleBn: 'মানবতার সেবায় আত্মতৃপ্তি',
+      titleEn: 'Spiritual Fulfillment',
+      descBn: 'দুর্গম চরাঞ্চলের অসহায় মানুষের মুখে হাসি ফোটানোর চেয়ে মহৎ আনন্দ আর কিছু হতে পারে না।',
+      descEn: 'The purest joy of directly touching vulnerable lives and bringing smiles to distressed families.',
+    },
+    {
+      titleBn: 'অফিসিয়াল স্বেচ্ছাসেবক সনদ',
+      titleEn: 'Official Volunteer Certificate',
+      descBn: 'সক্রিয় অংশগ্রহণের স্বীকৃতিস্বরূপ ফাউন্ডেশনের পক্ষ থেকে প্রাতিষ্ঠানিক অভিজ্ঞতা প্রশংসাপত্র প্রদান।',
+      descEn: 'Institutional certificates of social welfare service validating leadership and civic contributions.',
+    },
+    {
+      titleBn: 'নেতৃত্ব ও টিমওয়ার্ক দক্ষতা বৃদ্ধি',
+      titleEn: 'Leadership & Team Building',
+      descBn: 'দুর্যোগকালীন উদ্ধার, লজিস্টিকস ব্যবস্থাপনা ও তাৎক্ষণিক সিদ্ধান্ত গ্রহণের বাস্তব অভিজ্ঞতা অর্জন।',
+      descEn: 'Direct hands-on experience in disaster logistics, emergency response, and community organizing.',
+    },
+  ];
+
   return (
-    <div className="min-h-screen flex flex-col bg-white text-[#1E293B]">
+    <div className="min-h-screen flex flex-col bg-[#FAFBF9] text-[#1E293B]">
       <Navbar 
         lang={lang} 
         onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} 
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
-      <main className="flex-1 pb-24 sm:pb-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          
-          {/* Header Title Matching Wireframe */}
-          <div className="mb-6">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#E53935] tracking-tight mb-2">
-              {lang === 'bn' ? 'স্বেচ্ছাসেবক হোন' : 'Join as a Volunteer'}
-            </h1>
-            <p className="text-xs sm:text-sm text-stone-500 font-medium">
-              {lang === 'bn'
-                ? 'আপনার মেধা, সময় ও মানবিক শ্রম দিয়ে রৌমারীর দুর্গম চরাঞ্চলের মানুষের পাশে দাঁড়ান।'
-                : 'Offer your time, empathy, and skills to create lasting social impact across Rowmari.'}
-            </p>
+      <main className="flex-1 pb-20 sm:pb-24">
+        {/* Header Hero Banner */}
+        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-emerald-50/50 via-white to-[#FAFBF9]">
+          <div aria-hidden className="pointer-events-none absolute inset-0">
+            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl" />
+            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
           </div>
 
-          {/* Featured Field Image */}
-          <div className="relative w-full aspect-16/9 sm:aspect-21/9 rounded-2xl overflow-hidden shadow-md border border-stone-200 mb-10">
-            <Image
-              src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=1400&auto=format&fit=crop"
-              alt="Volunteer Humanitarian Team"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 896px"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4 text-white">
-              <span className="text-xs font-bold bg-[#E53935] px-2.5 py-0.5 rounded-md inline-block mb-1 shadow-sm">
-                {lang === 'bn' ? 'মাঠপর্যায়ের স্বেচ্ছাসেবক' : 'Field Volunteers'}
-              </span>
-              <p className="text-xs text-white/90">
-                {lang === 'bn' 
-                  ? 'শীতবস্ত্র বিতরণ ও ফ্রি মেডিকেল ক্যাম্পে নিবেদিত তরুণ স্বেচ্ছাসেবক দল' 
-                  : 'Dedicated youth team serving vulnerable communities in Kurigram.'}
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div 
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="max-w-3xl"
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0D5C35] text-xs font-bold mb-3 shadow-2xs">
+                <Users className="w-3.5 h-3.5 text-[#0D5C35]" />
+                <span>{t('স্বেচ্ছাসেবী নেটওয়ার্ক • মানবতার কল্যাণে তারুণ্য', 'Volunteer Network • Youth for Humanity')}</span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
+                {t('আপনার মেধা ও সময় দিয়ে চরাঞ্চলের মানুষের পাশে দাঁড়ান', 'Join Rowmari’s Largest Humanitarian Volunteer Force')}
+              </h1>
+              <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed font-normal">
+                {t(
+                  'রৌমারী জনকল্যাণ ফাউন্ডেশনের প্রতিটি কার্যক্রম পরিচালিত হয় উদ্যমী তরুণ ও সমাজসেবীদের স্বেচ্ছাশ্রমের ভিত্তিতে। আপনিও যুক্ত হয়ে পরিবর্তনের অংশীদার হোন।',
+                  'Every relief mission is carried out by selfless youth volunteers. Offer your energy, skills, and empathy to create a real impact in remote chars.'
+                )}
               </p>
-            </div>
-          </div>
+            </motion.div>
 
-          {/* Section: দায়িত্ব ও যোগ্যতা Cards with Top Borders */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-            {/* Card 1: যোগ্যতা (Green top border) */}
-            <div className="bg-white p-6 rounded-2xl border border-stone-200 border-t-4 border-t-[#0D5C35] shadow-xs">
-              <div className="flex items-center gap-2 mb-2">
-                <ShieldCheck className="w-5 h-5 text-[#0D5C35]" />
-                <h3 className="text-base font-bold text-stone-900">
-                  {lang === 'bn' ? 'যোগ্যতা ও অঙ্গীকার' : 'Eligibility & Commitment'}
-                </h3>
-              </div>
-              <ul className="text-xs sm:text-sm text-stone-600 space-y-1.5 list-disc list-inside">
-                <li>ন্যূনতম বয়স ১৮ বছর বা তদূর্ধ্ব</li>
-                <li>অরাজনৈতিক ও মানবিক সেবার মানসিকতা</li>
-                <li>মাসে অন্তত ১-২ দিন সময় দেওয়ার সামর্থ্য</li>
-                <li>সততা, ধৈর্য ও সহযোগিতাপূর্ণ মনোভাব</li>
-              </ul>
-            </div>
-
-            {/* Card 2: দায়িত্ব (Red top border) */}
-            <div className="bg-white p-6 rounded-2xl border border-stone-200 border-t-4 border-t-[#E53935] shadow-xs">
-              <div className="flex items-center gap-2 mb-2">
-                <Users className="w-5 h-5 text-[#E53935]" />
-                <h3 className="text-base font-bold text-stone-900">
-                  {lang === 'bn' ? 'দায়িত্ব ও কাজের ক্ষেত্র' : 'Key Responsibilities'}
-                </h3>
-              </div>
-              <ul className="text-xs sm:text-sm text-stone-600 space-y-1.5 list-disc list-inside">
-                <li>শীতবস্ত্র ও ত্রাণসামগ্রী বিতরণ সমন্বয়</li>
-                <li>মেডিকেল ক্যাম্প পরিচালনা ও রোগীর শৃঙ্খলা রক্ষা</li>
-                <li>জরুরি রক্তদাতা নেটওয়ার্কে যোগাযোগ রক্ষা</li>
-                <li>ডিজিটাল ডকুমেন্টেশন ও জনসংযোগ</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Registration CTA Box */}
-          <div className="bg-[#0D5C35] text-white rounded-2xl p-6 sm:p-8 text-center space-y-3 mb-10">
-            <h2 className="text-xl sm:text-2xl font-bold">
-              {lang === 'bn' ? 'আমাদের মানবিক পরিবারে যোগ দিন' : 'Join Our Humanitarian Family'}
-            </h2>
-            <p className="text-xs sm:text-sm text-emerald-100 max-w-lg mx-auto leading-relaxed">
-              {lang === 'bn' 
-                ? 'অনলাইন ফর্মটি পূরণ করুন। আমাদের ভলান্টিয়ার কো-অর্ডিনেটর দ্রুত আপনার সাথে যোগাযোগ করবেন।' 
-                : 'Fill out the simple online form and our coordinator will reach out shortly.'}
-            </p>
-            <div className="pt-2">
+            <div className="mt-6 flex flex-wrap gap-3">
               <button
                 onClick={() => setModalOpen(true)}
-                className="px-8 py-3 rounded-xl bg-white text-[#0D5C35] hover:bg-stone-100 font-bold text-sm transition shadow-md cursor-pointer inline-flex items-center gap-2"
+                className="px-8 py-3.5 rounded-full bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs sm:text-sm shadow-xl shadow-emerald-950/20 transition cursor-pointer flex items-center gap-2"
               >
-                <Users className="w-4 h-4 text-[#0D5C35]" />
-                <span>{lang === 'bn' ? 'স্বেচ্ছাসেবক আবেদন ফর্ম পূরণ করুন' : 'Open Volunteer Form'}</span>
+                <span>{t('স্বেচ্ছাসেবক হিসেবে নিবন্ধন করুন', 'Apply as Volunteer Now')}</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
+        </section>
 
-        </div>
+        {/* Featured Image Banner */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-2 mb-12 sm:mb-16">
+          <div className="relative w-full h-64 sm:h-80 md:h-[400px] rounded-3xl overflow-hidden shadow-2xl border border-stone-200">
+            <Image
+              src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=1600&auto=format&fit=crop"
+              alt="Volunteer Humanitarian Team"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1280px) 100vw, 1280px"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/25 to-transparent" />
+            <div className="absolute bottom-6 left-6 right-6 text-white max-w-2xl">
+              <span className="text-xs font-bold uppercase tracking-wider bg-[#E53935] px-3 py-1 rounded-md inline-block mb-2 shadow-md">
+                {t('মাঠপর্যায়ের স্বেচ্ছাশ্রম', 'Frontline Action')}
+              </span>
+              <h2 className="text-lg sm:text-2xl font-black leading-snug drop-shadow-md">
+                {t('প্রকৃত অসহায় মানুষের দ্বারে দ্বারে সাহায্য পৌঁছে দেওয়াই আমাদের আনন্দ', 'Reaching the most isolated char homes through rain, river, and cold')}
+              </h2>
+            </div>
+          </div>
+        </section>
+
+        {/* 4 Specialized Volunteer Wings */}
+        <GlassSection id="volunteer-wings">
+          <SectionHeading
+            title={t('যেসব উইংয়ে কাজ করতে পারেন', 'Specialized Volunteer Wings')}
+            subtitle={t('আপনার পছন্দ ও দক্ষতার ভিত্তিতে যেকোনো উইং নির্বাচন করে কাজ শুরু করতে পারেন।', 'Choose the domain where your passion and skills can make the highest impact.')}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+            {wings.map((w, idx) => {
+              const Icon = w.icon;
+              return (
+                <div key={idx} className={`${glassCardHover} p-6 sm:p-7 flex flex-col justify-between`}>
+                  <div>
+                    <div className="flex items-center gap-3.5 mb-3">
+                      <div className={`w-12 h-12 rounded-2xl ${w.color} flex items-center justify-center font-bold shadow-xs`}>
+                        <Icon className="w-6 h-6" />
+                      </div>
+                      <h2 className="text-lg sm:text-xl font-bold text-stone-900">{t(w.titleBn, w.titleEn)}</h2>
+                    </div>
+                    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-4">{t(w.descBn, w.descEn)}</p>
+                  </div>
+
+                  <button
+                    onClick={() => setModalOpen(true)}
+                    className="text-xs font-bold text-[#0D5C35] hover:text-[#E53935] transition inline-flex items-center gap-1.5 cursor-pointer self-start"
+                  >
+                    <span>{t('এই উইংয়ে যোগ দিন', 'Join this Wing')}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </GlassSection>
+
+        {/* Volunteer Benefits */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+          <SectionHeading
+            title={t('স্বেচ্ছাসেবক হিসেবে আপনি যা পাবেন', 'What You Gain as a Volunteer')}
+            subtitle={t('মানবতার সেবা করার পাশাপাশি আপনার ব্যক্তিগত ও সামাজিক দক্ষতা বৃদ্ধি পাবে।', 'Social recognition, practical fieldwork skills, and lifelong camaraderie in service.')}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+            {benefits.map((b, idx) => (
+              <div key={idx} className={`${glassCardHover} p-6 sm:p-7 space-y-3`}>
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-[#0D5C35] flex items-center justify-center font-bold">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
+                <h2 className="text-base sm:text-lg font-bold text-stone-900">{t(b.titleBn, b.titleEn)}</h2>
+                <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">{t(b.descBn, b.descEn)}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Callout */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl bg-gradient-to-br from-[#0D5C35] via-[#094828] to-stone-950 p-6 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="space-y-2 max-w-xl text-center md:text-left">
+              <h2 className="text-xl sm:text-2xl font-black">
+                {t('আজই রৌমারী জনকল্যাণ ফাউন্ডেশনের পরিবারে যুক্ত হোন', 'Ready to Make a Real Difference in River Chars?')}
+              </h2>
+              <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed">
+                {t('একটি সহজ অনলাইন ফরম পূরণের মাধ্যমে আপনার আগ্রহ প্রকাশ করুন। আমাদের সমন্বয়ক আপনার সাথে যোগাযোগ করবেন।', 'Complete a quick online registration. Our volunteer desk will connect with you.')}
+              </p>
+            </div>
+            <button
+              onClick={() => setModalOpen(true)}
+              className="px-8 py-3.5 rounded-full bg-white text-[#0D5C35] font-bold text-xs sm:text-sm hover:bg-emerald-50 transition shadow-lg cursor-pointer shrink-0"
+            >
+              {t('অনলাইন ফরম পূরণ করুন', 'Open Application Form')}
+            </button>
+          </div>
+        </section>
       </main>
 
       <Footer 
@@ -135,6 +248,8 @@ export default function VolunteerPage() {
         onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
+
+      <BackToTop />
 
       <VolunteerModal
         isOpen={modalOpen}

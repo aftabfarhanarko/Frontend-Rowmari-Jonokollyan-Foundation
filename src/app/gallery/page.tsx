@@ -2,15 +2,24 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Calendar, 
-  X
+  MapPin, 
+  X, 
+  Sparkles, 
+  ShieldCheck, 
+  Eye, 
+  Heart,
+  ArrowRight
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
+import BackToTop from '@/components/BackToTop';
 import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
+import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { GALLERY_ITEMS } from '@/data/mockData';
 import { Language } from '@/types';
 
@@ -21,13 +30,15 @@ export default function GalleryPage() {
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
 
+  const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
+
   const tags = [
-    { key: 'all', labelBn: 'সব', labelEn: 'All' },
-    { key: 'winter', labelBn: 'শীতবস্ত্র', labelEn: 'Winter' },
-    { key: 'medical', labelBn: 'ক্যাম্প', labelEn: 'Camp' },
-    { key: 'blood', labelBn: 'রক্তদান', labelEn: 'Blood' },
-    { key: 'education', labelBn: 'শিক্ষা', labelEn: 'Education' },
-    { key: 'flood', labelBn: 'ত্রাণ', labelEn: 'Relief' },
+    { key: 'all', labelBn: 'সকল স্থিরচিত্র', labelEn: 'All Photos' },
+    { key: 'winter', labelBn: 'শীতবস্ত্র বিতরণ', labelEn: 'Winter Relief' },
+    { key: 'medical', labelBn: 'ফ্রি মেডিকেল ক্যাম্প', labelEn: 'Medical Camps' },
+    { key: 'blood', labelBn: 'জরুরি রক্তদান', labelEn: 'Blood Drives' },
+    { key: 'education', labelBn: 'শিক্ষা উপবৃত্তি', labelEn: 'Char Education' },
+    { key: 'flood', labelBn: 'বন্যা ও ত্রাণ পুনর্বাসন', labelEn: 'Flood Relief' },
   ];
 
   const filteredItems = selectedTag === 'all'
@@ -35,153 +46,197 @@ export default function GalleryPage() {
     : GALLERY_ITEMS.filter(item => item.category === selectedTag);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-[#1E293B]">
+    <div className="min-h-screen flex flex-col bg-[#FAFBF9] text-[#1E293B]">
       <Navbar 
         lang={lang} 
         onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} 
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
-      <main className="flex-1 pb-24 sm:pb-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          
-          {/* Header Title Matching Wireframe */}
-          <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#E53935] tracking-tight mb-2">
-              {lang === 'bn' ? 'গ্যালারি' : 'Gallery'}
-            </h1>
-            <p className="text-sm sm:text-base text-stone-500 font-medium">
-              {lang === 'bn'
-                ? 'রৌমারী জনকল্যাণ ফাউন্ডেশনের মাঠপর্যায়ের বাস্তব স্থিরচিত্র ও কার্যক্রম'
-                : 'Real photographic archives of humanitarian relief operations in Rowmari'}
-            </p>
+      <main className="flex-1 pb-20 sm:pb-24">
+        {/* Header Hero Banner */}
+        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-emerald-50/50 via-white to-[#FAFBF9]">
+          <div aria-hidden className="pointer-events-none absolute inset-0">
+            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl" />
+            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
           </div>
 
-          {/* Filter Pills Matching Wireframe */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 no-scrollbar">
-            {tags.map((t) => (
-              <button
-                key={t.key}
-                onClick={() => setSelectedTag(t.key)}
-                className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
-                  selectedTag === t.key
-                    ? 'bg-[#0D5C35] text-white shadow-sm'
-                    : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
-                }`}
-              >
-                {lang === 'bn' ? t.labelBn : t.labelEn}
-              </button>
-            ))}
-          </div>
-
-          {/* Gallery Grid Matching Wireframe (2-Col / 3-Col Photographic layout) */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {filteredItems.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => setPreviewItem(item)}
-                className="group relative aspect-4/5 sm:aspect-square bg-stone-100 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 cursor-pointer border border-stone-200/80"
-              >
-                <Image
-                  src={item.imageUrl || 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800&auto=format&fit=crop'}
-                  alt={lang === 'bn' ? item.titleBn : item.titleEn}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                />
-                
-                {/* Gradient overlay for readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
-
-                {/* Tag Badge */}
-                <div className="absolute top-2.5 left-2.5 z-10">
-                  <span className="bg-[#E53935] text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
-                    {lang === 'bn' ? item.tagBn : item.tagEn}
-                  </span>
-                </div>
-
-                {/* Bottom title info */}
-                <div className="absolute bottom-2.5 left-2.5 right-2.5 text-white z-10">
-                  <h3 className="text-xs sm:text-sm font-bold line-clamp-2 leading-tight drop-shadow-xs">
-                    {lang === 'bn' ? item.titleBn : item.titleEn}
-                  </h3>
-                  <p className="text-[10px] text-stone-300 mt-1 flex items-center gap-1">
-                    <Calendar className="w-2.5 h-2.5 text-red-200" />
-                    <span>{lang === 'bn' ? item.dateBn : item.dateEn}</span>
-                  </p>
-                </div>
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div 
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="max-w-3xl"
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0D5C35] text-xs font-bold mb-3 shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-[#0D5C35]" />
+                <span>{t('মাঠপর্যায়ের মানবিক কার্যক্রমের বাস্তব ফটো আর্কাইভ', 'Verified Real Fieldwork Photographic Archive')}</span>
               </div>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
+                {t('রৌমারী ও চরাঞ্চলের বাস্তব চিত্র গ্যালারি', 'Humanitarian Action Across Rowmari')}
+              </h1>
+              <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed font-normal">
+                {t(
+                  'কনকনে শীতে ব্রহ্মপুত্র চরে কম্বল বিতরণ থেকে শুরু করে মেডিকেল ক্যাম্প, বন্যা ত্রাণ ও শিক্ষার্থীদের বই বিতরণ—আমাদের মাঠপর্যায়ের কার্যক্রমের প্রামাণ্য চিত্র।',
+                  'High-resolution field photographs documenting winter warmth drives, free doctor clinics, river island flood rescue, and children education scholarships.'
+                )}
+              </p>
+            </motion.div>
+
+            {/* Filter Pills */}
+            <div className="flex flex-wrap items-center gap-2 mt-8 pt-4 border-t border-stone-200/80">
+              {tags.map((tag) => (
+                <button
+                  key={tag.key}
+                  onClick={() => setSelectedTag(tag.key)}
+                  className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                    selectedTag === tag.key
+                      ? 'bg-[#0D5C35] text-white shadow-md'
+                      : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
+                  }`}
+                >
+                  {t(tag.labelBn, tag.labelEn)}
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Gallery Grid */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+          <div className="flex items-center justify-between text-xs sm:text-sm text-stone-500 mb-6 font-medium">
+            <span>{t(`${filteredItems.length} টি স্থিরচিত্র সংরক্ষিত`, `${filteredItems.length} photos in archive`)}</span>
+            <div className="flex items-center gap-1.5 text-[#0D5C35] font-bold">
+              <ShieldCheck className="w-4 h-4" />
+              <span>{t('শতভাগ প্রকৃত মাঠপর্যায়ের ছবি', 'Authentic On-site Documentation')}</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            {filteredItems.map((item, idx) => (
+              <motion.div
+                key={item.id}
+                layout
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: idx * 0.04 }}
+                onClick={() => setPreviewItem(item)}
+                className={`${glassCardHover} overflow-hidden cursor-pointer group flex flex-col justify-between`}
+              >
+                <div className="relative w-full h-64 sm:h-72 overflow-hidden bg-stone-100">
+                  <Image
+                    src={item.imageUrl || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80'}
+                    alt={t(item.titleBn, item.titleEn)}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-108 transition-transform duration-500 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-transparent" />
+                  
+                  {/* Category chip */}
+                  <div className="absolute top-3 left-3 z-10">
+                    <span className="px-2.5 py-1 rounded-md text-[11px] font-bold text-white bg-[#0D5C35] shadow-md backdrop-blur-md">
+                      {item.category === 'winter' ? t('শীতবস্ত্র', 'Winter') :
+                       item.category === 'medical' ? t('চিকিৎসা', 'Medical') :
+                       item.category === 'education' ? t('শিক্ষা', 'Education') :
+                       item.category === 'blood' ? t('রক্তদান', 'Blood') : t('ত্রাণ', 'Relief')}
+                    </span>
+                  </div>
+
+                  {/* Hover view overlay icon */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                    <span className="p-3 rounded-full bg-white/25 backdrop-blur-md border border-white/40 text-white shadow-xl">
+                      <Eye className="w-6 h-6" />
+                    </span>
+                  </div>
+
+                  {/* Bottom title and location */}
+                  <div className="absolute bottom-4 left-4 right-4 text-white z-10 space-y-1">
+                    <div className="flex items-center justify-between text-xs text-stone-200">
+                      <span className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/20">
+                        <MapPin className="w-3 h-3 text-emerald-400 shrink-0" />
+                        <span className="truncate max-w-[140px]">{t(item.locationBn || 'রৌমারী, কুড়িগ্রাম', item.locationEn || 'Rowmari, Kurigram')}</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/20">
+                        <Calendar className="w-3 h-3 text-white/80 shrink-0" />
+                        <span>{t(item.dateBn, item.dateEn)}</span>
+                      </span>
+                    </div>
+
+                    <h2 className="text-base font-bold text-white leading-snug drop-shadow-md">
+                      {t(item.titleBn, item.titleEn)}
+                    </h2>
+                  </div>
+                </div>
+              </motion.div>
             ))}
           </div>
-
-          {/* Privacy Footnote Matching Wireframe Screenshot */}
-          <div className="mt-10 text-center">
-            <p className="text-xs text-stone-500 font-medium">
-              {lang === 'bn' 
-                ? 'রোগীর পরিচয় বা স্বাস্থ্যতথ্য প্রকাশ করা হয় না।' 
-                : 'Beneficiary identity and confidential health details are strictly protected.'}
-            </p>
-          </div>
-
-        </div>
+        </section>
       </main>
 
-      {/* Lightbox Modal */}
-      {previewItem && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs"
-          onClick={() => setPreviewItem(null)}
-        >
-          <div
-            className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-stone-200 text-center relative overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setPreviewItem(null)}
-              className="absolute top-3 right-3 p-1.5 rounded-full bg-stone-100 text-stone-600 hover:bg-stone-200 transition cursor-pointer z-10"
-              aria-label="Close"
+      {/* Lightbox Photo Preview Modal */}
+      <AnimatePresence>
+        {previewItem && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative w-full max-w-3xl bg-stone-950 text-white rounded-3xl overflow-hidden shadow-2xl border border-white/20 max-h-[90vh] flex flex-col"
             >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="relative aspect-16/10 rounded-xl overflow-hidden mb-4 bg-stone-100">
-              <Image
-                src={previewItem.imageUrl || 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800&auto=format&fit=crop'}
-                alt={lang === 'bn' ? previewItem.titleBn : previewItem.titleEn}
-                fill
-                className="object-cover"
-              />
-            </div>
-
-            <div className="inline-block bg-[#E53935] text-white text-xs font-bold px-2.5 py-0.5 rounded mb-2">
-              {lang === 'bn' ? previewItem.tagBn : previewItem.tagEn}
-            </div>
-
-            <h3 className="text-lg font-bold text-stone-900 mb-2">
-              {lang === 'bn' ? previewItem.titleBn : previewItem.titleEn}
-            </h3>
-
-            <p className="text-xs text-stone-400 mb-4 flex items-center justify-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-stone-400" />
-              <span>{lang === 'bn' ? previewItem.dateBn : previewItem.dateEn}</span>
-            </p>
-
-            <div className="pt-2 flex gap-3">
               <button
-                onClick={() => {
-                  setPreviewItem(null);
-                  setDonationModalOpen(true);
-                }}
-                className="w-full py-2.5 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs transition cursor-pointer"
+                onClick={() => setPreviewItem(null)}
+                className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center backdrop-blur-md transition cursor-pointer border border-white/20"
               >
-                {lang === 'bn' ? 'অনুদান দিন' : 'Donate'}
+                <X className="w-5 h-5" />
               </button>
-            </div>
+
+              <div className="relative w-full h-80 sm:h-96 md:h-[450px]">
+                <Image
+                  src={previewItem.imageUrl || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80'}
+                  alt={t(previewItem.titleBn, previewItem.titleEn)}
+                  fill
+                  className="object-contain"
+                />
+              </div>
+
+              <div className="p-6 bg-stone-900 space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-stone-400">
+                  <span className="px-2.5 py-1 rounded bg-[#0D5C35] text-white font-bold">
+                    {t(previewItem.locationBn || 'রৌমারী, কুড়িগ্রাম', previewItem.locationEn || 'Rowmari, Kurigram')}
+                  </span>
+                  <span>{t(previewItem.dateBn, previewItem.dateEn)}</span>
+                </div>
+
+                <h2 className="text-lg sm:text-xl font-bold text-white">
+                  {t(previewItem.titleBn, previewItem.titleEn)}
+                </h2>
+
+                <div className="flex flex-wrap gap-3 pt-2">
+                  <button
+                    onClick={() => {
+                      setPreviewItem(null);
+                      setDonationModalOpen(true);
+                    }}
+                    className="flex-1 py-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center"
+                  >
+                    {t('অনুরূপ কার্যক্রমে অনুদান দিন', 'Support Similar Relief Work')}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setPreviewItem(null);
+                      setAssistanceModalOpen(true);
+                    }}
+                    className="flex-1 py-3 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center border border-white/25"
+                  >
+                    {t('সহায়তার আবেদন করুন', 'Request Help in this Area')}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
 
       <Footer 
         lang={lang} 
@@ -194,6 +249,8 @@ export default function GalleryPage() {
         onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
+
+      <BackToTop />
 
       <AssistanceModal
         isOpen={assistanceModalOpen}

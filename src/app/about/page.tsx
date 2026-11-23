@@ -2,15 +2,27 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { 
   Target, 
-  Eye
+  Eye, 
+  ShieldCheck, 
+  Users, 
+  HeartHandshake, 
+  Award, 
+  Clock, 
+  CheckCircle2, 
+  ArrowRight,
+  FileCheck
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
+import BackToTop from '@/components/BackToTop';
 import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
+import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { Language } from '@/types';
 
 export default function AboutPage() {
@@ -18,204 +30,392 @@ export default function AboutPage() {
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
 
+  const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
+
   const milestones = [
     {
       yearBn: '২০১৮',
       yearEn: '2018',
-      titleBn: 'ফাউন্ডেশন প্রতিষ্ঠা',
-      titleEn: 'Foundation Established',
-      descBn: 'রৌমারীর একদল তরুণ ও সমাজসেবীদের উদ্যোগে দুর্গম চরাঞ্চলের শীতার্ত ও বন্যাপীড়িত মানুষের সেবায় আত্মপ্রকাশ।',
-      descEn: 'Initiated by committed local youths to serve flood-hit and winter-affected river island char families in Rowmari.',
+      titleBn: 'ফাউন্ডেশন প্রতিষ্ঠা ও প্রথম শীতবস্ত্র মিশন',
+      titleEn: 'Foundation Established & First Winter Relief',
+      descBn: 'রৌমারীর একদল তরুণ ও সমাজসেবীদের উদ্যোগে দুর্গম চরাঞ্চলের শীতার্ত ও বন্যাপীড়িত মানুষের সেবায় আত্মপ্রকাশ। ৫০০ কম্বল ও জরুরি খাদ্য বিতরণের মাধ্যমে শুরু।',
+      descEn: 'Initiated by committed local youth to serve flood-hit and winter-affected river island char families in Rowmari with 500 blankets and dry rations.',
       theme: 'green',
     },
     {
       yearBn: '২০২০',
       yearEn: '2020',
-      titleBn: 'জরুরি রক্তদাতা নেটওয়ার্ক ও করোনা সহায়তা',
+      titleBn: 'জরুরি রক্তদাতা নেটওয়ার্ক ও করোনা মহামারী সহায়তা',
       titleEn: 'Emergency Blood Network & Pandemic Relief',
-      descBn: 'রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্সের রোগীদের জন্য সার্বক্ষণিক ব্লাড ডোনার গ্রুপ ও মহামারীকালীন জরুরি খাদ্য কর্মসূচি চালু।',
-      descEn: 'Established 24/7 volunteer blood donor network and dispatched emergency pandemic rations.',
+      descBn: 'রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্সের রোগীদের জন্য সার্বক্ষণিক ব্লাড ডোনার গ্রুপ গঠন এবং লকডাউনে কর্মহীন দিনমজুর পরিবারে জরুরি খাদ্য সহায়তা প্রদান।',
+      descEn: 'Established 24/7 volunteer blood donor network for Rowmari Upazila Health Complex and dispatched emergency pandemic food packs to daily wage earners.',
       theme: 'red',
     },
     {
-      yearBn: '২০২৩',
-      yearEn: '2023',
-      titleBn: 'বিনামূল্যে স্বাস্থ্য ও চক্ষু ক্যাম্প বিস্তার',
-      titleEn: 'Free Eye & Healthcare Camp Expansion',
-      descBn: 'বিশেষজ্ঞ চিকিৎসকদের নিয়ে বিনামূল্যে ভ্রাম্যমাণ স্বাস্থ্য ক্যাম্প ও নিয়মিত শিক্ষাবৃত্তি কার্যক্রম প্রাতিষ্ঠানিক রূপ লাভ করে।',
-      descEn: 'Institutionalized mobile healthcare camps, doctor consultations, and annual student scholarships.',
+      yearBn: '২০২২',
+      yearEn: '2022',
+      titleBn: 'বন্যা পুনর্বাসন ও নিরাপদ পানি প্রকল্প',
+      titleEn: 'Flood Rehabilitation & Safe Water Project',
+      descBn: 'ব্রহ্মপুত্রের তীব্র বন্যায় দুর্গত চরাঞ্চলে উদ্ধার অভিযান, ভাসমান মেডিকেল ক্যাম্প পরিচালনা এবং ২০টি গভীর নলকূপ স্থাপন।',
+      descEn: 'Rescued stranded families during Brahmaputra flash floods, ran boat-based medical relief camps, and installed 20 deep tube-wells in remote chars.',
       theme: 'green',
+    },
+    {
+      yearBn: '২০২৪',
+      yearEn: '2024',
+      titleBn: 'বিনামূল্যে স্বাস্থ্যসেবা ও শিক্ষাবৃত্তি বিস্তার',
+      titleEn: 'Free Eye & Healthcare Camps & Char Education',
+      descBn: 'বিশেষজ্ঞ চিকিৎসকদের নিয়ে বিনামূল্যে ভ্রাম্যমাণ স্বাস্থ্য ও চক্ষু ক্যাম্প এবং চরাঞ্চলের দরিদ্র শিক্ষার্থীদের নিয়মিত শিক্ষাবৃত্তি কর্মসূচি প্রাতিষ্ঠানিক রূপ লাভ করে।',
+      descEn: 'Institutionalized mobile healthcare and eye camps with specialist doctors, alongside monthly academic stipends and school kits for char children.',
+      theme: 'red',
     },
     {
       yearBn: 'আজ (২০২৬)',
       yearEn: 'Today (2026)',
-      titleBn: 'বর্তমান কার্যক্রম ও আধুনিক ডিজিটাল ব্যবস্থাপনা',
-      titleEn: 'Current Operations & Digital Management',
-      descBn: 'স্বচ্ছতা, স্বয়ংক্রিয় ট্র্যাকিং, নিরাপদ অনুদান এবং আধুনিক ডিজিটাল ব্যবস্থার মাধ্যমে সেবার মান ও বিস্তার বৃদ্ধি।',
-      descEn: 'Advancing with transparent digital tracking, verified donation receipts, and scalable service delivery.',
-      theme: 'red',
+      titleBn: 'আধুনিক ডিজিটাল প্ল্যাটফর্ম ও শতভাগ জবাবদিহিতা',
+      titleEn: 'Digital Governance & 100% Transparent Relief',
+      descBn: 'স্বয়ংক্রিয় অনলাইন আবেদন, রিয়েল-টাইম ট্র্যাকিং, নিরাপদ অনুদান এবং আধুনিক ডিজিটাল ব্যবস্থার মাধ্যমে সেবার মান ও বিস্তার উত্তরোত্তর বৃদ্ধি।',
+      descEn: 'Scaling humanitarian reach through digital application tracking, transparent financial reporting, and audited direct community delivery.',
+      theme: 'green',
     },
   ];
 
+  const pillars = [
+    {
+      icon: ShieldCheck,
+      titleBn: 'শতভাগ স্বচ্ছতা ও হিসাব',
+      titleEn: '100% Verified Transparency',
+      descBn: 'অনুদানের প্রতিটি টাকার হিসাব ও ব্যয়ের রসিদ উন্মুক্ত। যে কেউ নিরীক্ষা প্রতিবেদন দেখে নিতে পারেন।',
+      descEn: 'Open financial accounts with itemized expenditure reports and digital donor receipts.',
+    },
+    {
+      icon: Users,
+      titleBn: 'স্থানীয় নিবেদিত নেতৃত্ব',
+      titleEn: 'Local Grassroots Leadership',
+      descBn: 'রৌমারীর স্থানীয় বাসিন্দা ও যুবসমাজ সরাসরি চরে গিয়ে সরেজমিনে যাচাই করে সহায়তা প্রদান করে।',
+      descEn: 'Rowmari locals and active youths conducting physical on-site verifications across remote chars.',
+    },
+    {
+      icon: HeartHandshake,
+      titleBn: 'দলমত নির্বিশেষে সেবা',
+      titleEn: 'Neutral & Universal Aid',
+      descBn: 'ধর্ম, বর্ণ, রাজনৈতিক মতাদর্শ নির্বিশেষে শুধুমাত্র প্রকৃত অসহায়ত্বের ভিত্তিতে সহায়তা পৌঁছানো হয়।',
+      descEn: 'Strictly humanitarian criteria prioritizing solely vulnerability and medical emergency.',
+    },
+    {
+      icon: Clock,
+      titleBn: '২৪/৭ দ্রুত সাড়া প্রদান',
+      titleEn: '24/7 Rapid Emergency Response',
+      descBn: 'মুহূর্তের প্রয়োজনে রক্তের ব্যবস্থা এবং আকস্মিক দুর্যোগে দুর্গম চরে স্পিডবোট ও ট্রলারযোগে ত্রাণ পৌঁছে দেওয়া।',
+      descEn: 'Swift volunteer mobilization with emergency blood supplies and boat relief missions during floods.',
+    },
+  ];
+
+  const stats = [
+    { valueBn: '১২,৫০০+', valueEn: '12,500+', labelBn: 'সহায়তাপ্রাপ্ত মানুষ', labelEn: 'People Supported' },
+    { valueBn: '১,২০০+', valueEn: '1,200+', labelBn: 'নিবন্ধিত রক্তদাতা', labelEn: 'Registered Donors' },
+    { valueBn: '৮+ বছর', valueEn: '8+ Years', labelBn: 'মাঠপর্যায়ে সেবা', labelEn: 'Field Service' },
+    { valueBn: '১০০%', valueEn: '100%', labelBn: 'সরাসরি চরে বিতরণ', labelEn: 'Direct Char Delivery' },
+  ];
+
   return (
-    <div className="min-h-screen flex flex-col bg-white text-[#1E293B]">
+    <div className="min-h-screen flex flex-col bg-[#FAFBF9] text-[#1E293B]">
       <Navbar 
         lang={lang} 
         onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} 
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
-      <main className="flex-1 pb-24 sm:pb-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          
-          {/* Header Title Matching Wireframe */}
-          <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#E53935] tracking-tight mb-2">
-              {lang === 'bn' ? 'আমাদের কথা' : 'About Us'}
-            </h1>
-            <p className="text-sm sm:text-base text-stone-500 font-medium">
-              {lang === 'bn' 
-                ? '২০১৮ সালে রৌমারী, কুড়িগ্রামে প্রতিষ্ঠিত। [অনুমোদিত ইতিহাস]' 
-                : 'Established in 2018 at Rowmari, Kurigram. [Verified History]'}
-            </p>
+      <main className="flex-1 pb-20 sm:pb-24">
+        {/* Hero Section with Ambient Gradient Orbs */}
+        <section className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16 bg-gradient-to-b from-emerald-50/50 via-white to-[#FAFBF9]">
+          <div aria-hidden className="pointer-events-none absolute inset-0">
+            <div className="absolute -top-20 -left-20 h-72 w-72 rounded-full bg-emerald-300/30 blur-3xl" />
+            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
           </div>
 
-          {/* Featured Field Image Matching Wireframe [প্রচ্ছদ ছবি] */}
-          <div className="relative w-full aspect-16/9 sm:aspect-21/9 rounded-2xl overflow-hidden shadow-md border border-stone-200 mb-12">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div 
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="max-w-3xl"
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/80 border border-emerald-300/50 text-[#0D5C35] text-xs font-bold mb-3 shadow-2xs">
+                <Award className="w-3.5 h-3.5 text-[#0D5C35]" />
+                <span>{t('স্থাপিত ২০১৮ • রৌমারী, কুড়িগ্রাম • সামাজিক অলাভজনক সংস্থা', 'Est. 2018 • Rowmari, Kurigram • Non-Profit Organization')}</span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
+                {t('মানুষের পাশে, মানুষের জন্য—আমাদের অঙ্গীকার', 'Standing by People, For Humanity')}
+              </h1>
+              <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed font-normal">
+                {t(
+                  'রৌমারী জনকল্যাণ ফাউন্ডেশন (RJF) কুড়িগ্রামের দুর্গম ব্রহ্মপুত্র চরাঞ্চলের সুবিধাবঞ্চিত, শীতার্ত, দরিদ্র ও মুমূর্ষু মানুষের পাশে নিঃস্বার্থভাবে কাজ করে যাওয়া একটি স্থানীয় মানবিক সংগঠন।',
+                  'Rowmari Janakalyan Foundation is a verified grassroots humanitarian foundation dedicated to uplifting vulnerable river-island char communities of Kurigram through winter warmth, emergency blood, healthcare, and education.'
+                )}
+              </p>
+            </motion.div>
+
+            {/* Impact Metric Strip */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-8 sm:mt-10"
+            >
+              {stats.map((s, idx) => (
+                <div key={idx} className={`${glassCard} p-4 sm:p-5 text-center`}>
+                  <div className="text-2xl sm:text-3xl font-black text-[#0D5C35] mb-1">{t(s.valueBn, s.valueEn)}</div>
+                  <div className="text-xs sm:text-sm font-semibold text-stone-600">{t(s.labelBn, s.labelEn)}</div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Featured Real Field Image Showcase */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-2 mb-14 sm:mb-20">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.98 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative w-full h-64 sm:h-80 md:h-[440px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-stone-200/90"
+          >
             <Image
-              src="https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1400&auto=format&fit=crop"
-              alt={lang === 'bn' ? 'রৌমারী জনকল্যাণ ফাউন্ডেশন মাঠপর্যায়ের কার্যক্রম' : 'RJF Field Humanitarian Work'}
+              src="https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1600&auto=format&fit=crop"
+              alt={t('রৌমারী জনকল্যাণ ফাউন্ডেশন মাঠপর্যায়ের কার্যক্রম', 'RJF Field Humanitarian Work')}
               fill
               className="object-cover"
               priority
-              sizes="(max-width: 1024px) 100vw, 896px"
+              sizes="(max-width: 1280px) 100vw, 1280px"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4 text-white">
-              <span className="text-xs sm:text-sm font-semibold bg-[#0D5C35] px-3 py-1 rounded-md inline-block mb-1 shadow-sm">
-                {lang === 'bn' ? 'রৌমারীর চরাঞ্চলে মানুষের পাশে' : 'Serving Remote River Island Communities'}
+            <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/25 to-transparent" />
+            <div className="absolute bottom-5 left-5 right-5 sm:bottom-8 sm:left-8 text-white max-w-2xl">
+              <span className="text-xs font-bold uppercase tracking-wider bg-[#E53935] px-3 py-1 rounded-md inline-block mb-2 shadow-md">
+                {t('মাঠপর্যায়ের বাস্তব চিত্র', 'Live Fieldwork')}
               </span>
-              <p className="text-xs text-white/90 hidden sm:block">
-                {lang === 'bn' 
-                  ? 'শীতবস্ত্র, জরুরি চিকিৎসা, খাদ্য এবং দুর্যোগকালীন মানবিক সহায়তায় নিবেদিতপ্রাণ স্বেচ্ছাসেবক দল।' 
-                  : 'Dedicated volunteers delivering winter aid, medical care, and disaster relief.'}
+              <h2 className="text-lg sm:text-2xl font-black leading-snug drop-shadow-md">
+                {t('চরাঞ্চলের প্রতিটি বাড়িতে সরাসরি গিয়ে যাচাই ও অনুদান বিতরণ', 'Direct door-to-door verification and relief delivery in isolated chars')}
+              </h2>
+              <p className="text-xs sm:text-sm text-stone-200 mt-1 hidden sm:block drop-shadow-xs">
+                {t('কনকনে শীতে কম্বল বিতরণ থেকে শুরু করে মুমূর্ষু রোগীর রক্তের ব্যবস্থা—সবকিছুতেই আমাদের স্বেচ্ছাসেবকরা নিয়োজিত।', 'From winter blanket relief to emergency blood donor dispatch, our volunteer force stands with the marginalized.')}
               </p>
             </div>
+          </motion.div>
+        </section>
+
+        {/* Mission & Vision Section */}
+        <GlassSection id="mission-vision">
+          <SectionHeading
+            title={t('আমাদের লক্ষ্য ও রূপকল্প', 'Mission & Vision')}
+            subtitle={t('টেকসই মানবিক উন্নয়ন এবং সমতাভিত্তিক সমাজ বিনির্মাণই আমাদের মূল প্রেরণা।', 'Driving sustainable community resilience and empathetic social welfare.')}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+            <motion.div 
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.2 }}
+              className={`${glassCard} p-6 sm:p-8 border-t-4 border-t-[#0D5C35] flex flex-col justify-between`}
+            >
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-[#0D5C35] flex items-center justify-center mb-5 shadow-xs">
+                  <Target className="w-6 h-6 text-[#0D5C35]" />
+                </div>
+                <h3 className="text-xl font-bold text-stone-900 mb-3">{t('আমাদের লক্ষ্য (Mission)', 'Our Mission')}</h3>
+                <p className="text-sm sm:text-base text-stone-600 leading-relaxed">
+                  {t(
+                    'কুড়িগ্রামের রৌমারী ও দুর্গম চরাঞ্চলের অসহায়, শীতার্ত ও প্রান্তিক জনগোষ্ঠীর মাঝে জরুরি মানবিক সহায়তা, বিনামূল্যে স্বাস্থ্যসেবা, মুমূর্ষু রোগীর জন্য রক্তদান এবং দরিদ্র শিক্ষার্থীদের শিক্ষাবৃত্তি পৌঁছে দিয়ে তাদের জীবনমানের টেকসই উন্নয়ন নিশ্চিত করা।',
+                    'Providing emergency humanitarian relief, free medical care, volunteer blood donor networking, and educational scholarships to uplift marginalized families in flood-prone river island chars of Rowmari.'
+                  )}
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-stone-200/60 flex items-center gap-2 text-xs font-bold text-[#0D5C35]">
+                <CheckCircle2 className="w-4 h-4 text-[#0D5C35]" />
+                <span>{t('জরুরি ত্রাণ ও দীর্ঘমেয়াদী পুনর্বাসন', 'Emergency relief & long-term rehabilitation')}</span>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.2 }}
+              className={`${glassCard} p-6 sm:p-8 border-t-4 border-t-[#E53935] flex flex-col justify-between`}
+            >
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-red-100 text-[#E53935] flex items-center justify-center mb-5 shadow-xs">
+                  <Eye className="w-6 h-6 text-[#E53935]" />
+                </div>
+                <h3 className="text-xl font-bold text-stone-900 mb-3">{t('আমাদের রূপকল্প (Vision)', 'Our Vision')}</h3>
+                <p className="text-sm sm:text-base text-stone-600 leading-relaxed">
+                  {t(
+                    'এমন একটি মানবিক ও সমতাভিত্তিক সমাজ বিনির্মাণ, যেখানে অর্থের অভাবে কোনো রোগী বিনা চিকিৎসায় মারা যাবে না, কোনো পরিবার শীতে কষ্ট পাবে না এবং দারিদ্র্যের কারণে কোনো মেধাবী শিশুর পড়াশোনা বন্ধ হবে না।',
+                    'Envisioning a compassionate and resilient society where no human suffers untreated illness for lack of money, no char family suffers in the freezing cold, and no talented child drops out of school due to poverty.'
+                  )}
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-stone-200/60 flex items-center gap-2 text-xs font-bold text-[#E53935]">
+                <CheckCircle2 className="w-4 h-4 text-[#E53935]" />
+                <span>{t('মর্যাদাপূর্ণ ও আত্মনির্ভরশীল জীবন', 'Dignified & self-reliant life for all')}</span>
+              </div>
+            </motion.div>
           </div>
+        </GlassSection>
 
-          {/* Section: লক্ষ্য ও ভিশন */}
-          <section className="mb-14">
-            <h2 className="text-2xl font-bold text-[#E53935] tracking-tight mb-5">
-              {lang === 'bn' ? 'লক্ষ্য ও ভিশন' : 'Mission & Vision'}
-            </h2>
-            <div className="space-y-4">
-              {/* Mission Card: Green top border */}
-              <div className="bg-white p-6 sm:p-7 rounded-2xl border border-stone-200 border-t-4 border-t-[#0D5C35] shadow-xs">
-                <div className="flex items-center gap-2 mb-2">
-                  <Target className="w-5 h-5 text-[#0D5C35]" />
-                  <h3 className="text-lg font-bold text-stone-900">
-                    {lang === 'bn' ? 'লক্ষ্য' : 'Mission'}
-                  </h3>
-                </div>
-                <p className="text-sm text-stone-600 leading-relaxed">
-                  {lang === 'bn'
-                    ? 'কুড়িগ্রামের রৌমারী ও দুর্গম চরাঞ্চলের অসহায়, শীতার্ত ও প্রান্তিক জনগোষ্ঠীর মাঝে জরুরি মানবিক সহায়তা, বিনামূল্যে স্বাস্থ্যসেবা ও শিক্ষাবৃত্তি পৌঁছে দিয়ে তাদের জীবনমানের টেকসই উন্নয়ন নিশ্চিত করা।'
-                    : 'Providing emergency humanitarian relief, free medical care, and educational scholarships to uplift marginalized families in flood-prone river island chars of Rowmari.'}
-                </p>
-              </div>
+        {/* 4 Core Pillars */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+          <SectionHeading
+            title={t('আমাদের মূল স্তম্ভ ও মূল্যবোধ', 'Our Core Pillars & Values')}
+            subtitle={t('যেকোনো কাজ পরিচালনার ক্ষেত্রে আমরা এই চারটি নীতি কঠোরভাবে অনুসরণ করি।', 'The fundamental principles guiding every single relief operation we conduct.')}
+          />
 
-              {/* Vision Card: Red top border */}
-              <div className="bg-white p-6 sm:p-7 rounded-2xl border border-stone-200 border-t-4 border-t-[#E53935] shadow-xs">
-                <div className="flex items-center gap-2 mb-2">
-                  <Eye className="w-5 h-5 text-[#E53935]" />
-                  <h3 className="text-lg font-bold text-stone-900">
-                    {lang === 'bn' ? 'ভিশন' : 'Vision'}
-                  </h3>
-                </div>
-                <p className="text-sm text-stone-600 leading-relaxed">
-                  {lang === 'bn'
-                    ? 'এমন একটি সমতাভিত্তিক সমাজ বিনির্মাণ, যেখানে দারিদ্র্যের কারণে কোনো মানুষ বিনা চিকিৎসায় মারা যাবে না, শীতে কষ্ট পাবে না এবং শিক্ষার আলো থেকে কোনো শিশু বঞ্চিত থাকবে না।'
-                    : 'A compassionate and resilient society where no human suffers untreated illness, freezing cold, or hunger, and no child is denied the light of education.'}
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Section: পথচলা (Milestones) */}
-          <section className="mb-14">
-            <h2 className="text-2xl font-bold text-[#E53935] tracking-tight mb-5">
-              {lang === 'bn' ? 'পথচলা' : 'Our Journey'}
-            </h2>
-            <div className="space-y-4">
-              {milestones.map((m, idx) => {
-                const isGreen = m.theme === 'green';
-                return (
-                  <div
-                    key={idx}
-                    className={`bg-white p-6 rounded-2xl border border-stone-200 shadow-xs transition hover:shadow-md ${
-                      isGreen ? 'border-t-4 border-t-[#0D5C35]' : 'border-t-4 border-t-[#E53935]'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className={`px-2.5 py-0.5 rounded text-xs font-bold font-mono ${
-                        isGreen ? 'bg-emerald-50 text-[#0D5C35]' : 'bg-red-50 text-[#E53935]'
-                      }`}>
-                        {lang === 'bn' ? m.yearBn : m.yearEn}
-                      </span>
-                      <h3 className="text-base font-bold text-stone-900">
-                        {lang === 'bn' ? m.titleBn : m.titleEn}
-                      </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {pillars.map((p, idx) => {
+              const Icon = p.icon;
+              return (
+                <div key={idx} className={`${glassCardHover} p-5 sm:p-6 flex flex-col justify-between`}>
+                  <div>
+                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#0D5C35] to-emerald-600 text-white flex items-center justify-center mb-4 shadow-md shadow-emerald-900/20">
+                      <Icon className="w-5 h-5" />
                     </div>
-                    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed pl-1">
-                      {lang === 'bn' ? m.descBn : m.descEn}
-                    </p>
+                    <h3 className="text-base font-bold text-stone-900 mb-2">{t(p.titleBn, p.titleEn)}</h3>
+                    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">{t(p.descBn, p.descEn)}</p>
                   </div>
-                );
-              })}
-            </div>
-          </section>
+                </div>
+              );
+            })}
+          </div>
+        </section>
 
-          {/* Call to action boxes */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-            <div className="p-6 rounded-2xl bg-[#0D5C35] text-white flex flex-col justify-between">
-              <div>
-                <h3 className="text-lg font-bold mb-2">
-                  {lang === 'bn' ? 'সহায়তা প্রয়োজন?' : 'Need Assistance?'}
-                </h3>
-                <p className="text-xs text-emerald-100/90 leading-relaxed mb-4">
-                  {lang === 'bn' 
-                    ? 'চিকিৎসা, শীতবস্ত্র, খাদ্য বা জরুরি রক্তের জন্য অনলাইনে সরাসরি আবেদন করুন।'
-                    : 'Submit an online assistance application for medical, winter, or food aid.'}
-                </p>
-              </div>
-              <button
-                onClick={() => setAssistanceModalOpen(true)}
-                className="w-full py-2.5 rounded-xl bg-white text-[#0D5C35] font-bold text-xs sm:text-sm hover:bg-stone-100 transition cursor-pointer"
-              >
-                {lang === 'bn' ? 'সহায়তার আবেদন' : 'Request Help'}
-              </button>
-            </div>
+        {/* 8-Year Milestones Timeline */}
+        <GlassSection id="journey" tone="red">
+          <SectionHeading
+            title={t('আমাদের পথচলা (২০১৮ - ২০২৬)', 'Our 8-Year Journey')}
+            subtitle={t('ছোট একটি উদ্যোগ থেকে শুরু হয়ে আজ রৌমারীর মানুষের সবচেয়ে বিশ্বস্ত আশ্রয়ে রূপান্তর।', 'From a modest winter drive to Rowmari’s most reliable frontline humanitarian organization.')}
+          />
 
-            <div className="p-6 rounded-2xl bg-white border-2 border-[#E53935] flex flex-col justify-between">
-              <div>
-                <h3 className="text-lg font-bold text-[#E53935] mb-2">
-                  {lang === 'bn' ? 'পাশে দাঁড়াতে চান?' : 'Want to Support?'}
-                </h3>
-                <p className="text-xs text-stone-600 leading-relaxed mb-4">
-                  {lang === 'bn'
-                    ? 'আপনার যেকোনো পরিমাণ অনুদান চরাঞ্চলের অসহায় মানুষের মুখে হাসি ফোটাতে পারে।'
-                    : 'Your contributions directly fund relief efforts for impoverished families.'}
+          <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 relative">
+            <div className="hidden sm:block absolute left-8 top-6 bottom-6 w-0.5 bg-gradient-to-b from-[#0D5C35] via-[#E53935] to-[#0D5C35]" />
+            {milestones.map((m, idx) => {
+              const isGreen = m.theme === 'green';
+              return (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, x: -15 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: idx * 0.08 }}
+                  className={`${glassCardHover} p-5 sm:p-6 relative sm:ml-16`}
+                >
+                  <div className={`hidden sm:flex absolute -left-[54px] top-6 w-8 h-8 rounded-full border-2 border-white items-center justify-center shadow-md ${
+                    isGreen ? 'bg-[#0D5C35] text-white' : 'bg-[#E53935] text-white'
+                  }`}>
+                    <span className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
+                  </div>
+
+                  <div className="flex items-center gap-2.5 mb-2">
+                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold font-mono shadow-2xs ${
+                      isGreen ? 'bg-emerald-100 text-[#0D5C35]' : 'bg-red-100 text-[#E53935]'
+                    }`}>
+                      {t(m.yearBn, m.yearEn)}
+                    </span>
+                    <h3 className="text-base sm:text-lg font-bold text-stone-900">{t(m.titleBn, m.titleEn)}</h3>
+                  </div>
+                  <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">{t(m.descBn, m.descEn)}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </GlassSection>
+
+        {/* Governance & Trust Section */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+          <div className="rounded-3xl bg-gradient-to-br from-[#0D5C35] via-[#094828] to-stone-950 p-6 sm:p-10 md:p-12 text-white shadow-2xl relative overflow-hidden">
+            <div aria-hidden className="pointer-events-none absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-emerald-400/20 blur-3xl" />
+            
+            <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div className="space-y-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-emerald-200 text-xs font-bold">
+                  <FileCheck className="w-4 h-4" />
+                  <span>{t('আইনি অনুমোদন ও প্রশাসনিক ভিত্তি', 'Legal Status & Affiliation')}</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-black leading-tight">
+                  {t('সরকারি সমাজসেবা ট্রাস্ট ও অনুমোদিত কাঠামোর অধীনে পরিচালিত', 'Operating Under Official Non-Profit Social Welfare Standards')}
+                </h2>
+                <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed">
+                  {t(
+                    'রৌমারী জনকল্যাণ ফাউন্ডেশনের প্রতিটি কার্যক্রম উন্মুক্ত ও অডিটযোগ্য। সকল অনুদান নির্ধারিত ব্যাংক ও অফিসিয়াল মার্চেন্ট একাউন্টে সংরক্ষিত হয় এবং সরাসরি মাঠপর্যায়ে ব্যয়িত হয়।',
+                    'Every activity is fully auditable. Donations are received exclusively through authorized institutional banking channels and dispatched directly to vetted recipients.'
+                  )}
                 </p>
+                <div className="flex flex-wrap gap-3 pt-2">
+                  <Link
+                    href="/team"
+                    className="px-5 py-2.5 rounded-full bg-white text-[#0D5C35] font-bold text-xs sm:text-sm hover:bg-emerald-50 transition"
+                  >
+                    {t('পরিচালনা কমিটি দেখুন', 'View Executive Committee')}
+                  </Link>
+                  <Link
+                    href="/donation-policy"
+                    className="px-5 py-2.5 rounded-full bg-white/15 hover:bg-white/25 border border-white/30 text-white font-bold text-xs sm:text-sm backdrop-blur-md transition"
+                  >
+                    {t('অনুদান নীতিমালা ও অডিট', 'Donation Policy & Audit')}
+                  </Link>
+                </div>
               </div>
-              <button
-                onClick={() => setDonationModalOpen(true)}
-                className="w-full py-2.5 rounded-xl bg-[#E53935] text-white font-bold text-xs sm:text-sm hover:bg-[#D32F2F] transition cursor-pointer shadow-sm"
-              >
-                {lang === 'bn' ? 'অনুদান দিন' : 'Donate Now'}
-              </button>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+                  <div className="text-xs font-semibold text-emerald-300 mb-1">{t('নিবন্ধন ও ছাড়পত্র', 'Registration')}</div>
+                  <div className="text-sm font-bold text-white">{t('রৌমারী উপজেলা সমাজসেবা ট্রাস্ট নথিভুক্ত', 'Rowmari Social Welfare Affiliated')}</div>
+                </div>
+                <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+                  <div className="text-xs font-semibold text-emerald-300 mb-1">{t('আর্থিক স্বচ্ছতা', 'Financial Audit')}</div>
+                  <div className="text-sm font-bold text-white">{t('বার্ষিক হিসাব ও ব্যয়ের নিরীক্ষা সম্পন্ন', 'Annual External Audit Verified')}</div>
+                </div>
+                <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+                  <div className="text-xs font-semibold text-emerald-300 mb-1">{t('রক্তদাতা ডাটাবেজ', 'Blood Donor Base')}</div>
+                  <div className="text-sm font-bold text-white">{t('১,২০০+ রক্তদাতার মোবাইল ভেরিফাইড নেটওয়ার্ক', '1,200+ Verified Donors')}</div>
+                </div>
+                <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+                  <div className="text-xs font-semibold text-emerald-300 mb-1">{t('স্বেচ্ছাসেবক সেল', 'Volunteer Network')}</div>
+                  <div className="text-sm font-bold text-white">{t('৬টি ইউনিয়নে সক্রিয় ফিল্ড টিম', 'Active in 6 Char Unions')}</div>
+                </div>
+              </div>
             </div>
           </div>
+        </section>
 
+        {/* Action Callout Boxes */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="p-6 sm:p-7 rounded-2xl bg-[#0D5C35] text-white flex flex-col justify-between shadow-xl shadow-emerald-950/20">
+            <div>
+              <h3 className="text-lg sm:text-xl font-bold mb-2">{t('সহায়তা প্রয়োজন?', 'Need Assistance?')}</h3>
+              <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed mb-4">
+                {t('চিকিৎসা, শীতবস্ত্র, খাদ্য বা জরুরি রক্তের জন্য অনলাইনে সরাসরি আবেদন করুন। ট্র্যাকিং আইডিসহ দ্রুত সমাধান মিলবে।', 'Submit an assistance request for healthcare, winter aid, or food relief with an online tracking ID.')}
+              </p>
+            </div>
+            <button
+              onClick={() => setAssistanceModalOpen(true)}
+              className="w-full py-3 rounded-xl bg-white text-[#0D5C35] font-bold text-xs sm:text-sm hover:bg-emerald-50 transition cursor-pointer"
+            >
+              {t('সহায়তার আবেদন করুন', 'Request Help Online')}
+            </button>
+          </div>
+
+          <div className="p-6 sm:p-7 rounded-2xl bg-white border-2 border-[#E53935] flex flex-col justify-between shadow-xl shadow-red-950/10">
+            <div>
+              <h3 className="text-lg sm:text-xl font-bold text-[#E53935] mb-2">{t('মানুষের পাশে দাঁড়াতে চান?', 'Want to Support?')}</h3>
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-4">
+                {t('আপনার যেকোনো পরিমাণ অনুদান চরাঞ্চলের শীতার্ত পরিবার ও অসহায় রোগীর চিকিৎসার ভরসা জোগাতে পারে।', 'Your charitable donation directly funds life-saving emergency medical aid and blankets.')}
+              </p>
+            </div>
+            <button
+              onClick={() => setDonationModalOpen(true)}
+              className="w-full py-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs sm:text-sm transition cursor-pointer shadow-md"
+            >
+              {t('তহবিলে অনুদান দিন', 'Donate to Relief Fund')}
+            </button>
+          </div>
         </div>
       </main>
 
@@ -230,6 +430,8 @@ export default function AboutPage() {
         onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
+
+      <BackToTop />
 
       <AssistanceModal
         isOpen={assistanceModalOpen}

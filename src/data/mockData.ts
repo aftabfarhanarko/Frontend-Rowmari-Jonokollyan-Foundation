@@ -14,12 +14,22 @@ export const FOUNDATION_INFO = {
   yearsActiveBn: '৯ম বছরে পদার্পণ',
   yearsActiveEn: 'Over 8+ years of dedicated service',
   hotline: '+880 1712-345678',
+  phonePrimary: '+880 1712-345678',
   emergencyBloodHotline: '+880 1812-987654',
   email: 'contact@rowmarijanakalyan.org',
   addressBn: 'ডাকবাংলো মোড়, থানা রোড, রৌমারী সদর, রৌমারী, কুড়িগ্রাম-৫৬৪০',
   addressEn: 'Dakbangla Mor, Thana Road, Rowmari Sadar, Rowmari, Kurigram-5640',
   registrationNoBn: 'সমাজসেবা ও স্বেচ্ছাসেবী ট্রাস্ট নিবন্ধন নম্বর: RJF-KUR-2018/042',
   registrationNoEn: 'Govt. Affiliation & Registration: RJF-KUR-2018/042',
+  bkashMerchant: '01712-345678',
+  nagadMerchant: '01812-987654',
+  bankDetails: {
+    bankName: 'Islami Bank Bangladesh Ltd.',
+    accountName: 'Rowmari Janakalyan Foundation',
+    accountNo: '2050 3450 1000 8899',
+    branch: 'Rowmari Branch, Kurigram',
+    routingNo: '125491122',
+  },
 };
 
 export const IMPACT_STATS = [
