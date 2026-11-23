@@ -3,7 +3,21 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, Droplet, ShieldCheck, Heart } from 'lucide-react';
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Droplet,
+  ShieldCheck,
+  Heart,
+  ArrowRight,
+  ExternalLink,
+  Lock,
+  CheckCircle2,
+  Users,
+  FileText,
+  BadgeCheck,
+} from 'lucide-react';
 import { Language } from '@/types';
 import { FOUNDATION_INFO } from '@/data/mockData';
 
@@ -16,205 +30,440 @@ interface FooterProps {
 
 export default function Footer({
   lang,
+  onOpenAssistance,
+  onOpenBlood,
+  onOpenDonation,
 }: FooterProps) {
+  const isBn = lang === 'bn';
+
   return (
-    <footer className="bg-[#073B22] text-stone-300 pt-16 pb-28 sm:pb-14 border-t border-emerald-950 w-full relative z-30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="relative z-30 w-full overflow-hidden bg-[#041A0F] text-stone-300 border-t border-emerald-900/60 pt-0 pb-28 sm:pb-12">
+      {/* Decorative Top Accent Gradient Line */}
+      <div className="h-1 w-full bg-gradient-to-r from-emerald-600 via-[#E53935] to-emerald-600" />
+
+      {/* Subtle Background Radial Glow */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+      >
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-80 rounded-full bg-emerald-500/10 blur-[120px]" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full bg-red-600/5 blur-[100px]" />
+      </div>
+
+      {/* Top Pre-Footer Emergency & Quick Action Ribbon */}
+      <div className="border-b border-emerald-900/50 bg-[#062415]/90 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+            {/* Live Emergency Hotlines */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-6 text-xs sm:text-sm">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                </span>
+                <span className="text-stone-400 font-medium">
+                  {isBn ? 'কেন্দ্রীয় হটলাইন (২৪/৭):' : 'Hotline (24/7):'}
+                </span>
+                <a
+                  href={`tel:${FOUNDATION_INFO.hotline.replace(/\s+/g, '')}`}
+                  className="font-mono font-bold text-white hover:text-emerald-400 transition"
+                >
+                  {FOUNDATION_INFO.hotline}
+                </a>
+              </div>
+
+              <span className="hidden sm:inline text-emerald-900">•</span>
+
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
+                </span>
+                <span className="text-stone-400 font-medium">
+                  {isBn ? 'জরুরি ব্লাড হটলাইন:' : 'Blood Emergency:'}
+                </span>
+                <a
+                  href={`tel:${FOUNDATION_INFO.emergencyBloodHotline.replace(/\s+/g, '')}`}
+                  className="font-mono font-bold text-red-400 hover:text-red-300 transition"
+                >
+                  {FOUNDATION_INFO.emergencyBloodHotline}
+                </a>
+              </div>
+            </div>
+
+            {/* Direct Action Pills */}
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              {onOpenAssistance && (
+                <button
+                  onClick={onOpenAssistance}
+                  className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-semibold text-white transition active:scale-95 cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                >
+                  <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>{isBn ? 'সহায়তা চাই' : 'Request Aid'}</span>
+                </button>
+              )}
+
+              {onOpenBlood && (
+                <button
+                  onClick={onOpenBlood}
+                  className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-semibold text-white transition active:scale-95 cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                >
+                  <Droplet className="w-3.5 h-3.5 text-red-400" />
+                  <span>{isBn ? 'রক্ত প্রয়োজন' : 'Need Blood'}</span>
+                </button>
+              )}
+
+              {onOpenDonation && (
+                <button
+                  onClick={onOpenDonation}
+                  className="px-4 py-1.5 rounded-full bg-[#E53935] hover:bg-[#D32F2F] text-xs font-bold text-white transition active:scale-95 cursor-pointer flex items-center gap-1.5 shadow-sm shadow-red-950/40"
+                >
+                  <Heart className="w-3.5 h-3.5 fill-white" />
+                  <span>{isBn ? 'অনুদান দিন' : 'Donate'}</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Footer Columns */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pb-12 border-b border-emerald-900/60">
-          {/* Column 1: Organization details & Logo */}
-          <div className="lg:col-span-4 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-13 h-13 rounded-full overflow-hidden bg-white p-0.5 shrink-0 shadow-md">
+          {/* Column 1: Brand & Organization Overview (lg:col-span-4) */}
+          <div className="lg:col-span-4 space-y-5">
+            <div className="flex items-center gap-3.5">
+              <div className="w-14 h-14 rounded-2xl overflow-hidden bg-white p-1 shrink-0 shadow-lg shadow-emerald-950/50 border border-emerald-500/30 flex items-center justify-center">
                 <Image
                   src="/logo.png"
                   alt="রৌমারী জনকল্যাণ ফাউন্ডেশন লোগো"
-                  width={52}
-                  height={52}
+                  width={56}
+                  height={56}
                   className="object-contain"
                 />
               </div>
               <div>
-                <h3 className="text-lg sm:text-xl font-bold text-white leading-tight">
-                  {lang === 'bn' ? FOUNDATION_INFO.nameBn : FOUNDATION_INFO.nameEn}
-                </h3>
-                <p className="text-sm text-emerald-400 font-medium">
-                  {lang === 'bn' ? FOUNDATION_INFO.establishedBn : FOUNDATION_INFO.establishedEn} • {lang === 'bn' ? FOUNDATION_INFO.locationBn : FOUNDATION_INFO.locationEn}
+                <div className="flex items-center gap-1.5">
+                  <h3 className="text-lg sm:text-xl font-extrabold text-white leading-tight tracking-tight">
+                    {isBn ? FOUNDATION_INFO.nameBn : FOUNDATION_INFO.nameEn}
+                  </h3>
+                  <BadgeCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                </div>
+                <p className="text-xs sm:text-sm text-emerald-400 font-medium mt-0.5">
+                  {isBn ? FOUNDATION_INFO.establishedBn : FOUNDATION_INFO.establishedEn} • {isBn ? FOUNDATION_INFO.yearsActiveBn : FOUNDATION_INFO.yearsActiveEn}
                 </p>
               </div>
             </div>
 
-            <p className="text-sm text-stone-300 leading-relaxed">
-              {lang === 'bn'
-                ? 'রৌমারীর অসহায়, শীতার্ত ও চিকিৎসাবঞ্চিত মানুষের পাশে নিবেদিত একটি অরাজনৈতিক, স্বেচ্ছাসেবী ও অলাভজনক মানবিক সংগঠন।'
-                : 'A non-political, voluntary humanitarian foundation serving vulnerable communities in Rowmari and Kurigram.'}
+            <p className="text-sm text-stone-300 leading-relaxed font-normal">
+              {isBn
+                ? 'কুড়িগ্রাম জেলার ভারত সীমান্তবর্তী ও নদীবেষ্টিত রৌমারীর দুর্গম চরাঞ্চলের অসহায়, শীতার্ত, দরিদ্র রোগী ও চিকিৎসাবঞ্চিত মানুষের সার্বক্ষণিক সেবায় একটি নিবন্ধিত ও নিরপেক্ষ মানবিক সংগঠন।'
+                : 'A registered, non-political voluntary foundation dedicated to serving underprivileged families and remote river-island char communities in Rowmari and Kurigram.'}
             </p>
 
-            <div className="space-y-2.5 text-sm text-stone-200 pt-2">
-              <p className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                <span>{lang === 'bn' ? FOUNDATION_INFO.addressBn : FOUNDATION_INFO.addressEn}</span>
+            {/* Official Registration & Trust Badge */}
+            <div className="rounded-xl bg-[#062918] border border-emerald-800/60 p-3.5 text-xs text-stone-300 space-y-1.5 shadow-2xs">
+              <div className="flex items-center gap-1.5 text-emerald-300 font-bold">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>{isBn ? 'স্বীকৃত ও অনুমোদিত সমাজসেবা ট্রাস্ট' : 'Verified & Registered Charity Trust'}</span>
+              </div>
+              <p className="text-[11px] text-stone-400 font-mono leading-relaxed">
+                {isBn ? FOUNDATION_INFO.registrationNoBn : FOUNDATION_INFO.registrationNoEn}
               </p>
-              <p className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span className="font-mono font-medium">{FOUNDATION_INFO.hotline}</span>
-              </p>
-              <p className="flex items-center gap-2.5">
-                <Droplet className="w-4 h-4 text-red-400 shrink-0" />
-                <span>
-                  {lang === 'bn' ? 'জরুরি ব্লাড হটলাইন:' : 'Blood Hotline:'}{' '}
-                  <span className="font-mono font-bold text-red-400">{FOUNDATION_INFO.emergencyBloodHotline}</span>
-                </span>
-              </p>
-              <p className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span className="font-mono font-medium">{FOUNDATION_INFO.email}</span>
-              </p>
+            </div>
+
+            {/* Interactive Social Connect Pills */}
+            <div className="pt-1">
+              <span className="block text-[11px] uppercase tracking-wider text-stone-400 font-semibold mb-2">
+                {isBn ? 'সামাজিক যোগাযোগে যুক্ত থাকুন' : 'Connect with Us'}
+              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15 border border-white/10 text-xs font-medium text-stone-200 hover:text-white transition flex items-center gap-1.5"
+                >
+                  <span className="w-2 h-2 rounded-full bg-blue-500" />
+                  <span>Facebook Page</span>
+                </a>
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15 border border-white/10 text-xs font-medium text-stone-200 hover:text-white transition flex items-center gap-1.5"
+                >
+                  <span className="w-2 h-2 rounded-full bg-blue-400" />
+                  <span>Facebook Group</span>
+                </a>
+                <a
+                  href="https://youtube.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15 border border-white/10 text-xs font-medium text-stone-200 hover:text-white transition flex items-center gap-1.5"
+                >
+                  <span className="w-2 h-2 rounded-full bg-red-500" />
+                  <span>YouTube</span>
+                </a>
+              </div>
             </div>
           </div>
 
-          {/* Column 2: দ্রুত লিঙ্ক (Quick Links) */}
+          {/* Column 2: দ্রুত লিঙ্ক (Quick Links - lg:col-span-2) */}
           <div className="lg:col-span-2 space-y-4">
-            <h4 className="text-base font-bold text-white uppercase tracking-wider">
-              {lang === 'bn' ? 'দ্রুত লিঙ্ক' : 'Quick Links'}
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider border-b border-emerald-800/60 pb-2">
+              {isBn ? 'মূল পাতাগুলো' : 'Quick Links'}
             </h4>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'হোম পেজ' : 'Home'}
+                <Link href="/" className="group flex items-center gap-1.5 text-stone-300 hover:text-white transition">
+                  <ArrowRight className="w-3.5 h-3.5 text-emerald-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition" />
+                  <span>{isBn ? 'হোম পেজ' : 'Home'}</span>
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'আমাদের কথা' : 'About Us'}
+                <Link href="/about" className="group flex items-center gap-1.5 text-stone-300 hover:text-white transition">
+                  <ArrowRight className="w-3.5 h-3.5 text-emerald-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition" />
+                  <span>{isBn ? 'আমাদের কথা ও ইতিহাস' : 'About Foundation'}</span>
                 </Link>
               </li>
               <li>
-                <Link href="/team" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'টিম ও কমিটি' : 'Our Team'}
+                <Link href="/team" className="group flex items-center gap-1.5 text-stone-300 hover:text-white transition">
+                  <ArrowRight className="w-3.5 h-3.5 text-emerald-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition" />
+                  <span>{isBn ? 'টিম ও কমিটি' : 'Team & Leadership'}</span>
                 </Link>
               </li>
               <li>
-                <Link href="/activities" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'সকল কার্যক্রম' : 'Activities'}
+                <Link href="/activities" className="group flex items-center gap-1.5 text-stone-300 hover:text-white transition">
+                  <ArrowRight className="w-3.5 h-3.5 text-emerald-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition" />
+                  <span>{isBn ? 'সকল কার্যক্রম' : 'Field Activities'}</span>
                 </Link>
               </li>
               <li>
-                <Link href="/campaigns" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'চলমান ক্যাম্পেইন' : 'Campaigns'}
+                <Link href="/campaigns" className="group flex items-center gap-1.5 text-stone-300 hover:text-white transition">
+                  <ArrowRight className="w-3.5 h-3.5 text-emerald-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition" />
+                  <span>{isBn ? 'চলমান ক্যাম্পেইন' : 'Active Campaigns'}</span>
                 </Link>
               </li>
               <li>
-                <Link href="/gallery" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'ছবি ও ভিডিও' : 'Gallery'}
+                <Link href="/gallery" className="group flex items-center gap-1.5 text-stone-300 hover:text-white transition">
+                  <ArrowRight className="w-3.5 h-3.5 text-emerald-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition" />
+                  <span>{isBn ? 'ছবি ও ভিডিও গ্যালারি' : 'Photo Gallery'}</span>
                 </Link>
               </li>
               <li>
-                <Link href="/news" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'সংবাদ ও বিজ্ঞপ্তি' : 'News & Events'}
+                <Link href="/news" className="group flex items-center gap-1.5 text-stone-300 hover:text-white transition">
+                  <ArrowRight className="w-3.5 h-3.5 text-emerald-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition" />
+                  <span>{isBn ? 'সংবাদ ও বিজ্ঞপ্তি' : 'News & Press'}</span>
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'যোগাযোগ' : 'Contact Us'}
+                <Link href="/contact" className="group flex items-center gap-1.5 text-stone-300 hover:text-white transition">
+                  <ArrowRight className="w-3.5 h-3.5 text-emerald-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition" />
+                  <span>{isBn ? 'যোগাযোগ ও সহায়তা কেন্দ্র' : 'Contact Us'}</span>
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 3: সহায়তা ও সেবা (Services) */}
+          {/* Column 3: সেবা ও জরুরি পোর্টাল (Direct Portals - lg:col-span-3) */}
           <div className="lg:col-span-3 space-y-4">
-            <h4 className="text-base font-bold text-white uppercase tracking-wider">
-              {lang === 'bn' ? 'সেবা ও পোর্টাল' : 'Services & Portal'}
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider border-b border-emerald-800/60 pb-2">
+              {isBn ? 'সেবা ও নাগরিক পোর্টাল' : 'Services & Portals'}
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/get-help" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'সহায়তার আবেদন ও ট্র্যাকিং' : 'Request Aid & Track'}
+                <Link
+                  href="/get-help"
+                  className="group flex items-start gap-2 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition"
+                >
+                  <FileText className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
+                  <div>
+                    <span className="block font-semibold text-white group-hover:text-emerald-300 transition text-xs sm:text-sm">
+                      {isBn ? 'সহায়তার আবেদন ও ট্র্যাকিং' : 'Aid Application & Tracker'}
+                    </span>
+                    <span className="text-[11px] text-stone-400 block">
+                      {isBn ? 'চিকিৎসা, শিক্ষা, খাদ্য ও শীতবস্ত্র' : 'Medical, education, winter relief'}
+                    </span>
+                  </div>
                 </Link>
               </li>
+
               <li>
-                <Link href="/blood-donation" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'রক্তদান ও ডোনার নেটওয়ার্ক' : 'Blood Donation Portal'}
+                <Link
+                  href="/blood-donation"
+                  className="group flex items-start gap-2 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition"
+                >
+                  <Droplet className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
+                  <div>
+                    <span className="block font-semibold text-white group-hover:text-red-300 transition text-xs sm:text-sm">
+                      {isBn ? 'রক্তদান ও ডোনার নেটওয়ার্ক' : 'Blood Donation Portal'}
+                    </span>
+                    <span className="text-[11px] text-stone-400 block">
+                      {isBn ? '১,২০০+ নিবন্ধিত রক্তদাতা প্রস্তুত' : '1,200+ ready volunteer donors'}
+                    </span>
+                  </div>
                 </Link>
               </li>
+
               <li>
-                <Link href="/donate" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'অনুদানের পদ্ধতি ও রশিদ' : 'Donate & Digital Receipt'}
+                <Link
+                  href="/donate"
+                  className="group flex items-start gap-2 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition"
+                >
+                  <Heart className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
+                  <div>
+                    <span className="block font-semibold text-white group-hover:text-emerald-300 transition text-xs sm:text-sm">
+                      {isBn ? 'অনুদানের পদ্ধতি ও ডিজিটাল রসিদ' : 'Donate & Instant Receipt'}
+                    </span>
+                    <span className="text-[11px] text-stone-400 block">
+                      {isBn ? 'বিকাশ, নগদ ও ব্যাংক মাধ্যমে স্বচ্ছ' : '100% transparent records'}
+                    </span>
+                  </div>
                 </Link>
               </li>
+
               <li>
-                <Link href="/volunteer" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'স্বেচ্ছাসেবক নিবন্ধন' : 'Join as Volunteer'}
+                <Link
+                  href="/volunteer"
+                  className="group flex items-start gap-2 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition"
+                >
+                  <Users className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
+                  <div>
+                    <span className="block font-semibold text-white group-hover:text-emerald-300 transition text-xs sm:text-sm">
+                      {isBn ? 'স্বেচ্ছাসেবক নিবন্ধন' : 'Join as Volunteer'}
+                    </span>
+                    <span className="text-[11px] text-stone-400 block">
+                      {isBn ? 'রৌমারীর মানুষের সেবায় কাজ করুন' : 'Be a community changemaker'}
+                    </span>
+                  </div>
                 </Link>
               </li>
-              <li>
-                <Link href="/get-help#track" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'আবেদনের স্ট্যাটাস দেখুন' : 'Application Tracking'}
-                </Link>
-              </li>
-              <li>
-                <Link href="/dashboard" className="text-emerald-400 hover:text-white font-bold hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'ম্যানেজমেন্ট ড্যাশবোর্ড' : 'Management Dashboard'}
+
+              <li className="pt-1">
+                <Link
+                  href="/dashboard"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 hover:text-white text-xs font-semibold transition"
+                >
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>{isBn ? 'অফিসিয়াল অ্যাডমিন ড্যাশবোর্ড' : 'Staff Admin Dashboard'}</span>
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 4: নীতিমালা ও অনুমোদন (Policies) */}
+          {/* Column 4: কেন্দ্রীয় কার্যালয় ও পেমেন্ট স্বচ্ছতা (Headquarters & Contacts - lg:col-span-3) */}
           <div className="lg:col-span-3 space-y-4">
-            <h4 className="text-base font-bold text-white uppercase tracking-wider">
-              {lang === 'bn' ? 'নীতিমালা ও অনুমোদন' : 'Policies & Compliance'}
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider border-b border-emerald-800/60 pb-2">
+              {isBn ? 'কেন্দ্রীয় কার্যালয় ও ঠিকানা' : 'Official Headquarters'}
             </h4>
-            <p className="text-xs text-stone-300 font-medium">
-              {lang === 'bn' ? FOUNDATION_INFO.registrationNoBn : FOUNDATION_INFO.registrationNoEn}
-            </p>
-            <ul className="space-y-2.5 text-sm text-stone-300">
-              <li>
-                <Link href="/privacy" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'গোপনীয়তা ও ডেটা সুরক্ষা নীতি' : 'Privacy & Data Protection Policy'}
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'ব্যবহারের শর্তাবলী' : 'Terms & Conditions'}
-                </Link>
-              </li>
-              <li>
-                <Link href="/donation-policy" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'অনুদান ও আর্থিক স্বচ্ছতা বিধি' : 'Donation & Financial Transparency'}
-                </Link>
-              </li>
-              <li>
-                <Link href="/blood-donation" className="hover:text-white hover:translate-x-0.5 transition-all inline-block">
-                  {lang === 'bn' ? 'রক্তদাতা সুরক্ষা ও সম্মতি নীতিমালা' : 'Blood Donor Consent Policy'}
-                </Link>
-              </li>
-            </ul>
+
+            <div className="space-y-3 text-xs sm:text-sm text-stone-300">
+              <div className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <span className="leading-relaxed">
+                  {isBn ? FOUNDATION_INFO.addressBn : FOUNDATION_INFO.addressEn}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2.5">
+                <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
+                <a
+                  href={`tel:${FOUNDATION_INFO.hotline.replace(/\s+/g, '')}`}
+                  className="font-mono hover:text-white transition"
+                >
+                  {FOUNDATION_INFO.hotline}
+                </a>
+              </div>
+
+              <div className="flex items-center gap-2.5">
+                <Mail className="w-4 h-4 text-emerald-400 shrink-0" />
+                <a
+                  href={`mailto:${FOUNDATION_INFO.email}`}
+                  className="font-mono hover:text-white transition text-xs"
+                >
+                  {FOUNDATION_INFO.email}
+                </a>
+              </div>
+            </div>
+
+            {/* Donation Channels & Transparency Box */}
+            <div className="rounded-xl bg-[#062415] border border-emerald-800/60 p-3 space-y-2 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-white">
+                  {isBn ? 'স্বচ্ছ অনুদান গ্রহণ চ্যানেল:' : 'Official Donation Channels:'}
+                </span>
+                <span className="text-[10px] text-emerald-400 font-mono">24/7 Verified</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-[11px] text-stone-300">
+                <div className="p-1.5 rounded-lg bg-black/25 border border-white/5">
+                  <span className="block font-bold text-[#E53935]">bKash (মার্চেন্ট)</span>
+                  <span className="font-mono text-stone-300">{FOUNDATION_INFO.bkashMerchant}</span>
+                </div>
+                <div className="p-1.5 rounded-lg bg-black/25 border border-white/5">
+                  <span className="block font-bold text-amber-500">Nagad (মার্চেন্ট)</span>
+                  <span className="font-mono text-stone-300">{FOUNDATION_INFO.nagadMerchant}</span>
+                </div>
+              </div>
+              <div className="text-[10px] text-stone-400 flex items-center gap-1 pt-0.5">
+                <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
+                <span>{isBn ? 'প্রতিটি অনুদানে ডিজিটাল মানি রসিদ দেওয়া হয়' : 'Official digital receipts issued'}</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Bottom Bar: Copyright, Developer Credits & Accountability */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-stone-300 gap-4">
-          <p className="text-center md:text-left">
-            © 2026 {lang === 'bn' ? FOUNDATION_INFO.nameBn : FOUNDATION_INFO.nameEn}। সর্বস্বত্ব সংরক্ষিত।
+        {/* Policies and Governance Quick Row */}
+        <div className="py-4 border-b border-emerald-900/60 flex flex-wrap items-center justify-between gap-3 text-xs text-stone-400">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span className="text-stone-300 font-medium">
+              {isBn ? 'নীতিমালা ও আইনি সম্মতি:' : 'Compliance & Governance:'}
+            </span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-stone-300">
+            <Link href="/privacy" className="hover:text-emerald-300 hover:underline transition">
+              {isBn ? 'গোপনীয়তা ও ডেটা সুরক্ষা নীতি' : 'Privacy Policy'}
+            </Link>
+            <span className="text-emerald-900 hidden sm:inline">•</span>
+            <Link href="/terms" className="hover:text-emerald-300 hover:underline transition">
+              {isBn ? 'ব্যবহারের শর্তাবলী' : 'Terms of Use'}
+            </Link>
+            <span className="text-emerald-900 hidden sm:inline">•</span>
+            <Link href="/donation-policy" className="hover:text-emerald-300 hover:underline transition">
+              {isBn ? 'অনুদান ও আর্থিক স্বচ্ছতা বিধি' : 'Donation Policy'}
+            </Link>
+            <span className="text-emerald-900 hidden sm:inline">•</span>
+            <Link href="/blood-donation" className="hover:text-emerald-300 hover:underline transition">
+              {isBn ? 'রক্তদাতা সুরক্ষা নীতিমালা' : 'Donor Protection'}
+            </Link>
+          </div>
+        </div>
+
+        {/* Bottom Sub-Footer: Copyright, Developer Credits & Accountability */}
+        <div className="pt-6 flex flex-col md:flex-row items-center justify-between text-xs sm:text-sm text-stone-400 gap-4">
+          <p className="text-center md:text-left text-xs text-stone-400">
+            © 2026 {isBn ? FOUNDATION_INFO.nameBn : FOUNDATION_INFO.nameEn}। সর্বস্বত্ব সংরক্ষিত।
           </p>
 
-          {/* Developer Attribution with link to personal website */}
-          <div className="flex items-center gap-1.5 text-sm text-stone-300">
-            <span>Developed by</span>
+          {/* Premium Developer Attribution */}
+          <div className="flex items-center gap-1.5 text-xs text-stone-300 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full shadow-2xs">
+            <span className="text-stone-400">Developed with ❤️ by</span>
             <a
               href="https://www.aftabfarhan.tech/"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-bold text-emerald-400 hover:text-white underline underline-offset-4 decoration-emerald-500/80 hover:decoration-white transition-all"
+              className="font-bold text-emerald-300 hover:text-white underline underline-offset-4 decoration-emerald-400 hover:decoration-white transition-all flex items-center gap-1"
             >
-              Aftab Farhan ARKO
+              <span>Aftab Farhan ARKO</span>
+              <ExternalLink className="w-3 h-3 opacity-70" />
             </a>
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-emerald-400 font-medium">
-            <ShieldCheck className="w-4 h-4 shrink-0" />
-            <span>{lang === 'bn' ? 'স্বচ্ছতা ও জবাবদিহিতায় অঙ্গীকারবদ্ধ' : 'Committed to Full Accountability'}</span>
+          <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <span>{isBn ? 'নিরীক্ষিত আর্থিক স্বচ্ছতা ও জবাবদিহিতা' : '100% Verified Transparency'}</span>
           </div>
         </div>
       </div>
