@@ -40,7 +40,6 @@ export default function Hero({
   } = useAppStore();
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
 
   // 4 Full-Width Panoramic Hero Banner Slides
   const heroSlides = [
@@ -138,14 +137,13 @@ export default function Hero({
     },
   ];
 
-  // Auto-play slideshow every 6 seconds (pauses on hover)
+  // Continuous automatic slideshow rotation every 4 seconds
   useEffect(() => {
-    if (isPaused) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 6000);
+    }, 4000);
     return () => clearInterval(timer);
-  }, [isPaused, heroSlides.length]);
+  }, [currentSlide, heroSlides.length]);
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
@@ -249,8 +247,6 @@ export default function Hero({
   return (
     <section
       id="home"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
       className="relative pt-0 sm:pt-4 pb-10 sm:pb-14 md:pb-16 overflow-hidden bg-gradient-to-b from-stone-50 via-white to-stone-50/60"
     >
       <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
