@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
   X, 
   Search, 
@@ -10,6 +10,7 @@ import {
   Lightbulb 
 } from 'lucide-react';
 import { Language, ApplicationTrackingStatus } from '@/types';
+import { useAppStore } from '@/store/useAppStore';
 
 interface TrackingResultModalProps {
   isOpen: boolean;
@@ -26,6 +27,14 @@ export default function TrackingResultModal({
   application,
   searchedId,
 }: TrackingResultModalProps) {
+  const addSavedApplicationId = useAppStore((state) => state.addSavedApplicationId);
+
+  useEffect(() => {
+    if (application?.id) {
+      addSavedApplicationId(application.id);
+    }
+  }, [application?.id, addSavedApplicationId]);
+
   if (!isOpen) return null;
 
   const steps = [

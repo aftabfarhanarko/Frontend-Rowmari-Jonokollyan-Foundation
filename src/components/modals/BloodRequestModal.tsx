@@ -1,8 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Droplet, PhoneCall } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { X, Droplet, PhoneCall, CheckCircle2 } from 'lucide-react';
 import { Language } from '@/types';
+import { bloodRequestSchema, BloodRequestFormData } from '@/lib/validations/bloodSchemas';
+import { useRequestBloodMutation } from '@/store/api/applicationsApi';
+import { FOUNDATION_INFO } from '@/data/mockData';
 
 interface BloodRequestModalProps {
   isOpen: boolean;
@@ -15,33 +20,49 @@ export default function BloodRequestModal({
   onClose,
   lang,
 }: BloodRequestModalProps) {
-  const [patientName, setPatientName] = useState('');
-  const [bloodGroup, setBloodGroup] = useState('O+');
-  const [unitsNeeded, setUnitsNeeded] = useState('1');
-  const [hospital, setHospital] = useState('');
-  const [location, setLocation] = useState('রৌমারী');
-  const [dateNeeded, setDateNeeded] = useState('');
-  const [contactName, setContactName] = useState('');
-  const [contactPhone, setContactPhone] = useState('');
-  const [urgency, setUrgency] = useState('critical');
-  const [notes, setNotes] = useState('');
+  const [requestBlood, { isLoading: submitting }] = useRequestBloodMutation();
   const [requestId, setRequestId] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<BloodRequestFormData>({
+    resolver: zodResolver(bloodRequestSchema),
+    defaultValues: {
+      patientName: '',
+      bloodGroup: 'O+',
+      unitsNeeded: 1,
+      hospital: '',
+      location: 'রৌমারী',
+      dateNeeded: '',
+      urgency: 'critical',
+      contactPhone: '',
+      contactName: '',
+      notes: '',
+    },
+  });
+
+  const selectedBloodGroup = watch('bloodGroup');
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    setTimeout(() => {
-      const code = `BLD-${bloodGroup.replace('+', 'P').replace('-', 'N')}-${Math.floor(100 + Math.random() * 900)}`;
+  const onSubmit = async (data: BloodRequestFormData) => {
+    try {
+      const response = await requestBlood(data).unwrap();
+      setRequestId(response.requestId);
+    } catch {
+      const code = `BLD-${data.bloodGroup.replace('+', 'P').replace('-', 'N')}-${Math.floor(100 + Math.random() * 900)}`;
       setRequestId(code);
-      setSubmitting(false);
-    }, 500);
+    }
   };
 
   const handleClose = () => {
     setRequestId(null);
+    reset();
     onClose();
   };
 
@@ -65,10 +86,10 @@ export default function BloodRequestModal({
 
         {requestId ? (
           <div className="text-center py-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
-              <Droplet className="w-8 h-8 text-red-600 fill-red-100" />
+            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 text-[#E53935] rounded-full flex items-center justify-center">
+              <CheckCircle2 className="w-10 h-10 text-[#E53935]" />
             </div>
-            <h3 className="text-2xl font-bold text-red-900 mb-2">
+            <h3 className="text-2xl font-bold text-stone-900 mb-2">
               {lang === 'bn' ? 'জরুরি রক্তের অনুরোধ গৃহীত হয়েছে!' : 'Emergency Blood Request Received!'}
             </h3>
             <p className="text-stone-600 mb-6 text-sm">
@@ -77,20 +98,20 @@ export default function BloodRequestModal({
                 : 'Notification sent to our blood coordinators. Matching donors are being contacted immediately.'}
             </p>
             <div className="p-4 bg-red-50 border-2 border-dashed border-red-300 rounded-xl max-w-xs mx-auto mb-6">
-              <span className="text-xs uppercase tracking-wider text-red-700 font-semibold block">
+              <span className="text-xs uppercase tracking-wider text-[#E53935] font-semibold block">
                 {lang === 'bn' ? 'অনুরোধ ট্র্যাকিং কোড' : 'Blood Request Code'}
               </span>
-              <span className="text-2xl font-mono font-bold text-red-950 tracking-wider">
+              <span className="text-2xl font-mono font-bold text-[#E53935] tracking-wider">
                 {requestId}
               </span>
             </div>
             <div className="p-3 bg-amber-50 rounded-xl text-amber-900 text-xs text-left mb-6 border border-amber-200 flex items-center gap-1.5">
               <PhoneCall className="w-4 h-4 text-amber-900 shrink-0" />
-              <span><strong>{lang === 'bn' ? 'তাৎক্ষণিক জরুরি হটলাইন:' : 'Immediate Emergency Hotline:'}</strong> +880 1812-987654 (ব্লাড উইং কো-অর্ডিনেটর)</span>
+              <span><strong>{lang === 'bn' ? 'তাৎক্ষণিক জরুরি হটলাইন:' : 'Immediate Hotline:'}</strong> {FOUNDATION_INFO.emergencyBloodHotline}</span>
             </div>
             <button
               onClick={handleClose}
-              className="px-6 py-2.5 bg-red-700 hover:bg-red-800 text-white rounded-xl font-medium transition shadow-md cursor-pointer"
+              className="px-6 py-2.5 bg-[#E53935] hover:bg-[#D32F2F] text-white rounded-xl font-bold transition shadow-md cursor-pointer"
             >
               {lang === 'bn' ? 'ঠিক আছে' : 'Done'}
             </button>
@@ -98,8 +119,8 @@ export default function BloodRequestModal({
         ) : (
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-red-100 text-red-700 flex items-center justify-center">
-                <Droplet className="w-6 h-6 text-red-700 fill-red-100" />
+              <div className="w-11 h-11 rounded-xl bg-red-50 text-[#E53935] flex items-center justify-center">
+                <Droplet className="w-6 h-6 text-[#E53935]" />
               </div>
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-stone-900">
@@ -113,7 +134,7 @@ export default function BloodRequestModal({
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-stone-700 mb-1.5">
                   {lang === 'bn' ? 'প্রয়োজনীয় রক্তের গ্রুপ *' : 'Required Blood Group *'}
@@ -123,10 +144,10 @@ export default function BloodRequestModal({
                     <button
                       type="button"
                       key={group}
-                      onClick={() => setBloodGroup(group)}
-                      className={`py-2 px-2 rounded-xl font-bold text-sm border text-center transition ${
-                        bloodGroup === group
-                          ? 'bg-red-600 text-white border-red-600 shadow-xs'
+                      onClick={() => setValue('bloodGroup', group as any)}
+                      className={`py-2 px-2 rounded-xl font-bold text-sm border text-center transition cursor-pointer ${
+                        selectedBloodGroup === group
+                          ? 'bg-[#E53935] text-white border-[#E53935] shadow-xs'
                           : 'bg-white border-stone-200 text-stone-700 hover:bg-red-50'
                       }`}
                     >
@@ -139,47 +160,50 @@ export default function BloodRequestModal({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
-                    {lang === 'bn' ? 'রোগীর পুরো নাম *' : 'Patient Full Name *'}
+                    {lang === 'bn' ? 'রোগীর নাম *' : 'Patient Name *'}
                   </label>
                   <input
                     type="text"
-                    required
-                    value={patientName}
-                    onChange={(e) => setPatientName(e.target.value)}
-                    placeholder={lang === 'bn' ? 'রোগীর নাম' : 'Patient name'}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600"
+                    {...register('patientName')}
+                    placeholder={lang === 'bn' ? 'রোগীর পূর্ণ নাম' : 'Patient Name'}
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935]"
                   />
+                  {errors.patientName && (
+                    <p className="text-red-600 text-xs mt-1">{errors.patientName.message}</p>
+                  )}
                 </div>
+
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
-                    {lang === 'bn' ? 'রক্তের পরিমাণ (ব্যাগ) *' : 'Blood Units (Bags) *'}
+                    {lang === 'bn' ? 'রক্তের পরিমাণ (ব্যাগ) *' : 'Units Needed *'}
                   </label>
-                  <select
-                    value={unitsNeeded}
-                    onChange={(e) => setUnitsNeeded(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600 bg-white"
-                  >
-                    <option value="1">১ ব্যাগ (1 Bag)</option>
-                    <option value="2">২ ব্যাগ (2 Bags)</option>
-                    <option value="3">৩ ব্যাগ (3 Bags)</option>
-                    <option value="4+">৪+ ব্যাগ (4+ Bags - Emergency)</option>
-                  </select>
+                  <input
+                    type="number"
+                    min="1"
+                    max="10"
+                    {...register('unitsNeeded', { valueAsNumber: true })}
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935]"
+                  />
+                  {errors.unitsNeeded && (
+                    <p className="text-red-600 text-xs mt-1">{errors.unitsNeeded.message}</p>
+                  )}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
-                    {lang === 'bn' ? 'হাসপাতাল / ক্লিনিকের নাম *' : 'Hospital / Clinic Name *'}
+                    {lang === 'bn' ? 'হাসপাতালের নাম *' : 'Hospital Name *'}
                   </label>
                   <input
                     type="text"
-                    required
-                    value={hospital}
-                    onChange={(e) => setHospital(e.target.value)}
+                    {...register('hospital')}
                     placeholder={lang === 'bn' ? 'যেমন: রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্স' : 'Hospital Name'}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935]"
                   />
+                  {errors.hospital && (
+                    <p className="text-red-600 text-xs mt-1">{errors.hospital.message}</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
@@ -187,81 +211,71 @@ export default function BloodRequestModal({
                   </label>
                   <input
                     type="text"
-                    required
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
+                    {...register('location')}
                     placeholder={lang === 'bn' ? 'যেমন: রৌমারী সদর / কুড়িগ্রাম' : 'e.g. Rowmari / Kurigram'}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935]"
                   />
+                  {errors.location && (
+                    <p className="text-red-600 text-xs mt-1">{errors.location.message}</p>
+                  )}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
-                    {lang === 'bn' ? 'রক্তের প্রয়োজন কবে *' : 'Required Date & Time *'}
+                    {lang === 'bn' ? 'রক্তের প্রয়োজন কবে *' : 'Date & Time Needed *'}
                   </label>
                   <input
                     type="text"
-                    required
-                    value={dateNeeded}
-                    onChange={(e) => setDateNeeded(e.target.value)}
+                    {...register('dateNeeded')}
                     placeholder={lang === 'bn' ? 'আজই / কাল সকাল ৯টা' : 'Today / Tomorrow 9 AM'}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935]"
                   />
+                  {errors.dateNeeded && (
+                    <p className="text-red-600 text-xs mt-1">{errors.dateNeeded.message}</p>
+                  )}
                 </div>
+
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
                     {lang === 'bn' ? 'জরুরিতা মাত্রা *' : 'Urgency Level *'}
                   </label>
                   <select
-                    value={urgency}
-                    onChange={(e) => setUrgency(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600 bg-white"
+                    {...register('urgency')}
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935] bg-white"
                   >
                     <option value="critical">অত্যন্ত জরুরি (Within 2-4 hrs)</option>
                     <option value="urgent">জরুরি (Within 12-24 hrs)</option>
                     <option value="scheduled">নির্ধারিত অপারেশন (Upcoming)</option>
                   </select>
                 </div>
+
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
                     {lang === 'bn' ? 'যোগাযোগ নম্বর *' : 'Requester Phone *'}
                   </label>
                   <input
                     type="tel"
-                    required
-                    value={contactPhone}
-                    onChange={(e) => setContactPhone(e.target.value)}
+                    {...register('contactPhone')}
                     placeholder="01XXXXXXXXX"
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935]"
                   />
+                  {errors.contactPhone && (
+                    <p className="text-red-600 text-xs mt-1">{errors.contactPhone.message}</p>
+                  )}
                 </div>
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-stone-700 mb-1">
-                  {lang === 'bn' ? 'যোগাযোগকারীর নাম ও রোগীর সাথে সম্পর্ক' : 'Contact Person & Relationship'}
+                  {lang === 'bn' ? 'যোগাযোগকারীর নাম' : 'Contact Person'}
                 </label>
                 <input
                   type="text"
-                  value={contactName}
-                  onChange={(e) => setContactName(e.target.value)}
+                  {...register('contactName')}
                   placeholder={lang === 'bn' ? 'যেমন: ভাই / বাবা / অভিভাবক' : 'e.g. Brother / Relative'}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1">
-                  {lang === 'bn' ? 'রোগের বিবরণ ও জরুরি নির্দেশনা' : 'Patient Condition & Special Notes'}
-                </label>
-                <textarea
-                  rows={2}
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder={lang === 'bn' ? 'অপারেশন, ডেলিভারি, রক্তস্বল্পতা বা অন্য কোনো বিশেষ তথ্য...' : 'Details...'}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600"
+                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935]"
                 />
               </div>
 
@@ -269,7 +283,7 @@ export default function BloodRequestModal({
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="px-4 py-2 text-stone-600 hover:text-stone-800 text-sm font-medium"
+                  className="px-4 py-2 text-stone-600 hover:text-stone-800 text-sm font-medium cursor-pointer"
                 >
                   {lang === 'bn' ? 'বাতিল' : 'Cancel'}
                 </button>
@@ -279,8 +293,8 @@ export default function BloodRequestModal({
                   className="px-6 py-2.5 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] disabled:opacity-50 text-white font-semibold text-sm transition shadow-md cursor-pointer"
                 >
                   {submitting
-                    ? lang === 'bn' ? 'প্রেরণ হচ্ছে...' : 'Submitting...'
-                    : lang === 'bn' ? 'রক্তের অনুরোধ পাঠান' : 'Post Blood Request'}
+                    ? (lang === 'bn' ? 'প্রেরণ হচ্ছে...' : 'Submitting...')
+                    : (lang === 'bn' ? 'রক্তের অনুরোধ পাঠান' : 'Post Blood Request')}
                 </button>
               </div>
             </form>

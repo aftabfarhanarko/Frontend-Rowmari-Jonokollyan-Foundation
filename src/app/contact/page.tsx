@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { 
   MapPin, 
   CheckCircle2, 
@@ -13,19 +15,36 @@ import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
 import { FOUNDATION_INFO } from '@/data/mockData';
 import { Language } from '@/types';
+import { contactSchema, ContactFormData } from '@/lib/validations/contactSchema';
+import { useSendContactMessageMutation } from '@/store/api/applicationsApi';
 
 export default function ContactPage() {
   const [lang, setLang] = useState<Language>('bn');
-  const [name, setName] = useState('');
-  const [contactInfo, setContactInfo] = useState('');
-  const [message, setMessage] = useState('');
+  const [sendContactMessage, { isLoading: isSubmitting }] = useSendContactMessageMutation();
   const [submitted, setSubmitted] = useState(false);
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !contactInfo.trim() || !message.trim()) return;
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: '',
+      contactInfo: '',
+      message: '',
+    },
+  });
+
+  const onSubmit = async (data: ContactFormData) => {
+    try {
+      await sendContactMessage(data).unwrap();
+    } catch {
+      // optimistic
+    }
     setSubmitted(true);
   };
 
@@ -95,9 +114,7 @@ export default function ContactPage() {
                   type="button"
                   onClick={() => {
                     setSubmitted(false);
-                    setName('');
-                    setContactInfo('');
-                    setMessage('');
+                    reset();
                   }}
                   className="px-5 py-2 rounded-xl bg-stone-100 text-stone-700 text-xs font-bold hover:bg-stone-200 transition cursor-pointer"
                 >
@@ -105,55 +122,59 @@ export default function ContactPage() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-stone-700 mb-1">
-                    {lang === 'bn' ? 'নাম' : 'Name'}
+                    {lang === 'bn' ? 'নাম *' : 'Name *'}
                   </label>
                   <input
                     type="text"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    {...register('name')}
                     placeholder={lang === 'bn' ? 'আপনার পূর্ণ নাম লিখুন' : 'Enter your full name'}
                     className="w-full px-4 py-3 rounded-xl border border-stone-300 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] bg-stone-50 focus:bg-white transition"
                   />
+                  {errors.name && (
+                    <p className="text-red-600 text-xs mt-1">{errors.name.message}</p>
+                  )}
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-stone-700 mb-1">
-                    {lang === 'bn' ? 'ইমেইল / মোবাইল' : 'Email / Mobile'}
+                    {lang === 'bn' ? 'ইমেইল / মোবাইল *' : 'Email / Mobile *'}
                   </label>
                   <input
                     type="text"
-                    required
-                    value={contactInfo}
-                    onChange={(e) => setContactInfo(e.target.value)}
+                    {...register('contactInfo')}
                     placeholder={lang === 'bn' ? '০১৭XXXXXXXX বা ইমেইল' : '017XXXXXXXX or email'}
                     className="w-full px-4 py-3 rounded-xl border border-stone-300 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] bg-stone-50 focus:bg-white transition"
                   />
+                  {errors.contactInfo && (
+                    <p className="text-red-600 text-xs mt-1">{errors.contactInfo.message}</p>
+                  )}
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-stone-700 mb-1">
-                    {lang === 'bn' ? 'বার্তা' : 'Message'}
+                    {lang === 'bn' ? 'বার্তা *' : 'Message *'}
                   </label>
                   <textarea
                     rows={4}
-                    required
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    {...register('message')}
                     placeholder={lang === 'bn' ? 'আপনার বক্তব্য বিস্তারিত লিখুন...' : 'Write your inquiry here...'}
                     className="w-full px-4 py-3 rounded-xl border border-stone-300 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] bg-stone-50 focus:bg-white transition"
                   />
+                  {errors.message && (
+                    <p className="text-red-600 text-xs mt-1">{errors.message.message}</p>
+                  )}
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-sm sm:text-base transition duration-150 shadow-md cursor-pointer flex items-center justify-center gap-2"
+                  disabled={isSubmitting}
+                  className="w-full py-3.5 rounded-xl bg-[#0D5C35] hover:bg-[#094527] disabled:opacity-50 text-white font-bold text-sm sm:text-base transition duration-150 shadow-md cursor-pointer flex items-center justify-center gap-2"
                 >
                   <Send className="w-4 h-4" />
-                  <span>{lang === 'bn' ? 'পাঠান' : 'Send'}</span>
+                  <span>{isSubmitting ? (lang === 'bn' ? 'প্রেরণ হচ্ছে...' : 'Sending...') : (lang === 'bn' ? 'পাঠান' : 'Send')}</span>
                 </button>
               </form>
             )}

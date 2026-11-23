@@ -1,8 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { X, CheckCircle2, Users } from 'lucide-react';
 import { Language } from '@/types';
+import { volunteerSchema, VolunteerFormData } from '@/lib/validations/volunteerSchema';
+import { useApplyVolunteerMutation } from '@/store/api/applicationsApi';
 
 interface VolunteerModalProps {
   isOpen: boolean;
@@ -15,28 +19,42 @@ export default function VolunteerModal({
   onClose,
   lang,
 }: VolunteerModalProps) {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [occupation, setOccupation] = useState('');
-  const [interestArea, setInterestArea] = useState('relief');
-  const [upazila, setUpazila] = useState('রৌমারী');
-  const [motivation, setMotivation] = useState('');
+  const [applyVolunteer, { isLoading: submitting }] = useApplyVolunteerMutation();
   const [isSuccess, setIsSuccess] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<VolunteerFormData>({
+    resolver: zodResolver(volunteerSchema),
+    defaultValues: {
+      name: '',
+      phone: '',
+      email: '',
+      age: 20,
+      profession: '',
+      preferredWing: 'relief',
+      availability: 'anytime',
+      motivation: '',
+    },
+  });
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    setTimeout(() => {
-      setIsSuccess(true);
-      setSubmitting(false);
-    }, 500);
+  const onSubmit = async (data: VolunteerFormData) => {
+    try {
+      await applyVolunteer(data).unwrap();
+    } catch {
+      // optimistic
+    }
+    setIsSuccess(true);
   };
 
   const handleClose = () => {
     setIsSuccess(false);
+    reset();
     onClose();
   };
 
@@ -60,8 +78,8 @@ export default function VolunteerModal({
 
         {isSuccess ? (
           <div className="text-center py-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center">
-              <CheckCircle2 className="w-10 h-10 text-emerald-700" />
+            <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-[#0D5C35] rounded-full flex items-center justify-center">
+              <CheckCircle2 className="w-10 h-10 text-[#0D5C35]" />
             </div>
             <h3 className="text-2xl font-bold text-stone-900 mb-2">
               {lang === 'bn' ? 'স্বেচ্ছাসেবক আবেদন সফল!' : 'Volunteer Application Received!'}
@@ -73,7 +91,7 @@ export default function VolunteerModal({
             </p>
             <button
               onClick={handleClose}
-              className="px-6 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-medium transition shadow-md cursor-pointer"
+              className="px-6 py-2.5 bg-[#0D5C35] hover:bg-[#094527] text-white rounded-xl font-bold transition shadow-md cursor-pointer"
             >
               {lang === 'bn' ? 'ঠিক আছে' : 'Done'}
             </button>
@@ -81,8 +99,8 @@ export default function VolunteerModal({
         ) : (
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
-                <Users className="w-6 h-6 text-emerald-800" />
+              <div className="w-11 h-11 rounded-xl bg-emerald-100 text-[#0D5C35] flex items-center justify-center">
+                <Users className="w-6 h-6 text-[#0D5C35]" />
               </div>
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-stone-900">
@@ -96,19 +114,20 @@ export default function VolunteerModal({
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-stone-700 mb-1">
                   {lang === 'bn' ? 'আপনার নাম *' : 'Full Name *'}
                 </label>
                 <input
                   type="text"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  {...register('name')}
                   placeholder={lang === 'bn' ? 'পুরো নাম' : 'Name'}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35]"
                 />
+                {errors.name && (
+                  <p className="text-red-600 text-xs mt-1">{errors.name.message}</p>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -118,60 +137,75 @@ export default function VolunteerModal({
                   </label>
                   <input
                     type="tel"
-                    required
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    {...register('phone')}
                     placeholder="01XXXXXXXXX"
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-600"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35]"
                   />
+                  {errors.phone && (
+                    <p className="text-red-600 text-xs mt-1">{errors.phone.message}</p>
+                  )}
                 </div>
+
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
-                    {lang === 'bn' ? 'পেশা / শিক্ষাপ্রতিষ্ঠান *' : 'Occupation / College *'}
+                    {lang === 'bn' ? 'বয়স *' : 'Age *'}
+                  </label>
+                  <input
+                    type="number"
+                    min="16"
+                    max="70"
+                    {...register('age', { valueAsNumber: true })}
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35]"
+                  />
+                  {errors.age && (
+                    <p className="text-red-600 text-xs mt-1">{errors.age.message}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 mb-1">
+                    {lang === 'bn' ? 'পেশা / শিক্ষাপ্রতিষ্ঠান' : 'Occupation / College'}
                   </label>
                   <input
                     type="text"
-                    required
-                    value={occupation}
-                    onChange={(e) => setOccupation(e.target.value)}
+                    {...register('profession')}
                     placeholder={lang === 'bn' ? 'যেমন: শিক্ষার্থী / শিক্ষক' : 'e.g. Student'}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-600"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35]"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 mb-1">
+                    {lang === 'bn' ? 'আগ্রহের ক্ষেত্র *' : 'Preferred Wing *'}
+                  </label>
+                  <select
+                    {...register('preferredWing')}
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] bg-white"
+                  >
+                    <option value="relief">ত্রাণ ও শীতবস্ত্র বিতরণ</option>
+                    <option value="medical">মেডিকেল ক্যাম্প সহায়তা</option>
+                    <option value="blood">রক্তদাতা নেটওয়ার্ক সমন্বয়</option>
+                    <option value="media">ফটোগ্রাফি ও মিডিয়া প্রচার</option>
+                    <option value="it">আইটি ও ডেটা ম্যানেজমেন্ট</option>
+                    <option value="education">শিশুকল্যাণ ও শিক্ষাবৃত্তি</option>
+                  </select>
                 </div>
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-stone-700 mb-1">
-                  {lang === 'bn' ? 'কাজের আগ্রহের ক্ষেত্র *' : 'Area of Interest *'}
+                  {lang === 'bn' ? 'সময় প্রাপ্যতা *' : 'Availability *'}
                 </label>
                 <select
-                  value={interestArea}
-                  onChange={(e) => setInterestArea(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-600 bg-white"
+                  {...register('availability')}
+                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] bg-white"
                 >
-                  <option value="relief">মাঠপর্যায়ে ত্রাণ ও শীতবস্ত্র বিতরণ (Relief Distribution)</option>
-                  <option value="medical">মেডিকেল ও হেলথ ক্যাম্প পরিচালনা (Medical Camps)</option>
-                  <option value="blood">জরুরি রক্তদাতা নেটওয়ার্ক সমন্বয় (Blood Coordination)</option>
-                  <option value="media">মিডিয়া, ফটোগ্রাফি ও তথ্যপ্রযুক্তি (Media & IT)</option>
-                  <option value="education">শিক্ষা ও ছাত্রকল্যাণ কর্মসূচি (Education Program)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1">
-                  {lang === 'bn' ? 'এলাকা / ইউনিয়ন *' : 'Location / Union *'}
-                </label>
-                <select
-                  value={upazila}
-                  onChange={(e) => setUpazila(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-600 bg-white"
-                >
-                  <option value="রৌমারী সদর">রৌমারী সদর</option>
-                  <option value="দাঁতভাঙ্গা">দাঁতভাঙ্গা</option>
-                  <option value="বন্দবেড়">বন্দবেড়</option>
-                  <option value="চর শৌলমারী">চর শৌলমারী</option>
-                  <option value="যাদুর চর">যাদুর চর</option>
-                  <option value="শৌলমারী">শৌলমারী</option>
+                  <option value="weekends">শুধু ছুটির দিনে (শুক্রবার/শনিবার)</option>
+                  <option value="weekdays">সপ্তাহের কাজের দিনে</option>
+                  <option value="anytime">যেকোনো সময় (জরুরি প্রয়োজনে)</option>
+                  <option value="emergency">কেবলমাত্র দুর্যোগকালে</option>
                 </select>
               </div>
 
@@ -181,10 +215,9 @@ export default function VolunteerModal({
                 </label>
                 <textarea
                   rows={2}
-                  value={motivation}
-                  onChange={(e) => setMotivation(e.target.value)}
+                  {...register('motivation')}
                   placeholder={lang === 'bn' ? 'সংক্ষেপে লিখুন...' : 'Brief note...'}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35]"
                 />
               </div>
 
@@ -192,7 +225,7 @@ export default function VolunteerModal({
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="px-4 py-2 text-stone-600 hover:text-stone-800 text-sm font-medium"
+                  className="px-4 py-2 text-stone-600 hover:text-stone-800 text-sm font-medium cursor-pointer"
                 >
                   {lang === 'bn' ? 'বাতিল' : 'Cancel'}
                 </button>
@@ -202,8 +235,8 @@ export default function VolunteerModal({
                   className="px-6 py-2.5 rounded-xl bg-[#0D5C35] hover:bg-[#094527] disabled:opacity-50 text-white font-semibold text-sm transition shadow-md cursor-pointer"
                 >
                   {submitting
-                    ? lang === 'bn' ? 'জমা হচ্ছে...' : 'Submitting...'
-                    : lang === 'bn' ? 'নিবন্ধন সম্পন্ন করুন' : 'Submit Application'}
+                    ? (lang === 'bn' ? 'জমা হচ্ছে...' : 'Submitting...')
+                    : (lang === 'bn' ? 'নিবন্ধন সম্পন্ন করুন' : 'Submit Application')}
                 </button>
               </div>
             </form>

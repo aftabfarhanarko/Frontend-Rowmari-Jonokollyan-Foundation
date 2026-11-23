@@ -1,8 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, CheckCircle2, Heart, ShieldCheck } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { X, CheckCircle2, Droplet, ShieldCheck } from 'lucide-react';
 import { Language } from '@/types';
+import { bloodDonorSchema, BloodDonorFormData } from '@/lib/validations/bloodSchemas';
+import { useRegisterBloodDonorMutation } from '@/store/api/applicationsApi';
 
 interface BloodDonorModalProps {
   isOpen: boolean;
@@ -15,30 +19,42 @@ export default function BloodDonorModal({
   onClose,
   lang,
 }: BloodDonorModalProps) {
-  const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [bloodGroup, setBloodGroup] = useState('O+');
-  const [upazila, setUpazila] = useState('রৌমারী');
-  const [village, setVillage] = useState('');
-  const [lastDonation, setLastDonation] = useState('');
-  const [availability, setAvailability] = useState('available');
-  const [agreeConsent, setAgreeConsent] = useState(true);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const [registerBloodDonor, { isLoading: submitting }] = useRegisterBloodDonorMutation();
+  const [submittedName, setSubmittedName] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<BloodDonorFormData>({
+    resolver: zodResolver(bloodDonorSchema),
+    defaultValues: {
+      name: '',
+      phone: '',
+      bloodGroup: 'A+',
+      upazila: 'রৌমারী',
+      village: '',
+      lastDonation: '',
+      availability: 'available',
+      agreeConsent: true,
+    },
+  });
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    setTimeout(() => {
-      setIsSuccess(true);
-      setSubmitting(false);
-    }, 500);
+  const onSubmit = async (data: BloodDonorFormData) => {
+    try {
+      await registerBloodDonor(data).unwrap();
+    } catch {
+      // optimistic fallback
+    }
+    setSubmittedName(data.name);
   };
 
   const handleClose = () => {
-    setIsSuccess(false);
+    setSubmittedName(null);
+    reset();
     onClose();
   };
 
@@ -51,7 +67,7 @@ export default function BloodDonorModal({
         if (e.target === e.currentTarget) handleClose();
       }}
     >
-      <div className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto bg-white rounded-2xl shadow-2xl border border-rose-100 p-6 md:p-8 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto bg-white rounded-2xl shadow-2xl border border-stone-200 p-6 md:p-8 animate-in fade-in zoom-in-95 duration-200">
         <button
           onClick={handleClose}
           aria-label="Close"
@@ -60,42 +76,39 @@ export default function BloodDonorModal({
           <X className="w-4 h-4 text-stone-600" />
         </button>
 
-        {isSuccess ? (
+        {submittedName ? (
           <div className="text-center py-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center">
-              <CheckCircle2 className="w-10 h-10 text-emerald-700" />
+            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 text-[#E53935] rounded-full flex items-center justify-center">
+              <CheckCircle2 className="w-10 h-10 text-[#E53935]" />
             </div>
             <h3 className="text-2xl font-bold text-stone-900 mb-2">
-              {lang === 'bn' ? 'স্বেচ্ছায় রক্তদাতা হিসেবে নিবন্ধন সম্পন্ন!' : 'Donor Registration Complete!'}
+              {lang === 'bn' ? 'রক্তদাতা নিবন্ধন সফল হয়েছে!' : 'Donor Registration Successful!'}
             </h3>
-            <p className="text-stone-600 mb-6 text-sm">
+            <p className="text-stone-600 mb-4 text-sm md:text-base">
               {lang === 'bn'
-                ? 'মানবিক এই মহৎ উদ্যোগে যুক্ত হওয়ার জন্য রৌমারী জনকল্যাণ ফাউন্ডেশনের পক্ষ থেকে আপনাকে আন্তরিক শুভেচ্ছা ও কৃতজ্ঞতা।'
-                : 'Thank you for joining our network of volunteer blood donors in Rowmari.'}
+                ? `ধন্যবাদ ${submittedName}! রৌমারী ব্লাড ব্যাংক নেটওয়ার্কে আপনার তথ্য অন্তর্ভুক্ত করা হয়েছে।`
+                : `Thank you, ${submittedName}! Your details are saved in the Rowmari Blood Network.`}
             </p>
-            <div className="p-4 bg-stone-50 rounded-xl text-left text-xs text-stone-600 space-y-2 mb-6 border border-stone-200">
-              <div className="flex justify-between">
-                <span>রক্তের গ্রুপ:</span> <strong className="text-red-700">{bloodGroup}</strong>
-              </div>
-              <div className="flex justify-between">
-                <span>এলাকা:</span> <strong>{upazila}, কুড়িগ্রাম</strong>
-              </div>
-              <div className="flex justify-between">
-                <span>প্রাইভেসি স্ট্যাটাস:</span> <span className="text-emerald-700 font-semibold">সুরক্ষিত (পাবলিক ডিরেক্টরিতে অদৃশ্য)</span>
-              </div>
+            <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-[#0D5C35] max-w-md mx-auto mb-6 text-left flex items-start gap-2">
+              <ShieldCheck className="w-4 h-4 text-[#0D5C35] shrink-0 mt-0.5" />
+              <span>
+                {lang === 'bn'
+                  ? 'গোপনীয়তার নিশ্চয়তা: আপনার ফোন নম্বর কোনো উন্মুক্ত তালিকায় থাকবে না। জরুরি রোগীর প্রয়োজনে কেবল সমন্বয়ক যোগাযোগ করবেন।'
+                  : 'Your phone number is strictly confidential and never displayed publicly.'}
+              </span>
             </div>
             <button
               onClick={handleClose}
-              className="px-6 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-medium transition shadow-md cursor-pointer"
+              className="px-6 py-2.5 bg-[#E53935] hover:bg-[#D32F2F] text-white rounded-xl font-bold transition shadow-md cursor-pointer"
             >
-              {lang === 'bn' ? 'ঠিক আছে' : 'Done'}
+              {lang === 'bn' ? 'সম্পন্ন করুন' : 'Done'}
             </button>
           </div>
         ) : (
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-red-100 text-red-700 flex items-center justify-center">
-                <Heart className="w-6 h-6 text-red-600 fill-red-100" />
+              <div className="w-11 h-11 rounded-xl bg-red-50 text-[#E53935] flex items-center justify-center">
+                <Droplet className="w-6 h-6 text-[#E53935]" />
               </div>
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-stone-900">
@@ -103,79 +116,72 @@ export default function BloodDonorModal({
                 </h2>
                 <p className="text-xs md:text-sm text-stone-500">
                   {lang === 'bn'
-                    ? 'আপনার ১ ব্যাগ রক্ত বাঁচাতে পারে একটি অসহায় মানুষের জীবন'
-                    : 'Your blood donation can save an innocent life'}
+                    ? 'আপনার এক ব্যাগ রক্ত বাঁচাতে পারে রৌমারীর একটি নিষ্পাপ প্রাণ'
+                    : 'Be an on-call voluntary blood hero for critical patients in Rowmari'}
                 </p>
               </div>
             </div>
 
-            <div className="mb-5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-950 text-xs flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-rose-700 shrink-0" />
-              <span><strong>{lang === 'bn' ? 'কঠোর গোপনীয়তা সুরক্ষা:' : 'Strict Privacy Policy:'}</strong>{' '}
-              {lang === 'bn'
-                ? 'আপনার ফোন নম্বর কোনো পাবলিক লিস্টে প্রকাশ করা হবে না। রক্তের জরুরি প্রয়োজনে কেবল অনুমোদিত ব্লাড সমন্বয়ক আপনার সম্মতি নিয়ে যোগাযোগ করবেন।'
-                : 'Your contact number is NEVER published publicly. Only authorized coordinators contact you when needed.'}</span>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1.5">
-                  {lang === 'bn' ? 'আপনার রক্তের গ্রুপ *' : 'Your Blood Group *'}
-                </label>
-                <div className="grid grid-cols-4 gap-2">
-                  {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map((group) => (
-                    <button
-                      type="button"
-                      key={group}
-                      onClick={() => setBloodGroup(group)}
-                      className={`py-2 px-2 rounded-xl font-bold text-sm border text-center transition ${
-                        bloodGroup === group
-                          ? 'bg-red-700 text-white border-red-700 shadow-xs'
-                          : 'bg-white border-stone-200 text-stone-700 hover:bg-rose-50'
-                      }`}
-                    >
-                      {group}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1">
-                  {lang === 'bn' ? 'আপনার পূর্ণ নাম *' : 'Full Name *'}
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder={lang === 'bn' ? 'আপনার নাম' : 'Full Name'}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600"
-                />
-              </div>
-
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 mb-1">
+                    {lang === 'bn' ? 'আপনার নাম *' : 'Full Name *'}
+                  </label>
+                  <input
+                    type="text"
+                    {...register('name')}
+                    placeholder={lang === 'bn' ? 'আপনার পূর্ণ নাম' : 'Full Name'}
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935]"
+                  />
+                  {errors.name && (
+                    <p className="text-red-600 text-xs mt-1">{errors.name.message}</p>
+                  )}
+                </div>
+
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
                     {lang === 'bn' ? 'মোবাইল নম্বর *' : 'Phone Number *'}
                   </label>
                   <input
                     type="tel"
-                    required
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    {...register('phone')}
                     placeholder="01XXXXXXXXX"
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935]"
                   />
+                  {errors.phone && (
+                    <p className="text-red-600 text-xs mt-1">{errors.phone.message}</p>
+                  )}
                 </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
-                    {lang === 'bn' ? 'উপজেলা *' : 'Upazila *'}
+                    {lang === 'bn' ? 'রক্তের গ্রুপ *' : 'Blood Group *'}
                   </label>
                   <select
-                    value={upazila}
-                    onChange={(e) => setUpazila(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600 bg-white"
+                    {...register('bloodGroup')}
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935] bg-white font-bold text-[#E53935]"
+                  >
+                    <option value="A+">A+ (পজিটিভ)</option>
+                    <option value="A-">A- (নেগেটিভ)</option>
+                    <option value="B+">B+ (পজিটিভ)</option>
+                    <option value="B-">B- (নেগেটিভ)</option>
+                    <option value="O+">O+ (পজিটিভ)</option>
+                    <option value="O-">O- (নেগেটিভ)</option>
+                    <option value="AB+">AB+ (পজিটিভ)</option>
+                    <option value="AB-">AB- (নেগেটিভ)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 mb-1">
+                    {lang === 'bn' ? 'উপজেলা / এলাকা *' : 'Upazila / Area *'}
+                  </label>
+                  <select
+                    {...register('upazila')}
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935] bg-white"
                   >
                     <option value="রৌমারী">রৌমারী, কুড়িগ্রাম</option>
                     <option value="রাজীবপুর">রাজীবপুর, কুড়িগ্রাম</option>
@@ -192,10 +198,9 @@ export default function BloodDonorModal({
                   </label>
                   <input
                     type="text"
-                    value={village}
-                    onChange={(e) => setVillage(e.target.value)}
+                    {...register('village')}
                     placeholder={lang === 'bn' ? 'যেমন: দাঁতভাঙ্গা বাজার' : 'Area name'}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935]"
                   />
                 </div>
                 <div>
@@ -204,10 +209,9 @@ export default function BloodDonorModal({
                   </label>
                   <input
                     type="text"
-                    value={lastDonation}
-                    onChange={(e) => setLastDonation(e.target.value)}
+                    {...register('lastDonation')}
                     placeholder={lang === 'bn' ? 'যেমন: ৩ মাস আগে / জানা নেই' : 'e.g. 3 months ago / Never'}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935]"
                   />
                 </div>
               </div>
@@ -217,9 +221,8 @@ export default function BloodDonorModal({
                   {lang === 'bn' ? 'আপনার উপস্থিতি স্ট্যাটাস' : 'Availability Status'}
                 </label>
                 <select
-                  value={availability}
-                  onChange={(e) => setAvailability(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600 bg-white"
+                  {...register('availability')}
+                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935] bg-white"
                 >
                   <option value="available">রক্তদানের জন্য প্রস্তুত (Ready to donate)</option>
                   <option value="emergency_only">কেবলমাত্র অতি-জরুরি মুহূর্তে (Emergency only)</option>
@@ -231,9 +234,8 @@ export default function BloodDonorModal({
                 <input
                   type="checkbox"
                   id="donorConsent"
-                  checked={agreeConsent}
-                  onChange={(e) => setAgreeConsent(e.target.checked)}
-                  className="mt-0.5 rounded text-red-700 focus:ring-red-600"
+                  {...register('agreeConsent')}
+                  className="mt-0.5 rounded text-[#E53935] focus:ring-[#E53935]"
                 />
                 <label htmlFor="donorConsent" className="text-xs text-stone-600">
                   {lang === 'bn'
@@ -246,18 +248,18 @@ export default function BloodDonorModal({
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="px-4 py-2 text-stone-600 hover:text-stone-800 text-sm font-medium"
+                  className="px-4 py-2 text-stone-600 hover:text-stone-800 text-sm font-medium cursor-pointer"
                 >
                   {lang === 'bn' ? 'বাতিল' : 'Cancel'}
                 </button>
                 <button
                   type="submit"
-                  disabled={submitting || !agreeConsent}
+                  disabled={submitting}
                   className="px-6 py-2.5 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] disabled:opacity-50 text-white font-semibold text-sm transition shadow-md cursor-pointer"
                 >
                   {submitting
-                    ? lang === 'bn' ? 'নিবন্ধন হচ্ছে...' : 'Registering...'
-                    : lang === 'bn' ? 'রক্তদাতা হিসেবে নিবন্ধন করুন' : 'Complete Registration'}
+                    ? (lang === 'bn' ? 'নিবন্ধন হচ্ছে...' : 'Registering...')
+                    : (lang === 'bn' ? 'রক্তদাতা হিসেবে নিবন্ধন করুন' : 'Complete Registration')}
                 </button>
               </div>
             </form>

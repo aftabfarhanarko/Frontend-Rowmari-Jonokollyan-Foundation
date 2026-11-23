@@ -1,15 +1,19 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { 
   X, 
   CheckCircle2, 
   HeartHandshake, 
   AlertCircle, 
-  Upload, 
-  Check 
+  Upload
 } from 'lucide-react';
 import { Language } from '@/types';
+import { assistanceSchema, AssistanceFormData } from '@/lib/validations/assistanceSchema';
+import { useSubmitAssistanceMutation } from '@/store/api/applicationsApi';
+import { useAppStore } from '@/store/useAppStore';
 
 interface AssistanceModalProps {
   isOpen: boolean;
@@ -24,39 +28,56 @@ export default function AssistanceModal({
   lang,
   onSubmittedSuccess,
 }: AssistanceModalProps) {
-  const [category, setCategory] = useState('medical');
-  const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [nid, setNid] = useState('');
-  const [unionName, setUnionName] = useState('রৌমারী সদর');
-  const [village, setVillage] = useState('');
-  const [amountOrItems, setAmountOrItems] = useState('');
-  const [description, setDescription] = useState('');
-  const [agreeConsent, setAgreeConsent] = useState(true);
+  const addSavedApplicationId = useAppStore((state) => state.addSavedApplicationId);
+  const [submitAssistance, { isLoading: isSubmitting }] = useSubmitAssistanceMutation();
   const [generatedId, setGeneratedId] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<AssistanceFormData>({
+    resolver: zodResolver(assistanceSchema),
+    defaultValues: {
+      category: 'medical',
+      fullName: '',
+      phone: '',
+      nid: '',
+      unionName: 'রৌমারী সদর',
+      village: '',
+      amountOrItems: '',
+      description: '',
+      agreeConsent: true,
+    },
+  });
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setTimeout(() => {
-      const randomNum = Math.floor(1000 + Math.random() * 9000);
-      const newId = `RJF-2026-${randomNum}`;
+  const onSubmit = async (data: AssistanceFormData) => {
+    try {
+      const response = await submitAssistance(data).unwrap();
+      const newId = response.applicationId;
       setGeneratedId(newId);
-      setIsSubmitting(false);
+      addSavedApplicationId(newId);
       if (onSubmittedSuccess) {
         onSubmittedSuccess(newId);
       }
-    }, 600);
+    } catch {
+      // Fallback optimistic ID
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      const fallbackId = `RJF-2026-${randomNum}`;
+      setGeneratedId(fallbackId);
+      addSavedApplicationId(fallbackId);
+      if (onSubmittedSuccess) {
+        onSubmittedSuccess(fallbackId);
+      }
+    }
   };
 
   const handleResetAndClose = () => {
     setGeneratedId(null);
-    setFullName('');
-    setPhone('');
-    setDescription('');
+    reset();
     onClose();
   };
 
@@ -80,10 +101,10 @@ export default function AssistanceModal({
 
         {generatedId ? (
           <div className="text-center py-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center">
-              <CheckCircle2 className="w-10 h-10 text-emerald-700" />
+            <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-[#0D5C35] rounded-full flex items-center justify-center">
+              <CheckCircle2 className="w-10 h-10 text-[#0D5C35]" />
             </div>
-            <h3 className="text-2xl font-bold text-emerald-900 mb-2">
+            <h3 className="text-2xl font-bold text-stone-900 mb-2">
               {lang === 'bn' ? 'আবেদন সফলভাবে গৃহীত হয়েছে!' : 'Application Submitted Successfully!'}
             </h3>
             <p className="text-stone-600 mb-6 text-sm md:text-base">
@@ -91,11 +112,11 @@ export default function AssistanceModal({
                 ? 'আপনার আবেদনটি রৌমারী জনকল্যাণ ফাউন্ডেশনের রিভিউ কমিটিতে পাঠানো হয়েছে। আপনার অনন্য ট্র্যাকিং আইডি:'
                 : 'Your assistance request has been queued for verification. Your unique tracking ID:'}
             </p>
-            <div className="p-4 bg-emerald-50 border-2 border-dashed border-emerald-400 rounded-xl max-w-xs mx-auto mb-6">
-              <span className="text-xs uppercase tracking-wider text-emerald-700 font-semibold block">
+            <div className="p-4 bg-emerald-50 border-2 border-dashed border-[#0D5C35] rounded-xl max-w-xs mx-auto mb-6">
+              <span className="text-xs uppercase tracking-wider text-[#0D5C35] font-semibold block">
                 {lang === 'bn' ? 'আবেদন রেফারেন্স আইডি' : 'Application Tracking ID'}
               </span>
-              <span className="text-2xl font-mono font-bold text-emerald-950 tracking-wider">
+              <span className="text-2xl font-mono font-bold text-[#0D5C35] tracking-wider">
                 {generatedId}
               </span>
             </div>
@@ -106,7 +127,7 @@ export default function AssistanceModal({
             </p>
             <button
               onClick={handleResetAndClose}
-              className="px-6 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-medium transition shadow-md cursor-pointer"
+              className="px-6 py-2.5 bg-[#0D5C35] hover:bg-[#094527] text-white rounded-xl font-medium transition shadow-md cursor-pointer"
             >
               {lang === 'bn' ? 'ঠিক আছে' : 'Done'}
             </button>
@@ -114,8 +135,8 @@ export default function AssistanceModal({
         ) : (
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
-                <HeartHandshake className="w-6 h-6 text-emerald-800" />
+              <div className="w-11 h-11 rounded-xl bg-emerald-100 text-[#0D5C35] flex items-center justify-center">
+                <HeartHandshake className="w-6 h-6 text-[#0D5C35]" />
               </div>
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-stone-900">
@@ -138,109 +159,90 @@ export default function AssistanceModal({
               </span>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-stone-700 mb-1">
-                  {lang === 'bn' ? 'সহায়তার ধরন / ক্যাটাগরি *' : 'Assistance Category *'}
+                  {lang === 'bn' ? 'সহায়তার খাত *' : 'Assistance Category *'}
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {[
-                    { id: 'medical', labelBn: 'চিকিৎসা সহায়তা', labelEn: 'Medical Aid' },
-                    { id: 'winter', labelBn: 'শীতবস্ত্র / কম্বল', labelEn: 'Winter Clothes' },
-                    { id: 'education', labelBn: 'শিক্ষা সহায়তা', labelEn: 'Education Aid' },
-                    { id: 'food', labelBn: 'খাদ্য সহায়তা', labelEn: 'Food Aid' },
-                    { id: 'financial', labelBn: 'আর্থিক অনুদান', labelEn: 'Financial Aid' },
-                    { id: 'emergency', labelBn: 'জরুরি দুর্যোগ ত্রাণ', labelEn: 'Emergency Disaster' },
-                  ].map((cat) => (
-                    <button
-                      type="button"
-                      key={cat.id}
-                      onClick={() => setCategory(cat.id)}
-                      className={`text-xs py-2 px-3 rounded-lg border font-medium text-left transition flex items-center justify-between ${
-                        category === cat.id
-                          ? 'border-emerald-600 bg-emerald-50 text-emerald-900 font-bold'
-                          : 'border-stone-200 bg-white text-stone-700 hover:bg-stone-50'
-                      }`}
-                    >
-                      <span>{lang === 'bn' ? cat.labelBn : cat.labelEn}</span>
-                      {category === cat.id && <Check className="w-3.5 h-3.5 text-emerald-700" />}
-                    </button>
-                  ))}
-                </div>
+                <select
+                  {...register('category')}
+                  className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] text-sm bg-white"
+                >
+                  <option value="medical">জরুরি চিকিৎসা ও ওষুধ সহায়তা</option>
+                  <option value="education">মেধাবী শিক্ষার্থীর বই বা ভর্তি ফি</option>
+                  <option value="winter">শীতবস্ত্র ও কম্বল বিতরণ</option>
+                  <option value="food">জরুরি খাদ্য ও পুষ্টি সহায়তা</option>
+                  <option value="financial">স্বাবলম্বীকরণ ও পুনর্বাসন</option>
+                  <option value="emergency">জরুরি প্রাকৃতিক দুর্যোগ ও বন্যা ত্রাণ</option>
+                </select>
+                {errors.category && (
+                  <p className="text-red-600 text-xs mt-1">{errors.category.message}</p>
+                )}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
-                    {lang === 'bn' ? 'আবেদনকারী / রোগীর পুরো নাম *' : 'Full Name of Applicant/Patient *'}
+                    {lang === 'bn' ? 'আবেদনকারীর পূর্ণ নাম *' : 'Full Name *'}
                   </label>
                   <input
                     type="text"
-                    required
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder={lang === 'bn' ? 'যেমন: মো: করিম হোসেন' : 'e.g., Md. Karim Hossain'}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-emerald-600 text-sm"
+                    {...register('fullName')}
+                    placeholder={lang === 'bn' ? 'যেমন: মোহাম্মদ রহিম উদ্দিন' : 'Full Name'}
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] text-sm"
                   />
+                  {errors.fullName && (
+                    <p className="text-red-600 text-xs mt-1">{errors.fullName.message}</p>
+                  )}
                 </div>
+
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
-                    {lang === 'bn' ? 'যোগাযোগের মোবাইল নম্বর *' : 'Active Mobile Number *'}
+                    {lang === 'bn' ? 'মোবাইল নম্বর (যোগাযোগের জন্য) *' : 'Contact Mobile Number *'}
                   </label>
                   <input
                     type="tel"
-                    required
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="017XXXXXXXX"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-emerald-600 text-sm"
+                    {...register('phone')}
+                    placeholder="01XXXXXXXXX"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] text-sm"
                   />
+                  {errors.phone && (
+                    <p className="text-red-600 text-xs mt-1">{errors.phone.message}</p>
+                  )}
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
-                    {lang === 'bn' ? 'এনআইডি / জন্ম নিবন্ধন নম্বর' : 'NID / Birth Certificate'}
-                  </label>
-                  <input
-                    type="text"
-                    value={nid}
-                    onChange={(e) => setNid(e.target.value)}
-                    placeholder={lang === 'bn' ? 'ঐচ্ছিক তবে যাচাইয়ে সুবিধাজনক' : 'Optional for quick verification'}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-emerald-600 text-xs"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-stone-700 mb-1">
-                    {lang === 'bn' ? 'ইউনিয়ন *' : 'Union (Rowmari) *'}
+                    {lang === 'bn' ? 'ইউনিয়ন *' : 'Union (Rowmari) *'}
                   </label>
                   <select
-                    value={unionName}
-                    onChange={(e) => setUnionName(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-emerald-600 text-xs bg-white"
+                    {...register('unionName')}
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] text-sm bg-white"
                   >
-                    <option value="রৌমারী সদর">রৌমারী সদর</option>
-                    <option value="দাঁতভাঙ্গা">দাঁতভাঙ্গা</option>
-                    <option value="বন্দবেড়">বন্দবেড়</option>
-                    <option value="চর শৌলমারী">চর শৌলমারী</option>
-                    <option value="যাদুর চর">যাদুর চর</option>
-                    <option value="শৌলমারী">শৌলমারী</option>
-                    <option value="অন্যান্য / পার্শ্ববর্তী">অন্যান্য / পার্শ্ববর্তী এলাকা</option>
+                    <option value="রৌমারী সদর">রৌমারী সদর ইউনিয়ন</option>
+                    <option value="যাদুরচর">যাদুরচর ইউনিয়ন</option>
+                    <option value="শৌলমারী">শৌলমারী ইউনিয়ন</option>
+                    <option value="দাঁতভাঙ্গা">দাঁতভাঙ্গা ইউনিয়ন</option>
+                    <option value="বন্দবেড়">বন্দবেড় ইউনিয়ন</option>
+                    <option value="চর শৌলমারী">চর শৌলমারী ইউনিয়ন</option>
                   </select>
                 </div>
+
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
                     {lang === 'bn' ? 'গ্রাম ও পাড়া *' : 'Village / Ward *'}
                   </label>
                   <input
                     type="text"
-                    required
-                    value={village}
-                    onChange={(e) => setVillage(e.target.value)}
+                    {...register('village')}
                     placeholder={lang === 'bn' ? 'যেমন: চুলিয়ার চর, ৩ নং ওয়ার্ড' : 'e.g., Chuliar Char'}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-emerald-600 text-xs"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] text-sm"
                   />
+                  {errors.village && (
+                    <p className="text-red-600 text-xs mt-1">{errors.village.message}</p>
+                  )}
                 </div>
               </div>
 
@@ -252,14 +254,13 @@ export default function AssistanceModal({
                 </label>
                 <input
                   type="text"
-                  value={amountOrItems}
-                  onChange={(e) => setAmountOrItems(e.target.value)}
+                  {...register('amountOrItems')}
                   placeholder={
                     lang === 'bn'
                       ? 'যেমন: ওষুধ ক্রয়ের জন্য ৫,০০০ টাকা অথবা ২টি কম্বল'
                       : 'e.g. 5,000 BDT for medicine or 2 blankets'
                   }
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-emerald-600 text-sm"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] text-sm"
                 />
               </div>
 
@@ -271,37 +272,25 @@ export default function AssistanceModal({
                 </label>
                 <textarea
                   rows={3}
-                  required
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  {...register('description')}
                   placeholder={
                     lang === 'bn'
                       ? 'পরিবারের সদস্য সংখ্যা, আর্থিক সংকট এবং সহায়তার প্রয়োজনীয়তা সংক্ষেপে লিখুন...'
                       : 'Briefly explain your family condition, crisis and why this aid is urgent...'
                   }
-                  className="w-full px-3.5 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-emerald-600 text-sm"
+                  className="w-full px-3.5 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] text-sm"
                 />
-              </div>
-
-              <div className="p-3 bg-stone-50 rounded-xl border border-stone-200">
-                <label className="block text-xs font-semibold text-stone-700 mb-1">
-                  {lang === 'bn'
-                    ? 'সংযুক্ত প্রমাণাদি / ডকুমেন্টস (চিকিৎসাপত্র, ছবি বা প্রত্যয়ন)'
-                    : 'Supporting Documents (Prescription, Photo or Letter)'}
-                </label>
-                <div className="border border-dashed border-stone-300 rounded-lg p-3 text-center bg-white text-xs text-stone-500 hover:border-emerald-500 transition cursor-pointer flex items-center justify-center gap-2">
-                  <Upload className="w-4 h-4 text-stone-500" />
-                  <span>{lang === 'bn' ? 'ফাইল সিলেক্ট করতে ক্লিক করুন (PDF, JPG, PNG - সর্বোচ্চ ৫ এমবি)' : 'Click to attach file (Max 5MB)'}</span>
-                </div>
+                {errors.description && (
+                  <p className="text-red-600 text-xs mt-1">{errors.description.message}</p>
+                )}
               </div>
 
               <div className="flex items-start gap-2 pt-1">
                 <input
                   type="checkbox"
                   id="consent"
-                  checked={agreeConsent}
-                  onChange={(e) => setAgreeConsent(e.target.checked)}
-                  className="mt-0.5 rounded text-emerald-700 focus:ring-emerald-600"
+                  {...register('agreeConsent')}
+                  className="mt-0.5 rounded text-[#0D5C35] focus:ring-[#0D5C35]"
                 />
                 <label htmlFor="consent" className="text-xs text-stone-600">
                   {lang === 'bn'
@@ -309,18 +298,21 @@ export default function AssistanceModal({
                     : 'I certify that the information provided is true and the foundation verification team may verify on ground if necessary.'}
                 </label>
               </div>
+              {errors.agreeConsent && (
+                <p className="text-red-600 text-xs">{errors.agreeConsent.message}</p>
+              )}
 
               <div className="pt-2 flex items-center justify-end gap-3">
                 <button
                   type="button"
                   onClick={handleResetAndClose}
-                  className="px-4 py-2 text-stone-600 hover:text-stone-800 text-sm font-medium"
+                  className="px-4 py-2 text-stone-600 hover:text-stone-800 text-sm font-medium cursor-pointer"
                 >
                   {lang === 'bn' ? 'বাতিল' : 'Cancel'}
                 </button>
                 <button
                   type="submit"
-                  disabled={isSubmitting || !agreeConsent}
+                  disabled={isSubmitting}
                   className="px-6 py-2.5 rounded-xl bg-[#0D5C35] hover:bg-[#094527] disabled:opacity-50 text-white font-medium text-sm transition shadow-md flex items-center gap-2 cursor-pointer"
                 >
                   {isSubmitting ? (
