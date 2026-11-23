@@ -1,20 +1,26 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   FileText,
   Search,
   CheckCircle2,
   MapPin,
   Sparkles,
-  Users,
   Droplet,
+  Users,
   HeartPulse,
+  HeartHandshake,
   GraduationCap,
   ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  ShieldCheck,
 } from 'lucide-react';
 import { Language } from '@/types';
+import { useAppStore } from '@/store/useAppStore';
 
 interface HeroProps {
   lang: Language;
@@ -27,7 +33,156 @@ export default function Hero({
   onOpenAssistance,
   onOpenActivities,
 }: HeroProps) {
-  // Curated field photo cards with real-life humanitarian impact details
+  const {
+    setBloodRequestModalOpen,
+    setBloodDonorModalOpen,
+    setDonationModalOpen,
+  } = useAppStore();
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  // 4 Full-Width Panoramic Hero Banner Slides
+  const heroSlides = [
+    {
+      id: 'slide-1',
+      badgeBn: 'স্থাপিত ২০১৮ • রৌমারী, কুড়িগ্রাম • ৯ম বছরে পদার্পণ',
+      badgeEn: 'Est. 2018 • Rowmari, Kurigram • 8+ Years of Service',
+      categoryBn: 'মানবিক সহায়তা মিশন',
+      categoryEn: 'Humanitarian Mission',
+      titleBn: 'মানুষের পাশে, মানুষের জন্য',
+      titleEn: 'Standing by People, For Humanity',
+      subtitleBn:
+        'রৌমারী ও ব্রহ্মপুত্রের দুর্গম চরাঞ্চলের অসহায় শীতার্ত মানুষের পাশে দাঁড়ানোই আমাদের কাজ। শীতবস্ত্র, খাদ্য, শিক্ষা, চিকিৎসা ও রক্তদানে আমরা সার্বক্ষণিক নিবেদিত।',
+      subtitleEn:
+        'Dedicated to serving the underprivileged in Rowmari and remote river island chars through winter relief, food aid, education, healthcare, and emergency blood donor coordination.',
+      btnPrimaryBn: 'সহায়তার আবেদন',
+      btnPrimaryEn: 'Request Assistance',
+      btnPrimaryAction: 'assistance',
+      btnPrimaryIcon: FileText,
+      btnSecondaryBn: 'কার্যক্রম দেখুন',
+      btnSecondaryEn: 'Explore Activities',
+      btnSecondaryAction: 'activities',
+      btnSecondaryIcon: Search,
+      imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1800&q=85',
+      overlayGradient: 'from-[#073B22]/95 via-[#073B22]/80 to-transparent',
+    },
+    {
+      id: 'slide-2',
+      badgeBn: '২৪/৭ লাইভ ইমার্জেন্সি ব্লাড নেটওয়ার্ক',
+      badgeEn: '24/7 Live Emergency Blood Network',
+      categoryBn: 'জরুরি রক্তদান উইং',
+      categoryEn: 'Blood Donation Wing',
+      titleBn: 'এক ব্যাগ রক্ত, একটি মুমূর্ষু জীবনের আলো',
+      titleEn: 'One Bag of Blood, A Lifeline for Humanity',
+      subtitleBn:
+        'রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্স ও কুড়িগ্রামের হাসপাতালে রক্তের প্রয়োজনে ১,২০০+ নিবন্ধিত রক্তদাতা মানুষের জীবন বাঁচাতে সদা প্রস্তুত।',
+      subtitleEn:
+        'Ready 24/7 for emergency blood requirements at Rowmari Upazila Health Complex and Kurigram hospitals with a dedicated network of verified blood donors.',
+      btnPrimaryBn: 'জরুরি রক্তের আবেদন',
+      btnPrimaryEn: 'Request Blood',
+      btnPrimaryAction: 'blood-request',
+      btnPrimaryIcon: Droplet,
+      btnSecondaryBn: 'রক্তদাতা নিবন্ধন',
+      btnSecondaryEn: 'Become Blood Donor',
+      btnSecondaryAction: 'blood-donor',
+      btnSecondaryIcon: Users,
+      imageUrl: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=1800&q=85',
+      overlayGradient: 'from-[#7f1d1d]/95 via-[#991b1b]/80 to-transparent',
+    },
+    {
+      id: 'slide-3',
+      badgeBn: 'দরিদ্র ও অসহায় রোগীর চিকিৎসা তহবিল',
+      badgeEn: 'Medical Aid & Healthcare Fund',
+      categoryBn: 'চিকিৎসা সহায়তা ও ফ্রি ওষুধ',
+      categoryEn: 'Healthcare & Medicine Aid',
+      titleBn: 'অসহায় রোগীর সুচিকিৎসায় আমাদের নিরলস অঙ্গীকার',
+      titleEn: 'Quality Healthcare for Every Underprivileged Life',
+      subtitleBn:
+        'বিনা চিকিৎসায় যেন কোনো প্রাণ না হারায়—অসহায় রোগীদের বড় ধরনের অপারেশন, জটিল হৃদরোগ, থ্যালাসেমিয়া ও ওষুধে জরুরি আর্থিক অনুদান ও সহায়তা প্রদান।',
+      subtitleEn:
+        'No life should be lost for lack of medicine. Providing vital medical grants, complex surgery support, and free physician camps in remote river island unions.',
+      btnPrimaryBn: 'চিকিৎসা সহায়তা আবেদন',
+      btnPrimaryEn: 'Apply Medical Aid',
+      btnPrimaryAction: 'assistance',
+      btnPrimaryIcon: HeartPulse,
+      btnSecondaryBn: 'চিকিৎসায় অনুদান দিন',
+      btnSecondaryEn: 'Donate For Patients',
+      btnSecondaryAction: 'donation',
+      btnSecondaryIcon: HeartHandshake,
+      imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1800&q=85',
+      overlayGradient: 'from-[#064e3b]/95 via-[#065f46]/80 to-transparent',
+    },
+    {
+      id: 'slide-4',
+      badgeBn: 'চরাঞ্চলের সুবিধাবঞ্চিত শিশুদের মেধা বিকাশ',
+      badgeEn: 'Char Education & Child Empowerment',
+      categoryBn: 'শিক্ষা উপবৃত্তি ও বইপত্র',
+      categoryEn: 'Education & Scholarships',
+      titleBn: 'শিক্ষার আলোয় আলোকিত হোক প্রতিটি শিশুর ভবিষ্যৎ',
+      titleEn: 'Lighting the Lamp of Education for Every Child',
+      subtitleBn:
+        'অর্থের অভাবে যেন কোনো দরিদ্র মেধাবী শিশুর পড়াশোনা বন্ধ না হয়—রৌমারীর চরাঞ্চলে প্রাথমিক ও মাধ্যমিক শিক্ষার্থীদের স্কুল ব্যাগ, বইপত্র ও মাসিক বৃত্তি প্রদান।',
+      subtitleEn:
+        'Poverty must not stop education. Distributing school supplies, notebooks, bags, and monthly scholarships to prevent student dropouts in remote chars.',
+      btnPrimaryBn: 'শিক্ষা উপবৃত্তি আবেদন',
+      btnPrimaryEn: 'Scholarship Aid',
+      btnPrimaryAction: 'assistance',
+      btnPrimaryIcon: GraduationCap,
+      btnSecondaryBn: 'শিক্ষা তহবিলে অনুদান',
+      btnSecondaryEn: 'Support Education',
+      btnSecondaryAction: 'donation',
+      btnSecondaryIcon: Sparkles,
+      imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1800&q=85',
+      overlayGradient: 'from-[#1e1b4b]/95 via-[#312e81]/80 to-transparent',
+    },
+  ];
+
+  // Auto-play slideshow every 6 seconds (pauses on hover)
+  useEffect(() => {
+    if (isPaused) return;
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [isPaused, heroSlides.length]);
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  };
+
+  const activeSlide = heroSlides[currentSlide];
+
+  const handleAction = (actionType: string) => {
+    switch (actionType) {
+      case 'assistance':
+        onOpenAssistance();
+        break;
+      case 'activities':
+        onOpenActivities();
+        break;
+      case 'blood-request':
+        setBloodRequestModalOpen(true);
+        break;
+      case 'blood-donor':
+        setBloodDonorModalOpen(true);
+        break;
+      case 'donation':
+        setDonationModalOpen(true);
+        break;
+      default:
+        onOpenActivities();
+    }
+  };
+
+  const PrimaryIcon = activeSlide.btnPrimaryIcon;
+  const SecondaryIcon = activeSlide.btnSecondaryIcon;
+
+  // 4 Curated Field Photography Highlights
   const fieldHighlights = [
     {
       id: 'field-1',
@@ -43,7 +198,6 @@ export default function Hero({
       descBn: 'কনকনে শীতে ব্রহ্মপুত্রের প্রত্যন্ত চরাঞ্চলের অসহায় পরিবারের মুখে উষ্ণতার হাসি।',
       descEn: 'Delivering warmth to vulnerable families across remote Brahmaputra river island chars.',
       imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80',
-      icon: Users,
     },
     {
       id: 'field-2',
@@ -59,7 +213,6 @@ export default function Hero({
       descBn: 'মুমূর্ষু রোগীর জীবন বাঁচাতে ২৪/৭ জরুরি রক্তের ব্যবস্থা ও ফ্রি ব্লাড গ্রুপিং ক্যাম্প।',
       descEn: '24/7 volunteer emergency blood supply and regular community donor camps.',
       imageUrl: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=800&q=80',
-      icon: Droplet,
     },
     {
       id: 'field-3',
@@ -75,7 +228,6 @@ export default function Hero({
       descBn: 'অভিজ্ঞ চিকিৎসকদের মাধ্যমে সুবিধাবঞ্চিত চরাঞ্চলবাসীর বিনামূল্যে স্বাস্থ্য পরীক্ষা ও ওষুধ।',
       descEn: 'Free physician consultations, diagnosis, and essential life-saving medicine distribution.',
       imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
-      icon: HeartPulse,
     },
     {
       id: 'field-4',
@@ -91,134 +243,195 @@ export default function Hero({
       descBn: 'ঝরে পড়া রোধে চরাঞ্চলের দরিদ্র শিক্ষার্থীদের স্কুল ব্যাগ, বইপত্র ও মাসিক উপবৃত্তি প্রদান।',
       descEn: 'Providing bags, stationery, and monthly stipends to keep children in classrooms.',
       imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80',
-      icon: GraduationCap,
     },
   ];
 
   return (
-    <section id="home" className="relative pt-6 pb-14 md:pt-12 md:pb-20 overflow-hidden bg-gradient-to-b from-emerald-50/50 via-white to-stone-50/40">
+    <section
+      id="home"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      className="relative pt-4 pb-12 md:pt-6 md:pb-16 overflow-hidden bg-gradient-to-b from-stone-50 via-white to-stone-50/60"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Top Grid: Hero Typography (Left) + Focal Image Card (Right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
-          {/* Left Column: Texts & CTAs */}
-          <div className="lg:col-span-7 space-y-6">
-            {/* Tagline Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100/70 border border-emerald-200/60 text-emerald-900 text-xs font-semibold">
-              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-              <span>{lang === 'bn' ? 'স্থাপিত ২০১৮ • রৌমারী, কুড়িগ্রাম' : 'Est. 2018 • Rowmari, Kurigram'}</span>
-              <span className="text-emerald-700/60">|</span>
-              <span className="text-emerald-800 font-medium">
-                {lang === 'bn' ? '৯ম বছরে পদার্পণ' : '8+ Years of Service'}
-              </span>
-            </div>
-
-            {/* Main Heading in bold Primary Red */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-extrabold text-[#E53935] leading-[1.2] tracking-tight">
-              {lang === 'bn' ? 'মানুষের পাশে, মানুষের জন্য' : 'Standing by People, For Humanity'}
-            </h1>
-
-            {/* Subheading */}
-            <p className="text-base sm:text-lg text-stone-600 leading-relaxed max-w-2xl font-normal">
-              {lang === 'bn'
-                ? 'শীতবস্ত্র, খাদ্য, শিক্ষা, চিকিৎসা ও রক্তদানে রৌমারীর অসহায় মানুষের পাশে দাঁড়ানোই আমাদের কাজ। রৌমারী ও দুর্গম চরাঞ্চলের সুবিধাবঞ্চিত প্রতিটি মানুষের পাশে আমরা নিরলসভাবে নিবেদিত।'
-                : 'Dedicated to serving the underprivileged in Rowmari and remote river island chars through winter relief, food aid, education, healthcare, and emergency blood donor coordination.'}
-            </p>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <button
-                onClick={onOpenAssistance}
-                className="px-7 py-3 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-semibold text-base transition duration-150 shadow-md shadow-emerald-900/15 hover:shadow-lg flex items-center gap-2.5 active:scale-98 cursor-pointer"
-              >
-                <FileText className="w-5 h-5" />
-                <span>{lang === 'bn' ? 'সহায়তার আবেদন' : 'Request Assistance'}</span>
-              </button>
-
-              <button
-                onClick={onOpenActivities}
-                className="px-7 py-3 rounded-xl border-2 border-[#0D5C35] text-[#0D5C35] hover:bg-emerald-50/70 font-semibold text-base transition duration-150 flex items-center gap-2 active:scale-98 cursor-pointer"
-              >
-                <Search className="w-5 h-5" />
-                <span>{lang === 'bn' ? 'কার্যক্রম দেখুন' : 'Explore Activities'}</span>
-              </button>
-            </div>
-
-            {/* Trust and Certification Note */}
-            <div className="pt-2 flex flex-wrap items-center gap-3 text-xs text-stone-500">
-              <div className="flex items-center gap-1.5 text-stone-600">
-                <CheckCircle2 className="w-4 h-4 text-[#0D5C35] shrink-0" />
-                <span>
-                  {lang === 'bn' ? 'অধিভুক্তি ও অনুমোদন:' : 'Affiliation & Status:'}{' '}
-                  <a
-                    href="/about"
-                    className="underline text-[#0D5C35] font-medium hover:text-[#E53935] transition"
-                  >
-                    {lang === 'bn'
-                      ? 'সরকারি সমাজসেবা ট্রাস্ট ও অনুমোদিত ছাড়পত্র'
-                      : 'Verified trust certificates & registration'}
-                  </a>
-                </span>
-              </div>
-              <span className="text-stone-300 hidden sm:inline">•</span>
-              <a
-                href="#track"
-                className="text-[#E53935] font-semibold hover:underline"
-              >
-                {lang === 'bn' ? 'আবেদনের অবস্থা দেখুন →' : 'Track Application →'}
-              </a>
-            </div>
-          </div>
-
-          {/* Right Column: Visual Frame with real authentic photo & floating seal badge */}
-          <div className="lg:col-span-5 relative flex justify-center">
-            <div className="relative w-full max-w-md sm:max-w-lg aspect-4/3 rounded-3xl overflow-hidden shadow-2xl border-2 border-stone-200/90 group">
-              {/* Authentic Charity Field Image */}
+        {/* Full-Width Panoramic Hero Slider Card (Matching Reference Banner Style) */}
+        <div className="relative w-full rounded-3xl md:rounded-[36px] overflow-hidden min-h-[460px] sm:min-h-[500px] md:min-h-[540px] lg:min-h-[560px] shadow-2xl border border-stone-200/90 flex flex-col justify-between bg-stone-950">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSlide.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: 'easeInOut' }}
+              className="absolute inset-0 z-0"
+            >
+              {/* Full Background Photography */}
               <Image
-                src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1200&q=80"
-                alt="রৌমারী জনকল্যাণ ফাউন্ডেশনের চরাঞ্চলে মাঠপর্যায়ের মানবিক কার্যক্রম"
+                src={activeSlide.imageUrl}
+                alt={lang === 'bn' ? activeSlide.titleBn : activeSlide.titleEn}
                 fill
-                sizes="(max-width: 768px) 100vw, 500px"
-                className="object-cover group-hover:scale-105 transition-transform duration-500"
                 priority
+                sizes="(max-width: 1280px) 100vw, 1280px"
+                className="object-cover object-center scale-102 transition-transform duration-1000 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/30 to-transparent z-10" />
 
-              {/* Overlay Content */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 z-20 text-white space-y-1">
-                <span className="text-[11px] font-bold uppercase tracking-wider bg-[#E53935] text-white px-2.5 py-0.5 rounded-md inline-block shadow-xs">
-                  {lang === 'bn' ? 'মাঠপর্যায়ের মানবিক কার্যক্রম' : 'Ground Fieldwork'}
-                </span>
-                <h3 className="text-base sm:text-lg font-bold leading-tight drop-shadow-xs">
-                  {lang === 'bn'
-                    ? 'চরবাসীর মুখে হাসি ফোটানোর অবিচল অঙ্গীকার'
-                    : 'Bringing smiles to remote river island families'}
-                </h3>
-                <p className="text-xs text-stone-200 drop-shadow-xs">
-                  {lang === 'bn'
-                    ? '২০১৮ সাল থেকে কুড়িগ্রামের অবহেলিত মানুষের পাশে বিশ্বস্ততার সাথে'
-                    : 'Serving vulnerable communities of Kurigram since 2018'}
+              {/* Multi-layered Deep Branded Gradient Overlay for 100% Crisp Typography */}
+              <div className={`absolute inset-0 z-10 bg-gradient-to-r ${activeSlide.overlayGradient}`} />
+              <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Left & Right Chevron Arrows */}
+          <button
+            onClick={prevSlide}
+            className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 p-2.5 sm:p-3 rounded-full bg-black/35 hover:bg-black/65 text-white border border-white/20 backdrop-blur-md shadow-xl transition-all hover:scale-110 active:scale-95 cursor-pointer"
+            aria-label="Previous Slide"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 p-2.5 sm:p-3 rounded-full bg-black/35 hover:bg-black/65 text-white border border-white/20 backdrop-blur-md shadow-xl transition-all hover:scale-110 active:scale-95 cursor-pointer"
+            aria-label="Next Slide"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+
+          {/* Slide Content Overlay (Inside the Banner) */}
+          <div className="relative z-20 flex-1 flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 max-w-3xl">
+            {/* Top Tagline Badge */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`badge-${activeSlide.id}`}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.4 }}
+              >
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white text-xs font-semibold shadow-md">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>{lang === 'bn' ? activeSlide.badgeBn : activeSlide.badgeEn}</span>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Middle Main Text & CTAs */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`text-${activeSlide.id}`}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -18 }}
+                transition={{ duration: 0.45, ease: 'easeOut' }}
+                className="my-auto py-6 sm:py-8 space-y-4 sm:space-y-5"
+              >
+                <div className="inline-block">
+                  <span className="text-xs sm:text-sm font-bold tracking-wider uppercase px-3 py-1 rounded-md bg-[#E53935] text-white shadow-md">
+                    {lang === 'bn' ? activeSlide.categoryBn : activeSlide.categoryEn}
+                  </span>
+                </div>
+
+                <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-[54px] font-black text-white leading-[1.18] tracking-tight drop-shadow-md">
+                  {lang === 'bn' ? activeSlide.titleBn : activeSlide.titleEn}
+                </h1>
+
+                <p className="text-sm sm:text-base md:text-lg text-stone-100 leading-relaxed font-normal max-w-xl drop-shadow-sm">
+                  {lang === 'bn' ? activeSlide.subtitleBn : activeSlide.subtitleEn}
                 </p>
-              </div>
 
-              {/* Overlaid Official Logo Badge */}
-              <div className="absolute -bottom-3 -left-3 sm:-left-4 z-30 bg-white rounded-full p-1.5 shadow-2xl border-2 border-emerald-600/30 flex items-center justify-center hover:scale-105 transition-transform duration-200">
-                <Image
-                  src="/logo.png"
-                  alt="রৌমারী জনকল্যাণ ফাউন্ডেশন লোগো সিলমোহর"
-                  width={80}
-                  height={80}
-                  className="rounded-full object-contain"
-                  priority
-                />
-              </div>
+                {/* Primary & Secondary Buttons Inside the Banner */}
+                <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
+                  <button
+                    onClick={() => handleAction(activeSlide.btnPrimaryAction)}
+                    className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-sm sm:text-base transition-all duration-200 shadow-xl shadow-red-950/40 hover:scale-[1.03] active:scale-[0.98] flex items-center gap-2.5 cursor-pointer"
+                  >
+                    <PrimaryIcon className="w-5 h-5 text-white" />
+                    <span>{lang === 'bn' ? activeSlide.btnPrimaryBn : activeSlide.btnPrimaryEn}</span>
+                  </button>
 
-              {/* Floating verified badge on top right */}
-              <div className="absolute top-4 right-4 z-20 bg-white/95 backdrop-blur-xs px-3 py-1 rounded-full shadow-md border border-stone-200 flex items-center gap-1.5 text-xs text-[#0D5C35] font-bold">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#0D5C35]" />
-                <span>{lang === 'bn' ? 'যাচাইকৃত মানবিক সংস্থা' : 'Verified Foundation'}</span>
+                  <button
+                    onClick={() => handleAction(activeSlide.btnSecondaryAction)}
+                    className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-sm sm:text-base border border-white/30 backdrop-blur-md transition-all duration-200 shadow-md hover:scale-[1.03] active:scale-[0.98] flex items-center gap-2.5 cursor-pointer"
+                  >
+                    <SecondaryIcon className="w-5 h-5 text-white" />
+                    <span>{lang === 'bn' ? activeSlide.btnSecondaryBn : activeSlide.btnSecondaryEn}</span>
+                  </button>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Bottom Spacer */}
+            <div className="h-4" />
+          </div>
+
+          {/* Bottom Center Capsule Dot Pagination (Matching Reference Image 2!) */}
+          <div className="absolute bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 flex items-center gap-2 shadow-2xl">
+            {heroSlides.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentSlide(idx)}
+                className={`transition-all duration-300 rounded-full cursor-pointer ${
+                  currentSlide === idx
+                    ? 'w-7 sm:w-8 h-2.5 bg-[#E53935] shadow-xs'
+                    : 'w-2 sm:w-2.5 h-2 sm:h-2.5 bg-white/50 hover:bg-white/80'
+                }`}
+                aria-label={`Slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Bottom Right Brand Seal & Logo Watermark (Matching Image 2 watermark!) */}
+          <div className="absolute bottom-5 sm:bottom-6 right-5 sm:right-8 z-30 flex items-center gap-2.5 bg-black/35 backdrop-blur-md px-3 sm:px-4 py-1.5 rounded-full border border-white/15 text-white shadow-xl pointer-events-none">
+            <Image
+              src="/logo.png"
+              alt="RJF Seal"
+              width={30}
+              height={30}
+              className="rounded-full object-contain"
+            />
+            <div className="hidden sm:block text-left">
+              <div className="text-[10px] uppercase tracking-wider text-emerald-300 font-bold leading-tight">
+                RJF OFFICIAL
+              </div>
+              <div className="text-xs font-black text-white leading-tight">
+                রৌমারী জনকল্যাণ ফাউন্ডেশন
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Trust Credential Strip Underneath Panoramic Banner */}
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-stone-500 px-2 sm:px-4">
+          <div className="flex items-center gap-1.5 text-stone-600">
+            <ShieldCheck className="w-4 h-4 text-[#0D5C35] shrink-0" />
+            <span>
+              {lang === 'bn' ? 'অধিভুক্তি ও অনুমোদন:' : 'Affiliation & Status:'}{' '}
+              <a
+                href="/about"
+                className="underline text-[#0D5C35] font-bold hover:text-[#E53935] transition"
+              >
+                {lang === 'bn'
+                  ? 'সরকারি সমাজসেবা ট্রাস্ট ও অনুমোদিত ছাড়পত্র'
+                  : 'Verified trust certificates & registration'}
+              </a>
+            </span>
+          </div>
+
+          <div className="hidden md:flex items-center gap-2 text-stone-600 font-medium">
+            <span>১২,৫০০+ মানুষ সহায়তাপ্রাপ্ত</span>
+            <span>•</span>
+            <span>১,২০০+ রক্তদাতা</span>
+            <span>•</span>
+            <span>৮+ বছরের নিবেদিত মানবিক সেবা</span>
+          </div>
+
+          <a
+            href="#track"
+            className="text-[#E53935] font-bold hover:underline inline-flex items-center gap-1"
+          >
+            <span>{lang === 'bn' ? 'আবেদনের অবস্থা দেখুন' : 'Track Application'}</span>
+            <span>→</span>
+          </a>
         </div>
 
         {/* --- Premium Field Photography Showcase Underneath Hero --- */}
