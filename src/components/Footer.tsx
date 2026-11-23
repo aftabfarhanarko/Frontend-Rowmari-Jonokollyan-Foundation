@@ -388,26 +388,34 @@ export default function Footer({
             </div>
 
             {/* Donation Channels & Transparency Box */}
-            <div className="rounded-xl bg-[#062415] border border-emerald-800/60 p-3 space-y-2 text-xs">
+            <div className="rounded-xl bg-[#062415] border border-emerald-800/60 p-3.5 space-y-2.5 text-xs">
               <div className="flex items-center justify-between">
                 <span className="font-bold text-white">
                   {isBn ? 'স্বচ্ছ অনুদান গ্রহণ চ্যানেল:' : 'Official Donation Channels:'}
                 </span>
-                <span className="text-[10px] text-emerald-400 font-mono">24/7 Verified</span>
+                <span className="text-[10px] text-emerald-400 font-mono font-medium">24/7 Verified</span>
               </div>
-              <div className="grid grid-cols-2 gap-2 text-[11px] text-stone-300">
-                <div className="p-1.5 rounded-lg bg-black/25 border border-white/5">
-                  <span className="block font-bold text-[#E53935]">bKash (মার্চেন্ট)</span>
-                  <span className="font-mono text-stone-300">{FOUNDATION_INFO.bkashMerchant}</span>
-                </div>
-                <div className="p-1.5 rounded-lg bg-black/25 border border-white/5">
-                  <span className="block font-bold text-amber-500">Nagad (মার্চেন্ট)</span>
-                  <span className="font-mono text-stone-300">{FOUNDATION_INFO.nagadMerchant}</span>
-                </div>
+              <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
+                <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 font-bold text-[#E53935]">
+                  bKash
+                </span>
+                <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 font-bold text-amber-500">
+                  Nagad
+                </span>
+                <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 font-bold text-purple-400">
+                  Rocket
+                </span>
+                <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 font-bold text-emerald-400">
+                  Bank Transfer
+                </span>
               </div>
-              <div className="text-[10px] text-stone-400 flex items-center gap-1 pt-0.5">
-                <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
-                <span>{isBn ? 'প্রতিটি অনুদানে ডিজিটাল মানি রসিদ দেওয়া হয়' : 'Official digital receipts issued'}</span>
+              <div className="text-[11px] text-stone-300 flex items-center gap-1.5 pt-0.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span>
+                  {isBn
+                    ? 'প্রতিটি অনুদানে ডিজিটাল মানি রসিদ প্রদান করা হয়'
+                    : 'Official digital receipts issued for all donations'}
+                </span>
               </div>
             </div>
           </div>
