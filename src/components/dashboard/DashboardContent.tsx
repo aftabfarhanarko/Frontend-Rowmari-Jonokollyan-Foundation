@@ -1,0 +1,1154 @@
+"use client"
+
+import React, { useState } from "react"
+import { useAppStore } from "@/store/useAppStore"
+import { UserRole } from "@/types"
+import { DataTable, type TableColumn } from "@/components/ui/data-table"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { RoleBadge } from "@/components/dashboard/RoleBadge"
+import { ROLE_METAS } from "@/config/dashboard-navigation"
+import {
+  Users,
+  Droplet,
+  HeartPulse,
+  GraduationCap,
+  Coins,
+  ClipboardCheck,
+  CheckCircle2,
+  Clock,
+  AlertCircle,
+  Plus,
+  Eye,
+  FileSpreadsheet,
+  RefreshCw,
+  Search,
+  Megaphone,
+  FileText,
+  HeartHandshake,
+  Receipt,
+  Download,
+  Calendar,
+  Building,
+  UserCheck,
+  Send,
+  ExternalLink,
+} from "lucide-react"
+
+interface DashboardContentProps {
+  activeTab: string
+}
+
+export function DashboardContent({ activeTab }: DashboardContentProps) {
+  const {
+    currentRole,
+    setBloodRequestModalOpen,
+    setBloodDonorModalOpen,
+    setAssistanceModalOpen,
+    setDonationModalOpen,
+    setVolunteerModalOpen,
+  } = useAppStore()
+  const roleMeta = ROLE_METAS[currentRole] || ROLE_METAS.COMMUNITY_MEMBER
+
+  // --- 1. Blood Network Data (API: /api/blood/request & /api/blood/donor) ---
+  const [bloodData] = useState([
+    {
+      id: "BLD-REQ-901",
+      patient: "রাকিব হাসান",
+      bloodGroup: "O+",
+      bags: 2,
+      hospital: "রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্স",
+      phone: "01712-345678",
+      urgency: "খুব জরুরি",
+      status: "রক্তদাতা খোঁজা হচ্ছে",
+      date: "আজ, সকাল ১০:১৫",
+    },
+    {
+      id: "BLD-REQ-902",
+      patient: "মোছাঃ সালেহা বেগম",
+      bloodGroup: "B-",
+      bags: 1,
+      hospital: "কুড়িগ্রাম সদর হাসপাতাল",
+      phone: "01823-456789",
+      urgency: "জরুরি",
+      status: "রক্তদাতা বরাদ্দ হয়েছে",
+      date: "আজ, সকাল ০৮:৩০",
+    },
+    {
+      id: "BLD-REQ-903",
+      patient: "আরিফুল ইসলাম",
+      bloodGroup: "A+",
+      bags: 1,
+      hospital: "রৌমারী মডেল ক্লিনিক",
+      phone: "01934-567890",
+      urgency: "সাধারণ",
+      status: "সম্পন্ন",
+      date: "গতকাল",
+    },
+    {
+      id: "BLD-REQ-904",
+      patient: "খাদিজা আক্তার",
+      bloodGroup: "AB+",
+      bags: 2,
+      hospital: "রৌমারী মাতৃসদন",
+      phone: "01755-123456",
+      urgency: "খুব জরুরি",
+      status: "অনুরোধ গৃহীত",
+      date: "আজ, দুপুর ০১:০০",
+    },
+  ])
+
+  // --- 2. Medical Aid Applications (API: /api/assistance) ---
+  const [medicalData] = useState([
+    {
+      id: "RJF-2026-8492",
+      applicant: "আব্দুল কুদ্দুস",
+      condition: "হৃদরোগ চিকিৎসা ও বাইপাস সহায়তা",
+      amountNeeded: 25000,
+      approvedAmount: 15000,
+      assignedOfficer: "তানভীর আহমেদ",
+      status: "যাচাই সম্পন্ন",
+      union: "রৌমারী সদর",
+      date: "২২ নভেম্বর ২০২৪",
+    },
+    {
+      id: "RJF-2026-8493",
+      applicant: "মরিয়ম আক্তার",
+      condition: "থ্যালাসেমিয়া রোগীর নিয়মিত রক্ত ও ইনজেকশন",
+      amountNeeded: 10000,
+      approvedAmount: 10000,
+      assignedOfficer: "ডাঃ সুমাইয়া",
+      status: "অনুমোদিত",
+      union: "যাদুরচর",
+      date: "২১ নভেম্বর ২০২৪",
+    },
+    {
+      id: "RJF-2026-8494",
+      applicant: "জহিরুল ইসলাম",
+      condition: "বন্যাজনিত দুর্ঘটনায় ভাঙা পায়ের অস্ত্রোপচার",
+      amountNeeded: 18000,
+      approvedAmount: 0,
+      assignedOfficer: "অপেক্ষমাণ",
+      status: "তদন্তাধীন",
+      union: "দাঁতভাঙ্গা",
+      date: "২০ নভেম্বর ২০২৪",
+    },
+  ])
+
+  // --- 3. Education Scholarships (API: /api/assistance - category: education) ---
+  const [educationData] = useState([
+    {
+      id: "RJF-2026-301",
+      studentName: "ফাতিমা তুজ জোহরা",
+      institute: "রৌমারী মহিলা কলেজ",
+      grade: "এইচএসসি ১ম বর্ষ",
+      supportType: "মাসিক উপবৃত্তি ও বইপত্র",
+      amount: 1500,
+      status: "অনুমোদিত",
+      union: "রৌমারী সদর",
+    },
+    {
+      id: "RJF-2026-302",
+      studentName: "মো: মেহেদী হাসান",
+      institute: "যাদুরচর উচ্চ বিদ্যালয়",
+      grade: "১০ম শ্রেণি",
+      supportType: "পরীক্ষার ফি ও গাইড বই",
+      amount: 2000,
+      status: "অনুমোদিত",
+      union: "যাদুরচর",
+    },
+    {
+      id: "RJF-2026-303",
+      studentName: "নূরে জান্নাত",
+      institute: "শৌলমারী মাদ্রাসা",
+      grade: "৮ম শ্রেণি",
+      supportType: "পোশাক ও শিক্ষাসামগ্রী",
+      amount: 1200,
+      status: "অপেক্ষমাণ",
+      union: "শৌলমারী",
+    },
+  ])
+
+  // --- 4. Volunteers Data (API: /api/volunteer) ---
+  const [volunteersData] = useState([
+    {
+      id: "VOL-101",
+      name: "নাজমুল হক",
+      wing: "ব্লাড ডোনেশন উইং",
+      union: "রৌমারী সদর",
+      phone: "01723-998877",
+      joinDate: "জানুয়ারি ২০২৪",
+      status: "সক্রিয়",
+    },
+    {
+      id: "VOL-102",
+      name: "তানিয়া সুলতানা",
+      wing: "শিক্ষা ও প্রশিক্ষণ উইং",
+      union: "যাদুরচর",
+      phone: "01834-887766",
+      joinDate: "মার্চ ২০২৪",
+      status: "সক্রিয়",
+    },
+    {
+      id: "VOL-103",
+      name: "শামীম রেজা",
+      wing: "দুর্যোগ ও ত্রাণ উইং",
+      union: "দাঁতভাঙ্গা",
+      phone: "01945-776655",
+      joinDate: "আগস্ট ২০২৪",
+      status: "অন ডিউটি",
+    },
+  ])
+
+  // --- 5. Field Cases Data (API: /api/assistance & /api/track/[id]) ---
+  const [casesData] = useState([
+    {
+      caseId: "CASE-081",
+      applicationId: "RJF-2026-8494",
+      applicant: "জহিরুল ইসলাম",
+      union: "দাঁতভাঙ্গা",
+      village: "চর গয়াপাড়া",
+      category: "চিকিৎসা সহায়তা",
+      caseWorker: "মো: সাইদুর রহমান",
+      visitStatus: "মাঠ পরিদর্শন সম্পন্ন",
+      recommendation: "অনুমোদনের সুপারিশ (৳১৫,০০০)",
+      priority: "উচ্চ",
+    },
+    {
+      caseId: "CASE-082",
+      applicationId: "RJF-2026-8495",
+      applicant: "আনোয়ারা বেগম",
+      union: "বন্দবেড়",
+      village: "কুটিরচর",
+      category: "খাদ্য ও পুনর্বাসন",
+      caseWorker: "হাসিবুল ইসলাম",
+      visitStatus: "তদন্তাধীন",
+      recommendation: "পরিবার যাচাই অপেক্ষমাণ",
+      priority: "জরুরি",
+    },
+    {
+      caseId: "CASE-083",
+      applicationId: "RJF-2026-8492",
+      applicant: "আব্দুল কুদ্দুস",
+      union: "রৌমারী সদর",
+      village: "মির্জাপাড়া",
+      category: "চিকিৎসা সহায়তা",
+      caseWorker: "তানভীর আহমেদ",
+      visitStatus: "অনুমোদিত ও বিতরণযোগ্য",
+      recommendation: "যাচাই সত্য, জরুরি চিকিৎসা প্রয়োজন",
+      priority: "উচ্চ",
+    },
+  ])
+
+  // --- 6. Finance Transactions (API: /api/donate) ---
+  const [financeData] = useState([
+    {
+      id: "TRX-5501",
+      receiptNo: "RJF-REC-78219",
+      donor: "ইকবাল মাহমুদ",
+      campaign: "শীতবস্ত্র বিতরণ ২০২৪",
+      amount: 5000,
+      channel: "bKash",
+      date: "২৪ নভেম্বর ২০২৪",
+      status: "সফল",
+    },
+    {
+      id: "TRX-5502",
+      receiptNo: "RJF-REC-78220",
+      donor: "ড. শরিফুল হক (প্রবাসী)",
+      campaign: "সাধারণ তহবিল",
+      amount: 25000,
+      channel: "Bank Transfer",
+      date: "২৩ নভেম্বর ২০২৪",
+      status: "সফল",
+    },
+    {
+      id: "TRX-5503",
+      receiptNo: "RJF-REC-78221",
+      donor: "বেনামী শুভাকাঙ্ক্ষী",
+      campaign: "জরুরি চিকিৎসা সহায়তা",
+      amount: 2000,
+      channel: "Nagad",
+      date: "২২ নভেম্বর ২০২৪",
+      status: "সফল",
+    },
+  ])
+
+  // --- 7. Campaigns & Content (API: /api/campaigns & /api/news) ---
+  const [campaignsList] = useState([
+    {
+      id: "cmp-winter-2024",
+      titleBn: "শীতবস্ত্র বিতরণ ও কম্বল সহায়তা ২০২৪",
+      target: 100000,
+      raised: 75000,
+      donors: 85,
+      deadlineBn: "৩১ ডিসেম্বর ২০২৪",
+      status: "চলমান",
+    },
+    {
+      id: "cmp-medical-emergency",
+      titleBn: "অসহায় রোগীর জরুরি চিকিৎসা তহবিল",
+      target: 200000,
+      raised: 145000,
+      donors: 120,
+      deadlineBn: "চলমান তহবিল",
+      status: "চলমান",
+    },
+    {
+      id: "cmp-education-aid",
+      titleBn: "মেধাবী শিক্ষার্থী শিক্ষা উপকরণ ও উপবৃত্তি",
+      target: 80000,
+      raised: 80000,
+      donors: 64,
+      deadlineBn: "১৫ নভেম্বর ২০২৪",
+      status: "সম্পন্ন",
+    },
+  ])
+
+  // --- 8. Community Member's Personal Submissions ---
+  const [myApplications] = useState([
+    {
+      id: "RJF-2026-8492",
+      categoryBn: "জরুরি চিকিৎসা সহায়তা",
+      submittedDate: "২২ নভেম্বর ২০২৪",
+      status: "approved",
+      statusTitle: "অনুমোদিত",
+      note: "আপনার আবেদনটি অনুমোদিত হয়েছে। আগামী ২৪ ঘণ্টার মধ্যে সহায়তা প্রদান করা হবে।",
+      officer: "তানভীর আহমেদ (মাঠ কর্মকর্তা)",
+      approvedAmount: "৳১৫,০০০",
+    },
+    {
+      id: "RJF-2026-9104",
+      categoryBn: "শীতবস্ত্র ও জরুরি ত্রাণ",
+      submittedDate: "১০ নভেম্বর ২০২৪",
+      status: "completed",
+      statusTitle: "সম্পন্ন",
+      note: "সহায়তা সামগ্রী সফলভাবে হস্তান্তর করা হয়েছে।",
+      officer: "মো: শফিকুল ইসলাম",
+      approvedAmount: "২টি কম্বল ও শুকনো খাবার",
+    },
+  ])
+
+  const [myBloodRequests] = useState([
+    {
+      id: "BLD-REQ-901",
+      patient: "রাকিব হাসান (ভাই)",
+      bloodGroup: "O+",
+      bags: 2,
+      hospital: "রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্স",
+      status: "রক্তদাতা খোঁজা হচ্ছে",
+      coordinator: "মাহমুদুল হাসান তারেক (01812-987654)",
+      date: "আজ, সকাল ১০:১৫",
+    },
+  ])
+
+  const [myDonations] = useState([
+    {
+      receiptNo: "RJF-REC-78219",
+      campaign: "শীতবস্ত্র বিতরণ ২০২৪",
+      amount: 5000,
+      paymentMethod: "bKash",
+      date: "২৪ নভেম্বর ২০২৪",
+      transactionId: "BK9X8921KL",
+    },
+  ])
+
+  // --- 9. Notifications Data ---
+  const [notifications, setNotifications] = useState([
+    {
+      id: "1",
+      titleBn: "নতুন রক্তের অনুরোধ",
+      descBn: "ও-পজিটিভ (O+) ২ ব্যাগ • রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্স",
+      timeBn: "১০ মিনিট আগে",
+      type: "urgent",
+      isUnread: true,
+    },
+    {
+      id: "2",
+      titleBn: "আবেদন RJF-2026-8492 হালনাগাদ",
+      descBn: "চিকিৎসা সহায়তা • যাচাইকারী কর্মকর্তা পরিদর্শন সম্পন্ন করেছেন",
+      timeBn: "২৫ মিনিট আগে",
+      type: "info",
+      isUnread: true,
+    },
+    {
+      id: "3",
+      titleBn: "ক্যাম্পেইনের লক্ষ্যমাত্রা পূর্ণ",
+      descBn: "শীতবস্ত্র বিতরণ ২০২৪ • ৫০,০০০ টাকা সফলভাবে সংগৃহীত হয়েছে",
+      timeBn: "২ ঘণ্টা আগে",
+      type: "success",
+      isUnread: false,
+    },
+    {
+      id: "4",
+      titleBn: "SMS পাঠানো হয়েছে",
+      descBn: "জরুরি রক্তের প্রয়োজনের প্রেক্ষিতে ১৫ জন রক্তদাতাকে বার্তা প্রেরিত",
+      timeBn: "৫ ঘণ্টা আগে",
+      type: "info",
+      isUnread: false,
+    },
+  ])
+  const [notifFilter, setNotifFilter] = useState<"all" | "unread" | "urgent">("all")
+
+  // --- Table Column Definitions ---
+  const bloodColumns: TableColumn<any>[] = [
+    { header: "আইডি", accessorKey: "id", sortable: true, className: "font-mono text-xs" },
+    { header: "রোগীর নাম", accessorKey: "patient", sortable: true, className: "font-semibold" },
+    {
+      header: "রক্তের গ্রুপ",
+      accessorKey: "bloodGroup",
+      align: "center",
+      cell: (r) => (
+        <span className="inline-block px-2.5 py-0.5 rounded-full bg-red-100 text-red-700 font-bold text-xs">
+          {r.bloodGroup}
+        </span>
+      ),
+    },
+    { header: "ব্যাগ", accessorKey: "bags", align: "center" },
+    { header: "হাসপাতাল", accessorKey: "hospital" },
+    { header: "জরুরিতা", accessorKey: "urgency", align: "center", cell: (r) => (
+      <Badge className={r.urgency === "খুব জরুরি" ? "bg-red-600 text-white" : "bg-amber-500 text-white"}>
+        {r.urgency}
+      </Badge>
+    )},
+    { header: "অবস্থা", accessorKey: "status", align: "center", cell: (r) => (
+      <Badge variant="outline" className="border-stone-300 text-stone-700 bg-stone-50">
+        {r.status}
+      </Badge>
+    )},
+    {
+      header: "অ্যাকশন",
+      align: "center",
+      cell: () => (
+        <Button size="xs" variant="outline" className="h-7 text-xs gap-1">
+          <Eye className="size-3" />
+          <span>বিবরণ</span>
+        </Button>
+      ),
+    },
+  ]
+
+  const medicalColumns: TableColumn<any>[] = [
+    { header: "আবেদন আইডি", accessorKey: "id", sortable: true, className: "font-mono text-xs" },
+    { header: "আবেদনকারী", accessorKey: "applicant", sortable: true, className: "font-semibold" },
+    { header: "চিকিৎসা সংক্রান্ত সমস্যা", accessorKey: "condition" },
+    { header: "ইউনিয়ন", accessorKey: "union" },
+    {
+      header: "প্রয়োজন",
+      accessorKey: "amountNeeded",
+      sortable: true,
+      align: "right",
+      cell: (r) => <span className="font-semibold text-stone-800">৳{r.amountNeeded.toLocaleString("bn-BD")}</span>,
+    },
+    {
+      header: "অনুমোদিত",
+      accessorKey: "approvedAmount",
+      align: "right",
+      cell: (r) => (
+        <span className="font-bold text-emerald-700">৳{r.approvedAmount.toLocaleString("bn-BD")}</span>
+      ),
+    },
+    { header: "দায়িত্বপ্রাপ্ত", accessorKey: "assignedOfficer" },
+    {
+      header: "অবস্থা",
+      accessorKey: "status",
+      align: "center",
+      cell: (r) => (
+        <Badge
+          variant="outline"
+          className={
+            r.status === "অনুমোদিত"
+              ? "border-emerald-500 text-emerald-700 bg-emerald-50"
+              : r.status === "যাচাই সম্পন্ন"
+              ? "border-blue-500 text-blue-700 bg-blue-50"
+              : "border-amber-500 text-amber-700 bg-amber-50"
+          }
+        >
+          {r.status}
+        </Badge>
+      ),
+    },
+  ]
+
+  const casesColumns: TableColumn<any>[] = [
+    { header: "কেস নং", accessorKey: "caseId", sortable: true, className: "font-mono text-xs font-bold" },
+    { header: "আবেদন আইডি", accessorKey: "applicationId", className: "font-mono text-xs text-muted-foreground" },
+    { header: "আবেদনকারী", accessorKey: "applicant", sortable: true, className: "font-semibold" },
+    { header: "ইউনিয়ন ও গ্রাম", cell: (r) => <span>{r.union}, {r.village}</span> },
+    { header: "ধরণ", accessorKey: "category" },
+    { header: "তদন্তকারী কর্মকর্তা", accessorKey: "caseWorker" },
+    {
+      header: "তদন্ত অবস্থা",
+      accessorKey: "visitStatus",
+      align: "center",
+      cell: (r) => (
+        <Badge
+          variant="outline"
+          className={
+            r.visitStatus.includes("অনুমোদিত")
+              ? "border-emerald-500 text-emerald-700 bg-emerald-50"
+              : "border-blue-500 text-blue-700 bg-blue-50"
+          }
+        >
+          {r.visitStatus}
+        </Badge>
+      ),
+    },
+    { header: "সুপারিশ", accessorKey: "recommendation", className: "text-xs font-medium" },
+    {
+      header: "অ্যাকশন",
+      align: "center",
+      cell: () => (
+        <Button size="xs" variant="outline" className="h-7 text-xs">
+          রিপোর্ট আপডেট
+        </Button>
+      ),
+    },
+  ]
+
+  const financeColumns: TableColumn<any>[] = [
+    { header: "রশিদ নং", accessorKey: "receiptNo", className: "font-mono text-xs font-bold text-[#0D5C35]" },
+    { header: "দাতার নাম", accessorKey: "donor", sortable: true, className: "font-semibold" },
+    { header: "ক্যাম্পেইন", accessorKey: "campaign" },
+    {
+      header: "পরিমাণ",
+      accessorKey: "amount",
+      sortable: true,
+      align: "right",
+      cell: (r) => <span className="font-bold text-emerald-700">৳{r.amount.toLocaleString("bn-BD")}</span>,
+    },
+    { header: "পদ্ধতি", accessorKey: "channel", align: "center" },
+    { header: "তারিখ", accessorKey: "date", className: "text-xs text-muted-foreground" },
+  ]
+
+  return (
+    <div className="space-y-6">
+      {/* 1. Header Banner */}
+      <div className="bg-white rounded-2xl border border-stone-200/90 p-5 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <h1 className="text-xl sm:text-2xl font-black text-stone-900 tracking-tight">
+              স্বাগতম, {roleMeta.titleBn}
+            </h1>
+            <RoleBadge role={currentRole} size="sm" />
+          </div>
+          <p className="text-xs sm:text-sm text-stone-500">
+            {roleMeta.descriptionBn}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => window.location.reload()}
+            className="text-xs gap-1.5 h-8 border-stone-300"
+          >
+            <RefreshCw className="size-3.5 text-stone-500" />
+            <span>রিফ্রেশ</span>
+          </Button>
+
+          {/* Role-based quick modal trigger buttons */}
+          {["SUPER_ADMIN", "ADMIN", "BLOOD_COORDINATOR"].includes(currentRole) && (
+            <Button
+              size="sm"
+              onClick={() => setBloodRequestModalOpen(true)}
+              className="text-xs gap-1.5 h-8 bg-red-600 hover:bg-red-700 text-white shadow-xs"
+            >
+              <Droplet className="size-3.5" />
+              <span>রক্তের আবেদন</span>
+            </Button>
+          )}
+
+          {["SUPER_ADMIN", "ADMIN", "MEDICAL_COORDINATOR", "EDUCATION_COORDINATOR"].includes(currentRole) && (
+            <Button
+              size="sm"
+              onClick={() => setAssistanceModalOpen(true)}
+              className="text-xs gap-1.5 h-8 bg-[#0D5C35] hover:bg-[#094527] text-white shadow-xs"
+            >
+              <Plus className="size-3.5" />
+              <span>নতুন আবেদন</span>
+            </Button>
+          )}
+
+          {["SUPER_ADMIN", "ADMIN", "FINANCE_MANAGER"].includes(currentRole) && (
+            <Button
+              size="sm"
+              onClick={() => setDonationModalOpen(true)}
+              className="text-xs gap-1.5 h-8 bg-amber-600 hover:bg-amber-700 text-white shadow-xs"
+            >
+              <Coins className="size-3.5" />
+              <span>অনুদান সংগ্রহ</span>
+            </Button>
+          )}
+
+          {currentRole === "COMMUNITY_MEMBER" && (
+            <Button
+              size="sm"
+              onClick={() => setAssistanceModalOpen(true)}
+              className="text-xs gap-1.5 h-8 bg-[#0D5C35] hover:bg-[#094527] text-white shadow-xs"
+            >
+              <HeartHandshake className="size-3.5" />
+              <span>সাহায্যের আবেদন করুন</span>
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* 2. Overview Tab */}
+      {activeTab === "overview" && (
+        <>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs">
+              <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
+                <span>জরুরি রক্তের আবেদন</span>
+                <div className="p-2 rounded-xl bg-red-50 text-red-600">
+                  <Droplet className="size-4" />
+                </div>
+              </div>
+              <div className="text-2xl font-black text-stone-900">৪ টি</div>
+              <div className="text-[11px] text-red-600 font-semibold mt-1">
+                ২ টিতে জরুরি রক্তদাতা প্রয়োজন
+              </div>
+            </div>
+
+            <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs">
+              <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
+                <span>সহায়তা আবেদনপত্র</span>
+                <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
+                  <HeartPulse className="size-4" />
+                </div>
+              </div>
+              <div className="text-2xl font-black text-stone-900">১২ টি</div>
+              <div className="text-[11px] text-emerald-700 font-semibold mt-1">
+                ৮ টি যাচাই সম্পন্ন
+              </div>
+            </div>
+
+            <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs">
+              <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
+                <span>চলতি মাসের তহবিল</span>
+                <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
+                  <Coins className="size-4" />
+                </div>
+              </div>
+              <div className="text-2xl font-black text-stone-900">৳১,৩২,৫০০</div>
+              <div className="text-[11px] text-stone-500 font-semibold mt-1">
+                মোট ৪২ জন শুভাকাঙ্ক্ষী
+              </div>
+            </div>
+
+            <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs">
+              <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
+                <span>সক্রিয় স্বেচ্ছাসেবক</span>
+                <div className="p-2 rounded-xl bg-teal-50 text-teal-600">
+                  <Users className="size-4" />
+                </div>
+              </div>
+              <div className="text-2xl font-black text-stone-900">৪৮ জন</div>
+              <div className="text-[11px] text-teal-700 font-semibold mt-1">
+                ৬টি ইউনিয়ন টিম
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+            <DataTable
+              title="জরুরি রক্তের অনুরোধসমূহ (লাইভ ফিড)"
+              description="রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্স ও কুড়িগ্রাম সদর হাসপাতালের জরুরি তালিকা"
+              columns={bloodColumns}
+              data={bloodData}
+              searchable
+              searchPlaceholder="রোগীর নাম বা রক্তের গ্রুপ দিয়ে খুঁজুন..."
+              pageSize={5}
+            />
+          </div>
+        </>
+      )}
+
+      {/* 3. Blood Network Tab (Role: BLOOD_COORDINATOR, ADMIN, SUPER_ADMIN) */}
+      {activeTab === "blood" && (
+        <div className="space-y-4">
+          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+            <DataTable
+              title="রক্তদান ব্যবস্থাপনা ও লাইভ রিকোয়েস্ট"
+              description="জরুরি রক্তের আবেদন ও রক্তদাতাদের সমন্বয় (API: /api/blood/request)"
+              columns={bloodColumns}
+              data={bloodData}
+              searchable
+              searchPlaceholder="রোগী, হাসপাতাল বা রক্তের গ্রুপ..."
+              pageSize={10}
+              actions={
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="xs"
+                    onClick={() => setBloodDonorModalOpen(true)}
+                    variant="outline"
+                    className="gap-1 border-stone-300 text-stone-700"
+                  >
+                    <UserCheck className="size-3.5" />
+                    <span>রক্তদাতা নিবন্ধন</span>
+                  </Button>
+                  <Button
+                    size="xs"
+                    onClick={() => setBloodRequestModalOpen(true)}
+                    className="gap-1 bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    <Plus className="size-3.5" />
+                    <span>নতুন রক্তের চাহিদা</span>
+                  </Button>
+                </div>
+              }
+            />
+          </div>
+        </div>
+      )}
+
+      {/* 4. Medical Aid Tab (Role: MEDICAL_COORDINATOR, ADMIN, SUPER_ADMIN) */}
+      {activeTab === "medical" && (
+        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+          <DataTable
+            title="চিকিৎসা সহায়তা আবেদনসমূহ"
+            description="অসহায় ও দরিদ্র রোগীদের চিকিৎসার জন্য তহবিল বিতরণ তালিকা (API: /api/assistance)"
+            columns={medicalColumns}
+            data={medicalData}
+            searchable
+            searchPlaceholder="আবেদনকারী বা রোগ দিয়ে খুঁজুন..."
+            pageSize={10}
+            actions={
+              <Button
+                size="xs"
+                onClick={() => setAssistanceModalOpen(true)}
+                className="gap-1 bg-[#0D5C35] text-white"
+              >
+                <Plus className="size-3.5" />
+                <span>নতুন আবেদনপত্র</span>
+              </Button>
+            }
+          />
+        </div>
+      )}
+
+      {/* 5. Education Tab (Role: EDUCATION_COORDINATOR, ADMIN, SUPER_ADMIN) */}
+      {activeTab === "education" && (
+        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+          <DataTable
+            title="শিক্ষা সহায়তা ও মেধা বৃত্তি"
+            description="দরিদ্র ও মেধাবী শিক্ষার্থীদের উপবৃত্তি ও শিক্ষা সামগ্রী (API: /api/assistance)"
+            columns={[
+              { header: "আইডি", accessorKey: "id", className: "font-mono text-xs" },
+              { header: "শিক্ষার্থীর নাম", accessorKey: "studentName", sortable: true, className: "font-semibold" },
+              { header: "শিক্ষা প্রতিষ্ঠান", accessorKey: "institute" },
+              { header: "শ্রেণি", accessorKey: "grade" },
+              { header: "সহায়তার ধরণ", accessorKey: "supportType" },
+              {
+                header: "বরাদ্দকৃত অর্থ",
+                accessorKey: "amount",
+                align: "right",
+                cell: (r) => <span className="font-bold text-indigo-700">৳{r.amount}</span>,
+              },
+              {
+                header: "স্ট্যাটাস",
+                accessorKey: "status",
+                align: "center",
+                cell: (r) => (
+                  <Badge variant="outline" className="border-indigo-400 text-indigo-700 bg-indigo-50">
+                    {r.status}
+                  </Badge>
+                ),
+              },
+            ]}
+            data={educationData}
+            searchable
+            searchPlaceholder="শিক্ষার্থীর নাম বা প্রতিষ্ঠান..."
+            pageSize={10}
+            actions={
+              <Button
+                size="xs"
+                onClick={() => setAssistanceModalOpen(true)}
+                className="gap-1 bg-indigo-600 hover:bg-indigo-700 text-white"
+              >
+                <Plus className="size-3.5" />
+                <span>বৃত্তি আবেদন যোগ</span>
+              </Button>
+            }
+          />
+        </div>
+      )}
+
+      {/* 6. Volunteers Tab (Role: VOLUNTEER_MANAGER, ADMIN, SUPER_ADMIN) */}
+      {activeTab === "volunteers" && (
+        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+          <DataTable
+            title="স্বেচ্ছাসেবক তালিকা ও উইং বণ্টন"
+            description="নিবন্ধিত স্বেচ্ছাসেবক ও দায়িত্ব বণ্টন (API: /api/volunteer)"
+            columns={[
+              { header: "আইডি", accessorKey: "id", className: "font-mono text-xs" },
+              { header: "নাম", accessorKey: "name", sortable: true, className: "font-semibold" },
+              { header: "উইং", accessorKey: "wing" },
+              { header: "ইউনিয়ন", accessorKey: "union" },
+              { header: "মোবাইল নম্বর", accessorKey: "phone", className: "font-mono text-xs" },
+              {
+                header: "অবস্থা",
+                accessorKey: "status",
+                align: "center",
+                cell: (r) => (
+                  <span className="inline-block px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold">
+                    {r.status}
+                  </span>
+                ),
+              },
+            ]}
+            data={volunteersData}
+            searchable
+            searchPlaceholder="নাম, উইং বা ইউনিয়ন..."
+            pageSize={10}
+            actions={
+              <Button
+                size="xs"
+                onClick={() => setVolunteerModalOpen(true)}
+                className="gap-1 bg-teal-600 hover:bg-teal-700 text-white"
+              >
+                <Plus className="size-3.5" />
+                <span>নতুন স্বেচ্ছাসেবক যোগ</span>
+              </Button>
+            }
+          />
+        </div>
+      )}
+
+      {/* 7. Field Cases Tab (Role: CASE_WORKER, MEDICAL_COORDINATOR, ADMIN, SUPER_ADMIN) */}
+      {activeTab === "cases" && (
+        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+          <DataTable
+            title="মাঠপর্যায় তদন্ত (কেস ট্র্যাকিং ও পরিদর্শন)"
+            description="আবেদনকারীদের বাড়ি গিয়ে যাচাইকরণ ও প্রতিবেদন জমা (API: /api/assistance & /api/track)"
+            columns={casesColumns}
+            data={casesData}
+            searchable
+            searchPlaceholder="কেস নং, আবেদনকারী বা গ্রাম..."
+            pageSize={10}
+            actions={
+              <Button size="xs" variant="outline" className="gap-1 border-stone-300">
+                <FileSpreadsheet className="size-3.5 text-orange-600" />
+                <span>তদন্ত তালিকা প্রিন্ট</span>
+              </Button>
+            }
+          />
+        </div>
+      )}
+
+      {/* 8. Finance Tab (Role: FINANCE_MANAGER, ADMIN, SUPER_ADMIN) */}
+      {activeTab === "finance" && (
+        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+          <DataTable
+            title="অর্থ ও অনুদান প্রাপ্তি হিসাব"
+            description="বিকাশ, নগদ ও ব্যাংক মাধ্যমে সংগৃহীত অনুদান ও মানি রিসিট (API: /api/donate)"
+            columns={financeColumns}
+            data={financeData}
+            searchable
+            searchPlaceholder="দাতার নাম, ক্যাম্পেইন বা রশিদ নং..."
+            pageSize={10}
+            actions={
+              <div className="flex items-center gap-2">
+                <Button
+                  size="xs"
+                  onClick={() => setDonationModalOpen(true)}
+                  className="gap-1 bg-[#0D5C35] text-white"
+                >
+                  <Plus className="size-3.5" />
+                  <span>নতুন অনুদান এন্ট্রি</span>
+                </Button>
+                <Button size="xs" variant="outline" className="gap-1 border-stone-300">
+                  <FileSpreadsheet className="size-3.5 text-emerald-700" />
+                  <span>রিপোর্ট ডাউনলোড</span>
+                </Button>
+              </div>
+            }
+          />
+        </div>
+      )}
+
+      {/* 9. Campaigns & Content Tab (Role: CONTENT_MANAGER, ADMIN, SUPER_ADMIN) */}
+      {activeTab === "content" && (
+        <div className="space-y-6">
+          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+            <DataTable
+              title="ক্যাম্পেইন ব্যবস্থাপনা"
+              description="ওয়েবসাইটে চলমান ও সমাপ্ত ক্যাম্পেইনসমূহ (API: /api/campaigns)"
+              columns={[
+                { header: "আইডি", accessorKey: "id", className: "font-mono text-xs" },
+                { header: "ক্যাম্পেইনের নাম", accessorKey: "titleBn", sortable: true, className: "font-semibold" },
+                {
+                  header: "লক্ষ্যমাত্রা",
+                  accessorKey: "target",
+                  align: "right",
+                  cell: (r) => <span>৳{r.target.toLocaleString("bn-BD")}</span>,
+                },
+                {
+                  header: "সংগৃহীত অর্থ",
+                  accessorKey: "raised",
+                  align: "right",
+                  cell: (r) => (
+                    <span className="font-bold text-emerald-700">৳{r.raised.toLocaleString("bn-BD")}</span>
+                  ),
+                },
+                { header: "দাতা", accessorKey: "donors", align: "center" },
+                { header: "শেষ সময়", accessorKey: "deadlineBn" },
+                {
+                  header: "অবস্থা",
+                  accessorKey: "status",
+                  align: "center",
+                  cell: (r) => (
+                    <Badge variant="outline" className={r.status === "চলমান" ? "border-emerald-500 text-emerald-700 bg-emerald-50" : "border-stone-400 text-stone-600"}>
+                      {r.status}
+                    </Badge>
+                  ),
+                },
+              ]}
+              data={campaignsList}
+              searchable
+              pageSize={5}
+              actions={
+                <Button size="xs" className="gap-1 bg-amber-600 hover:bg-amber-700 text-white">
+                  <Plus className="size-3.5" />
+                  <span>নতুন ক্যাম্পেইন তৈরি</span>
+                </Button>
+              }
+            />
+          </div>
+        </div>
+      )}
+
+      {/* 10. Community Member: My Applications (Role: COMMUNITY_MEMBER) */}
+      {activeTab === "my-applications" && (
+        <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-bold text-stone-900">আমার সাহায্য আবেদন ও বর্তমান অবস্থা</h2>
+              <p className="text-xs text-stone-500">আপনার জমা দেওয়া সকল মানবিক সহায়তা আবেদনের রিয়েলটাইম অগ্রগতি (API: /api/track/[id])</p>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => setAssistanceModalOpen(true)}
+              className="bg-[#0D5C35] text-white text-xs gap-1.5"
+            >
+              <Plus className="size-3.5" />
+              <span>নতুন আবেদন করুন</span>
+            </Button>
+          </div>
+
+          <div className="space-y-3">
+            {myApplications.map((app) => (
+              <div key={app.id} className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-2">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs font-bold bg-white px-2 py-0.5 rounded border border-stone-200 text-stone-800">
+                      {app.id}
+                    </span>
+                    <span className="font-bold text-stone-900 text-sm">{app.categoryBn}</span>
+                  </div>
+                  <Badge className="bg-emerald-600 text-white">{app.statusTitle}</Badge>
+                </div>
+                <p className="text-xs text-stone-600 bg-white p-2.5 rounded-lg border border-stone-100">
+                  <strong className="text-stone-800">সর্বশেষ আপডেট:</strong> {app.note}
+                </p>
+                <div className="flex items-center justify-between text-xs text-stone-500 pt-1">
+                  <span>কর্মকর্তা: {app.officer}</span>
+                  <span className="font-semibold text-emerald-700">বরাদ্দ: {app.approvedAmount}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 11. Community Member: My Blood Requests */}
+      {activeTab === "my-blood-requests" && (
+        <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-bold text-stone-900">আমার রক্তের অনুরোধসমূহ</h2>
+              <p className="text-xs text-stone-500">আপনার পরিবারের জন্য চাওয়া রক্তের আপডেট ও সমন্বয়কারীর তথ্য</p>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => setBloodRequestModalOpen(true)}
+              className="bg-red-600 hover:bg-red-700 text-white text-xs gap-1.5"
+            >
+              <Droplet className="size-3.5" />
+              <span>জরুরি রক্তের আবেদন</span>
+            </Button>
+          </div>
+
+          <div className="space-y-3">
+            {myBloodRequests.map((b) => (
+              <div key={b.id} className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-bold text-xs">
+                      {b.bloodGroup}
+                    </span>
+                    <span className="font-bold text-stone-900 text-sm">{b.patient}</span>
+                    <span className="text-xs text-stone-500">({b.bags} ব্যাগ)</span>
+                  </div>
+                  <Badge variant="outline" className="border-amber-400 text-amber-700 bg-amber-50">
+                    {b.status}
+                  </Badge>
+                </div>
+                <div className="text-xs text-stone-600">
+                  <div><strong>হাসপাতাল:</strong> {b.hospital}</div>
+                  <div><strong>দায়িত্বপ্রাপ্ত কো-অর্ডিনেটর:</strong> {b.coordinator}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 12. Community Member: My Donations */}
+      {activeTab === "my-donations" && (
+        <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-bold text-stone-900">আমার অনুদান ও রশিদ হিস্ট্রি</h2>
+              <p className="text-xs text-stone-500">ফাউন্ডেশনে আপনার প্রদত্ত অর্থ অনুদান ও মানি রিসিট (API: /api/donate)</p>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => setDonationModalOpen(true)}
+              className="bg-[#0D5C35] text-white text-xs gap-1.5"
+            >
+              <Coins className="size-3.5" />
+              <span>অনুদান দিন</span>
+            </Button>
+          </div>
+
+          <div className="space-y-3">
+            {myDonations.map((d) => (
+              <div key={d.receiptNo} className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 flex items-center justify-between flex-wrap gap-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs font-bold text-[#0D5C35]">{d.receiptNo}</span>
+                    <span className="font-bold text-stone-900 text-sm">{d.campaign}</span>
+                  </div>
+                  <div className="text-xs text-stone-500 mt-1">
+                    তারিখ: {d.date} • মাধ্যম: {d.paymentMethod} • TrxID: {d.transactionId}
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-base font-black text-emerald-700">৳{d.amount.toLocaleString("bn-BD")}</span>
+                  <Button size="xs" variant="outline" className="gap-1 border-stone-300">
+                    <Download className="size-3" />
+                    <span>রশিদ</span>
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 13. Notifications Tab */}
+      {activeTab === "notifications" && (
+        <div className="bg-white rounded-2xl border border-stone-200/90 p-5 shadow-2xs space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-stone-900">সিস্টেম নোটিফিকেশন</h2>
+            <div className="flex items-center gap-1.5">
+              {(["all", "unread", "urgent"] as const).map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setNotifFilter(f)}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                    notifFilter === f
+                      ? "bg-[#0D5C35] text-white"
+                      : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                  }`}
+                >
+                  {f === "all" ? "সব" : f === "unread" ? "অপঠিত" : "জরুরি"}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="divide-y divide-stone-100">
+            {notifications
+              .filter((n) => {
+                if (notifFilter === "unread") return n.isUnread
+                if (notifFilter === "urgent") return n.type === "urgent"
+                return true
+              })
+              .map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => {
+                    setNotifications((prev) =>
+                      prev.map((n) =>
+                        n.id === item.id ? { ...n, isUnread: !n.isUnread } : n
+                      )
+                    )
+                  }}
+                  className="py-3 flex items-start gap-3 cursor-pointer hover:bg-stone-50/80 px-2 rounded-xl transition-colors"
+                >
+                  <div className="pt-1.5 shrink-0 w-3">
+                    {item.isUnread && (
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#E53935] animate-pulse" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-sm font-bold text-stone-900">{item.titleBn}</h3>
+                    <p className="text-xs text-stone-500 mt-0.5">{item.descBn}</p>
+                    <span className="text-[11px] text-stone-400 mt-1 inline-block">{item.timeBn}</span>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {/* 14. Users & Roles Tab (SUPER_ADMIN, ADMIN) */}
+      {activeTab === "users" && (
+        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+          <DataTable
+            title="ইউজার ও রোল ব্যবস্থাপনা"
+            description="ফাউন্ডেশনের কর্মকর্তাদের ভূমিকা ও পারমিশন কন্ট্রোল"
+            columns={[
+              { header: "আইডি", accessorKey: "id", className: "font-mono text-xs" },
+              { header: "কর্মকর্তার নাম", accessorKey: "name", sortable: true, className: "font-semibold" },
+              { header: "ইমেইল / মোবাইল", accessorKey: "contact" },
+              {
+                header: "বর্তমান রোল",
+                accessorKey: "role",
+                align: "center",
+                cell: (r) => <RoleBadge role={r.role as UserRole} size="sm" />,
+              },
+              {
+                header: "অ্যাকশন",
+                align: "center",
+                cell: () => (
+                  <Button size="xs" variant="outline" className="h-7 text-xs">
+                    রোল পরিবর্তন
+                  </Button>
+                ),
+              },
+            ]}
+            data={[
+              { id: "USR-01", name: "প্রকৌশলী মো: রফিকুল ইসলাম", contact: "admin@rjf.org", role: "SUPER_ADMIN" },
+              { id: "USR-02", name: "মো: শফিকুল ইসলাম সাজু", contact: "01713-223344", role: "ADMIN" },
+              { id: "USR-03", name: "মাহমুদুল হাসান তারেক", contact: "01812-987654", role: "BLOOD_COORDINATOR" },
+              { id: "USR-04", name: "ডা: তৌহিদুল ইসলাম", contact: "01714-334455", role: "MEDICAL_COORDINATOR" },
+              { id: "USR-05", name: "তানভীর হাসান", contact: "01933-445566", role: "EDUCATION_COORDINATOR" },
+              { id: "USR-06", name: "নাজমুল হক", contact: "01723-998877", role: "VOLUNTEER_MANAGER" },
+              { id: "USR-07", name: "ফারহানা ইয়াসমিন", contact: "finance@rjf.org", role: "FINANCE_MANAGER" },
+              { id: "USR-08", name: "মো: সাইদুর রহমান", contact: "01844-556677", role: "CASE_WORKER" },
+            ]}
+            searchable
+            pageSize={10}
+          />
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default DashboardContent

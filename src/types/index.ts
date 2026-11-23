@@ -75,3 +75,39 @@ export interface ApplicationTrackingStatus {
   assignedOfficerBn?: string;
   amountOrSupportBn?: string;
 }
+
+export type UserRole =
+  | 'SUPER_ADMIN'
+  | 'ADMIN'
+  | 'BLOOD_COORDINATOR'
+  | 'MEDICAL_COORDINATOR'
+  | 'EDUCATION_COORDINATOR'
+  | 'VOLUNTEER_MANAGER'
+  | 'CONTENT_MANAGER'
+  | 'FINANCE_MANAGER'
+  | 'CASE_WORKER'
+  | 'COMMUNITY_MEMBER';
+
+export interface DashboardNavItem {
+  id: string;
+  titleBn: string;
+  titleEn: string;
+  href: string;
+  iconName: string;
+  badge?: string | number;
+  roles: UserRole[]; // Which roles can see this route
+  category?: 'main' | 'operations' | 'management' | 'personal' | 'settings';
+}
+
+export interface RoleMeta {
+  role: UserRole;
+  titleBn: string;
+  titleEn: string;
+  descriptionBn: string;
+  colorScheme: {
+    bg: string;
+    text: string;
+    border: string;
+  };
+}
+

@@ -5,7 +5,6 @@ import { Language, ApplicationTrackingStatus } from '@/types';
 import { MOCK_APPLICATIONS } from '@/data/mockData';
 
 // Modular Page Sections
-import TopAnnouncement from '@/components/TopAnnouncement';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import QuickActions from '@/components/QuickActions';
@@ -110,15 +109,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBF9] text-[#1E293B]">
-      {/* 1. Top Emergency Announcement Strip (Wireframe Top Bar) */}
-      <TopAnnouncement
-        lang={lang}
-        isVisible={topBannerVisible}
-        onOpenDetails={() => setAnnouncementModalOpen(true)}
-        onDismiss={() => setTopBannerVisible(false)}
-      />
-
-      {/* 2. Main Navigation Bar with Logo, Links, Lang Switch & Donate CTA */}
+      {/* 1. Main Navigation Bar with Emergency Announcement Ticker, Logo & Links */}
       <Navbar
         lang={lang}
         onToggleLang={handleToggleLang}

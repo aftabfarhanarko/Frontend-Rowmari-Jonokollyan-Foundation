@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="bn" className="h-full antialiased scroll-smooth">
+    <html lang="bn" className="h-full antialiased scroll-smooth font-sans">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

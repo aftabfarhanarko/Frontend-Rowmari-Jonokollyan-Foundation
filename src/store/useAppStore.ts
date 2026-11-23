@@ -1,12 +1,16 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { Language } from '@/types';
+import { Language, UserRole } from '@/types';
 
 interface AppState {
   // Localization
   lang: Language;
   setLang: (lang: Language) => void;
   toggleLang: () => void;
+
+  // Role Management
+  currentRole: UserRole;
+  setCurrentRole: (role: UserRole) => void;
 
   // Emergency Announcement Banner
   topBannerVisible: boolean;
@@ -47,11 +51,15 @@ interface AppState {
 
 export const useAppStore = create<AppState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       // Localization default: 'bn'
       lang: 'bn',
       setLang: (lang) => set({ lang }),
       toggleLang: () => set((state) => ({ lang: state.lang === 'bn' ? 'en' : 'bn' })),
+
+      // Default Role
+      currentRole: 'SUPER_ADMIN',
+      setCurrentRole: (currentRole) => set({ currentRole }),
 
       // Announcement
       topBannerVisible: true,
@@ -108,6 +116,7 @@ export const useAppStore = create<AppState>()(
       storage: createJSONStorage(() => (typeof window !== 'undefined' ? localStorage : sessionStorage)),
       partialize: (state) => ({
         lang: state.lang,
+        currentRole: state.currentRole,
         announcementDismissedDate: state.announcementDismissedDate,
         savedApplicationIds: state.savedApplicationIds,
         recentDonationReceipts: state.recentDonationReceipts,
