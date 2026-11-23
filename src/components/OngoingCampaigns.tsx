@@ -23,7 +23,7 @@ export default function OngoingCampaigns({
               <Target className="w-3.5 h-3.5" />
               <span>{lang === 'bn' ? 'চলমান ক্যাম্পেইন' : 'Active Campaigns'}</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0D5C35] tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#E53935] tracking-tight">
               {lang === 'bn' ? 'জরুরি মানবকল্যাণ তহবিলসমূহ' : 'Ongoing Humanitarian Funds'}
             </h2>
             <p className="text-xs sm:text-sm text-stone-500 mt-1">
@@ -77,7 +77,7 @@ export default function OngoingCampaigns({
 
                     <div className="w-full h-3 bg-stone-100 rounded-full overflow-hidden p-0.5 border border-stone-200">
                       <div
-                        className="h-full bg-gradient-to-r from-emerald-600 to-emerald-800 rounded-full transition-all duration-500"
+                        className="h-full bg-gradient-to-r from-[#0D5C35] to-[#0A4F2E] rounded-full transition-all duration-500"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
@@ -87,8 +87,8 @@ export default function OngoingCampaigns({
                         <Users className="w-3 h-3 text-stone-400" />
                         <span>{camp.donorsCount} {lang === 'bn' ? 'জন মহানুভব দাতা' : 'generous donors'}</span>
                       </span>
-                      <span className="font-semibold text-emerald-700 flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                      <span className="font-semibold text-[#0D5C35] flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3 text-[#0D5C35]" />
                         <span>{lang === 'bn' ? 'সরাসরি অডিট রিপোর্ট প্রযোজ্য' : 'Reconciled in Audit'}</span>
                       </span>
                     </div>
@@ -101,7 +101,7 @@ export default function OngoingCampaigns({
                   </span>
                   <button
                     onClick={() => onOpenDonation(camp.category)}
-                    className="px-5 py-2.5 rounded-xl bg-red-700 hover:bg-red-800 text-white font-semibold text-xs sm:text-sm transition shadow-sm flex items-center gap-1.5 cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-semibold text-xs sm:text-sm transition shadow-sm flex items-center gap-1.5 cursor-pointer"
                   >
                     <Heart className="w-3.5 h-3.5 fill-white text-white" />
                     <span>{lang === 'bn' ? 'এই তহবিলে অনুদান দিন' : 'Donate to Fund'}</span>

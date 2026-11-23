@@ -276,7 +276,7 @@ export default function BloodRequestModal({
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-6 py-2.5 rounded-xl bg-red-700 hover:bg-red-800 disabled:opacity-50 text-white font-semibold text-sm transition shadow-md"
+                  className="px-6 py-2.5 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] disabled:opacity-50 text-white font-semibold text-sm transition shadow-md cursor-pointer"
                 >
                   {submitting
                     ? lang === 'bn' ? 'প্রেরণ হচ্ছে...' : 'Submitting...'

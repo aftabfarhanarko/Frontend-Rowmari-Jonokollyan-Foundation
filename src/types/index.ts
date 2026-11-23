@@ -33,6 +33,33 @@ export interface CampaignItem {
   descriptionEn: string;
   status: 'ongoing' | 'completed' | 'upcoming';
   category: string;
+  imageUrl?: string;
+}
+
+export interface GalleryItem {
+  id: string;
+  category: string;
+  titleBn: string;
+  titleEn: string;
+  dateBn: string;
+  dateEn: string;
+  tagBn: string;
+  tagEn: string;
+  imageUrl?: string;
+}
+
+export interface NewsItem {
+  id: string;
+  type: 'news' | 'event';
+  titleBn: string;
+  titleEn: string;
+  dateBn: string;
+  dateEn: string;
+  locationBn: string;
+  locationEn: string;
+  summaryBn: string;
+  summaryEn: string;
+  imageUrl?: string;
 }
 
 export interface ApplicationTrackingStatus {

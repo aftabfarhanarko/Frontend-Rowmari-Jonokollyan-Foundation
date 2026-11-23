@@ -356,7 +356,7 @@ export default function DonationModal({
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-semibold text-sm transition shadow-md"
+                  className="px-6 py-2.5 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-semibold text-sm transition shadow-md cursor-pointer"
                 >
                   {lang === 'bn' ? 'অনুদান নিশ্চিত করুন ও রসিদ পান' : 'Confirm Donation & Get Receipt'}
                 </button>

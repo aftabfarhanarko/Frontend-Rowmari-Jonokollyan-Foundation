@@ -1,4 +1,4 @@
-import { ActivityItem, CampaignItem, ApplicationTrackingStatus } from '../types';
+import { ActivityItem, CampaignItem, ApplicationTrackingStatus, GalleryItem, NewsItem } from '../types';
 
 export const FOUNDATION_INFO = {
   nameBn: 'রৌমারী জনকল্যাণ ফাউন্ডেশন',
@@ -135,6 +135,7 @@ export const ACTIVITIES_DATA: ActivityItem[] = [
     locationBn: 'দাঁতভাঙ্গা ও বন্দবেড় চরাঞ্চল, রৌমারী',
     locationEn: 'Dantbhanga & Bandaber Chars, Rowmari',
     beneficiariesCount: 1200,
+    imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80',
     featured: true,
   },
   {
@@ -151,6 +152,7 @@ export const ACTIVITIES_DATA: ActivityItem[] = [
     locationBn: 'রৌমারী মডেল সরকারি প্রাথমিক বিদ্যালয় মাঠ',
     locationEn: 'Rowmari Model Govt. Primary School Field',
     beneficiariesCount: 450,
+    imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
     featured: true,
   },
   {
@@ -167,6 +169,7 @@ export const ACTIVITIES_DATA: ActivityItem[] = [
     locationBn: 'ফাউন্ডেশন মিলনায়তন, রৌমারী',
     locationEn: 'Foundation Auditorium, Rowmari',
     beneficiariesCount: 75,
+    imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80',
     featured: true,
   },
   {
@@ -183,6 +186,7 @@ export const ACTIVITIES_DATA: ActivityItem[] = [
     locationBn: 'রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্স ও কুড়িগ্রাম',
     locationEn: 'Rowmari Upazila Health Complex & Kurigram',
     beneficiariesCount: 135,
+    imageUrl: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=800&q=80',
     featured: false,
   },
   {
@@ -199,6 +203,7 @@ export const ACTIVITIES_DATA: ActivityItem[] = [
     locationBn: 'চর শৌলমারী ও যাদুর চর ইউনিয়ন',
     locationEn: 'Char Shoulmari & Jadhur Char Union',
     beneficiariesCount: 800,
+    imageUrl: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=800&q=80',
     featured: false,
   },
   {
@@ -215,6 +220,7 @@ export const ACTIVITIES_DATA: ActivityItem[] = [
     locationBn: 'শৌলমারী ও কর্তিমারী এলাকা',
     locationEn: 'Shoulmari & Kortimari Area',
     beneficiariesCount: 600,
+    imageUrl: 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=800&q=80',
     featured: false,
   },
 ];
@@ -233,6 +239,7 @@ export const CAMPAIGNS_DATA: CampaignItem[] = [
     descriptionEn: 'A targeted initiative providing warm fleece blankets and heavy garments to vulnerable elderly persons and children across border chars.',
     status: 'ongoing',
     category: 'winter',
+    imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'camp-2',
@@ -247,6 +254,7 @@ export const CAMPAIGNS_DATA: CampaignItem[] = [
     descriptionEn: 'Ensuring free emergency transport fuel and oxygen refilling for critically ill patients traveling from remote chars to district hospitals.',
     status: 'ongoing',
     category: 'medical',
+    imageUrl: 'https://images.unsplash.com/photo-1587745416684-47953f16f02f?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'camp-3',
@@ -261,10 +269,11 @@ export const CAMPAIGNS_DATA: CampaignItem[] = [
     descriptionEn: 'Covering examination registration and book expenses for 100 orphaned and impoverished students.',
     status: 'ongoing',
     category: 'education',
+    imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80',
   },
 ];
 
-export const GALLERY_ITEMS = [
+export const GALLERY_ITEMS: GalleryItem[] = [
   {
     id: 'gal-1',
     category: 'winter',
@@ -274,6 +283,7 @@ export const GALLERY_ITEMS = [
     dateEn: 'Nov 2026',
     tagBn: 'শীতবস্ত্র',
     tagEn: 'Winter Relief',
+    imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'gal-2',
@@ -284,6 +294,7 @@ export const GALLERY_ITEMS = [
     dateEn: 'Oct 2026',
     tagBn: 'স্বাস্থ্যসেবা',
     tagEn: 'Health Camp',
+    imageUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'gal-3',
@@ -294,6 +305,7 @@ export const GALLERY_ITEMS = [
     dateEn: 'Ongoing',
     tagBn: 'রক্তদান',
     tagEn: 'Blood Drive',
+    imageUrl: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'gal-4',
@@ -304,6 +316,7 @@ export const GALLERY_ITEMS = [
     dateEn: 'Sep 2026',
     tagBn: 'শিক্ষা',
     tagEn: 'Education',
+    imageUrl: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'gal-5',
@@ -314,6 +327,7 @@ export const GALLERY_ITEMS = [
     dateEn: 'Aug 2026',
     tagBn: 'বন্যা ত্রাণ',
     tagEn: 'Flood Relief',
+    imageUrl: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'gal-6',
@@ -324,10 +338,11 @@ export const GALLERY_ITEMS = [
     dateEn: 'Jul 2026',
     tagBn: 'টিম ও সম্মেলন',
     tagEn: 'Volunteers',
+    imageUrl: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=800&q=80',
   },
 ];
 
-export const NEWS_EVENTS = [
+export const NEWS_EVENTS: NewsItem[] = [
   {
     id: 'news-1',
     type: 'event',
@@ -339,6 +354,7 @@ export const NEWS_EVENTS = [
     locationEn: 'Dantbhanga Union Parishad Complex',
     summaryBn: 'রংপুর ও ঢাকার বিশেষজ্ঞ মেডিসিন, শিশু ও গাইনি ডাক্তারদের অংশগ্রহণে দিনব্যাপী এই স্বাস্থ্য ক্যাম্প অনুষ্ঠিত হবে।',
     summaryEn: 'Daylong health camp featuring specialist doctors in medicine, pediatrics, and gynecology.',
+    imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'news-2',
@@ -351,6 +367,7 @@ export const NEWS_EVENTS = [
     locationEn: 'Rowmari Office',
     summaryBn: 'দেশ ও বিদেশের শুভানুধ্যায়ীদের সহযোগিতায় ৫ হাজার শীতার্ত পরিবারের পাশে দাঁড়ানোর প্রস্তুতি দ্রুত এগিয়ে চলছে।',
     summaryEn: 'Preparations in full swing to distribute warm blankets to 5,000 families with generous donor contributions.',
+    imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'news-3',
@@ -363,6 +380,7 @@ export const NEWS_EVENTS = [
     locationEn: 'Rowmari Health Complex',
     summaryBn: 'ফাউন্ডেশনের ভলান্টিয়ার ডোনারদের তাৎক্ষণিক হস্তক্ষেপে ৪ জন মুমূর্ষু রোগীকে বিনামূল্যে রক্ত সরবরাহ করা হয়েছে।',
     summaryEn: 'Volunteers provided 4 bags of emergency blood for critical patients within hours.',
+    imageUrl: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=800&q=80',
   },
 ];
 

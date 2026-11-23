@@ -55,7 +55,7 @@ export default function Navbar({
         <div className="flex items-center justify-between h-20">
           {/* Brand Logo & Name */}
           <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 border border-emerald-100 shadow-xs bg-white flex items-center justify-center">
+            <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 border border-stone-200 shadow-xs bg-white flex items-center justify-center">
               <Image
                 src="/logo.png"
                 alt="রৌমারী জনকল্যাণ ফাউন্ডেশন লোগো"
@@ -66,7 +66,7 @@ export default function Navbar({
               />
             </div>
             <div>
-              <span className="text-base sm:text-lg md:text-xl font-bold text-emerald-900 group-hover:text-emerald-700 transition leading-tight block">
+              <span className="text-base sm:text-lg md:text-xl font-bold text-[#0D5C35] group-hover:text-[#E53935] transition leading-tight block">
                 {lang === 'bn' ? 'রৌমারী জনকল্যাণ ফাউন্ডেশন' : 'Rowmari Janakalyan Foundation'}
               </span>
               <span className="text-[11px] text-stone-500 block leading-tight">
@@ -86,8 +86,8 @@ export default function Navbar({
                   href={link.href}
                   className={`text-xs font-semibold transition duration-150 py-1.5 px-1 flex items-center gap-1.5 ${
                     isActive
-                      ? 'text-emerald-800 border-b-2 border-emerald-800'
-                      : 'text-stone-600 hover:text-emerald-800'
+                      ? 'text-[#0D5C35] border-b-2 border-[#0D5C35] font-bold'
+                      : 'text-stone-600 hover:text-[#0D5C35]'
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -111,11 +111,11 @@ export default function Navbar({
               </button>
             )}
 
-            {/* Donate CTA Link / Button */}
+            {/* Donate CTA Link / Button (Primary Red #E53935) */}
             {onOpenDonation ? (
               <button
                 onClick={onOpenDonation}
-                className="px-4 py-2 rounded-full bg-red-700 hover:bg-red-800 text-white font-semibold text-xs sm:text-sm transition shadow-md shadow-red-700/20 flex items-center gap-1.5 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                className="px-5 py-2 rounded-full bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs sm:text-sm transition shadow-md shadow-red-600/20 flex items-center gap-1.5 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
               >
                 <Heart className="w-4 h-4 fill-white text-white" />
                 <span>{lang === 'bn' ? 'অনুদানের জন্য' : 'Donate Now'}</span>
@@ -123,7 +123,7 @@ export default function Navbar({
             ) : (
               <Link
                 href="/donate"
-                className="px-4 py-2 rounded-full bg-red-700 hover:bg-red-800 text-white font-semibold text-xs sm:text-sm transition shadow-md shadow-red-700/20 flex items-center gap-1.5 hover:scale-[1.02] active:scale-[0.98]"
+                className="px-5 py-2 rounded-full bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs sm:text-sm transition shadow-md shadow-red-600/20 flex items-center gap-1.5 hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Heart className="w-4 h-4 fill-white text-white" />
                 <span>{lang === 'bn' ? 'অনুদানের জন্য' : 'Donate Now'}</span>
@@ -184,7 +184,7 @@ export default function Navbar({
             <Link
               href="/donate"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex-1 py-2 rounded-full bg-red-700 text-white font-semibold text-xs shadow-md flex items-center justify-center gap-1.5 text-center"
+              className="flex-1 py-2 rounded-full bg-[#E53935] hover:bg-[#D32F2F] text-white font-semibold text-xs shadow-md flex items-center justify-center gap-1.5 text-center"
             >
               <Heart className="w-3.5 h-3.5 fill-white text-white" />
               <span>{lang === 'bn' ? 'অনুদানের জন্য' : 'Donate Now'}</span>
@@ -192,9 +192,9 @@ export default function Navbar({
             <Link
               href="/volunteer"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex-1 py-2 rounded-full border border-emerald-800 text-emerald-900 font-semibold text-xs flex items-center justify-center gap-1.5 text-center"
+              className="flex-1 py-2 rounded-full border border-[#0D5C35] text-[#0D5C35] hover:bg-emerald-50 font-semibold text-xs flex items-center justify-center gap-1.5 text-center"
             >
-              <Users className="w-3.5 h-3.5 text-emerald-900" />
+              <Users className="w-3.5 h-3.5 text-[#0D5C35]" />
               <span>{lang === 'bn' ? 'স্বেচ্ছাসেবক' : 'Volunteer'}</span>
             </Link>
           </div>

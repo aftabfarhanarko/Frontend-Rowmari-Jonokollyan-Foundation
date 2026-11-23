@@ -62,7 +62,7 @@ export default function AboutUs({
               <span>{lang === 'bn' ? 'আমাদের পরিচিতি ও অঙ্গীকার' : 'About Our Foundation'}</span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0D5C35] leading-tight tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#E53935] leading-tight tracking-tight">
               {lang === 'bn'
                 ? 'মানবিক মূল্যবোধে গড়া ৯ বছরের অবিচল পথচলা'
                 : 'Nearly 9 Years of Steadfast Humanitarian Service'}
@@ -76,8 +76,8 @@ export default function AboutUs({
 
             {/* Mission & Vision Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <div className="p-4 bg-white rounded-xl border border-emerald-100 shadow-2xs">
-                <Target className="w-6 h-6 text-emerald-700 mb-2" />
+              <div className="p-4 bg-white rounded-xl border border-stone-200 border-t-4 border-t-[#0D5C35] shadow-xs">
+                <Target className="w-6 h-6 text-[#0D5C35] mb-2" />
                 <h3 className="font-bold text-stone-900 text-sm mb-1">
                   {lang === 'bn' ? 'আমাদের লক্ষ্য (Mission)' : 'Our Mission'}
                 </h3>
@@ -88,8 +88,8 @@ export default function AboutUs({
                 </p>
               </div>
 
-              <div className="p-4 bg-white rounded-xl border border-emerald-100 shadow-2xs">
-                <Eye className="w-6 h-6 text-emerald-700 mb-2" />
+              <div className="p-4 bg-white rounded-xl border border-stone-200 border-t-4 border-t-[#E53935] shadow-xs">
+                <Eye className="w-6 h-6 text-[#E53935] mb-2" />
                 <h3 className="font-bold text-stone-900 text-sm mb-1">
                   {lang === 'bn' ? 'আমাদের স্বপ্ন (Vision)' : 'Our Vision'}
                 </h3>
@@ -104,13 +104,13 @@ export default function AboutUs({
             <div className="pt-2 flex flex-wrap items-center gap-4">
               <button
                 onClick={onOpenAssistance}
-                className="px-5 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-semibold text-xs sm:text-sm transition shadow-sm"
+                className="px-5 py-2.5 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-semibold text-xs sm:text-sm transition shadow-sm cursor-pointer"
               >
                 {lang === 'bn' ? 'সহায়তার আবেদন করুন' : 'Request Assistance'}
               </button>
               <button
                 onClick={onOpenDonation}
-                className="px-5 py-2.5 rounded-xl border border-emerald-800 text-emerald-800 hover:bg-emerald-50 font-semibold text-xs sm:text-sm transition"
+                className="px-5 py-2.5 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-semibold text-xs sm:text-sm transition shadow-sm cursor-pointer"
               >
                 {lang === 'bn' ? 'তহবিলে অনুদান দিন' : 'Donate to Fund'}
               </button>

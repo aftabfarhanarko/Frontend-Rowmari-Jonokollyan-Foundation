@@ -1,12 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { 
-  Snowflake, 
-  Stethoscope, 
-  GraduationCap, 
-  Droplet, 
-  Wheat, 
   MapPin, 
   Calendar, 
   ArrowRight, 
@@ -38,23 +34,6 @@ export default function RecentActivities({
     { key: 'food' as ActivityCategory, labelBn: 'খাদ্য সহায়তা', labelEn: 'Food Aid' },
   ];
 
-  const getActivityIcon = (cat: string) => {
-    switch (cat) {
-      case 'winter':
-        return <Snowflake className="w-10 h-10 text-cyan-700" />;
-      case 'medical':
-        return <Stethoscope className="w-10 h-10 text-emerald-700" />;
-      case 'education':
-        return <GraduationCap className="w-10 h-10 text-blue-700" />;
-      case 'emergency':
-        return <Droplet className="w-10 h-10 text-red-600" />;
-      case 'food':
-        return <Wheat className="w-10 h-10 text-amber-700" />;
-      default:
-        return <Users className="w-10 h-10 text-emerald-700" />;
-    }
-  };
-
   const filteredActivities =
     activeCategory === 'all'
       ? ACTIVITIES_DATA
@@ -66,7 +45,7 @@ export default function RecentActivities({
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0D5C35] tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#E53935] tracking-tight">
               {lang === 'bn' ? 'সাম্প্রতিক কার্যক্রম' : 'Recent Activities'}
             </h2>
             <p className="text-xs sm:text-sm text-stone-500 mt-1">
@@ -78,7 +57,7 @@ export default function RecentActivities({
 
           <button
             onClick={() => setActiveCategory('all')}
-            className="text-xs sm:text-sm font-semibold text-emerald-800 hover:text-emerald-950 underline underline-offset-4 self-start sm:self-auto cursor-pointer flex items-center gap-1"
+            className="text-xs sm:text-sm font-semibold text-[#0D5C35] hover:text-[#094527] underline underline-offset-4 self-start sm:self-auto cursor-pointer flex items-center gap-1"
           >
             <span>{lang === 'bn' ? 'সব দেখুন' : 'View All'}</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -93,7 +72,7 @@ export default function RecentActivities({
               onClick={() => setActiveCategory(cat.key)}
               className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
                 activeCategory === cat.key
-                  ? 'bg-emerald-800 text-white shadow-sm'
+                  ? 'bg-[#0D5C35] text-white shadow-sm'
                   : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
               }`}
             >
@@ -112,20 +91,18 @@ export default function RecentActivities({
               <div>
                 {/* Visual Header */}
                 <div className="relative aspect-16/10 bg-stone-100 overflow-hidden flex items-center justify-center">
+                  <Image
+                    src={activity.imageUrl || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=800&auto=format&fit=crop'}
+                    alt={lang === 'bn' ? activity.titleBn : activity.titleEn}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent z-10" />
-
-                  <div className="w-full h-full bg-emerald-950/5 flex flex-col items-center justify-center p-4 text-center group-hover:scale-105 transition-transform duration-300">
-                    <div className="mb-2 p-3 bg-white/80 rounded-2xl shadow-xs">
-                      {getActivityIcon(activity.category)}
-                    </div>
-                    <span className="text-[11px] font-mono text-stone-600 font-semibold">
-                      [রৌমারী জনকল্যাণ মাঠকর্ম চিত্র]
-                    </span>
-                  </div>
 
                   {/* Category Pill Tag */}
                   <div className="absolute bottom-3 left-3 z-20">
-                    <span className="inline-flex items-center gap-1.5 bg-red-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-md shadow-xs">
+                    <span className="inline-flex items-center gap-1.5 bg-[#E53935] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-md shadow-xs">
                       <span>{lang === 'bn' ? activity.categoryBn : activity.categoryEn}</span>
                       <span>•</span>
                       <Calendar className="w-3 h-3 text-red-100" />
@@ -136,7 +113,7 @@ export default function RecentActivities({
 
                 {/* Card Content */}
                 <div className="p-5">
-                  <h3 className="text-lg font-bold text-stone-900 group-hover:text-emerald-800 transition line-clamp-2 leading-snug mb-2">
+                  <h3 className="text-lg font-bold text-stone-900 group-hover:text-[#E53935] transition line-clamp-2 leading-snug mb-2">
                     {lang === 'bn' ? activity.titleBn : activity.titleEn}
                   </h3>
 
@@ -148,7 +125,7 @@ export default function RecentActivities({
 
               {/* Card Footer */}
               <div className="px-5 pb-5 pt-0 flex items-center justify-between text-xs text-stone-500 border-t border-stone-100 mt-2">
-                <span className="flex items-center gap-1.5 text-emerald-800 font-medium truncate max-w-[170px]">
+                <span className="flex items-center gap-1.5 text-[#0D5C35] font-medium truncate max-w-[170px]">
                   <MapPin className="w-3.5 h-3.5 shrink-0" />
                   <span className="truncate">
                     {lang === 'bn' ? activity.locationBn : activity.locationEn}
@@ -157,7 +134,7 @@ export default function RecentActivities({
 
                 <button
                   onClick={() => setSelectedActivity(activity)}
-                  className="text-emerald-800 font-bold hover:text-emerald-950 hover:underline cursor-pointer flex items-center gap-1"
+                  className="text-[#0D5C35] font-bold hover:text-[#094527] hover:underline cursor-pointer flex items-center gap-1"
                 >
                   <span>{lang === 'bn' ? 'বিস্তারিত' : 'Details'}</span>
                   <ArrowRight className="w-3 h-3" />

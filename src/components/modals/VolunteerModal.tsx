@@ -199,7 +199,7 @@ export default function VolunteerModal({
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-6 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 disabled:opacity-50 text-white font-semibold text-sm transition shadow-md"
+                  className="px-6 py-2.5 rounded-xl bg-[#0D5C35] hover:bg-[#094527] disabled:opacity-50 text-white font-semibold text-sm transition shadow-md cursor-pointer"
                 >
                   {submitting
                     ? lang === 'bn' ? 'জমা হচ্ছে...' : 'Submitting...'

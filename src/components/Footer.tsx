@@ -16,12 +16,9 @@ interface FooterProps {
 
 export default function Footer({
   lang,
-  onOpenAssistance,
-  onOpenBlood,
-  onOpenDonation,
 }: FooterProps) {
   return (
-    <footer className="bg-[#052615] text-stone-300 pt-16 pb-10 border-t border-emerald-950">
+    <footer className="bg-[#073B22] text-stone-300 pt-16 pb-12 border-t border-emerald-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pb-12 border-b border-emerald-900/60">
           {/* Column 1: Organization details & Logo */}

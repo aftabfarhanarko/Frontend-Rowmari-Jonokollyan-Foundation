@@ -1,22 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
+import Image from 'next/image';
 import { 
-  Snowflake, 
-  Stethoscope, 
-  GraduationCap, 
-  Droplet, 
-  Wheat, 
-  Users, 
   Calendar, 
   MapPin, 
-  Search, 
   X, 
-  CheckCircle2 
+  ArrowRight
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import MobileBottomBar from '@/components/MobileBottomBar';
+import AssistanceModal from '@/components/modals/AssistanceModal';
+import DonationModal from '@/components/modals/DonationModal';
 import { ACTIVITIES_DATA } from '@/data/mockData';
 import { Language, ActivityCategory, ActivityItem } from '@/types';
 
@@ -25,6 +21,8 @@ export default function ActivitiesPage() {
   const [activeCategory, setActiveCategory] = useState<ActivityCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedActivity, setSelectedActivity] = useState<ActivityItem | null>(null);
+  const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
+  const [donationModalOpen, setDonationModalOpen] = useState(false);
 
   const categories = [
     { key: 'all' as ActivityCategory, labelBn: 'সকল কার্যক্রম', labelEn: 'All Activities' },
@@ -44,200 +42,237 @@ export default function ActivitiesPage() {
     return matchesCategory && matchesQuery;
   });
 
-  const getActivityIcon = (cat: string) => {
-    switch (cat) {
-      case 'winter':
-        return <Snowflake className="w-12 h-12 text-cyan-700" />;
-      case 'medical':
-        return <Stethoscope className="w-12 h-12 text-emerald-700" />;
-      case 'education':
-        return <GraduationCap className="w-12 h-12 text-blue-700" />;
-      case 'emergency':
-        return <Droplet className="w-12 h-12 text-red-600" />;
-      case 'food':
-        return <Wheat className="w-12 h-12 text-amber-700" />;
-      default:
-        return <Users className="w-12 h-12 text-emerald-700" />;
-    }
-  };
-
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAFBF9] text-[#1E293B]">
-      <Navbar lang={lang} onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} />
+    <div className="min-h-screen flex flex-col bg-white text-[#1E293B]">
+      <Navbar 
+        lang={lang} 
+        onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} 
+        onOpenDonation={() => setDonationModalOpen(true)}
+      />
 
-      <main className="flex-1">
-        {/* Banner */}
-        <section className="bg-gradient-to-b from-emerald-900 to-[#0A4F2E] text-white py-16 md:py-20 text-center">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
-            <span className="inline-block px-3 py-1 rounded-full bg-emerald-800/80 text-emerald-200 text-xs font-bold mb-3 border border-emerald-700">
-              {lang === 'bn' ? 'মাঠপর্যায়ের মানবিক উদ্যোগ' : 'Field Initiatives'}
-            </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-              {lang === 'bn' ? 'আমাদের সকল কার্যক্রম' : 'Our Activities & Projects'}
+      <main className="flex-1 pb-24 sm:pb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          
+          {/* Header Title Matching Wireframe */}
+          <div className="mb-8">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#E53935] tracking-tight mb-2">
+              {lang === 'bn' ? 'আমাদের কার্যক্রম' : 'Our Activities'}
             </h1>
-            <p className="text-sm sm:text-base text-emerald-100/90 leading-relaxed">
-              {lang === 'bn'
-                ? 'রৌমারীর চরাঞ্চল ও নদীভাঙনে ক্ষতিগ্রস্ত মানুষের পাশে শীতবস্ত্র, খাদ্য, চিকিৎসা ও শিক্ষা সহায়তা।'
-                : 'Comprehensive overview of verified relief drives and health programs conducted in Rowmari.'}
+            <p className="text-sm sm:text-base text-stone-500 font-medium">
+              {lang === 'bn' 
+                ? 'রৌমারীর চরাঞ্চল ও নদীভাঙনে ক্ষতিগ্রস্ত মানুষের পাশে শীতবস্ত্র, খাদ্য, চিকিৎসা ও শিক্ষা সহায়তা।' 
+                : 'Comprehensive overview of field relief drives and health programs conducted in Rowmari.'}
             </p>
           </div>
-        </section>
 
-        {/* Filter and Content Section */}
-        <section className="py-12 md:py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Search and Filters Bar */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
-              {/* Category Pills */}
-              <div className="flex items-center gap-2 overflow-x-auto pb-2 w-full md:w-auto no-scrollbar">
-                {categories.map((cat) => (
-                  <button
-                    key={cat.key}
-                    onClick={() => setActiveCategory(cat.key)}
-                    className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
-                      activeCategory === cat.key
-                        ? 'bg-emerald-800 text-white shadow-sm'
-                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-                    }`}
-                  >
-                    {lang === 'bn' ? cat.labelBn : cat.labelEn}
-                  </button>
-                ))}
-              </div>
-
-              {/* Search Box */}
-              <div className="w-full md:w-72">
-                <input
-                  type="text"
-                  placeholder={lang === 'bn' ? 'কার্যক্রম বা স্থান দিয়ে খুঁজুন...' : 'Search by title or place...'}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-4 py-2 rounded-xl border border-stone-300 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-700 bg-white"
-                />
-              </div>
+          {/* Search and Filters Bar */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+            {/* Category Pills */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 w-full md:w-auto no-scrollbar">
+              {categories.map((cat) => (
+                <button
+                  key={cat.key}
+                  onClick={() => setActiveCategory(cat.key)}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
+                    activeCategory === cat.key
+                      ? 'bg-[#0D5C35] text-white shadow-sm'
+                      : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                  }`}
+                >
+                  {lang === 'bn' ? cat.labelBn : cat.labelEn}
+                </button>
+              ))}
             </div>
 
-            {/* Activities Grid */}
-            {filteredActivities.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                {filteredActivities.map((act) => (
-                  <div
-                    key={act.id}
-                    className="bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
-                  >
-                    <div>
-                      {/* Placeholder Card Art */}
-                      <div className="aspect-16/10 bg-emerald-950/10 flex flex-col items-center justify-center p-6 text-center relative">
-                        <div className="mb-2">
-                          {getActivityIcon(act.category)}
-                        </div>
-                        <span className="text-xs font-mono text-stone-600 font-semibold">[রৌমারী জনকল্যাণ মাঠকর্ম]</span>
-                        <div className="absolute top-3 right-3 bg-red-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow-xs">
+            {/* Search Box */}
+            <div className="w-full md:w-72">
+              <input
+                type="text"
+                placeholder={lang === 'bn' ? 'কার্যক্রম বা স্থান দিয়ে খুঁজুন...' : 'Search by title or place...'}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-2 rounded-xl border border-stone-300 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] bg-stone-50 focus:bg-white transition"
+              />
+            </div>
+          </div>
+
+          {/* Activities Grid */}
+          {filteredActivities.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {filteredActivities.map((act) => (
+                <div
+                  key={act.id}
+                  className="group bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
+                >
+                  <div>
+                    {/* Visual Header with Real Photo */}
+                    <div className="relative aspect-16/10 bg-stone-100 overflow-hidden">
+                      <Image
+                        src={act.imageUrl || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=800&auto=format&fit=crop'}
+                        alt={lang === 'bn' ? act.titleBn : act.titleEn}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent z-10" />
+
+                      {/* Category Pill Tag */}
+                      <div className="absolute top-3 left-3 z-20">
+                        <span className="inline-flex items-center gap-1.5 bg-[#E53935] text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow-sm">
                           {lang === 'bn' ? act.categoryBn : act.categoryEn}
-                        </div>
+                        </span>
                       </div>
 
-                      <div className="p-6">
-                        <div className="text-xs text-stone-500 mb-2 flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5 text-stone-400" />
-                          <span>{lang === 'bn' ? act.dateBn : act.dateEn}</span>
-                        </div>
-                        <h3 className="text-lg font-bold text-stone-900 leading-snug mb-3">
-                          {lang === 'bn' ? act.titleBn : act.titleEn}
-                        </h3>
-                        <p className="text-xs sm:text-sm text-stone-600 line-clamp-3 leading-relaxed mb-4">
-                          {lang === 'bn' ? act.descriptionBn : act.descriptionEn}
-                        </p>
+                      <div className="absolute bottom-3 left-3 z-20 text-white text-xs flex items-center gap-1">
+                        <Calendar className="w-3.5 h-3.5 text-red-200" />
+                        <span className="font-semibold">{lang === 'bn' ? act.dateBn : act.dateEn}</span>
                       </div>
                     </div>
 
-                    <div className="px-6 pb-6 pt-0 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mt-2">
-                      <span className="font-medium text-emerald-800 truncate max-w-[170px] flex items-center gap-1">
-                        <MapPin className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                        <span>{lang === 'bn' ? act.locationBn : act.locationEn}</span>
-                      </span>
-                      <button
-                        onClick={() => setSelectedActivity(act)}
-                        className="text-emerald-800 font-bold hover:underline cursor-pointer"
-                      >
-                        {lang === 'bn' ? 'বিস্তারিত →' : 'Details →'}
-                      </button>
+                    <div className="p-5 sm:p-6">
+                      <h3 className="text-lg font-bold text-stone-900 group-hover:text-[#E53935] transition leading-snug mb-2">
+                        {lang === 'bn' ? act.titleBn : act.titleEn}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-stone-600 line-clamp-3 leading-relaxed mb-4">
+                        {lang === 'bn' ? act.descriptionBn : act.descriptionEn}
+                      </p>
+
+                      <div className="space-y-1.5 text-xs text-stone-500 pt-3 border-t border-stone-100">
+                        <div className="flex items-center justify-between">
+                          <span className="flex items-center gap-1 text-[#0D5C35] font-medium">
+                            <MapPin className="w-3.5 h-3.5 shrink-0" />
+                            <span>{lang === 'bn' ? act.locationBn : act.locationEn}</span>
+                          </span>
+                          <span className="font-bold text-[#0D5C35]">
+                            {act.beneficiariesCount} জন
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-16 bg-white rounded-2xl border border-stone-200">
-                <Search className="w-12 h-12 text-stone-300 mx-auto mb-2" />
-                <p className="text-stone-500 text-sm font-medium">
-                  {lang === 'bn' ? 'কোনো কার্যক্রম খুঁজে পাওয়া যায়নি।' : 'No activities matched your search.'}
-                </p>
-              </div>
-            )}
-          </div>
-        </section>
 
-        {/* Modal View for Activity */}
-        {selectedActivity && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
-            onClick={() => setSelectedActivity(null)}
-          >
-            <div
-              className="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-stone-200 relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setSelectedActivity(null)}
-                className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 text-lg w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center cursor-pointer"
-              >
-                <X className="w-4 h-4 text-stone-600" />
-              </button>
-              <span className="inline-block bg-red-700 text-white text-xs font-bold px-2.5 py-1 rounded-md mb-2">
-                {lang === 'bn' ? selectedActivity.categoryBn : selectedActivity.categoryEn} • {lang === 'bn' ? selectedActivity.dateBn : selectedActivity.dateEn}
-              </span>
-              <h3 className="text-xl font-bold text-stone-900 mb-3">
-                {lang === 'bn' ? selectedActivity.titleBn : selectedActivity.titleEn}
-              </h3>
-              <p className="text-sm text-stone-600 leading-relaxed mb-4">
-                {lang === 'bn' ? selectedActivity.descriptionBn : selectedActivity.descriptionEn}
-              </p>
-              <div className="p-3 bg-stone-50 rounded-xl text-xs space-y-1.5 mb-6 border border-stone-200">
-                <p className="flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                  <span><strong>স্থান:</strong> {selectedActivity.locationBn}</span>
-                </p>
-                <p className="flex items-center gap-1.5">
-                  <Users className="w-3.5 h-3.5 text-stone-500 shrink-0" />
-                  <span><strong>সুবিধাভোগী সংখ্যা:</strong> {selectedActivity.beneficiariesCount} জন মানুষ</span>
-                </p>
-                <p className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span><strong>তত্ত্বাবধানে:</strong> রৌমারী জনকল্যাণ ফাউন্ডেশন কার্যনির্বাহী কমিটি</span>
-                </p>
-              </div>
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={() => setSelectedActivity(null)}
-                  className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs font-semibold"
-                >
-                  {lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
-                </button>
-                <Link
-                  href="/get-help"
-                  className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-semibold"
-                >
-                  {lang === 'bn' ? 'সহায়তার আবেদন করুন' : 'Request Assistance'}
-                </Link>
-              </div>
+                  <div className="p-5 sm:p-6 pt-0">
+                    <button
+                      onClick={() => setSelectedActivity(act)}
+                      className="w-full py-2.5 rounded-xl border border-stone-200 text-stone-700 hover:text-white hover:bg-[#0D5C35] hover:border-[#0D5C35] text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+                    >
+                      <span>{lang === 'bn' ? 'বিস্তারিত তথ্য' : 'View Full Details'}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="text-center py-16 bg-stone-50 rounded-2xl border border-stone-200">
+              <p className="text-stone-500 text-sm">
+                {lang === 'bn' ? 'এই ক্যাটাগরিতে কোনো কার্যক্রম খুঁজে পাওয়া যায়নি।' : 'No activities found matching your criteria.'}
+              </p>
+            </div>
+          )}
+
+        </div>
       </main>
 
-      <Footer lang={lang} />
+      {/* Detail Modal */}
+      {selectedActivity && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
+          onClick={() => setSelectedActivity(null)}
+        >
+          <div
+            className="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-stone-200 relative overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelectedActivity(null)}
+              className="absolute top-4 right-4 p-1.5 rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 transition"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="relative aspect-16/9 rounded-xl overflow-hidden mb-4">
+              <Image
+                src={selectedActivity.imageUrl || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=800&auto=format&fit=crop'}
+                alt={lang === 'bn' ? selectedActivity.titleBn : selectedActivity.titleEn}
+                fill
+                className="object-cover"
+              />
+            </div>
+
+            <div className="inline-block bg-[#E53935] text-white text-xs font-bold px-2.5 py-0.5 rounded mb-2">
+              {lang === 'bn' ? selectedActivity.categoryBn : selectedActivity.categoryEn}
+            </div>
+
+            <h3 className="text-xl font-bold text-stone-900 mb-2">
+              {lang === 'bn' ? selectedActivity.titleBn : selectedActivity.titleEn}
+            </h3>
+
+            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-6">
+              {lang === 'bn' ? selectedActivity.descriptionBn : selectedActivity.descriptionEn}
+            </p>
+
+            <div className="grid grid-cols-2 gap-3 p-3 bg-stone-50 rounded-xl border border-stone-200 text-xs mb-6">
+              <div>
+                <span className="text-stone-400 block">{lang === 'bn' ? 'তারিখ:' : 'Date:'}</span>
+                <span className="font-bold text-stone-800">{lang === 'bn' ? selectedActivity.dateBn : selectedActivity.dateEn}</span>
+              </div>
+              <div>
+                <span className="text-stone-400 block">{lang === 'bn' ? 'স্থান:' : 'Location:'}</span>
+                <span className="font-bold text-stone-800">{lang === 'bn' ? selectedActivity.locationBn : selectedActivity.locationEn}</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => {
+                  setSelectedActivity(null);
+                  setAssistanceModalOpen(true);
+                }}
+                className="flex-1 py-2.5 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs transition"
+              >
+                {lang === 'bn' ? 'এই খাতে সহায়তা চান?' : 'Need Help in this Area?'}
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedActivity(null);
+                  setDonationModalOpen(true);
+                }}
+                className="flex-1 py-2.5 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs transition"
+              >
+                {lang === 'bn' ? 'অনুদান দিন' : 'Donate to this Cause'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <Footer 
+        lang={lang} 
+        onOpenAssistance={() => setAssistanceModalOpen(true)}
+        onOpenDonation={() => setDonationModalOpen(true)}
+      />
+
+      <MobileBottomBar
+        lang={lang}
+        onOpenAssistance={() => setAssistanceModalOpen(true)}
+        onOpenDonation={() => setDonationModalOpen(true)}
+      />
+
+      <AssistanceModal
+        isOpen={assistanceModalOpen}
+        onClose={() => setAssistanceModalOpen(false)}
+        lang={lang}
+      />
+
+      <DonationModal
+        isOpen={donationModalOpen}
+        onClose={() => setDonationModalOpen(false)}
+        lang={lang}
+      />
     </div>
   );
 }

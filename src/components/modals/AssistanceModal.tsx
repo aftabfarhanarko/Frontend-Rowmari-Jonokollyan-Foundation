@@ -321,7 +321,7 @@ export default function AssistanceModal({
                 <button
                   type="submit"
                   disabled={isSubmitting || !agreeConsent}
-                  className="px-6 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 disabled:opacity-50 text-white font-medium text-sm transition shadow-md flex items-center gap-2"
+                  className="px-6 py-2.5 rounded-xl bg-[#0D5C35] hover:bg-[#094527] disabled:opacity-50 text-white font-medium text-sm transition shadow-md flex items-center gap-2 cursor-pointer"
                 >
                   {isSubmitting ? (
                     <span>{lang === 'bn' ? 'প্রক্রিয়াধীন...' : 'Submitting...'}</span>

@@ -72,18 +72,18 @@ export default function QuickActions({
             <button
               key={card.id}
               onClick={card.action}
-              className={`group text-left p-5 sm:p-6 rounded-2xl bg-white border transition-all duration-200 shadow-md hover:shadow-xl hover:-translate-y-1 cursor-pointer flex flex-col justify-between ${
+              className={`group text-left p-5 sm:p-6 rounded-2xl bg-white border border-stone-200 transition-all duration-200 shadow-md hover:shadow-xl hover:-translate-y-1 cursor-pointer flex flex-col justify-between ${
                 isRed
-                  ? 'border-red-100 hover:border-red-300'
-                  : 'border-emerald-100 hover:border-emerald-300'
+                  ? 'border-t-4 border-t-[#E53935] hover:border-red-300'
+                  : 'border-t-4 border-t-[#0D5C35] hover:border-emerald-300'
               }`}
             >
               <div className="flex items-center justify-between mb-4 w-full">
                 <span
                   className={`w-12 h-12 rounded-xl flex items-center justify-center transition duration-200 ${
                     isRed
-                      ? 'bg-red-50 text-red-600 group-hover:bg-red-100 group-hover:scale-110'
-                      : 'bg-emerald-50 text-emerald-700 group-hover:bg-emerald-100 group-hover:scale-110'
+                      ? 'bg-red-50 text-[#E53935] group-hover:bg-red-100 group-hover:scale-110'
+                      : 'bg-emerald-50 text-[#0D5C35] group-hover:bg-emerald-100 group-hover:scale-110'
                   }`}
                 >
                   <IconComp className="w-6 h-6" />
@@ -91,8 +91,8 @@ export default function QuickActions({
                 <span
                   className={`w-7 h-7 rounded-full flex items-center justify-center transition ${
                     isRed
-                      ? 'text-red-700 bg-red-50 group-hover:bg-red-700 group-hover:text-white'
-                      : 'text-emerald-800 bg-emerald-50 group-hover:bg-emerald-800 group-hover:text-white'
+                      ? 'text-[#E53935] bg-red-50 group-hover:bg-[#E53935] group-hover:text-white'
+                      : 'text-[#0D5C35] bg-emerald-50 group-hover:bg-[#0D5C35] group-hover:text-white'
                   }`}
                 >
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -103,8 +103,8 @@ export default function QuickActions({
                 <h3
                   className={`text-lg font-bold transition mb-1 ${
                     isRed
-                      ? 'text-stone-900 group-hover:text-red-700'
-                      : 'text-stone-900 group-hover:text-emerald-800'
+                      ? 'text-stone-900 group-hover:text-[#E53935]'
+                      : 'text-stone-900 group-hover:text-[#0D5C35]'
                   }`}
                 >
                   {lang === 'bn' ? card.titleBn : card.titleEn}

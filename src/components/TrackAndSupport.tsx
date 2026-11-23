@@ -94,19 +94,19 @@ export default function TrackAndSupport({
           </div>
 
           {/* Right Card: "আপনিও পাশে দাঁড়ান" (Dark Green box matching wireframe) */}
-          <div className="bg-[#0A4F2E] text-white rounded-2xl p-6 sm:p-8 shadow-xl flex flex-col justify-between relative overflow-hidden border border-emerald-800">
+          <div className="bg-[#0D5C35] text-white rounded-2xl p-6 sm:p-8 shadow-xl flex flex-col justify-between relative overflow-hidden border border-emerald-900">
             {/* Background pattern */}
             <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-400/10 rounded-full blur-2xl pointer-events-none" />
 
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-800/80 text-emerald-200 text-xs font-bold mb-2">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-900/80 text-emerald-200 text-xs font-bold mb-2">
                 <HandHeart className="w-3.5 h-3.5" />
                 <span>{lang === 'bn' ? 'মানবতার অংশীদারিত্ব' : 'Partnership for Humanity'}</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                 {lang === 'bn' ? 'আপনিও পাশে দাঁড়ান' : 'Stand With Us Today'}
               </h2>
-              <p className="text-xs sm:text-sm text-emerald-200/90 mt-1">
+              <p className="text-xs sm:text-sm text-emerald-100/90 mt-1">
                 {lang === 'bn'
                   ? 'প্রতিটি অনুদানের পুঙ্খানুপুঙ্খ হিসাব প্রকাশ করা হয়।'
                   : 'Every single donation is accounted for and audited transparently.'}
@@ -116,9 +116,9 @@ export default function TrackAndSupport({
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <button
                   onClick={onOpenDonation}
-                  className="px-6 py-3 rounded-xl bg-white text-[#0A4F2E] hover:bg-stone-100 font-bold text-sm transition shadow-md hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center gap-2"
+                  className="px-6 py-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-sm transition shadow-md hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center gap-2"
                 >
-                  <HandHeart className="w-4 h-4 text-[#0A4F2E]" />
+                  <HandHeart className="w-4 h-4 text-white" />
                   <span>{lang === 'bn' ? 'অনুদান দিন' : 'Donate Now'}</span>
                 </button>
 

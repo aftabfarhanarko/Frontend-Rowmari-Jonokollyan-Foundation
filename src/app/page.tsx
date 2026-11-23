@@ -16,6 +16,7 @@ import TrackAndSupport from '@/components/TrackAndSupport';
 import OngoingCampaigns from '@/components/OngoingCampaigns';
 import AboutUs from '@/components/AboutUs';
 import Footer from '@/components/Footer';
+import MobileBottomBar from '@/components/MobileBottomBar';
 
 // Interactive Modals
 import AssistanceModal from '@/components/modals/AssistanceModal';
@@ -184,6 +185,13 @@ export default function HomePage() {
         lang={lang}
         onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenBlood={() => setBloodDonorModalOpen(true)}
+        onOpenDonation={() => handleOpenDonation('general')}
+      />
+
+      {/* Persistent Mobile Bottom Sticky Bar matching the user's wireframes */}
+      <MobileBottomBar
+        lang={lang}
+        onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => handleOpenDonation('general')}
       />
 

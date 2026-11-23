@@ -15,7 +15,7 @@ export default function ImpactStats({ lang }: ImpactStatsProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0D5C35] mb-2 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#E53935] mb-2 tracking-tight">
             {lang === 'bn' ? 'আমাদের প্রভাব' : 'Our Real Impact'}
           </h2>
           <p className="text-xs sm:text-sm text-stone-500 font-medium">
@@ -30,7 +30,7 @@ export default function ImpactStats({ lang }: ImpactStatsProps) {
           {IMPACT_STATS.map((stat, idx) => (
             <div
               key={idx}
-              className="bg-[#0A4F2E] text-white p-6 sm:p-7 rounded-2xl shadow-lg border border-emerald-800/60 text-center flex flex-col justify-between hover:scale-[1.02] transition-transform duration-200 relative overflow-hidden group"
+              className="bg-[#0D5C35] text-white p-6 sm:p-7 rounded-2xl shadow-lg border border-emerald-900/60 text-center flex flex-col justify-between hover:scale-[1.02] transition-transform duration-200 relative overflow-hidden group"
             >
               {/* Subtle background glow */}
               <div className="absolute -top-12 -right-12 w-28 h-28 bg-emerald-400/10 rounded-full blur-xl group-hover:bg-emerald-400/20 transition-all duration-300" />

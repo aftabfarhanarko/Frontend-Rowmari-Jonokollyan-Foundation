@@ -3,25 +3,34 @@
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import MobileBottomBar from '@/components/MobileBottomBar';
+import AssistanceModal from '@/components/modals/AssistanceModal';
+import DonationModal from '@/components/modals/DonationModal';
 import { Language } from '@/types';
 
 export default function PrivacyPolicyPage() {
   const [lang, setLang] = useState<Language>('bn');
+  const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
+  const [donationModalOpen, setDonationModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAFBF9] text-[#1E293B]">
-      <Navbar lang={lang} onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} />
+    <div className="min-h-screen flex flex-col bg-white text-[#1E293B]">
+      <Navbar 
+        lang={lang} 
+        onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} 
+        onOpenDonation={() => setDonationModalOpen(true)}
+      />
 
-      <main className="flex-1 py-16 md:py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white p-8 sm:p-12 rounded-3xl border border-stone-200 shadow-sm space-y-6">
-            <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider bg-emerald-50 px-2.5 py-1 rounded">
+      <main className="flex-1 py-10 md:py-16 pb-24 sm:pb-16">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white p-6 sm:p-10 rounded-2xl border border-stone-200 shadow-xs space-y-6">
+            <span className="text-xs font-bold text-[#E53935] uppercase tracking-wider bg-red-50 px-2.5 py-1 rounded">
               {lang === 'bn' ? 'আইনগত ও গোপনীয়তা সুরক্ষা' : 'Privacy & Compliance'}
             </span>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0D5C35]">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#E53935] tracking-tight">
               {lang === 'bn' ? 'গোপনীয়তা ও ডেটা সুরক্ষা নীতিমালা' : 'Privacy & Data Protection Policy'}
             </h1>
-            <p className="text-xs text-stone-400">সর্বশেষ সংস্করণ: নভেম্বর ২০২৬ • PRD v1.0 কমপ্লায়েন্ট</p>
+            <p className="text-xs text-stone-400">সর্বশেষ সংস্করণ: নভেম্বর ২০২৬ • কঠোর গোপনীয়তা কমপ্লায়েন্ট</p>
 
             <div className="space-y-6 text-xs sm:text-sm text-stone-600 leading-relaxed pt-4 border-t border-stone-100">
               <section className="space-y-2">
@@ -48,7 +57,7 @@ export default function PrivacyPolicyPage() {
               <section className="space-y-2">
                 <h3 className="font-bold text-stone-900 text-base">৪. ডেটা নিরাপত্তা ও প্রবেশাধিকার নিয়ন্ত্রণ</h3>
                 <p>
-                  আমাদের কেন্দ্রীয় ডাটাবেজ সুরক্ষিত সার্ভারে এনক্রিপ্টেড অবস্থায় সংরক্ষিত থাকে এবং রোল-বেজড অ্যাক্সেস কন্ট্রোল (RBAC) দ্বারা পরিচালিত হয়।
+                  আমাদের কেন্দ্রীয় ডাটাবেজ সুরক্ষিত সার্ভারে এনক্রিপ্টেড অবস্থায় সংরক্ষিত থাকে এবং রোল-বেজড অ্যাক্সেস কন্ট্রোল দ্বারা পরিচালিত হয়।
                 </p>
               </section>
             </div>
@@ -56,7 +65,29 @@ export default function PrivacyPolicyPage() {
         </div>
       </main>
 
-      <Footer lang={lang} />
+      <Footer 
+        lang={lang} 
+        onOpenAssistance={() => setAssistanceModalOpen(true)}
+        onOpenDonation={() => setDonationModalOpen(true)}
+      />
+
+      <MobileBottomBar
+        lang={lang}
+        onOpenAssistance={() => setAssistanceModalOpen(true)}
+        onOpenDonation={() => setDonationModalOpen(true)}
+      />
+
+      <AssistanceModal
+        isOpen={assistanceModalOpen}
+        onClose={() => setAssistanceModalOpen(false)}
+        lang={lang}
+      />
+
+      <DonationModal
+        isOpen={donationModalOpen}
+        onClose={() => setDonationModalOpen(false)}
+        lang={lang}
+      />
     </div>
   );
 }

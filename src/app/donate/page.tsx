@@ -1,136 +1,237 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Heart, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { 
+  Heart, 
+  Clock
+} from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import MobileBottomBar from '@/components/MobileBottomBar';
+import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
 import { Language } from '@/types';
 
 export default function DonatePage() {
   const [lang, setLang] = useState<Language>('bn');
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedCampaign, setSelectedCampaign] = useState('general');
+  const [selectedAmount, setSelectedAmount] = useState<number | 'other'>(1000);
+  const [customAmount, setCustomAmount] = useState<string>('');
+  const [frequency, setFrequency] = useState<'once' | 'monthly'>('once');
+  const [campaign, setCampaign] = useState<string>('general');
+  const [anonymous, setAnonymous] = useState<boolean>(false);
+  const [paymentMethod, setPaymentMethod] = useState<'bkash' | 'nagad' | 'bank' | 'card'>('bkash');
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [assistanceModalOpen, setAssistanceModalOpen] = useState<boolean>(false);
+
+  const amounts: (number | 'other')[] = [500, 1000, 2000, 'other'];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAFBF9] text-[#1E293B]">
-      <Navbar lang={lang} onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} />
+    <div className="min-h-screen flex flex-col bg-white text-[#1E293B]">
+      <Navbar 
+        lang={lang} 
+        onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} 
+        onOpenDonation={() => setModalOpen(true)}
+      />
 
-      <main className="flex-1">
-        {/* Banner */}
-        <section className="bg-gradient-to-b from-[#064024] to-[#0A5C36] text-white py-16 md:py-20 text-center">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
-            <span className="inline-block px-3 py-1 rounded-full bg-emerald-800/80 text-emerald-200 text-xs font-bold mb-3 border border-emerald-700">
-              {lang === 'bn' ? 'স্বচ্ছ ও নিরাপদ অনুদান' : 'Transparent & Secure Donation'}
-            </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-              {lang === 'bn' ? 'মানবতার কল্যাণে অনুদান দিন' : 'Donate for Humanity'}
+      <main className="flex-1 pb-24 sm:pb-16">
+        <div className="max-w-xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+          
+          {/* Header Title Matching Wireframe */}
+          <div className="mb-6">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#E53935] tracking-tight mb-2">
+              {lang === 'bn' ? 'অনুদান দিন' : 'Make a Donation'}
             </h1>
-            <p className="text-sm sm:text-base text-emerald-100/90 leading-relaxed mb-6">
-              {lang === 'bn'
-                ? 'আপনার দেওয়া প্রতিটি টাকার পাই-টু-পাই হিসাব সংরক্ষিত থাকে এবং তাৎক্ষণিক ডিজিটাল রসিদ প্রদান করা হয়।'
-                : 'Every penny of your donation directly supports vulnerable char families with transparent digital receipts.'}
+            <p className="text-xs sm:text-sm text-stone-500 font-medium">
+              {lang === 'bn' ? 'স্বচ্ছ ও নিরাপদ মানবিক অনুদান — তাৎক্ষণিক ডিজিটাল রসিদ' : 'Transparent humanitarian donation with instant verifiable receipt'}
             </p>
+          </div>
+
+          {/* Amount Pills Matching Wireframe */}
+          <div className="grid grid-cols-4 gap-2 sm:gap-3 mb-4">
+            {amounts.map((amt) => {
+              const isSelected = selectedAmount === amt;
+              return (
+                <button
+                  key={amt}
+                  type="button"
+                  onClick={() => setSelectedAmount(amt)}
+                  className={`py-3 px-2 rounded-xl text-xs sm:text-sm font-bold border transition cursor-pointer text-center ${
+                    isSelected
+                      ? 'bg-[#0D5C35] text-white border-[#0D5C35] shadow-xs'
+                      : 'bg-white text-stone-700 border-stone-200 hover:border-stone-300 shadow-2xs'
+                  }`}
+                >
+                  {amt === 'other' ? (lang === 'bn' ? 'অন্য' : 'Other') : (lang === 'bn' ? `৳${amt.toLocaleString()}` : `৳${amt}`)}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Custom Amount Input if 'other' is selected */}
+          {selectedAmount === 'other' && (
+            <div className="mb-4">
+              <input
+                type="number"
+                placeholder={lang === 'bn' ? 'অনুদানের পরিমাণ লিখুন (টাকায়)' : 'Enter amount in BDT'}
+                value={customAmount}
+                onChange={(e) => setCustomAmount(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35]"
+              />
+            </div>
+          )}
+
+          {/* Frequency Pills Matching Wireframe */}
+          <div className="grid grid-cols-2 gap-3 mb-6">
             <button
-              onClick={() => {
-                setSelectedCampaign('general');
-                setModalOpen(true);
-              }}
-              className="px-8 py-3.5 rounded-full bg-red-700 hover:bg-red-800 text-white font-bold text-sm shadow-xl transition cursor-pointer inline-flex items-center gap-2"
+              type="button"
+              onClick={() => setFrequency('once')}
+              className={`py-3 rounded-xl text-xs sm:text-sm font-bold border transition cursor-pointer text-center ${
+                frequency === 'once'
+                  ? 'bg-[#0D5C35] text-white border-[#0D5C35] shadow-xs'
+                  : 'bg-white text-stone-700 border-stone-200 hover:border-stone-300'
+              }`}
             >
-              <Heart className="w-4 h-4 fill-white text-white" />
-              <span>{lang === 'bn' ? 'এখনই অনলাইন অনুদান দিন ও রসিদ পান' : 'Donate Now & Get Receipt'}</span>
+              {lang === 'bn' ? 'একবার' : 'One Time'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setFrequency('monthly')}
+              className={`py-3 rounded-xl text-xs sm:text-sm font-bold border transition cursor-pointer text-center ${
+                frequency === 'monthly'
+                  ? 'bg-[#0D5C35] text-white border-[#0D5C35] shadow-xs'
+                  : 'bg-white text-stone-700 border-stone-200 hover:border-stone-300'
+              }`}
+            >
+              {lang === 'bn' ? 'মাসিক' : 'Monthly'}
             </button>
           </div>
-        </section>
 
-        {/* Payment Channels Section */}
-        <section className="py-16 md:py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              {/* bKash */}
-              <div className="bg-white p-6 rounded-2xl border-2 border-pink-100 shadow-xs hover:border-pink-300 transition">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="font-extrabold text-pink-700 text-lg">bKash (বিকাশ)</span>
-                  <span className="text-[10px] bg-pink-100 text-pink-700 px-2 py-0.5 rounded font-bold">মার্চেন্ট / পেমেন্ট</span>
-                </div>
-                <p className="text-xs text-stone-500 mb-3">বিকাশ অ্যাপের ‘Make Payment’ বা ‘Send Money’ অপশন ব্যবহার করুন:</p>
-                <div className="p-3 bg-pink-50/60 rounded-xl font-mono font-bold text-stone-900 text-center text-sm border border-pink-200 mb-3">
-                  01712-345678
-                </div>
-                <p className="text-[11px] text-stone-400">রেফারেন্সে আপনার নাম বা খাতের নাম (যেমন: Winter) লিখুন।</p>
-              </div>
-
-              {/* Nagad */}
-              <div className="bg-white p-6 rounded-2xl border-2 border-orange-100 shadow-xs hover:border-orange-300 transition">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="font-extrabold text-orange-600 text-lg">Nagad (নগদ)</span>
-                  <span className="text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded font-bold">পেমেন্ট / পার্সোনাল</span>
-                </div>
-                <p className="text-xs text-stone-500 mb-3">নগদ অ্যাপ বা ইউএসএসডি কোড দিয়ে সেন্ড মানি করুন:</p>
-                <div className="p-3 bg-orange-50/60 rounded-xl font-mono font-bold text-stone-900 text-center text-sm border border-orange-200 mb-3">
-                  01812-987654
-                </div>
-                <p className="text-[11px] text-stone-400">লেনদেনের পর TrxID টি আমাদের ফর্মে লিখে রসিদ সংগ্রহ করুন।</p>
-              </div>
-
-              {/* Bank Account */}
-              <div className="bg-white p-6 rounded-2xl border-2 border-emerald-100 shadow-xs hover:border-emerald-300 transition">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="font-extrabold text-emerald-800 text-lg">ব্যাংক একাউন্ট</span>
-                  <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">সরাসরি ট্রান্সফার</span>
-                </div>
-                <div className="space-y-1 text-xs text-stone-600 mb-3">
-                  <p><strong>ব্যাংক:</strong> ইসলামী ব্যাংক বাংলাদেশ লিমিটেড</p>
-                  <p><strong>হিসাবের নাম:</strong> Rowmari Janakalyan Foundation</p>
-                  <p><strong>হিসাব নং:</strong> <span className="font-mono font-bold text-stone-900">2050398010009876</span></p>
-                  <p><strong>শাখা:</strong> রৌমারী শাখা, কুড়িগ্রাম</p>
-                </div>
-                <p className="text-[11px] text-stone-400">রাউটিং নম্বর: 125492482 (BEFTN / NPSB সমর্থিত)</p>
-              </div>
-            </div>
-
-            {/* Transparency statement */}
-            <div className="bg-stone-50 border border-stone-200 rounded-3xl p-8 sm:p-10 max-w-4xl mx-auto space-y-4">
-              <h2 className="text-xl sm:text-2xl font-bold text-stone-900 flex items-center gap-2">
-                <ShieldCheck className="w-6 h-6 text-emerald-700 shrink-0" />
-                <span>{lang === 'bn' ? 'আমাদের আর্থিক স্বচ্ছতা ও জবাবদিহিতা নীতি' : 'Financial Transparency & Accountability'}</span>
-              </h2>
-              <ul className="text-xs sm:text-sm text-stone-600 space-y-2.5">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
-                  <span><strong>ডিজিটাল রসিদ:</strong> প্রত্যেক দাতাকে তাৎক্ষণিক ইউনিক রসিদ নম্বরসহ ডিজিটাল মানি রিসিপ্ট প্রদান করা হয়।</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
-                  <span><strong>নিরীক্ষিত হিসাব:</strong> প্রতিটি ক্যাম্পেইনের সংগ্রহ ও ব্যয়ের হিসাব চার্টার্ড একাউন্ট্যান্ট বা অনুমোদিত অডিট কমিটি দ্বারা নিরীক্ষিত হয়।</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
-                  <span><strong>গোপনীয়তার অধিকার:</strong> কোনো দাতা চাইলে নিজের নাম-পরিচয় সম্পূর্ণ গোপন রেখে অনুদান দিতে পারেন (Anonymous Donation)।</span>
-                </li>
-              </ul>
-
-              <div className="pt-4 border-t border-stone-200 flex justify-center">
-                <button
-                  onClick={() => setModalOpen(true)}
-                  className="px-8 py-3 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-sm shadow-md transition cursor-pointer"
-                >
-                  {lang === 'bn' ? 'অনুদান ফর্ম ওপেন করুন' : 'Open Donation Form'}
-                </button>
-              </div>
-            </div>
+          {/* Campaign Selector Matching Wireframe */}
+          <div className="mb-4">
+            <label className="block text-xs font-bold text-stone-700 mb-1.5">
+              {lang === 'bn' ? 'ক্যাম্পেইন' : 'Campaign'}
+            </label>
+            <select
+              value={campaign}
+              onChange={(e) => setCampaign(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm text-stone-800 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35]"
+            >
+              <option value="general">{lang === 'bn' ? 'সাধারণ মানবিক তহবিল' : 'General Relief Fund'}</option>
+              <option value="winter">{lang === 'bn' ? 'শীতবস্ত্র বিতরণ তহবিল ২০২৬' : 'Winter Clothes Drive 2026'}</option>
+              <option value="medical">{lang === 'bn' ? 'বিনামূল্যে ওষুধ ও ভ্রাম্যমাণ অ্যাম্বুলেন্স' : 'Free Medicine & Ambulance'}</option>
+              <option value="education">{lang === 'bn' ? 'দরিদ্র মেধাবী শিক্ষাবৃত্তি' : 'Student Scholarship Fund'}</option>
+            </select>
           </div>
-        </section>
+
+          {/* Anonymous Checkbox Matching Wireframe */}
+          <div className="flex items-center gap-2 mb-8">
+            <input
+              type="checkbox"
+              id="anon"
+              checked={anonymous}
+              onChange={(e) => setAnonymous(e.target.checked)}
+              className="w-4 h-4 rounded text-[#0D5C35] focus:ring-[#0D5C35] border-stone-300 cursor-pointer"
+            />
+            <label htmlFor="anon" className="text-xs sm:text-sm text-stone-600 font-medium cursor-pointer">
+              {lang === 'bn' ? 'নাম প্রকাশ করতে চাই না (Anonymous Donation)' : 'I wish to donate anonymously'}
+            </label>
+          </div>
+
+          {/* Subheading: পেমেন্ট পদ্ধতি in Red Matching Wireframe */}
+          <div className="mb-4">
+            <h2 className="text-xl font-bold text-[#E53935] tracking-tight">
+              {lang === 'bn' ? 'পেমেন্ট পদ্ধতি' : 'Payment Method'}
+            </h2>
+          </div>
+
+          {/* Payment Method Pills Matching Wireframe */}
+          <div className="grid grid-cols-4 gap-2 mb-6">
+            {(['bkash', 'nagad', 'bank', 'card'] as const).map((method) => {
+              const isSelected = paymentMethod === method;
+              const labels = {
+                bkash: 'bKash',
+                nagad: 'Nagad',
+                bank: lang === 'bn' ? 'ব্যাংক' : 'Bank',
+                card: lang === 'bn' ? 'কার্ড' : 'Card',
+              };
+              return (
+                <button
+                  key={method}
+                  type="button"
+                  onClick={() => setPaymentMethod(method)}
+                  className={`py-3 rounded-xl text-xs sm:text-sm font-bold border transition cursor-pointer text-center ${
+                    isSelected
+                      ? 'bg-[#0D5C35] text-white border-[#0D5C35] shadow-xs'
+                      : 'bg-white text-stone-700 border-stone-200 hover:border-stone-300'
+                  }`}
+                >
+                  {labels[method]}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Action Button: অনুদান নিশ্চিত করুন in Red Matching Wireframe */}
+          <button
+            type="button"
+            onClick={() => setModalOpen(true)}
+            className="w-full py-3.5 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-sm sm:text-base transition duration-150 shadow-md cursor-pointer mb-8 active:scale-98 flex items-center justify-center gap-2"
+          >
+            <Heart className="w-4 h-4 fill-white text-white" />
+            <span>{lang === 'bn' ? 'অনুদান নিশ্চিত করুন' : 'Confirm Donation'}</span>
+          </button>
+
+          {/* Green Card: আপনার অনুদান কোথায় যায় Matching Wireframe */}
+          <div className="bg-[#0D5C35] text-white rounded-2xl p-5 sm:p-6 mb-6 shadow-md border border-emerald-900">
+            <h3 className="text-base sm:text-lg font-bold mb-1.5">
+              {lang === 'bn' ? 'আপনার অনুদান কোথায় যায়' : 'Where Your Donation Goes'}
+            </h3>
+            <p className="text-xs text-emerald-100/90 leading-relaxed">
+              {lang === 'bn' 
+                ? 'সংগ্রহ [৳ ৩৫,৫০,০০০] • ব্যয় [৳ ৩১,২০,০০০] • অবশিষ্ট [৳ ৪,৩০,০০০]' 
+                : 'Total Raised [৳ 35,50,000] • Spent [৳ 31,20,000] • Balance [৳ 4,30,000]'}
+            </p>
+          </div>
+
+          {/* Verification Status Card Matching Wireframe */}
+          <div className="bg-white border border-stone-200 rounded-2xl p-5 sm:p-6 shadow-2xs">
+            <h4 className="text-sm font-bold text-stone-900 mb-1 flex items-center gap-2">
+              <Clock className="w-4 h-4 text-[#0D5C35]" />
+              <span>{lang === 'bn' ? 'পেমেন্ট যাচাই প্রক্রিয়া...' : 'Payment Verification Process...'}</span>
+            </h4>
+            <p className="text-xs text-stone-500 leading-relaxed">
+              {lang === 'bn'
+                ? 'সার্ভার নিশ্চিত করার পরই "পরিশোধিত" ও রসিদ দেখানো হবে।'
+                : 'Instant digital donation receipt and audit confirmation is generated once transaction is verified.'}
+            </p>
+          </div>
+
+        </div>
       </main>
 
-      <Footer lang={lang} />
+      <Footer 
+        lang={lang} 
+        onOpenAssistance={() => setAssistanceModalOpen(true)}
+        onOpenDonation={() => setModalOpen(true)}
+      />
+
+      <MobileBottomBar
+        lang={lang}
+        onOpenAssistance={() => setAssistanceModalOpen(true)}
+        onOpenDonation={() => setModalOpen(true)}
+      />
+
+      <AssistanceModal
+        isOpen={assistanceModalOpen}
+        onClose={() => setAssistanceModalOpen(false)}
+        lang={lang}
+      />
 
       <DonationModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         lang={lang}
-        preselectedCampaign={selectedCampaign}
+        preselectedCampaign={campaign}
       />
     </div>
   );
