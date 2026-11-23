@@ -386,38 +386,6 @@ export default function Footer({
                 </a>
               </div>
             </div>
-
-            {/* Donation Channels & Transparency Box */}
-            <div className="rounded-xl bg-[#062415] border border-emerald-800/60 p-3.5 space-y-2.5 text-xs">
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-white">
-                  {isBn ? 'স্বচ্ছ অনুদান গ্রহণ চ্যানেল:' : 'Official Donation Channels:'}
-                </span>
-                <span className="text-[10px] text-emerald-400 font-mono font-medium">24/7 Verified</span>
-              </div>
-              <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
-                <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 font-bold text-[#E53935]">
-                  bKash
-                </span>
-                <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 font-bold text-amber-500">
-                  Nagad
-                </span>
-                <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 font-bold text-purple-400">
-                  Rocket
-                </span>
-                <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 font-bold text-emerald-400">
-                  Bank Transfer
-                </span>
-              </div>
-              <div className="text-[11px] text-stone-300 flex items-center gap-1.5 pt-0.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span>
-                  {isBn
-                    ? 'প্রতিটি অনুদানে ডিজিটাল মানি রসিদ প্রদান করা হয়'
-                    : 'Official digital receipts issued for all donations'}
-                </span>
-              </div>
-            </div>
           </div>
         </div>
 
