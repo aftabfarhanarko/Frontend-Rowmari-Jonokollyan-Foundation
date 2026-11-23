@@ -122,6 +122,9 @@ export default function HomePage() {
           lang={lang}
           onOpenAssistance={() => setAssistanceModalOpen(true)}
           onOpenActivities={scrollToActivities}
+          onOpenBlood={() => setBloodRequestModalOpen(true)}
+          onOpenDonor={() => setBloodDonorModalOpen(true)}
+          onOpenDonation={(campaign) => handleOpenDonation(campaign || 'general')}
         />
 
         {/* 4. Quick Action Cards (4 Cards: সহায়তা চাই, রক্তদান, অনুদান দিন, স্বেচ্ছাসেবক হোন) */}

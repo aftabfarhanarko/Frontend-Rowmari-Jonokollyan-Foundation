@@ -113,7 +113,16 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: 'rjf-app-storage', // Persistent Storage in localStorage
-      storage: createJSONStorage(() => (typeof window !== 'undefined' ? localStorage : sessionStorage)),
+      storage: createJSONStorage(() => {
+        if (typeof window !== 'undefined') {
+          return localStorage;
+        }
+        return {
+          getItem: () => null,
+          setItem: () => {},
+          removeItem: () => {},
+        };
+      }),
       partialize: (state) => ({
         lang: state.lang,
         currentRole: state.currentRole,

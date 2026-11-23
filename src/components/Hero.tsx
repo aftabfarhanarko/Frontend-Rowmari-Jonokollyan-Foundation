@@ -20,25 +20,24 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { Language } from '@/types';
-import { useAppStore } from '@/store/useAppStore';
 
 interface HeroProps {
   lang: Language;
   onOpenAssistance: () => void;
   onOpenActivities: () => void;
+  onOpenBlood?: () => void;
+  onOpenDonor?: () => void;
+  onOpenDonation?: (campaignId?: string) => void;
 }
 
 export default function Hero({
   lang,
   onOpenAssistance,
   onOpenActivities,
+  onOpenBlood,
+  onOpenDonor,
+  onOpenDonation,
 }: HeroProps) {
-  const {
-    setBloodRequestModalOpen,
-    setBloodDonorModalOpen,
-    setDonationModalOpen,
-  } = useAppStore();
-
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // 4 Full-Width Panoramic Hero Banner Slides
@@ -164,13 +163,16 @@ export default function Hero({
         onOpenActivities();
         break;
       case 'blood-request':
-        setBloodRequestModalOpen(true);
+        if (onOpenBlood) onOpenBlood();
+        else onOpenAssistance();
         break;
       case 'blood-donor':
-        setBloodDonorModalOpen(true);
+        if (onOpenDonor) onOpenDonor();
+        else onOpenAssistance();
         break;
       case 'donation':
-        setDonationModalOpen(true);
+        if (onOpenDonation) onOpenDonation('general');
+        else onOpenAssistance();
         break;
       default:
         onOpenActivities();
