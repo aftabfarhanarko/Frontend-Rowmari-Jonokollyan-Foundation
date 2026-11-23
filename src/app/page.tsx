@@ -11,15 +11,11 @@ import QuickActions from '@/components/QuickActions';
 import ImpactStats from '@/components/ImpactStats';
 import HowItWorks from '@/components/HowItWorks';
 import RecentActivities from '@/components/RecentActivities';
-import FundUsage from '@/components/FundUsage';
 import BloodDonationBanner from '@/components/BloodDonationBanner';
 import TrackAndSupport from '@/components/TrackAndSupport';
 import OngoingCampaigns from '@/components/OngoingCampaigns';
 import Testimonials from '@/components/Testimonials';
 import AboutUs from '@/components/AboutUs';
-import TeamPreview from '@/components/TeamPreview';
-import NewsEvents from '@/components/NewsEvents';
-import FAQ from '@/components/FAQ';
 import JoinCTA from '@/components/JoinCTA';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
@@ -135,7 +131,7 @@ export default function HomePage() {
 
         <ImpactStats lang={lang} />
 
-        {/* NEW: 3 Steps How It Works */}
+        {/* 3 Steps How It Works */}
         <HowItWorks lang={lang} onOpenAssistance={() => setAssistanceModalOpen(true)} />
 
         <RecentActivities
@@ -143,13 +139,15 @@ export default function HomePage() {
           onOpenAssistance={() => setAssistanceModalOpen(true)}
         />
 
-        {/* NEW: Financial Transparency & Fund Usage */}
-        <FundUsage lang={lang} />
-
         <BloodDonationBanner
           lang={lang}
           onOpenDonorModal={() => setBloodDonorModalOpen(true)}
           onOpenBloodRequestModal={() => setBloodRequestModalOpen(true)}
+        />
+
+        <OngoingCampaigns
+          lang={lang}
+          onOpenDonation={handleOpenDonation}
         />
 
         <TrackAndSupport
@@ -159,12 +157,7 @@ export default function HomePage() {
           onOpenVolunteer={() => setVolunteerModalOpen(true)}
         />
 
-        <OngoingCampaigns
-          lang={lang}
-          onOpenDonation={handleOpenDonation}
-        />
-
-        {/* NEW: Real Beneficiary & Volunteer Testimonials */}
+        {/* Real Beneficiary & Volunteer Testimonials */}
         <Testimonials lang={lang} />
 
         <AboutUs
@@ -173,16 +166,7 @@ export default function HomePage() {
           onOpenDonation={() => handleOpenDonation('general')}
         />
 
-        {/* NEW: Leadership Team Preview */}
-        <TeamPreview lang={lang} />
-
-        {/* NEW: News & Events */}
-        <NewsEvents lang={lang} />
-
-        {/* NEW: Frequently Asked Questions Accordion */}
-        <FAQ lang={lang} />
-
-        {/* NEW: Join CTA & Newsletter Subscription */}
+        {/* Join CTA & Newsletter Subscription */}
         <JoinCTA
           lang={lang}
           onOpenDonation={() => handleOpenDonation('general')}

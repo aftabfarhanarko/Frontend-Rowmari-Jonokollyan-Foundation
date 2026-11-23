@@ -11,10 +11,10 @@ interface ImpactStatsProps {
 
 export default function ImpactStats({ lang }: ImpactStatsProps) {
   return (
-    <section className="py-16 md:py-20 bg-stone-50/70 border-y border-stone-200/60">
+    <section className="py-10 md:py-14 bg-stone-50/40 border-y border-stone-200/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12">
+        <div className="text-center max-w-2xl mx-auto mb-8">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#E53935] mb-2 tracking-tight">
             {lang === 'bn' ? 'আমাদের প্রভাব' : 'Our Real Impact'}
           </h2>

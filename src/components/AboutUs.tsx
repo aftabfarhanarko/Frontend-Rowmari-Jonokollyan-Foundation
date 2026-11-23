@@ -52,7 +52,7 @@ export default function AboutUs({
   ];
 
   return (
-    <section id="about" className="py-16 md:py-24 bg-stone-50/60 border-t border-stone-200/50">
+    <section id="about" className="py-10 md:py-14 bg-stone-50/40 border-t border-stone-200/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
           {/* Left Column: Organization Story */}

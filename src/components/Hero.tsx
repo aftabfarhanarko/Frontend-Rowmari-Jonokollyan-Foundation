@@ -249,7 +249,7 @@ export default function Hero({
   return (
     <section
       id="home"
-      className="relative pt-0 sm:pt-4 pb-10 sm:pb-14 md:pb-16 overflow-hidden bg-gradient-to-b from-stone-50 via-white to-stone-50/60"
+      className="relative pt-0 sm:pt-4 pb-8 sm:pb-12 overflow-hidden bg-[#FAFBF9]"
     >
       <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
         {/* Full-Width Panoramic Hero Slider Card */}

@@ -15,7 +15,7 @@ export default function OngoingCampaigns({
   onOpenDonation,
 }: OngoingCampaignsProps) {
   return (
-    <section id="campaigns" className="py-16 md:py-20 bg-stone-50/40 border-t border-stone-200/50">
+    <section id="campaigns" className="py-10 md:py-14 bg-stone-50/40 border-t border-stone-200/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>

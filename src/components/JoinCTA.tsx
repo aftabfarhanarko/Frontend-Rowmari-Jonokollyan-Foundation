@@ -23,11 +23,11 @@ export default function JoinCTA({ lang, onOpenDonation, onOpenVolunteer }: Props
   };
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-24">
+    <section className="relative overflow-hidden py-10 md:py-14">
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#0D5C35] via-[#0b4d2d] to-[#073320] p-8 md:p-14 shadow-[0_30px_70px_-20px_rgba(13,92,53,0.7)]">
-          <div aria-hidden className="pointer-events-none absolute -top-20 -right-20 h-72 w-72 rounded-full bg-[#E53935]/40 blur-3xl" />
-          <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-emerald-300/25 blur-3xl" />
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#0D5C35] via-[#0b4d2d] to-[#073320] p-6 md:p-10 shadow-lg">
+          <div aria-hidden className="pointer-events-none absolute -top-20 -right-20 h-72 w-72 rounded-full bg-[#E53935]/15 blur-3xl" />
+          <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-emerald-300/15 blur-3xl" />
 
           <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div className="space-y-5 text-white">
