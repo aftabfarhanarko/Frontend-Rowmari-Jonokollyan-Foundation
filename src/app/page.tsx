@@ -9,13 +9,21 @@ import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import QuickActions from '@/components/QuickActions';
 import ImpactStats from '@/components/ImpactStats';
+import HowItWorks from '@/components/HowItWorks';
 import RecentActivities from '@/components/RecentActivities';
+import FundUsage from '@/components/FundUsage';
 import BloodDonationBanner from '@/components/BloodDonationBanner';
 import TrackAndSupport from '@/components/TrackAndSupport';
 import OngoingCampaigns from '@/components/OngoingCampaigns';
+import Testimonials from '@/components/Testimonials';
 import AboutUs from '@/components/AboutUs';
+import TeamPreview from '@/components/TeamPreview';
+import NewsEvents from '@/components/NewsEvents';
+import FAQ from '@/components/FAQ';
+import JoinCTA from '@/components/JoinCTA';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
+import BackToTop from '@/components/BackToTop';
 
 // Interactive Modals
 import AssistanceModal from '@/components/modals/AssistanceModal';
@@ -27,14 +35,10 @@ import TrackingResultModal from '@/components/modals/TrackingResultModal';
 import AnnouncementModal from '@/components/modals/AnnouncementModal';
 
 export default function HomePage() {
-  // Localization State: বাংলা (default) | English
   const [lang, setLang] = useState<Language>('bn');
 
-  // Emergency Announcement Banner & Popup State
-  const [topBannerVisible, setTopBannerVisible] = useState(true);
   const [announcementModalOpen, setAnnouncementModalOpen] = useState(false);
 
-  // Modals Visibility
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [bloodRequestModalOpen, setBloodRequestModalOpen] = useState(false);
   const [bloodDonorModalOpen, setBloodDonorModalOpen] = useState(false);
@@ -42,19 +46,16 @@ export default function HomePage() {
   const [preselectedCampaign, setPreselectedCampaign] = useState<string>('general');
   const [volunteerModalOpen, setVolunteerModalOpen] = useState(false);
 
-  // Tracking Application State
   const [trackingModalOpen, setTrackingModalOpen] = useState(false);
   const [searchedId, setSearchedId] = useState('');
   const [trackingRecord, setTrackingRecord] = useState<ApplicationTrackingStatus | null>(null);
   const [applicationsMap, setApplicationsMap] = useState<Record<string, ApplicationTrackingStatus>>(MOCK_APPLICATIONS);
 
-  // Auto show announcement once per session if not dismissed today (PRD Section 6 UX Rule)
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const dismissed = localStorage.getItem('rjf_announcement_dismissed');
       const today = new Date().toDateString();
       if (dismissed !== today) {
-        // Show after a subtle delay for optimal UX
         const timer = setTimeout(() => {
           setAnnouncementModalOpen(true);
         }, 1200);
@@ -81,16 +82,15 @@ export default function HomePage() {
   };
 
   const handleAssistanceSubmitted = (newId: string) => {
-    // Add to live tracker in memory
     const newRecord: ApplicationTrackingStatus = {
       id: newId,
       applicantName: 'সম্মানিত আবেদনকারী',
-      categoryBn: 'মানবিক সহায়তা আবেদন',
+      categoryBn: 'মানবিক সহায়তা আবেদন',
       categoryEn: 'Humanitarian Assistance Request',
       submittedDateBn: 'আজই (নতুন)',
       submittedDateEn: 'Today (New)',
       status: 'pending',
-      statusNoteBn: 'আপনার আবেদনটি সফলভাবে সার্ভারে সংরক্ষিত হয়েছে। প্রাথমিক যাচাই কমিটি দ্রুত পর্যালোচনা সম্পন্ন করবে।',
+      statusNoteBn: 'আপনার আবেদনটি সফলভাবে সার্ভারে সংরক্ষিত হয়েছে। প্রাথমিক যাচাই কমিটি দ্রুত পর্যালোচনা সম্পন্ন করবে।',
       statusNoteEn: 'Application received and waiting for preliminary verification review.',
       assignedOfficerBn: 'যাচাই কমিটি, রৌমারী শাখা',
     };
@@ -109,7 +109,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBF9] text-[#1E293B]">
-      {/* 1. Main Navigation Bar with Emergency Announcement Ticker, Logo & Links */}
       <Navbar
         lang={lang}
         onToggleLang={handleToggleLang}
@@ -117,7 +116,6 @@ export default function HomePage() {
       />
 
       <main className="flex-1">
-        {/* 3. Hero Section (Heading, Subtitle, CTAs, Hero Card with Official Seal) */}
         <Hero
           lang={lang}
           onOpenAssistance={() => setAssistanceModalOpen(true)}
@@ -127,7 +125,6 @@ export default function HomePage() {
           onOpenDonation={(campaign) => handleOpenDonation(campaign || 'general')}
         />
 
-        {/* 4. Quick Action Cards (4 Cards: সহায়তা চাই, রক্তদান, অনুদান দিন, স্বেচ্ছাসেবক হোন) */}
         <QuickActions
           lang={lang}
           onOpenAssistance={() => setAssistanceModalOpen(true)}
@@ -136,23 +133,25 @@ export default function HomePage() {
           onOpenVolunteer={() => setVolunteerModalOpen(true)}
         />
 
-        {/* 5. Our Real Impact (4 Dark Green Stat Cards with Verified Numbers) */}
         <ImpactStats lang={lang} />
 
-        {/* 6. Recent Activities Grid with View All & Modal Preview */}
+        {/* NEW: 3 Steps How It Works */}
+        <HowItWorks lang={lang} onOpenAssistance={() => setAssistanceModalOpen(true)} />
+
         <RecentActivities
           lang={lang}
           onOpenAssistance={() => setAssistanceModalOpen(true)}
         />
 
-        {/* 7. Blood Donation Banner (Soft Red Container with Privacy Reassurance) */}
+        {/* NEW: Financial Transparency & Fund Usage */}
+        <FundUsage lang={lang} />
+
         <BloodDonationBanner
           lang={lang}
           onOpenDonorModal={() => setBloodDonorModalOpen(true)}
           onOpenBloodRequestModal={() => setBloodRequestModalOpen(true)}
         />
 
-        {/* 8. Dual Action Section: Track Application (Left) & Stand With Us (Right) */}
         <TrackAndSupport
           lang={lang}
           onSearchTracking={handleSearchTracking}
@@ -160,21 +159,37 @@ export default function HomePage() {
           onOpenVolunteer={() => setVolunteerModalOpen(true)}
         />
 
-        {/* 9. Ongoing Campaigns Section with Targeted Funds & Progress */}
         <OngoingCampaigns
           lang={lang}
           onOpenDonation={handleOpenDonation}
         />
 
-        {/* 10. About Us & 9-Year Historical Milestone Journey */}
+        {/* NEW: Real Beneficiary & Volunteer Testimonials */}
+        <Testimonials lang={lang} />
+
         <AboutUs
           lang={lang}
           onOpenAssistance={() => setAssistanceModalOpen(true)}
           onOpenDonation={() => handleOpenDonation('general')}
         />
+
+        {/* NEW: Leadership Team Preview */}
+        <TeamPreview lang={lang} />
+
+        {/* NEW: News & Events */}
+        <NewsEvents lang={lang} />
+
+        {/* NEW: Frequently Asked Questions Accordion */}
+        <FAQ lang={lang} />
+
+        {/* NEW: Join CTA & Newsletter Subscription */}
+        <JoinCTA
+          lang={lang}
+          onOpenDonation={() => handleOpenDonation('general')}
+          onOpenVolunteer={() => setVolunteerModalOpen(true)}
+        />
       </main>
 
-      {/* 11. Footer with Full Contacts, Affiliation, Quick Links & Policies */}
       <Footer
         lang={lang}
         onOpenAssistance={() => setAssistanceModalOpen(true)}
@@ -182,14 +197,14 @@ export default function HomePage() {
         onOpenDonation={() => handleOpenDonation('general')}
       />
 
-      {/* Persistent Mobile Bottom Sticky Bar matching the user's wireframes */}
       <MobileBottomBar
         lang={lang}
         onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => handleOpenDonation('general')}
       />
 
-      {/* All Interactive Modals */}
+      <BackToTop />
+
       <AssistanceModal
         isOpen={assistanceModalOpen}
         onClose={() => setAssistanceModalOpen(false)}

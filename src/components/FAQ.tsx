@@ -1,0 +1,87 @@
+'use client';
+
+import React, { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Language } from '@/types';
+import { GlassSection, SectionHeading, glassCard } from '@/components/ui/glass';
+
+interface Props {
+  lang: Language;
+}
+
+const FAQS = [
+  {
+    qBn: 'কারা সহায়তার জন্য আবেদন করতে পারেন?',
+    qEn: 'Who can apply for assistance?',
+    aBn: 'রৌমারী ও আশপাশের এলাকার অসহায়, দরিদ্র ও ক্ষতিগ্রস্ত পরিবার আবেদন করতে পারেন। আবেদন যাচাই করে সহায়তা দেওয়া হয়।',
+    aEn: 'Vulnerable, low-income and affected families in Rowmari and nearby areas can apply. Every request is verified before help is given.',
+  },
+  {
+    qBn: 'আমার আবেদনের অবস্থা কীভাবে জানব?',
+    qEn: 'How do I check my application status?',
+    aBn: 'আবেদনের পর পাওয়া ট্র্যাকিং আইডি দিয়ে হোমপেজের “আবেদনের অবস্থা” অংশে খুঁজলেই বর্তমান অবস্থা দেখা যাবে।',
+    aEn: 'Use the tracking ID you received in the “Track Application” section on the home page to see the current status.',
+  },
+  {
+    qBn: 'রক্তদাতা হিসেবে কীভাবে নিবন্ধন করব?',
+    qEn: 'How do I register as a blood donor?',
+    aBn: 'রক্তদান অংশে “দাতা হোন” বাটনে ক্লিক করে ফর্মটি পূরণ করুন। প্রয়োজনের সময় আমরা আপনার সঙ্গে যোগাযোগ করব।',
+    aEn: 'Click “Become a donor” in the blood donation section and fill in the form. We will contact you when someone needs your blood group.',
+  },
+  {
+    qBn: 'অনুদান কীভাবে ব্যবহার করা হয়?',
+    qEn: 'How are donations used?',
+    aBn: 'অনুদান নির্ধারিত ক্যাম্পেইন বা সাধারণ তহবিলে যায় এবং সরাসরি সহায়তা কার্যক্রমে ব্যয় হয়। হিসাব নিয়মিত প্রকাশ করা হয়।',
+    aEn: 'Donations go to the campaign you choose or the general fund and are spent on relief work. Accounts are published regularly.',
+  },
+  {
+    qBn: 'স্বেচ্ছাসেবক হতে কী করতে হবে?',
+    qEn: 'How can I volunteer?',
+    aBn: '“স্বেচ্ছাসেবক হোন” ফর্ম পূরণ করুন। আমাদের সমন্বয়ক আপনার সঙ্গে যোগাযোগ করে কাজের বিষয়ে জানাবেন।',
+    aEn: 'Fill in the “Volunteer” form. Our coordinator will get in touch and explain how you can help.',
+  },
+];
+
+export default function FAQ({ lang }: Props) {
+  const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
+  const [open, setOpen] = useState<number | null>(0);
+
+  return (
+    <GlassSection id="faq" tone="red">
+      <SectionHeading title={t('সাধারণ জিজ্ঞাসা', 'Frequently asked questions')} />
+      <div className="max-w-3xl mx-auto space-y-3">
+        {FAQS.map((f, i) => {
+          const isOpen = open === i;
+          return (
+            <div key={i} className={`${glassCard} overflow-hidden`}>
+              <button
+                onClick={() => setOpen(isOpen ? null : i)}
+                aria-expanded={isOpen}
+                className="w-full flex items-center justify-between gap-4 text-left px-5 md:px-6 py-4 cursor-pointer"
+              >
+                <span className="font-semibold text-stone-900 text-sm md:text-base">{t(f.qBn, f.qEn)}</span>
+                <motion.span animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.25 }} className="shrink-0">
+                  <ChevronDown className="w-5 h-5 text-[#0D5C35]" />
+                </motion.span>
+              </button>
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <p className="px-5 md:px-6 pb-5 text-sm text-stone-600 leading-relaxed">{t(f.aBn, f.aEn)}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
+      </div>
+    </GlassSection>
+  );
+}
