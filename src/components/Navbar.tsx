@@ -141,27 +141,6 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
 
   const isSecondaryActive = secondaryDesktopLinks.some((l) => isActive(l.href));
 
-  const donateClasses =
-    'relative overflow-hidden px-5 py-2 rounded-full bg-[#E53935] text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-md shadow-red-600/25 cursor-pointer';
-
-  const donateInner = (
-    <>
-      {/* Light sweep on hover */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-y-0 -left-full w-1/2 -skew-x-12 bg-white/25 transition-transform duration-700 ease-out group-hover/donate:translate-x-[400%]"
-      />
-      <motion.span
-        className="relative flex"
-        animate={reduceMotion ? undefined : { scale: [1, 1.22, 1, 1.12, 1] }}
-        transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 3.2, ease: 'easeInOut' }}
-      >
-        <Heart className="w-4 h-4 fill-white text-white" />
-      </motion.span>
-      <span className="relative">{lang === 'bn' ? 'অনুদানের জন্য' : 'Donate Now'}</span>
-    </>
-  );
-
   return (
     <div className="sticky top-0 z-40 w-full">
       <TopAnnouncement lang={lang} />
@@ -369,18 +348,6 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                 </AnimatePresence>
               </motion.button>
             )}
-
-            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="group/donate">
-              {onOpenDonation ? (
-                <button onClick={onOpenDonation} className={donateClasses}>
-                  {donateInner}
-                </button>
-              ) : (
-                <Link href="/donate" className={donateClasses}>
-                  {donateInner}
-                </Link>
-              )}
-            </motion.div>
           </div>
 
           {/* Mobile controls */}
@@ -494,23 +461,6 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                     </Link>
                   </div>
                 )}
-
-                <div className="flex gap-2">
-                  <Link
-                    href="/donate"
-                    className="flex-1 py-2 rounded-full bg-[#E53935] hover:bg-[#D32F2F] text-white font-semibold text-xs shadow-md flex items-center justify-center gap-1.5 text-center active:scale-[0.97] transition"
-                  >
-                    <Heart className="w-3.5 h-3.5 fill-white text-white" />
-                    <span>{lang === 'bn' ? 'অনুদানের জন্য' : 'Donate Now'}</span>
-                  </Link>
-                  <Link
-                    href="/volunteer"
-                    className="flex-1 py-2 rounded-full border border-[#0D5C35] text-[#0D5C35] hover:bg-emerald-50 font-semibold text-xs flex items-center justify-center gap-1.5 text-center active:scale-[0.97] transition"
-                  >
-                    <Users className="w-3.5 h-3.5 text-[#0D5C35]" />
-                    <span>{lang === 'bn' ? 'স্বেচ্ছাসেবক' : 'Volunteer'}</span>
-                  </Link>
-                </div>
               </motion.div>
             </div>
           </motion.div>
