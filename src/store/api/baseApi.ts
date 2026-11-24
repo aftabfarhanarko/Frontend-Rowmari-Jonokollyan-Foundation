@@ -21,6 +21,8 @@ export const baseApi = createApi({
     'Users',
     'Notifications',
     'MyRecords',
+    'AccessControl',
+    'AuditLogs',
   ],
   endpoints: () => ({}),
 });

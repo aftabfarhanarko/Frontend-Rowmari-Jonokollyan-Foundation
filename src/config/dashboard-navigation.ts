@@ -80,6 +80,17 @@ export const ROLE_METAS: Record<UserRole, RoleMeta> = {
       border: "border-teal-300",
     },
   },
+  VOLUNTEER_COORDINATOR: {
+    role: "VOLUNTEER_COORDINATOR",
+    titleBn: "স্বেচ্ছাসেবক সমন্বয়ক",
+    titleEn: "Volunteer Coordinator",
+    descriptionBn: "মাঠপর্যায়ে স্বেচ্ছাসেবী ক্যাম্প ও টিম সমন্বয়",
+    colorScheme: {
+      bg: "bg-cyan-100 text-cyan-800",
+      text: "text-cyan-700",
+      border: "border-cyan-300",
+    },
+  },
   CONTENT_MANAGER: {
     role: "CONTENT_MANAGER",
     titleBn: "কন্টেন্ট ও প্রচার ব্যবস্থাপক",
@@ -133,6 +144,7 @@ export const ALL_ROLES: UserRole[] = [
   "MEDICAL_COORDINATOR",
   "EDUCATION_COORDINATOR",
   "VOLUNTEER_MANAGER",
+  "VOLUNTEER_COORDINATOR",
   "CONTENT_MANAGER",
   "FINANCE_MANAGER",
   "CASE_WORKER",
@@ -199,7 +211,7 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
     href: "/dashboard?tab=volunteers",
     iconName: "Users",
     category: "operations",
-    roles: ["SUPER_ADMIN", "ADMIN", "VOLUNTEER_MANAGER"],
+    roles: ["SUPER_ADMIN", "ADMIN", "VOLUNTEER_MANAGER", "VOLUNTEER_COORDINATOR"],
     descriptionBn: "স্বেচ্ছাসেবক আবেদন ও দায়িত্ব বণ্টন",
   },
 

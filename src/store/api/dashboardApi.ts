@@ -230,21 +230,38 @@ export const dashboardApi = baseApi.injectEndpoints({
       }),
       providesTags: ['Users'],
     }),
-    updateUserRole: builder.mutation<BackendUser, { id: string; roleNames: string[] }>({
-      query: ({ id, roleNames }) => ({
+    updateUserRole: builder.mutation<BackendUser, { id: string; roles: string[] }>({
+      query: ({ id, roles }) => ({
         url: API_ENDPOINTS.users.roles(id),
-        method: 'PATCH',
-        data: { roleNames },
+        method: 'PUT',
+        data: { roles },
       }),
       invalidatesTags: ['Users'],
     }),
-    updateUserStatus: builder.mutation<BackendUser, { id: string; isActive: boolean }>({
-      query: ({ id, isActive }) => ({
+    updateUserStatus: builder.mutation<BackendUser, { id: string; status: 'ACTIVE' | 'SUSPENDED' | 'INACTIVE' }>({
+      query: ({ id, status }) => ({
         url: API_ENDPOINTS.users.status(id),
         method: 'PATCH',
-        data: { isActive },
+        data: { status },
       }),
       invalidatesTags: ['Users'],
+    }),
+
+    // Access Control & Audit Trail (Super Admin)
+    getAccessControlRoles: builder.query<any[], void>({
+      query: () => ({ url: API_ENDPOINTS.accessControl.roles }),
+      providesTags: ['AccessControl'],
+    }),
+    getAccessControlPermissions: builder.query<any[], void>({
+      query: () => ({ url: API_ENDPOINTS.accessControl.permissions }),
+      providesTags: ['AccessControl'],
+    }),
+    getAuditLogs: builder.query<PaginatedResponse<any> | any[], { page?: number; limit?: number; action?: string; entityType?: string } | void>({
+      query: (params) => ({
+        url: API_ENDPOINTS.audit.logs,
+        params: params || { page: 1, limit: 50 },
+      }),
+      providesTags: ['AuditLogs'],
     }),
 
     // Admin Notifications
@@ -284,6 +301,9 @@ export const {
   useGetAdminUsersQuery,
   useUpdateUserRoleMutation,
   useUpdateUserStatusMutation,
+  useGetAccessControlRolesQuery,
+  useGetAccessControlPermissionsQuery,
+  useGetAuditLogsQuery,
   useGetAdminNotificationsQuery,
   useGetMyApplicationsQuery,
   useGetMyDonationsQuery,

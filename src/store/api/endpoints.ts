@@ -95,4 +95,9 @@ export const API_ENDPOINTS = {
   audit: {
     logs: '/admin/audit-logs',
   },
-} as const;
+  accessControl: {
+    roles: '/access-control/roles',
+    permissions: '/access-control/permissions',
+    createRole: '/access-control/roles',
+  },
+};
