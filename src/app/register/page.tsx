@@ -36,6 +36,13 @@ export default function RegisterPage() {
   const toggleLang = useAppStore((state) => state.toggleLang);
   const setCurrentRole = useAppStore((state) => state.setCurrentRole);
   const setIsAuthenticated = useAppStore((state) => state.setIsAuthenticated);
+  const isAuthenticated = useAppStore((state) => state.isAuthenticated);
+
+  React.useEffect(() => {
+    if (isAuthenticated || (typeof document !== 'undefined' && document.cookie.includes('rjf_session=1'))) {
+      router.replace('/dashboard');
+    }
+  }, [isAuthenticated, router]);
   const donationModalOpen = useAppStore((state) => state.donationModalOpen);
   const setDonationModalOpen = useAppStore((state) => state.setDonationModalOpen);
   const assistanceModalOpen = useAppStore((state) => state.assistanceModalOpen);

@@ -133,6 +133,8 @@ export const useAppStore = create<AppState>()(
         announcementDismissedDate: state.announcementDismissedDate,
         savedApplicationIds: state.savedApplicationIds,
         recentDonationReceipts: state.recentDonationReceipts,
+        currentRole: state.currentRole,
+        isAuthenticated: state.isAuthenticated,
       }),
     }
   )

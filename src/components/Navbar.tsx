@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   motion,
   AnimatePresence,
@@ -34,7 +34,7 @@ import {
   LogOut,
   User,
 } from 'lucide-react';
-import { Language } from '@/types';
+import { Language, UserRole } from '@/types';
 import TopAnnouncement from '@/components/TopAnnouncement';
 import { useAppStore } from '@/store/useAppStore';
 import { useLogoutMutation, useGetCurrentUserQuery } from '@/store/api/authApi';
@@ -95,12 +95,39 @@ const drawerItem: Variants = {
 };
 
 export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarProps) {
+  const router = useRouter();
   const currentRole = useAppStore((state) => state.currentRole);
   const setCurrentRole = useAppStore((state) => state.setCurrentRole);
-  const isAuthenticated = currentRole !== 'COMMUNITY_MEMBER';
+  const isAuthenticated = useAppStore((state) => state.isAuthenticated);
+  const setIsAuthenticated = useAppStore((state) => state.setIsAuthenticated);
+  const [hasSessionCookie, setHasSessionCookie] = useState(false);
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const hasCookie = document.cookie.includes('rjf_session=1');
+      setHasSessionCookie(hasCookie);
+      if (hasCookie && !isAuthenticated) {
+        setIsAuthenticated(true);
+      }
+    }
+  }, [isAuthenticated, setIsAuthenticated]);
+
+  const isUserLoggedIn = isAuthenticated || hasSessionCookie;
 
   const [logout] = useLogoutMutation();
-  const { data: currentUser } = useGetCurrentUserQuery(undefined, { skip: !isAuthenticated });
+  const { data: currentUser } = useGetCurrentUserQuery(undefined, { skip: !isUserLoggedIn });
+
+  useEffect(() => {
+    if (currentUser?.roles?.[0]) {
+      const roleName =
+        typeof currentUser.roles[0] === 'object'
+          ? (currentUser.roles[0] as any).name
+          : currentUser.roles[0];
+      if (roleName && roleName !== currentRole) {
+        setCurrentRole(roleName as UserRole);
+      }
+    }
+  }, [currentUser, currentRole, setCurrentRole]);
 
   const handleLogout = async () => {
     try {
@@ -108,8 +135,15 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
     } catch {
       // ignore
     } finally {
+      setIsAuthenticated(false);
+      setHasSessionCookie(false);
       setCurrentRole('COMMUNITY_MEMBER');
+      if (typeof document !== 'undefined') {
+        document.cookie = 'rjf_session=; path=/; max-age=0; SameSite=Lax';
+        document.cookie = 'rjf_auth_role=; path=/; max-age=0; SameSite=Lax';
+      }
       toast.info(lang === 'bn' ? 'লগআউট সম্পন্ন হয়েছে' : 'Logged out successfully');
+      router.push('/login');
     }
   };
 
@@ -289,7 +323,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
 
           {/* Actions */}
           <div className="hidden sm:flex items-center gap-2.5 shrink-0">
-            {isAuthenticated ? (
+            {isUserLoggedIn ? (
               <div className="flex items-center gap-2">
                 <Link
                   href="/dashboard"
@@ -310,20 +344,24 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
               </div>
             ) : (
               <div className="flex items-center gap-1.5">
-                <Link
-                  href="/login"
-                  className="px-3 py-1.5 rounded-lg text-stone-700 hover:text-[#0D5C35] hover:bg-emerald-50 text-xs font-bold transition flex items-center gap-1"
-                >
-                  <LogIn className="w-3.5 h-3.5 text-[#0D5C35]" />
-                  <span>{lang === 'bn' ? 'লগইন' : 'Login'}</span>
-                </Link>
-                <Link
-                  href="/register"
-                  className="px-3 py-1.5 rounded-lg border border-[#0D5C35]/30 text-[#0D5C35] hover:bg-[#0D5C35] hover:text-white text-xs font-bold transition flex items-center gap-1"
-                >
-                  <UserPlus className="w-3.5 h-3.5" />
-                  <span>{lang === 'bn' ? 'রেজিস্টার' : 'Register'}</span>
-                </Link>
+                {pathname !== '/login' && (
+                  <Link
+                    href="/login"
+                    className="px-3 py-1.5 rounded-lg text-stone-700 hover:text-[#0D5C35] hover:bg-emerald-50 text-xs font-bold transition flex items-center gap-1"
+                  >
+                    <LogIn className="w-3.5 h-3.5 text-[#0D5C35]" />
+                    <span>{lang === 'bn' ? 'লগইন' : 'Login'}</span>
+                  </Link>
+                )}
+                {pathname !== '/register' && (
+                  <Link
+                    href="/register"
+                    className="px-3 py-1.5 rounded-lg border border-[#0D5C35]/30 text-[#0D5C35] hover:bg-[#0D5C35] hover:text-white text-xs font-bold transition flex items-center gap-1"
+                  >
+                    <UserPlus className="w-3.5 h-3.5" />
+                    <span>{lang === 'bn' ? 'রেজিস্টার' : 'Register'}</span>
+                  </Link>
+                )}
               </div>
             )}
 
@@ -425,10 +463,11 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
               </nav>
 
               <motion.div variants={drawerItem} className="pt-3 border-t border-stone-100 flex flex-col gap-2">
-                {isAuthenticated ? (
+                {isUserLoggedIn ? (
                   <div className="flex gap-2">
                     <Link
                       href="/dashboard"
+                      onClick={() => setMobileMenuOpen(false)}
                       className="flex-1 py-2 rounded-full border border-[#0D5C35] bg-emerald-50 text-[#0D5C35] font-bold text-xs flex items-center justify-center gap-1.5 text-center"
                     >
                       <LayoutDashboard className="w-3.5 h-3.5 text-[#0D5C35]" />
@@ -436,7 +475,10 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                     </Link>
                     <button
                       type="button"
-                      onClick={handleLogout}
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        handleLogout();
+                      }}
                       className="px-4 py-2 rounded-full bg-red-50 text-red-600 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <LogOut className="w-3.5 h-3.5" />
@@ -445,20 +487,26 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                   </div>
                 ) : (
                   <div className="flex gap-2">
-                    <Link
-                      href="/login"
-                      className="flex-1 py-2 rounded-full border border-[#0D5C35] text-[#0D5C35] bg-emerald-50/50 hover:bg-emerald-50 font-bold text-xs flex items-center justify-center gap-1.5 text-center"
-                    >
-                      <LogIn className="w-3.5 h-3.5 text-[#0D5C35]" />
-                      <span>{lang === 'bn' ? 'লগইন' : 'Sign In'}</span>
-                    </Link>
-                    <Link
-                      href="/register"
-                      className="flex-1 py-2 rounded-full bg-[#0D5C35] text-white hover:bg-[#094527] font-bold text-xs flex items-center justify-center gap-1.5 text-center"
-                    >
-                      <UserPlus className="w-3.5 h-3.5 text-white" />
-                      <span>{lang === 'bn' ? 'রেজিস্ট্রেশন' : 'Register'}</span>
-                    </Link>
+                    {pathname !== '/login' && (
+                      <Link
+                        href="/login"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex-1 py-2 rounded-full border border-[#0D5C35] text-[#0D5C35] bg-emerald-50/50 hover:bg-emerald-50 font-bold text-xs flex items-center justify-center gap-1.5 text-center"
+                      >
+                        <LogIn className="w-3.5 h-3.5 text-[#0D5C35]" />
+                        <span>{lang === 'bn' ? 'লগইন' : 'Sign In'}</span>
+                      </Link>
+                    )}
+                    {pathname !== '/register' && (
+                      <Link
+                        href="/register"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex-1 py-2 rounded-full bg-[#0D5C35] text-white hover:bg-[#094527] font-bold text-xs flex items-center justify-center gap-1.5 text-center"
+                      >
+                        <UserPlus className="w-3.5 h-3.5 text-white" />
+                        <span>{lang === 'bn' ? 'রেজিস্ট্রেশন' : 'Register'}</span>
+                      </Link>
+                    )}
                   </div>
                 )}
               </motion.div>
