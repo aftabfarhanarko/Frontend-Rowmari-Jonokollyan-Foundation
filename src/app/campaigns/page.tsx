@@ -20,7 +20,7 @@ import BackToTop from '@/components/BackToTop';
 import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
-import { CAMPAIGNS_DATA } from '@/data/mockData';
+import { useGetCampaignsQuery } from '@/store/api/campaignsApi';
 import { Language } from '@/types';
 
 export default function CampaignsPage() {
@@ -29,6 +29,7 @@ export default function CampaignsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [selectedCampaignCategory, setSelectedCampaignCategory] = useState('general');
+  const { data: campaigns = [], isLoading, isError } = useGetCampaignsQuery();
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
 
@@ -39,7 +40,7 @@ export default function CampaignsPage() {
     { key: 'education' as const, labelBn: 'শিক্ষাবৃত্তি', labelEn: 'Education' },
   ];
 
-  const filteredCampaigns = CAMPAIGNS_DATA.filter((camp) => {
+  const filteredCampaigns = campaigns.filter((camp) => {
     if (activeTab === 'all') return true;
     return camp.category === activeTab;
   });
@@ -105,6 +106,9 @@ export default function CampaignsPage() {
         {/* Campaigns Grid */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {isLoading ? <p className="col-span-full py-12 text-center">{t('তথ্য লোড হচ্ছে…', 'Loading campaigns…')}</p> : null}
+            {isError ? <p role="alert" className="col-span-full py-12 text-center">{t('ক্যাম্পেইন লোড করা যায়নি। পরে আবার চেষ্টা করুন।', 'Campaigns could not be loaded. Please try again.')}</p> : null}
+            {!isLoading && !isError && filteredCampaigns.length === 0 ? <p className="col-span-full py-12 text-center">{t('কোনো ক্যাম্পেইন পাওয়া যায়নি।', 'No campaigns are currently available.')}</p> : null}
             {filteredCampaigns.map((camp) => {
               const percentage = Math.min(
                 100,

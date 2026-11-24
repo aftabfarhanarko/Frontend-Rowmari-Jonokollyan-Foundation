@@ -168,12 +168,6 @@ export function DashboardSidebar({
       <div className="flex-1 overflow-y-auto px-3 py-2 scrollbar-thin">
         {categories.map((cat) => renderNavGroup(cat.key, cat.title))}
       </div>
-
-      {/* Bottom Footer Info */}
-      <div className="p-3 border-t border-stone-200 bg-stone-50/50 text-[11px] text-stone-500 flex items-center justify-between">
-        <span>সংস্করণ v১.০ (RJF)</span>
-        <span className="text-stone-400 font-mono">২০২৬</span>
-      </div>
     </div>
   )
 

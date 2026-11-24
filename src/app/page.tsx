@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Language, ApplicationTrackingStatus } from '@/types';
 import { MOCK_APPLICATIONS } from '@/data/mockData';
+import { useLazyTrackApplicationQuery } from '@/store/api/applicationsApi';
 
 // Modular Page Sections
 import Navbar from '@/components/Navbar';
@@ -46,6 +47,7 @@ export default function HomePage() {
   const [searchedId, setSearchedId] = useState('');
   const [trackingRecord, setTrackingRecord] = useState<ApplicationTrackingStatus | null>(null);
   const [applicationsMap, setApplicationsMap] = useState<Record<string, ApplicationTrackingStatus>>(MOCK_APPLICATIONS);
+  const [triggerTrack] = useLazyTrackApplicationQuery();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -69,11 +71,16 @@ export default function HomePage() {
     setDonationModalOpen(true);
   };
 
-  const handleSearchTracking = (id: string) => {
+  const handleSearchTracking = async (id: string) => {
     const trimmedId = id.trim().toUpperCase();
     setSearchedId(trimmedId);
-    const found = applicationsMap[trimmedId] || null;
-    setTrackingRecord(found);
+    try {
+      const res = await triggerTrack({ referenceCode: trimmedId, phone: '' }).unwrap();
+      setTrackingRecord(res);
+    } catch {
+      const found = applicationsMap[trimmedId] || null;
+      setTrackingRecord(found);
+    }
     setTrackingModalOpen(true);
   };
 

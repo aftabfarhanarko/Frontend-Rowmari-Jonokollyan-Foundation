@@ -1,122 +1,98 @@
 import { baseApi } from './baseApi';
-import { ApplicationTrackingStatus, NewsItem } from '@/types';
+import { API_ENDPOINTS } from './endpoints';
+import type { ApplicationTrackingStatus, NewsItem } from '@/types';
 
 export interface AssistancePayload {
-  category: string;
-  fullName: string;
-  phone: string;
-  nid?: string;
-  unionName: string;
-  village: string;
-  amountOrItems?: string;
-  description: string;
-  agreeConsent: boolean;
+  category: string; fullName: string; phone: string; nid?: string; unionName: string; village: string;
+  amountOrItems?: string; description: string; agreeConsent: boolean;
 }
-
 export interface BloodDonorPayload {
-  name: string;
-  phone: string;
-  bloodGroup: string;
-  upazila: string;
-  village?: string;
-  lastDonation?: string;
-  availability: string;
+  name: string; phone: string; bloodGroup: string; upazila: string; village?: string; lastDonation?: string; availability: string;
 }
-
 export interface BloodRequestPayload {
-  patientName: string;
-  bloodGroup: string;
-  unitsNeeded: number;
-  hospital: string;
-  location: string;
-  dateNeeded: string;
-  urgency: string;
-  contactPhone: string;
-  contactName?: string;
-  notes?: string;
+  patientName: string; bloodGroup: string; unitsNeeded: number; hospital: string; location: string; dateNeeded: string;
+  urgency: string; contactPhone: string; contactName?: string; notes?: string;
 }
-
 export interface VolunteerPayload {
-  name: string;
-  phone: string;
-  email?: string;
-  age: number;
-  profession?: string;
-  preferredWing: string;
-  availability: string;
-  motivation?: string;
+  name: string; phone: string; email?: string; age: number; profession?: string; preferredWing: string; availability: string; motivation?: string;
 }
+export interface ContactMessagePayload { name: string; contactInfo: string; message: string }
 
-export interface ContactMessagePayload {
-  name: string;
-  contactInfo: string;
-  message: string;
-}
+type TrackedApplication = { referenceCode: string; status: string; category: string; createdAt: string; statusHistory?: Array<{ remarks?: string }> };
+type BackendNews = { id: string; type: 'NEWS' | 'EVENT'; title: string; summary?: string; location?: string; startDate?: string; createdAt: string; imageUrl?: string };
+const enumValue = (value: string) => value.trim().replace(/[ -]+/g, '_').toUpperCase();
+const phoneValue = (value: string) => value.replace(/[ ()-]/g, '');
 
 export const applicationsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getNews: builder.query<NewsItem[], void>({
-      query: () => ({
-        url: '/news',
-        method: 'GET',
-      }),
-      providesTags: [{ type: 'News', id: 'LIST' }],
+      query: () => ({ url: API_ENDPOINTS.content.newsEvents, params: { page: 1, limit: 100 } }),
+      transformResponse: (response: BackendNews[] | { items: BackendNews[] }): NewsItem[] =>
+        (Array.isArray(response) ? response : response.items).map((item) => ({
+          id: item.id, type: item.type.toLowerCase() as NewsItem['type'], titleBn: item.title, titleEn: item.title,
+          dateBn: item.startDate || item.createdAt, dateEn: item.startDate || item.createdAt,
+          locationBn: item.location || '', locationEn: item.location || '', summaryBn: item.summary || '', summaryEn: item.summary || '', imageUrl: item.imageUrl,
+        })),
     }),
-    trackApplication: builder.query<ApplicationTrackingStatus, string>({
-      query: (id) => ({
-        url: `/track/${id}`,
-        method: 'GET',
+    trackApplication: builder.query<ApplicationTrackingStatus, { referenceCode: string; phone: string }>({
+      query: ({ referenceCode, phone }) => ({ url: API_ENDPOINTS.applications.track, method: 'POST', data: { referenceCode, phone: phoneValue(phone) } }),
+      transformResponse: (record: TrackedApplication): ApplicationTrackingStatus => ({
+        id: record.referenceCode,
+        applicantName: '',
+        categoryBn: record.category,
+        categoryEn: record.category,
+        submittedDateBn: record.createdAt,
+        submittedDateEn: record.createdAt,
+        status: (record.status.toLowerCase() === 'verified' ? 'under_review' : record.status.toLowerCase()) as ApplicationTrackingStatus['status'],
+        statusNoteBn: record.statusHistory?.at(-1)?.remarks || '',
+        statusNoteEn: record.statusHistory?.at(-1)?.remarks || '',
       }),
-      providesTags: (_res, _err, id) => [{ type: 'Applications', id }],
     }),
-    submitAssistance: builder.mutation<{ success: boolean; applicationId: string; message: string }, AssistancePayload>({
-      query: (data) => ({
-        url: '/assistance',
-        method: 'POST',
-        data,
-      }),
-      invalidatesTags: [{ type: 'Applications', id: 'LIST' }],
+    submitAssistance: builder.mutation<{ referenceCode: string; id: string; status: string; createdAt: string }, AssistancePayload>({
+      query: (form) => {
+        const amount = Number(form.amountOrItems?.replace(/[^\d.]/g, ''));
+        const category = enumValue(form.category);
+        return {
+          url: API_ENDPOINTS.applications.create,
+          method: 'POST',
+          data: {
+            applicant: { fullName: form.fullName, phone: phoneValue(form.phone), upazila: form.unionName, address: form.village },
+            category: ['MEDICAL', 'EDUCATION', 'DISASTER_RELIEF', 'WIDOW_ORPHAN', 'HOUSING', 'FOOD_AID', 'OTHER'].includes(category) ? category : 'OTHER',
+            ...(Number.isFinite(amount) && amount > 0 ? { requestedAmount: amount } : {}),
+            description: form.description,
+            consent: { privacyAccepted: form.agreeConsent, contactAllowed: form.agreeConsent },
+          },
+        };
+      },
     }),
-    registerBloodDonor: builder.mutation<{ success: boolean; message: string }, BloodDonorPayload>({
-      query: (data) => ({
-        url: '/blood/donor',
-        method: 'POST',
-        data,
+    registerBloodDonor: builder.mutation<unknown, BloodDonorPayload>({
+      query: (form) => ({
+        url: API_ENDPOINTS.donors.register, method: 'POST',
+        data: { fullName: form.name, phone: phoneValue(form.phone), bloodGroup: form.bloodGroup, upazila: form.upazila, address: form.village,
+          ...(form.lastDonation && !Number.isNaN(Date.parse(form.lastDonation)) ? { lastDonationDate: new Date(form.lastDonation).toISOString() } : {}), consentToContact: true },
       }),
-      invalidatesTags: [{ type: 'BloodDonors', id: 'LIST' }],
     }),
-    requestBlood: builder.mutation<{ success: boolean; requestId: string; message: string }, BloodRequestPayload>({
-      query: (data) => ({
-        url: '/blood/request',
-        method: 'POST',
-        data,
+    requestBlood: builder.mutation<{ id: string }, BloodRequestPayload>({
+      query: (form) => ({
+        url: API_ENDPOINTS.bloodRequests.create, method: 'POST',
+        data: { patientName: form.patientName, bloodGroup: form.bloodGroup, unitsNeeded: Number(form.unitsNeeded),
+          hospitalName: form.hospital, hospitalAddress: form.location, requiredDate: new Date(form.dateNeeded).toISOString(),
+          urgency: form.urgency === 'scheduled' ? 'ROUTINE' : enumValue(form.urgency), contactPhone: phoneValue(form.contactPhone), contactPerson: form.contactName || form.contactPhone, medicalReason: form.notes },
       }),
-      invalidatesTags: [{ type: 'BloodRequests', id: 'LIST' }],
     }),
-    applyVolunteer: builder.mutation<{ success: boolean; message: string }, VolunteerPayload>({
-      query: (data) => ({
-        url: '/volunteer',
-        method: 'POST',
-        data,
-      }),
-      invalidatesTags: [{ type: 'Volunteers', id: 'LIST' }],
+    applyVolunteer: builder.mutation<unknown, VolunteerPayload>({
+      query: (form) => ({ url: API_ENDPOINTS.volunteers.register, method: 'POST', data: {
+        fullName: form.name, phone: phoneValue(form.phone), email: form.email, upazila: form.preferredWing,
+        skills: [form.profession, form.motivation].filter(Boolean).join(' — '), availabilityHoursPerWeek: Number(form.availability) || 1,
+      } }),
     }),
-    sendContactMessage: builder.mutation<{ success: boolean; message: string }, ContactMessagePayload>({
-      query: (data) => ({
-        url: '/contact',
-        method: 'POST',
-        data,
-      }),
+    sendContactMessage: builder.mutation<{ id: string; createdAt: string }, ContactMessagePayload>({
+      query: ({ name, contactInfo, message }) => ({ url: API_ENDPOINTS.contact, method: 'POST', data: { name, contactInfo, message } }),
     }),
   }),
 });
 
 export const {
-  useGetNewsQuery,
-  useLazyTrackApplicationQuery,
-  useSubmitAssistanceMutation,
-  useRegisterBloodDonorMutation,
-  useRequestBloodMutation,
-  useApplyVolunteerMutation,
-  useSendContactMessageMutation,
+  useGetNewsQuery, useLazyTrackApplicationQuery, useSubmitAssistanceMutation, useRegisterBloodDonorMutation,
+  useRequestBloodMutation, useApplyVolunteerMutation, useSendContactMessageMutation,
 } = applicationsApi;

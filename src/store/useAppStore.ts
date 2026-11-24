@@ -57,8 +57,9 @@ export const useAppStore = create<AppState>()(
       setLang: (lang) => set({ lang }),
       toggleLang: () => set((state) => ({ lang: state.lang === 'bn' ? 'en' : 'bn' })),
 
-      // Default Role
-      currentRole: 'SUPER_ADMIN',
+      // Staff role comes from the authenticated backend session; unauthenticated
+      // visitors must never receive privileged UI by default.
+      currentRole: 'COMMUNITY_MEMBER',
       setCurrentRole: (currentRole) => set({ currentRole }),
 
       // Announcement
@@ -125,7 +126,6 @@ export const useAppStore = create<AppState>()(
       }),
       partialize: (state) => ({
         lang: state.lang,
-        currentRole: state.currentRole,
         announcementDismissedDate: state.announcementDismissedDate,
         savedApplicationIds: state.savedApplicationIds,
         recentDonationReceipts: state.recentDonationReceipts,

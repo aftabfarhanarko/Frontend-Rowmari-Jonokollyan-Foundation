@@ -26,6 +26,7 @@ import { FOUNDATION_INFO } from '@/data/mockData';
 import { Language } from '@/types';
 import { contactSchema, ContactFormData } from '@/lib/validations/contactSchema';
 import { useSendContactMessageMutation } from '@/store/api/applicationsApi';
+import { toast } from 'sonner';
 
 export default function ContactPage() {
   const [lang, setLang] = useState<Language>('bn');
@@ -53,11 +54,11 @@ export default function ContactPage() {
   const onSubmit = async (data: ContactFormData) => {
     try {
       await sendContactMessage(data).unwrap();
-    } catch {
-      // optimistic success fallback
+      setSubmitted(true);
+      reset();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : (lang === 'bn' ? 'বার্তা পাঠানো যাচ্ছে না।' : 'Contact messages are currently unavailable.'));
     }
-    setSubmitted(true);
-    reset();
   };
 
   return (

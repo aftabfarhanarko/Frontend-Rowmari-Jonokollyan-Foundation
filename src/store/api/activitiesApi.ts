@@ -1,14 +1,24 @@
 import { baseApi } from './baseApi';
 import { ActivityItem } from '@/types';
+import { API_ENDPOINTS } from './endpoints';
+
+type BackendActivity = { id: string; title: string; description: string; category: string; location?: string; beneficiariesCount?: number; imageUrl?: string; createdAt: string };
+type ActivityResult = BackendActivity[] | { items: BackendActivity[] };
 
 export const activitiesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getActivities: builder.query<ActivityItem[], { category?: string } | void>({
       query: (params) => ({
-        url: '/activities',
+        url: API_ENDPOINTS.activities.list,
         method: 'GET',
         params: params || undefined,
       }),
+      transformResponse: (response: ActivityResult): ActivityItem[] => (Array.isArray(response) ? response : response.items).map((item) => ({
+        id: item.id, category: item.category.toLowerCase() as ActivityItem['category'], titleBn: item.title, titleEn: item.title,
+        categoryBn: item.category, categoryEn: item.category, dateBn: item.createdAt, dateEn: item.createdAt,
+        descriptionBn: item.description, descriptionEn: item.description, locationBn: item.location || '', locationEn: item.location || '',
+        beneficiariesCount: item.beneficiariesCount || 0, imageUrl: item.imageUrl,
+      })),
       providesTags: (result) =>
         result
           ? [
@@ -19,7 +29,7 @@ export const activitiesApi = baseApi.injectEndpoints({
     }),
     getActivityById: builder.query<ActivityItem, string>({
       query: (id) => ({
-        url: `/activities/${id}`,
+        url: `${API_ENDPOINTS.activities.list}/${id}`,
         method: 'GET',
       }),
       providesTags: (_result, _error, id) => [{ type: 'Activities', id }],

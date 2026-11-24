@@ -4,12 +4,52 @@ import React from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import { Language } from '@/types';
 import { IMPACT_STATS } from '@/data/mockData';
+import { useGetPublicSummaryQuery } from '@/store/api/dashboardApi';
 
 interface ImpactStatsProps {
   lang: Language;
 }
 
 export default function ImpactStats({ lang }: ImpactStatsProps) {
+  const { data: summary } = useGetPublicSummaryQuery();
+
+  const toBnNum = (n: number | string) =>
+    n.toString().replace(/\d/g, (d) => '০১২৩৪৫৬৭৮৯'[parseInt(d, 10)]);
+
+  const displayStats = [
+    {
+      countBn: summary?.totalDonationsReceived ? `৳ ${toBnNum(summary.totalDonationsReceived.toLocaleString())}` : IMPACT_STATS[0].countBn,
+      countEn: summary?.totalDonationsReceived ? `৳ ${summary.totalDonationsReceived.toLocaleString()}` : IMPACT_STATS[0].countEn,
+      labelBn: IMPACT_STATS[0].labelBn,
+      labelEn: IMPACT_STATS[0].labelEn,
+      descBn: IMPACT_STATS[0].descBn,
+      descEn: IMPACT_STATS[0].descEn,
+    },
+    {
+      countBn: summary?.applicationsApproved ? `${toBnNum(summary.applicationsApproved)}+` : IMPACT_STATS[1].countBn,
+      countEn: summary?.applicationsApproved ? `${summary.applicationsApproved}+` : IMPACT_STATS[1].countEn,
+      labelBn: IMPACT_STATS[1].labelBn,
+      labelEn: IMPACT_STATS[1].labelEn,
+      descBn: IMPACT_STATS[1].descBn,
+      descEn: IMPACT_STATS[1].descEn,
+    },
+    {
+      countBn: summary?.registeredBloodDonors ? `${toBnNum(summary.registeredBloodDonors)}+` : IMPACT_STATS[2].countBn,
+      countEn: summary?.registeredBloodDonors ? `${summary.registeredBloodDonors}+` : IMPACT_STATS[2].countEn,
+      labelBn: IMPACT_STATS[2].labelBn,
+      labelEn: IMPACT_STATS[2].labelEn,
+      descBn: IMPACT_STATS[2].descBn,
+      descEn: IMPACT_STATS[2].descEn,
+    },
+    {
+      countBn: summary?.activeVolunteers ? `${toBnNum(summary.activeVolunteers)}+` : IMPACT_STATS[3].countBn,
+      countEn: summary?.activeVolunteers ? `${summary.activeVolunteers}+` : IMPACT_STATS[3].countEn,
+      labelBn: IMPACT_STATS[3].labelBn,
+      labelEn: IMPACT_STATS[3].labelEn,
+      descBn: IMPACT_STATS[3].descBn,
+      descEn: IMPACT_STATS[3].descEn,
+    },
+  ];
   return (
     <section className="py-10 md:py-14 bg-stone-50/40 border-y border-stone-200/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,7 +67,7 @@ export default function ImpactStats({ lang }: ImpactStatsProps) {
 
         {/* 4 Green Boxes matching the wireframe */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {IMPACT_STATS.map((stat, idx) => (
+          {displayStats.map((stat, idx) => (
             <div
               key={idx}
               className="bg-[#0D5C35] text-white p-6 sm:p-7 rounded-2xl shadow-lg border border-emerald-900/60 text-center flex flex-col justify-between hover:scale-[1.02] transition-transform duration-200 relative overflow-hidden group"

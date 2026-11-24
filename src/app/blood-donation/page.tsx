@@ -24,6 +24,7 @@ import DonationModal from '@/components/modals/DonationModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { FOUNDATION_INFO } from '@/data/mockData';
 import { Language } from '@/types';
+import { useGetBloodRequestsQuery } from '@/store/api/bloodApi';
 
 export default function BloodDonationPage() {
   const [lang, setLang] = useState<Language>('bn');
@@ -32,6 +33,9 @@ export default function BloodDonationPage() {
   const [bloodDonorOpen, setBloodDonorOpen] = useState(false);
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
+
+  const { data: bloodRequestsRes } = useGetBloodRequestsQuery({ status: 'OPEN' });
+  const openRequests = Array.isArray(bloodRequestsRes) ? bloodRequestsRes : (bloodRequestsRes as any)?.items || [];
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
 
@@ -205,6 +209,52 @@ export default function BloodDonationPage() {
               <span>{t('আপনার গ্রুপের রক্তদাতা হিসেবে যুক্ত হোন', 'Register Your Blood Group')}</span>
             </button>
           </div>
+
+          {openRequests.length > 0 && (
+            <div className="mt-12 space-y-4">
+              <div className="text-center">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-bold mb-2">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  <span>{t('লাইভ ইমার্জেন্সি রিকোয়েস্ট', 'Active Emergency Requests')}</span>
+                </span>
+                <h3 className="text-lg sm:text-xl font-black text-stone-900">
+                  {t('জরুরি রক্তের প্রয়োজনসমূহ', 'Urgent Blood Requests Right Now')}
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {openRequests.map((req: any) => (
+                  <div key={req.id} className="p-4 rounded-2xl bg-white border border-red-200/80 shadow-xs space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="px-2.5 py-1 rounded-full bg-red-600 text-white font-black text-xs">
+                        {req.bloodGroup}
+                      </span>
+                      <span className="text-xs font-bold text-red-700">
+                        {req.unitsNeeded} {t('ব্যাগ প্রয়োজন', 'Bags needed')}
+                      </span>
+                    </div>
+                    <div className="text-sm font-bold text-stone-900">
+                      {req.patientName}
+                    </div>
+                    <div className="text-xs text-stone-600">
+                      📍 {req.hospitalName} ({req.upazila || 'রৌমারী'})
+                    </div>
+                    <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
+                      <span className="text-stone-500">
+                        তারিখ: {new Date(req.requiredDate).toLocaleDateString('bn-BD')}
+                      </span>
+                      <a
+                        href={`tel:${req.contactPhone}`}
+                        className="px-3 py-1 rounded-lg bg-red-50 text-red-700 font-bold hover:bg-red-100 transition"
+                      >
+                        {t('যোগাযোগ', 'Call')}
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </GlassSection>
 
         {/* 3 Step Blood Request Procedure */}

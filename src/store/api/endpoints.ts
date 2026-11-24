@@ -1,0 +1,98 @@
+/** Canonical paths relative to the single /api/v1 client base URL. */
+export const API_ENDPOINTS = {
+  auth: {
+    login: '/auth/login',
+    register: '/auth/register',
+    refresh: '/auth/refresh',
+    logout: '/auth/logout',
+    me: '/auth/me',
+  },
+  reports: {
+    dashboard: '/admin/reports/dashboard',
+    publicSummary: '/reports/public-summary',
+  },
+  campaigns: {
+    list: '/campaigns',
+    bySlug: (slug: string) => `/campaigns/by-slug/${slug}`,
+    donate: '/donations/record',
+  },
+  activities: {
+    list: '/activities',
+    detail: (id: string) => `/activities/${id}`,
+  },
+  content: {
+    newsEvents: '/content/news-events',
+    newsEventBySlug: (slug: string) => `/content/news-events/${slug}`,
+    gallery: '/content/gallery',
+    announcements: '/content/announcements',
+    page: (slug: string) => `/content/pages/${slug}`,
+    adminNewsEvents: '/content/admin/news-events',
+    adminGallery: '/content/admin/gallery',
+    adminAnnouncements: '/content/admin/announcements',
+  },
+  applications: {
+    create: '/assistance-applications',
+    track: '/application-tracking/verify',
+    admin: '/admin/assistance-applications',
+    adminDetail: (id: string) => `/admin/assistance-applications/${id}`,
+    adminStatus: (id: string) => `/admin/assistance-applications/${id}/status`,
+    adminAssign: (id: string) => `/admin/assistance-applications/${id}/assign`,
+    my: '/assistance-applications/my',
+  },
+  donors: {
+    register: '/blood/donors',
+    search: '/blood/donors/search',
+    admin: '/blood/donors/admin/list',
+    availability: (id: string) => `/blood/donors/${id}/availability`,
+    verify: (id: string) => `/blood/donors/${id}/verify`,
+  },
+  bloodRequests: {
+    list: '/blood/requests',
+    create: '/blood/requests',
+    my: '/blood/requests/my',
+    detail: (id: string) => `/blood/requests/${id}`,
+    match: (id: string) => `/blood/requests/${id}/matches`,
+    updateMatch: (id: string) => `/blood/requests/matches/${id}/status`,
+    recordOutcome: (id: string) => `/blood/requests/matches/${id}/outcomes`,
+  },
+  volunteers: {
+    list: '/volunteers',
+    register: '/volunteers/register',
+    detail: (id: string) => `/volunteers/${id}`,
+    approve: (id: string) => `/volunteers/${id}/approve`,
+    assignments: '/volunteers/assignments',
+  },
+  contact: '/contact-messages',
+  users: {
+    list: '/users',
+    profile: '/users/profile',
+    detail: (id: string) => `/users/${id}`,
+    roles: (id: string) => `/users/${id}/roles`,
+    status: (id: string) => `/users/${id}/status`,
+  },
+  donations: {
+    list: '/donations',
+    my: '/donations/my',
+    record: '/donations/record',
+    detail: (id: string) => `/donations/${id}`,
+  },
+  expenses: {
+    list: '/admin/expenses',
+    create: '/admin/expenses',
+    detail: (id: string) => `/admin/expenses/${id}`,
+    review: (id: string) => `/admin/expenses/${id}/review`,
+  },
+  medicalCamps: {
+    list: '/medical-camps',
+    create: '/medical-camps',
+    detail: (id: string) => `/medical-camps/${id}`,
+    staff: (id: string) => `/medical-camps/${id}/staff`,
+    attendance: (id: string) => `/medical-camps/${id}/attendance-summary`,
+  },
+  notifications: {
+    admin: '/admin/notifications',
+  },
+  audit: {
+    logs: '/admin/audit-logs',
+  },
+} as const;

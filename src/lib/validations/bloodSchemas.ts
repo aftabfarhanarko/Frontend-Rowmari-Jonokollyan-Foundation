@@ -30,7 +30,7 @@ export const bloodRequestSchema = z.object({
     .max(10),
   hospital: z.string().min(2, { message: 'হাসপাতালের নাম লিখুন' }),
   location: z.string().min(2, { message: 'হাসপাতালের অবস্থান লিখুন' }),
-  dateNeeded: z.string().min(2, { message: 'কবে রক্ত প্রয়োজন তা উল্লেখ করুন' }),
+  dateNeeded: z.string().refine((value) => !Number.isNaN(Date.parse(value)), { message: 'সঠিক প্রয়োজনীয় তারিখ নির্বাচন করুন' }),
   urgency: z.enum(['critical', 'urgent', 'scheduled']),
   contactPhone: z
     .string()

@@ -3,7 +3,7 @@
 import React from 'react';
 import { Target, Clock, Heart, Users, CheckCircle2 } from 'lucide-react';
 import { Language } from '@/types';
-import { CAMPAIGNS_DATA } from '@/data/mockData';
+import { useGetCampaignsQuery } from '@/store/api/campaignsApi';
 
 interface OngoingCampaignsProps {
   lang: Language;
@@ -14,6 +14,7 @@ export default function OngoingCampaigns({
   lang,
   onOpenDonation,
 }: OngoingCampaignsProps) {
+  const { data: campaigns = [], isLoading, isError } = useGetCampaignsQuery();
   return (
     <section id="campaigns" className="py-10 md:py-14 bg-stone-50/40 border-t border-stone-200/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,7 +36,10 @@ export default function OngoingCampaigns({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-          {CAMPAIGNS_DATA.map((camp) => {
+          {isLoading ? <p className="col-span-full text-center">Loading campaigns…</p> : null}
+          {isError ? <p role="alert" className="col-span-full text-center">Campaigns could not be loaded.</p> : null}
+          {!isLoading && !isError && campaigns.length === 0 ? <p className="col-span-full text-center">No campaigns are currently available.</p> : null}
+          {campaigns.map((camp) => {
             const percentage = Math.min(
               100,
               Math.round((camp.raisedAmount / camp.targetAmount) * 100)

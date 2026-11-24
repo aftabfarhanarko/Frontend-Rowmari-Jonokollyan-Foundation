@@ -14,6 +14,7 @@ import { Language } from '@/types';
 import { assistanceSchema, AssistanceFormData } from '@/lib/validations/assistanceSchema';
 import { useSubmitAssistanceMutation } from '@/store/api/applicationsApi';
 import { useAppStore } from '@/store/useAppStore';
+import { toast } from 'sonner';
 
 interface AssistanceModalProps {
   isOpen: boolean;
@@ -57,21 +58,14 @@ export default function AssistanceModal({
   const onSubmit = async (data: AssistanceFormData) => {
     try {
       const response = await submitAssistance(data).unwrap();
-      const newId = response.applicationId;
+      const newId = response.referenceCode;
       setGeneratedId(newId);
       addSavedApplicationId(newId);
       if (onSubmittedSuccess) {
         onSubmittedSuccess(newId);
       }
-    } catch {
-      // Fallback optimistic ID
-      const randomNum = Math.floor(1000 + Math.random() * 9000);
-      const fallbackId = `RJF-2026-${randomNum}`;
-      setGeneratedId(fallbackId);
-      addSavedApplicationId(fallbackId);
-      if (onSubmittedSuccess) {
-        onSubmittedSuccess(fallbackId);
-      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : (lang === 'bn' ? 'আবেদন পাঠানো যায়নি। আবার চেষ্টা করুন।' : 'Application could not be submitted. Please try again.'));
     }
   };
 

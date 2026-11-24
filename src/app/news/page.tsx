@@ -19,7 +19,7 @@ import BackToTop from '@/components/BackToTop';
 import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
-import { NEWS_EVENTS } from '@/data/mockData';
+import { useGetNewsQuery } from '@/store/api/applicationsApi';
 import { Language } from '@/types';
 
 export default function NewsPage() {
@@ -29,6 +29,7 @@ export default function NewsPage() {
   const [donationModalOpen, setDonationModalOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const { data: newsEvents = [], isLoading, isError } = useGetNewsQuery();
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
 
@@ -39,7 +40,7 @@ export default function NewsPage() {
     { key: 'notice' as const, labelBn: 'জরুরি ঘোষণা', labelEn: 'Urgent Notices' },
   ];
 
-  const filteredNews = NEWS_EVENTS.filter((item) => {
+  const filteredNews = newsEvents.filter((item) => {
     if (activeTab === 'all') return true;
     return item.type === activeTab;
   });
@@ -112,6 +113,9 @@ export default function NewsPage() {
         {/* News Grid */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {isLoading ? <p className="col-span-full py-12 text-center">{t('লোড হচ্ছে…', 'Loading news and events…')}</p> : null}
+            {isError ? <p role="alert" className="col-span-full py-12 text-center">{t('খবর লোড করা যায়নি।', 'News and events could not be loaded.')}</p> : null}
+            {!isLoading && !isError && filteredNews.length === 0 ? <p className="col-span-full py-12 text-center">{t('কোনো খবর পাওয়া যায়নি।', 'No news or events are currently available.')}</p> : null}
             {filteredNews.map((n, idx) => (
               <motion.article
                 key={n.id}

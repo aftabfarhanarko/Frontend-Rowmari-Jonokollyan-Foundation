@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { CalendarDays } from 'lucide-react';
 import { Language } from '@/types';
 import { GlassSection, glassCardHover } from '@/components/ui/glass';
+import { useGetNewsQuery } from '@/store/api/applicationsApi';
 
 interface Props {
   lang: Language;
@@ -46,6 +47,20 @@ const ITEMS = [
 
 export default function NewsEvents({ lang }: Props) {
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
+  const { data: newsItems = [] } = useGetNewsQuery();
+
+  const displayItems = newsItems.length > 0
+    ? newsItems.slice(0, 3).map((item) => ({
+        dateBn: item.dateBn,
+        dateEn: item.dateEn,
+        tagBn: item.type === 'event' ? 'ইভেন্ট' : 'সংবাদ',
+        tagEn: item.type === 'event' ? 'Event' : 'News',
+        titleBn: item.titleBn,
+        titleEn: item.titleEn,
+        textBn: item.summaryBn || item.titleBn,
+        textEn: item.summaryEn || item.titleEn,
+      }))
+    : ITEMS;
   return (
     <GlassSection id="news">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10 md:mb-12">
@@ -62,7 +77,7 @@ export default function NewsEvents({ lang }: Props) {
         </Link>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
-        {ITEMS.map((n) => (
+        {displayItems.map((n, idx) => (
           <article key={n.titleEn} className={`${glassCardHover} p-6 flex flex-col gap-3`}>
             <div className="flex items-center justify-between text-xs">
               <span className="px-2.5 py-1 rounded-full bg-[#E53935]/10 text-[#E53935] font-bold">{t(n.tagBn, n.tagEn)}</span>

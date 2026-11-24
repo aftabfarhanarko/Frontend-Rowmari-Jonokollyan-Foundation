@@ -8,6 +8,7 @@ import { Language } from '@/types';
 import { bloodRequestSchema, BloodRequestFormData } from '@/lib/validations/bloodSchemas';
 import { useRequestBloodMutation } from '@/store/api/applicationsApi';
 import { FOUNDATION_INFO } from '@/data/mockData';
+import { toast } from 'sonner';
 
 interface BloodRequestModalProps {
   isOpen: boolean;
@@ -53,10 +54,9 @@ export default function BloodRequestModal({
   const onSubmit = async (data: BloodRequestFormData) => {
     try {
       const response = await requestBlood(data).unwrap();
-      setRequestId(response.requestId);
-    } catch {
-      const code = `BLD-${data.bloodGroup.replace('+', 'P').replace('-', 'N')}-${Math.floor(100 + Math.random() * 900)}`;
-      setRequestId(code);
+      setRequestId(response.id);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : (lang === 'bn' ? 'রক্তের অনুরোধ পাঠানো যায়নি। আবার চেষ্টা করুন।' : 'Blood request could not be submitted. Please try again.'));
     }
   };
 
@@ -227,9 +227,9 @@ export default function BloodRequestModal({
                     {lang === 'bn' ? 'রক্তের প্রয়োজন কবে *' : 'Date & Time Needed *'}
                   </label>
                   <input
-                    type="text"
+                    type="date"
                     {...register('dateNeeded')}
-                    placeholder={lang === 'bn' ? 'আজই / কাল সকাল ৯টা' : 'Today / Tomorrow 9 AM'}
+                    min={new Date().toISOString().slice(0, 10)}
                     className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#E53935]"
                   />
                   {errors.dateNeeded && (

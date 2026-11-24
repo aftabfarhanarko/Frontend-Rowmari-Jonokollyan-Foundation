@@ -7,6 +7,7 @@ import { X, CheckCircle2, Users } from 'lucide-react';
 import { Language } from '@/types';
 import { volunteerSchema, VolunteerFormData } from '@/lib/validations/volunteerSchema';
 import { useApplyVolunteerMutation } from '@/store/api/applicationsApi';
+import { toast } from 'sonner';
 
 interface VolunteerModalProps {
   isOpen: boolean;
@@ -46,10 +47,10 @@ export default function VolunteerModal({
   const onSubmit = async (data: VolunteerFormData) => {
     try {
       await applyVolunteer(data).unwrap();
-    } catch {
-      // optimistic
+      setIsSuccess(true);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : (lang === 'bn' ? 'আবেদন পাঠানো যায়নি। আবার চেষ্টা করুন।' : 'Application could not be submitted. Please try again.'));
     }
-    setIsSuccess(true);
   };
 
   const handleClose = () => {

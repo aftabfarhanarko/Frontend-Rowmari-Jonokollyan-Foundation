@@ -4,6 +4,7 @@ import React from 'react';
 import { AlertCircle, ChevronRight } from 'lucide-react';
 import { Language } from '@/types';
 import { useAppStore } from '@/store/useAppStore';
+import { useGetAnnouncementsQuery } from '@/store/api/contentApi';
 
 interface TopAnnouncementProps {
   lang?: Language;
@@ -34,7 +35,11 @@ export default function TopAnnouncement({
   const alertContentEn =
     'Emergency Blood Appeal: Urgent need for O- & B+ blood at Rowmari Health Complex • Winter Relief & Blanket Distribution Ongoing • Medical Assistance for Underprivileged Patients • Hotline: +880 1712-345678 • Standing beside humanity, for humanity';
 
-  const alertText = lang === 'bn' ? alertContentBn : alertContentEn;
+  const { data: announcements = [] } = useGetAnnouncementsQuery();
+  const activeAnnouncement = announcements[0];
+  const alertText = activeAnnouncement
+    ? activeAnnouncement.message
+    : (lang === 'bn' ? alertContentBn : alertContentEn);
 
   return (
     <aside

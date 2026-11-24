@@ -11,7 +11,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { Language, ActivityCategory, ActivityItem } from '@/types';
-import { ACTIVITIES_DATA } from '@/data/mockData';
+import { useGetActivitiesQuery } from '@/store/api/activitiesApi';
 
 interface RecentActivitiesProps {
   lang: Language;
@@ -24,6 +24,7 @@ export default function RecentActivities({
 }: RecentActivitiesProps) {
   const [activeCategory, setActiveCategory] = useState<ActivityCategory>('all');
   const [selectedActivity, setSelectedActivity] = useState<ActivityItem | null>(null);
+  const { data: activities = [], isLoading, isError } = useGetActivitiesQuery();
 
   const categories = [
     { key: 'all' as ActivityCategory, labelBn: 'সকল কার্যক্রম', labelEn: 'All Activities' },
@@ -36,8 +37,8 @@ export default function RecentActivities({
 
   const filteredActivities =
     activeCategory === 'all'
-      ? ACTIVITIES_DATA
-      : ACTIVITIES_DATA.filter((act) => act.category === activeCategory);
+      ? activities
+      : activities.filter((act) => act.category === activeCategory);
 
   return (
     <section id="activities" className="py-10 md:py-14 bg-white">
@@ -83,6 +84,8 @@ export default function RecentActivities({
 
         {/* 3-Column Activities Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+          {isLoading ? <p className="col-span-full text-center">Loading activities…</p> : null}
+          {isError ? <p role="alert" className="col-span-full text-center">Activities could not be loaded.</p> : null}
           {filteredActivities.slice(0, 6).map((activity) => (
             <div
               key={activity.id}

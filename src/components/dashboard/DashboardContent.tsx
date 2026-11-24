@@ -33,7 +33,28 @@ import {
   UserCheck,
   Send,
   ExternalLink,
+  Loader2,
 } from "lucide-react"
+import {
+  useGetExecutiveDashboardQuery,
+  useGetAdminApplicationsQuery,
+  useUpdateApplicationStatusMutation,
+  useAssignApplicationStaffMutation,
+  useGetAdminDonationsQuery,
+  useGetAdminExpensesQuery,
+  useGetAdminVolunteersQuery,
+  useApproveVolunteerMutation,
+  useGetAdminUsersQuery,
+  useUpdateUserRoleMutation,
+  useUpdateUserStatusMutation,
+  useGetAdminNotificationsQuery,
+  useGetMyApplicationsQuery,
+  useGetMyDonationsQuery,
+  useGetMyBloodRequestsQuery,
+} from "@/store/api/dashboardApi"
+import { useGetBloodRequestsQuery } from "@/store/api/bloodApi"
+import { useGetCampaignsQuery } from "@/store/api/campaignsApi"
+import { toast } from "sonner"
 
 interface DashboardContentProps {
   activeTab: string
@@ -49,6 +70,70 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
     setVolunteerModalOpen,
   } = useAppStore()
   const roleMeta = ROLE_METAS[currentRole] || ROLE_METAS.COMMUNITY_MEMBER
+
+  // --- Real Backend API Hooks ---
+  const isPrivileged = ["SUPER_ADMIN", "ADMIN", "FINANCE_MANAGER"].includes(currentRole)
+  const isStaff = isPrivileged || ["MEDICAL_COORDINATOR", "EDUCATION_COORDINATOR", "CASE_WORKER", "VOLUNTEER_MANAGER", "BLOOD_COORDINATOR"].includes(currentRole)
+
+  const { data: execDashboard, isLoading: isDashboardLoading, refetch: refetchDashboard } = useGetExecutiveDashboardQuery(undefined, {
+    skip: !isPrivileged,
+  })
+
+  const { data: bloodRequestsRes, isLoading: isBloodLoading, refetch: refetchBlood } = useGetBloodRequestsQuery()
+  const bloodItems = Array.isArray(bloodRequestsRes) ? bloodRequestsRes : (bloodRequestsRes as any)?.items || []
+
+  const { data: adminAppsRes, isLoading: isAppsLoading, refetch: refetchApps } = useGetAdminApplicationsQuery(undefined, {
+    skip: !isStaff,
+  })
+  const appItems = Array.isArray(adminAppsRes) ? adminAppsRes : (adminAppsRes as any)?.items || []
+
+  const { data: adminVolunteersRes, refetch: refetchVolunteers } = useGetAdminVolunteersQuery(undefined, {
+    skip: !isStaff,
+  })
+  const volunteerItems = Array.isArray(adminVolunteersRes) ? adminVolunteersRes : (adminVolunteersRes as any)?.items || []
+
+  const { data: adminDonationsRes } = useGetAdminDonationsQuery(undefined, {
+    skip: !isStaff,
+  })
+  const donationItems = Array.isArray(adminDonationsRes) ? adminDonationsRes : (adminDonationsRes as any)?.items || []
+
+  const { data: liveCampaignsRes } = useGetCampaignsQuery()
+  const liveCampaigns = liveCampaignsRes || []
+
+  const { data: adminUsersRes } = useGetAdminUsersQuery(undefined, {
+    skip: !["SUPER_ADMIN", "ADMIN"].includes(currentRole),
+  })
+  const userItems = Array.isArray(adminUsersRes) ? adminUsersRes : (adminUsersRes as any)?.items || []
+
+  const { data: myAppsRes } = useGetMyApplicationsQuery(undefined, {
+    skip: currentRole === "COMMUNITY_MEMBER",
+  })
+  const myAppItems = Array.isArray(myAppsRes) ? myAppsRes : (myAppsRes as any)?.items || []
+
+  const { data: myBloodRes } = useGetMyBloodRequestsQuery(undefined, {
+    skip: currentRole === "COMMUNITY_MEMBER",
+  })
+  const myBloodItems = Array.isArray(myBloodRes) ? myBloodRes : (myBloodRes as any)?.items || []
+
+  const { data: myDonationsRes } = useGetMyDonationsQuery(undefined, {
+    skip: currentRole === "COMMUNITY_MEMBER",
+  })
+  const myDonationItems = Array.isArray(myDonationsRes) ? myDonationsRes : (myDonationsRes as any)?.items || []
+
+  // Mutations
+  const [approveVolunteerMutation] = useApproveVolunteerMutation()
+  const [updateApplicationStatusMutation] = useUpdateApplicationStatusMutation()
+  const [updateUserRoleMutation] = useUpdateUserRoleMutation()
+
+  const handleApproveVolunteer = async (id: string, currentStatus: boolean) => {
+    try {
+      await approveVolunteerMutation({ id, isApproved: !currentStatus }).unwrap()
+      toast.success(!currentStatus ? "স্বেচ্ছাসেবক সফলভাবে অনুমোদিত হয়েছে" : "স্বেচ্ছাসেবক স্ট্যাটাস পরিবর্তিত হয়েছে")
+      refetchVolunteers()
+    } catch (err: any) {
+      toast.error(err?.message || "অনুমোদন ব্যর্থ হয়েছে")
+    }
+  }
 
   // --- 1. Blood Network Data (API: /api/blood/request & /api/blood/donor) ---
   const [bloodData] = useState([
@@ -390,6 +475,160 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
   ])
   const [notifFilter, setNotifFilter] = useState<"all" | "unread" | "urgent">("all")
 
+  // --- Dynamic Live Mappings from API ---
+  const displayBloodData = bloodItems.length > 0
+    ? bloodItems.map((r: any) => ({
+        id: r.id?.slice(0, 8) || "BLD",
+        patient: r.patientName,
+        bloodGroup: r.bloodGroup,
+        bags: r.unitsNeeded || 1,
+        hospital: r.hospitalName,
+        phone: r.contactPhone,
+        urgency: r.urgency === "EMERGENCY" ? "খুব জরুরি" : "জরুরি",
+        status: r.status === "OPEN" ? "রক্তদাতা খোঁজা হচ্ছে" : r.status === "MATCHED" ? "রক্তদাতা বরাদ্দ হয়েছে" : "সম্পন্ন",
+        date: new Date(r.createdAt || Date.now()).toLocaleDateString("bn-BD"),
+        rawId: r.id,
+      }))
+    : bloodData
+
+  const displayMedicalData = appItems.filter((a: any) => a.category === "MEDICAL").length > 0
+    ? appItems
+        .filter((a: any) => a.category === "MEDICAL")
+        .map((r: any) => ({
+          id: r.referenceCode || r.id?.slice(0, 8),
+          applicant: r.applicantName,
+          condition: r.description || "জরুরি চিকিৎসা সহায়তা",
+          amountNeeded: Number(r.requestedAmount || 0),
+          approvedAmount: Number(r.approvedAmount || 0),
+          assignedOfficer: r.assignedTo?.fullName || "অপেক্ষমাণ",
+          status: r.status === "APPROVED" ? "অনুমোদিত" : r.status === "REJECTED" ? "বাতিল" : "যাচাই সম্পন্ন",
+          union: r.upazila || "রৌমারী সদর",
+          date: new Date(r.createdAt || Date.now()).toLocaleDateString("bn-BD"),
+          rawId: r.id,
+        }))
+    : medicalData
+
+  const displayEducationData = appItems.filter((a: any) => a.category === "EDUCATION").length > 0
+    ? appItems
+        .filter((a: any) => a.category === "EDUCATION")
+        .map((r: any) => ({
+          id: r.referenceCode || r.id?.slice(0, 8),
+          studentName: r.applicantName,
+          institute: r.address || "রৌমারী উচ্চ বিদ্যালয়",
+          grade: "শ্রেণি সহায়তা",
+          supportType: r.description || "উপবৃত্তি",
+          amount: Number(r.requestedAmount || 0),
+          status: r.status === "APPROVED" ? "অনুমোদিত" : "অপেক্ষমাণ",
+          union: r.upazila || "রৌমারী",
+          rawId: r.id,
+        }))
+    : educationData
+
+  const displayVolunteersData = volunteerItems.length > 0
+    ? volunteerItems.map((v: any) => ({
+        id: v.id?.slice(0, 8) || "VOL",
+        name: v.fullName,
+        wing: v.skills || "সাধারণ সহায়তা উইং",
+        union: v.upazila || "রৌমারী",
+        phone: v.phone,
+        joinDate: new Date(v.createdAt || Date.now()).toLocaleDateString("bn-BD"),
+        status: v.isApproved ? "সক্রিয়" : "অপেক্ষমাণ",
+        rawId: v.id,
+        isApproved: v.isApproved,
+      }))
+    : volunteersData
+
+  const displayCasesData = appItems.length > 0
+    ? appItems.map((r: any) => ({
+        caseId: r.referenceCode || r.id?.slice(0, 8),
+        applicationId: r.referenceCode || r.id?.slice(0, 8),
+        applicant: r.applicantName,
+        union: r.upazila || "রৌমারী সদর",
+        village: r.address || "গ্রাম",
+        category: r.category === "MEDICAL" ? "চিকিৎসা সহায়তা" : r.category === "EDUCATION" ? "শিক্ষা সহায়তা" : "সাধারণ সহায়তা",
+        caseWorker: r.assignedTo?.fullName || "অপেক্ষমাণ",
+        visitStatus: r.status === "APPROVED" ? "অনুমোদিত ও বিতরণযোগ্য" : r.status === "UNDER_REVIEW" ? "তদন্তাধীন" : "মাঠ পরিদর্শন সম্পন্ন",
+        recommendation: r.approvedAmount ? `অনুমোদনের সুপারিশ (৳${r.approvedAmount.toLocaleString("bn-BD")})` : "যাচাই সম্পন্ন",
+        priority: "উচ্চ",
+        rawId: r.id,
+      }))
+    : casesData
+
+  const displayFinanceData = donationItems.length > 0
+    ? donationItems.map((d: any) => ({
+        id: d.id?.slice(0, 8),
+        receiptNo: d.receipt?.receiptNumber || `RJF-REC-${d.id?.slice(0, 6)}`,
+        donor: d.isAnonymous ? "বেনামী শুভাকাঙ্ক্ষী" : (d.donorName || "শুভাকাঙ্ক্ষী"),
+        campaign: d.campaign?.title || "সাধারণ তহবিল",
+        amount: Number(d.amount),
+        channel: d.paymentMethod,
+        date: new Date(d.createdAt || Date.now()).toLocaleDateString("bn-BD"),
+        status: "সফল",
+      }))
+    : financeData
+
+  const displayCampaignsList = liveCampaigns.length > 0
+    ? liveCampaigns.map((c: any) => ({
+        id: c.id,
+        titleBn: c.titleBn || c.titleEn,
+        target: c.targetAmount,
+        raised: c.raisedAmount,
+        donors: c.donorsCount || 0,
+        deadlineBn: c.deadlineBn || "চলমান",
+        status: c.status === "ongoing" ? "চলমান" : "সম্পন্ন",
+      }))
+    : campaignsList
+
+  const displayUsersData = userItems.length > 0
+    ? userItems.map((u: any) => ({
+        id: u.id?.slice(0, 8),
+        name: u.fullName,
+        contact: u.email || u.phone,
+        role: (u.roles?.[0]?.name || "COMMUNITY_MEMBER") as UserRole,
+        rawId: u.id,
+      }))
+    : [
+        { id: "USR-01", name: "প্রকৌশলী মো: রফিকুল ইসলাম", contact: "admin@rjf.org", role: "SUPER_ADMIN" as UserRole },
+        { id: "USR-02", name: "মো: শফিকুল ইসলাম সাজু", contact: "01713-223344", role: "ADMIN" as UserRole },
+      ]
+
+  const displayMyApps = myAppItems.length > 0
+    ? myAppItems.map((a: any) => ({
+        id: a.referenceCode || a.id?.slice(0, 8),
+        categoryBn: a.category === "MEDICAL" ? "জরুরি চিকিৎসা সহায়তা" : "মানবিক সহায়তা",
+        submittedDate: new Date(a.createdAt || Date.now()).toLocaleDateString("bn-BD"),
+        status: a.status.toLowerCase(),
+        statusTitle: a.status === "APPROVED" ? "অনুমোদিত" : a.status === "REJECTED" ? "বাতিল" : "তদন্তাধীন",
+        note: a.statusHistory?.at(-1)?.remarks || "আপনার আবেদনটি প্রক্রিয়াকরণ চলছে।",
+        officer: a.assignedTo?.fullName || "মাঠ কর্মকর্তা",
+        approvedAmount: a.approvedAmount ? `৳${a.approvedAmount.toLocaleString("bn-BD")}` : "অপেক্ষমাণ",
+      }))
+    : myApplications
+
+  const displayMyBlood = myBloodItems.length > 0
+    ? myBloodItems.map((b: any) => ({
+        id: b.id?.slice(0, 8),
+        patient: b.patientName,
+        bloodGroup: b.bloodGroup,
+        bags: b.unitsNeeded,
+        hospital: b.hospitalName,
+        status: b.status === "OPEN" ? "রক্তদাতা খোঁজা হচ্ছে" : b.status === "MATCHED" ? "রক্তদাতা বরাদ্দ হয়েছে" : "সম্পন্ন",
+        coordinator: b.contactPerson || "জরুরি সমন্বয়ক",
+        date: new Date(b.createdAt || Date.now()).toLocaleDateString("bn-BD"),
+      }))
+    : myBloodRequests
+
+  const displayMyDonations = myDonationItems.length > 0
+    ? myDonationItems.map((d: any) => ({
+        receiptNo: d.receipt?.receiptNumber || `RJF-REC-${d.id?.slice(0, 6)}`,
+        campaign: d.campaign?.title || "সাধারণ তহবিল",
+        amount: Number(d.amount),
+        paymentMethod: d.paymentMethod,
+        date: new Date(d.createdAt || Date.now()).toLocaleDateString("bn-BD"),
+        transactionId: d.transactionReference || "TRX-N/A",
+      }))
+    : myDonations
+
   // --- Table Column Definitions ---
   const bloodColumns: TableColumn<any>[] = [
     { header: "আইডি", accessorKey: "id", sortable: true, className: "font-mono text-xs" },
@@ -606,9 +845,15 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
                   <Droplet className="size-4" />
                 </div>
               </div>
-              <div className="text-2xl font-black text-stone-900">৪ টি</div>
+              <div className="text-2xl font-black text-stone-900">
+                {execDashboard?.bloodNetwork?.totalBloodRequests !== undefined
+                  ? `${execDashboard.bloodNetwork.totalBloodRequests} টি`
+                  : "৪ টি"}
+              </div>
               <div className="text-[11px] text-red-600 font-semibold mt-1">
-                ২ টিতে জরুরি রক্তদাতা প্রয়োজন
+                {execDashboard?.bloodNetwork?.availableDonors !== undefined
+                  ? `${execDashboard.bloodNetwork.availableDonors} জন রক্তদাতা প্রস্তুত`
+                  : "২ টিতে জরুরি রক্তদাতা প্রয়োজন"}
               </div>
             </div>
 
@@ -619,9 +864,15 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
                   <HeartPulse className="size-4" />
                 </div>
               </div>
-              <div className="text-2xl font-black text-stone-900">১২ টি</div>
+              <div className="text-2xl font-black text-stone-900">
+                {execDashboard?.assistance?.totalApplicationsSubmitted !== undefined
+                  ? `${execDashboard.assistance.totalApplicationsSubmitted} টি`
+                  : "১২ টি"}
+              </div>
               <div className="text-[11px] text-emerald-700 font-semibold mt-1">
-                ৮ টি যাচাই সম্পন্ন
+                {execDashboard?.assistance?.applicationsApproved !== undefined
+                  ? `${execDashboard.assistance.applicationsApproved} টি যাচাই সম্পন্ন`
+                  : "৮ টি যাচাই সম্পন্ন"}
               </div>
             </div>
 
@@ -632,9 +883,15 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
                   <Coins className="size-4" />
                 </div>
               </div>
-              <div className="text-2xl font-black text-stone-900">৳১,৩২,৫০০</div>
+              <div className="text-2xl font-black text-stone-900">
+                {execDashboard?.financials?.totalDonationsReceived !== undefined
+                  ? `৳${execDashboard.financials.totalDonationsReceived.toLocaleString("bn-BD")}`
+                  : "৳১,৩২,৫০০"}
+              </div>
               <div className="text-[11px] text-stone-500 font-semibold mt-1">
-                মোট ৪২ জন শুভাকাঙ্ক্ষী
+                {execDashboard?.financials?.totalExpensesDisbursed !== undefined
+                  ? `ব্যয়: ৳${execDashboard.financials.totalExpensesDisbursed.toLocaleString("bn-BD")}`
+                  : "মোট ৪২ জন শুভাকাঙ্ক্ষী"}
               </div>
             </div>
 
@@ -645,7 +902,11 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
                   <Users className="size-4" />
                 </div>
               </div>
-              <div className="text-2xl font-black text-stone-900">৪৮ জন</div>
+              <div className="text-2xl font-black text-stone-900">
+                {execDashboard?.volunteers?.activeApprovedVolunteers !== undefined
+                  ? `${execDashboard.volunteers.activeApprovedVolunteers} জন`
+                  : "৪৮ জন"}
+              </div>
               <div className="text-[11px] text-teal-700 font-semibold mt-1">
                 ৬টি ইউনিয়ন টিম
               </div>
@@ -657,7 +918,7 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
               title="জরুরি রক্তের অনুরোধসমূহ (লাইভ ফিড)"
               description="রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্স ও কুড়িগ্রাম সদর হাসপাতালের জরুরি তালিকা"
               columns={bloodColumns}
-              data={bloodData}
+              data={displayBloodData}
               searchable
               searchPlaceholder="রোগীর নাম বা রক্তের গ্রুপ দিয়ে খুঁজুন..."
               pageSize={5}
@@ -674,7 +935,7 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
               title="রক্তদান ব্যবস্থাপনা ও লাইভ রিকোয়েস্ট"
               description="জরুরি রক্তের আবেদন ও রক্তদাতাদের সমন্বয় (API: /api/blood/request)"
               columns={bloodColumns}
-              data={bloodData}
+              data={displayBloodData}
               searchable
               searchPlaceholder="রোগী, হাসপাতাল বা রক্তের গ্রুপ..."
               pageSize={10}
@@ -711,7 +972,7 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
             title="চিকিৎসা সহায়তা আবেদনসমূহ"
             description="অসহায় ও দরিদ্র রোগীদের চিকিৎসার জন্য তহবিল বিতরণ তালিকা (API: /api/assistance)"
             columns={medicalColumns}
-            data={medicalData}
+            data={displayMedicalData}
             searchable
             searchPlaceholder="আবেদনকারী বা রোগ দিয়ে খুঁজুন..."
             pageSize={10}
@@ -758,7 +1019,7 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
                 ),
               },
             ]}
-            data={educationData}
+            data={displayEducationData}
             searchable
             searchPlaceholder="শিক্ষার্থীর নাম বা প্রতিষ্ঠান..."
             pageSize={10}
@@ -799,7 +1060,7 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
                 ),
               },
             ]}
-            data={volunteersData}
+            data={displayVolunteersData}
             searchable
             searchPlaceholder="নাম, উইং বা ইউনিয়ন..."
             pageSize={10}
@@ -824,7 +1085,7 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
             title="মাঠপর্যায় তদন্ত (কেস ট্র্যাকিং ও পরিদর্শন)"
             description="আবেদনকারীদের বাড়ি গিয়ে যাচাইকরণ ও প্রতিবেদন জমা (API: /api/assistance & /api/track)"
             columns={casesColumns}
-            data={casesData}
+            data={displayCasesData}
             searchable
             searchPlaceholder="কেস নং, আবেদনকারী বা গ্রাম..."
             pageSize={10}
@@ -845,7 +1106,7 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
             title="অর্থ ও অনুদান প্রাপ্তি হিসাব"
             description="বিকাশ, নগদ ও ব্যাংক মাধ্যমে সংগৃহীত অনুদান ও মানি রিসিট (API: /api/donate)"
             columns={financeColumns}
-            data={financeData}
+            data={displayFinanceData}
             searchable
             searchPlaceholder="দাতার নাম, ক্যাম্পেইন বা রশিদ নং..."
             pageSize={10}
@@ -906,7 +1167,7 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
                   ),
                 },
               ]}
-              data={campaignsList}
+              data={displayCampaignsList}
               searchable
               pageSize={5}
               actions={
@@ -939,7 +1200,7 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
           </div>
 
           <div className="space-y-3">
-            {myApplications.map((app) => (
+            {displayMyApps.map((app: any) => (
               <div key={app.id} className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-2">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2">
@@ -982,7 +1243,7 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
           </div>
 
           <div className="space-y-3">
-            {myBloodRequests.map((b) => (
+            {displayMyBlood.map((b: any) => (
               <div key={b.id} className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -1025,7 +1286,7 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
           </div>
 
           <div className="space-y-3">
-            {myDonations.map((d) => (
+            {displayMyDonations.map((d: any) => (
               <div key={d.receiptNo} className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 flex items-center justify-between flex-wrap gap-3">
                 <div>
                   <div className="flex items-center gap-2">
@@ -1132,16 +1393,7 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
                 ),
               },
             ]}
-            data={[
-              { id: "USR-01", name: "প্রকৌশলী মো: রফিকুল ইসলাম", contact: "admin@rjf.org", role: "SUPER_ADMIN" },
-              { id: "USR-02", name: "মো: শফিকুল ইসলাম সাজু", contact: "01713-223344", role: "ADMIN" },
-              { id: "USR-03", name: "মাহমুদুল হাসান তারেক", contact: "01812-987654", role: "BLOOD_COORDINATOR" },
-              { id: "USR-04", name: "ডা: তৌহিদুল ইসলাম", contact: "01714-334455", role: "MEDICAL_COORDINATOR" },
-              { id: "USR-05", name: "তানভীর হাসান", contact: "01933-445566", role: "EDUCATION_COORDINATOR" },
-              { id: "USR-06", name: "নাজমুল হক", contact: "01723-998877", role: "VOLUNTEER_MANAGER" },
-              { id: "USR-07", name: "ফারহানা ইয়াসমিন", contact: "finance@rjf.org", role: "FINANCE_MANAGER" },
-              { id: "USR-08", name: "মো: সাইদুর রহমান", contact: "01844-556677", role: "CASE_WORKER" },
-            ]}
+            data={displayUsersData}
             searchable
             pageSize={10}
           />

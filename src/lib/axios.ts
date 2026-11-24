@@ -1,75 +1,76 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 
-// 1. Configured Axios Instance for standalone & interceptor usage
+const configuredOrigin = process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/$/, '');
+export const API_BASE_URL = `${configuredOrigin || 'https://api-rowmari-jonokollyan-foundation.onrender.com'}/api/v1`;
+
+let accessToken: string | null = null;
+export const setAccessToken = (token: string | null) => {
+  accessToken = token;
+};
+
+export interface ApiEnvelope<T> {
+  success: boolean;
+  data: T;
+  meta?: Record<string, unknown>;
+}
+
+export interface ApiError {
+  status: number | string;
+  message: string;
+  data?: unknown;
+}
+
+export function unwrapApiResponse<T>(response: T | ApiEnvelope<T>): T {
+  if (response && typeof response === 'object' && 'success' in response && 'data' in response) {
+    return (response as ApiEnvelope<T>).data;
+  }
+  return response as T;
+}
+
 export const apiClient = axios.create({
-  baseURL: typeof window !== 'undefined' ? '/api' : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api',
+  baseURL: API_BASE_URL,
   timeout: 15000,
-  headers: {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-  },
+  withCredentials: true,
+  headers: { Accept: 'application/json' },
 });
 
-// Request Interceptor (Logging, Auth / Session token injection)
-apiClient.interceptors.request.use(
-  (config) => {
-    // Inject headers or client-side context if available
-    if (typeof window !== 'undefined') {
-      config.headers['X-Client-Timestamp'] = new Date().toISOString();
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+apiClient.interceptors.request.use((config) => {
+  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+  // Let the browser set the multipart boundary for FormData requests.
+  if (typeof FormData !== 'undefined' && config.data instanceof FormData) {
+    config.headers.delete('Content-Type');
+  }
+  return config;
+});
 
-// Response Interceptor (Error standardization & response parsing)
 apiClient.interceptors.response.use(
   (response) => response,
-  (error: AxiosError) => {
-    const formattedError = {
-      status: error.response?.status || 500,
-      message: (error.response?.data as { message?: string })?.message || error.message || 'An unexpected error occurred',
-      data: error.response?.data || null,
+  (error: AxiosError<{ message?: string }>) => {
+    const normalized: ApiError = {
+      status: error.response?.status ?? 'NETWORK_ERROR',
+      message: error.response?.data?.message || error.message || 'The request failed. Please try again.',
+      data: error.response?.data,
     };
-    return Promise.reject(formattedError);
-  }
+    return Promise.reject(normalized);
+  },
 );
 
-// 2. Custom Axios BaseQuery for RTK Query
-// Connects RTK Query's caching, polling, deduplication and invalidation directly to Axios!
 export const axiosBaseQuery =
-  (
-    { baseUrl }: { baseUrl: string } = { baseUrl: '' }
-  ): BaseQueryFn<
-    {
-      url: string;
-      method?: AxiosRequestConfig['method'];
-      data?: AxiosRequestConfig['data'];
-      params?: AxiosRequestConfig['params'];
-      headers?: AxiosRequestConfig['headers'];
-    },
+  ({ baseUrl = '' }: { baseUrl?: string } = {}): BaseQueryFn<
+    { url: string; method?: AxiosRequestConfig['method']; data?: AxiosRequestConfig['data']; params?: AxiosRequestConfig['params']; headers?: AxiosRequestConfig['headers']; signal?: AbortSignal },
     unknown,
-    unknown
+    ApiError
   > =>
-  async ({ url, method = 'GET', data, params, headers }) => {
+  async ({ url, method = 'GET', data, params, headers, signal }) => {
     try {
-      const result = await apiClient({
-        url: baseUrl + url,
-        method,
-        data,
-        params,
-        headers,
-      });
-      return { data: result.data };
-    } catch (axiosError) {
-      const err = axiosError as AxiosError;
-      return {
-        error: {
-          status: err.response?.status,
-          data: err.response?.data || err.message,
-        },
-      };
+      const response = await apiClient({ url: `${baseUrl}${url}`, method, data, params, headers, signal });
+      return { data: unwrapApiResponse(response.data) };
+    } catch (error) {
+      if (error && typeof error === 'object' && 'status' in error && 'message' in error) {
+        return { error: error as ApiError };
+      }
+      return { error: { status: 'UNKNOWN_ERROR', message: 'The request failed. Please try again.', data: error } };
     }
   };
 

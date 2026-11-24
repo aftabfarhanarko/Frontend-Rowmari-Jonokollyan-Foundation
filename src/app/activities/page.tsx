@@ -23,7 +23,7 @@ import BackToTop from '@/components/BackToTop';
 import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
-import { ACTIVITIES_DATA } from '@/data/mockData';
+import { useGetActivitiesQuery } from '@/store/api/activitiesApi';
 import { Language, ActivityCategory, ActivityItem } from '@/types';
 
 export default function ActivitiesPage() {
@@ -33,6 +33,7 @@ export default function ActivitiesPage() {
   const [selectedActivity, setSelectedActivity] = useState<ActivityItem | null>(null);
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
+  const { data: activities = [], isLoading, isError } = useGetActivitiesQuery();
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
 
@@ -45,7 +46,7 @@ export default function ActivitiesPage() {
     { key: 'food' as ActivityCategory, labelBn: 'খাদ্য সহায়তা', labelEn: 'Food Aid' },
   ];
 
-  const filteredActivities = ACTIVITIES_DATA.filter((act) => {
+  const filteredActivities = activities.filter((act) => {
     const matchesCategory = activeCategory === 'all' || act.category === activeCategory;
     const matchesQuery =
       act.titleBn.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -130,7 +131,8 @@ export default function ActivitiesPage() {
         {/* Activities Grid */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8">
           <div className="flex items-center justify-between text-xs sm:text-sm text-stone-500 mb-6 font-medium">
-            <span>{t(`${filteredActivities.length} টি কার্যক্রম প্রদর্শিত হচ্ছে`, `Showing ${filteredActivities.length} activities`)}</span>
+            <span>{isLoading ? t('লোড হচ্ছে…', 'Loading…') : t(`${filteredActivities.length} টি কার্যক্রম প্রদর্শিত হচ্ছে`, `Showing ${filteredActivities.length} activities`)}</span>
+            {isError ? <span role="alert" className="text-red-700">{t('কার্যক্রম লোড করা যায়নি।', 'Activities could not be loaded.')}</span> : null}
             <div className="flex items-center gap-1.5 text-[#0D5C35] font-bold">
               <ShieldCheck className="w-4 h-4" />
               <span>{t('১০০% যাচাইকৃত মাঠপর্যায়ের কাজ', '100% On-ground Verified')}</span>

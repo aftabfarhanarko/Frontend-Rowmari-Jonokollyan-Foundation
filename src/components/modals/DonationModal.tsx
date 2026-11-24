@@ -7,6 +7,7 @@ import { X, CheckCircle2, HeartHandshake, AlertCircle } from 'lucide-react';
 import { Language } from '@/types';
 import { donationSchema, DonationFormData } from '@/lib/validations/donationSchema';
 import { useSubmitDonationMutation } from '@/store/api/campaignsApi';
+import { toast } from 'sonner';
 import { useAppStore } from '@/store/useAppStore';
 
 interface DonationModalProps {
@@ -86,18 +87,8 @@ export default function DonationModal({
         donorName: data.isAnonymous ? (lang === 'bn' ? 'গোপনীয় শুভাকাঙ্ক্ষী' : 'Anonymous Donor') : data.donorName || 'সম্মানিত দাতা',
         paymentMethod: data.paymentMethod,
       });
-    } catch {
-      // Fallback optimistic receipt
-      const receiptNo = `RJF-REC-${Math.floor(10000 + Math.random() * 90000)}`;
-      addDonationReceipt(receiptNo);
-      setSubmittedReceipt({
-        receiptNo,
-        amount: finalAmount,
-        date: new Date().toLocaleDateString(lang === 'bn' ? 'bn-BD' : 'en-US'),
-        campaign: data.campaign,
-        donorName: data.isAnonymous ? (lang === 'bn' ? 'গোপনীয় শুভাকাঙ্ক্ষী' : 'Anonymous Donor') : data.donorName || 'সম্মানিত দাতা',
-        paymentMethod: data.paymentMethod,
-      });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : (lang === 'bn' ? 'অনুদান রেকর্ড করা যায়নি। আবার চেষ্টা করুন।' : 'Donation could not be recorded. Please try again.'));
     }
   };
 

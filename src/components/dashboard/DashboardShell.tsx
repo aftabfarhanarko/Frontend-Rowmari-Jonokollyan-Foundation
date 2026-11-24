@@ -14,7 +14,6 @@ import AssistanceModal from "@/components/modals/AssistanceModal"
 import DonationModal from "@/components/modals/DonationModal"
 import VolunteerModal from "@/components/modals/VolunteerModal"
 import AnnouncementModal from "@/components/modals/AnnouncementModal"
-import Footer from "@/components/Footer"
 
 interface DashboardShellProps {
   defaultTab?: string
@@ -66,7 +65,14 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
   const activeNavItem = DASHBOARD_NAV_ITEMS.find((it) => it.id === activeTab)
 
   return (
-    <div className="min-h-screen bg-[#FDFBF9] text-[#1E293B] flex flex-col font-sans">
+    <div className="relative flex min-h-screen flex-col overflow-x-clip bg-linear-to-b from-[#FDFBF9] via-[#FAF8F5] to-[#F5F3EE] font-sans text-[#1E293B] antialiased selection:bg-emerald-200/60 selection:text-emerald-950">
+      {/* Decorative ambient background */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-40 -left-32 size-120 rounded-full bg-emerald-200/30 blur-3xl" />
+        <div className="absolute top-1/3 -right-40 size-130 rounded-full bg-amber-100/40 blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(13,92,53,0.05)_1px,transparent_0)] bg-size-[28px_28px] mask-[linear-gradient(to_bottom,black,transparent_60%)]" />
+      </div>
+
       {/* 1. Global Top Navbar */}
       <DashboardNavbar
         onToggleSidebar={() => setIsMobileSidebarOpen(true)}
@@ -74,7 +80,7 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
       />
 
       {/* 2. Body: Sidebar + Main Content */}
-      <div className="flex-1 flex max-w-7xl w-full mx-auto">
+      <div className="flex w-full flex-1">
         {/* Dynamic Role-Based Sidebar */}
         <DashboardSidebar
           activeTab={activeTab}
@@ -84,13 +90,18 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
         />
 
         {/* Dynamic Tab Content Area */}
-        <main className="flex-1 min-w-0 p-3 sm:p-6 lg:p-8">
-          <DashboardContent activeTab={activeTab} />
+        <main className="min-w-0 flex-1 p-3 sm:p-6 lg:p-8">
+          <div className="min-h-[calc(100vh-6.5rem)] rounded-3xl border border-stone-200/70 bg-white/70 p-4 shadow-[0_1px_0_0_rgba(255,255,255,0.8)_inset,0_20px_50px_-24px_rgba(13,92,53,0.18)] ring-1 ring-black/2 backdrop-blur-sm sm:p-6 lg:p-8">
+            {/* key triggers a smooth fade on tab change */}
+            <div
+              key={activeTab}
+              className="animate-in fade-in slide-in-from-bottom-2 duration-300"
+            >
+              <DashboardContent activeTab={activeTab} />
+            </div>
+          </div>
         </main>
       </div>
-
-      {/* 3. Global Footer */}
-      <Footer lang={lang} />
 
       {/* Modals integrated with Dashboard quick actions */}
       <BloodRequestModal

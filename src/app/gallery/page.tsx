@@ -22,10 +22,28 @@ import DonationModal from '@/components/modals/DonationModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { GALLERY_ITEMS } from '@/data/mockData';
 import { Language } from '@/types';
+import { useGetGalleryQuery } from '@/store/api/contentApi';
 
 export default function GalleryPage() {
   const [lang, setLang] = useState<Language>('bn');
   const [selectedTag, setSelectedTag] = useState('all');
+  const { data: galleryRes } = useGetGalleryQuery();
+  const backendItems = Array.isArray(galleryRes) ? galleryRes : (galleryRes as any)?.items || [];
+
+  const liveItems = backendItems.length > 0
+    ? backendItems.map((item: any) => ({
+        id: item.id,
+        category: (item.category || 'general').toLowerCase(),
+        titleBn: item.title,
+        titleEn: item.title,
+        locationBn: item.caption || 'রৌমারী, কুড়িগ্রাম',
+        locationEn: item.caption || 'Rowmari, Kurigram',
+        dateBn: new Date(item.date || item.createdAt || Date.now()).toLocaleDateString('bn-BD'),
+        dateEn: new Date(item.date || item.createdAt || Date.now()).toLocaleDateString('en-US'),
+        imageUrl: item.imageUrl,
+      }))
+    : GALLERY_ITEMS;
+
   const [previewItem, setPreviewItem] = useState<typeof GALLERY_ITEMS[0] | null>(null);
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
@@ -42,8 +60,8 @@ export default function GalleryPage() {
   ];
 
   const filteredItems = selectedTag === 'all'
-    ? GALLERY_ITEMS
-    : GALLERY_ITEMS.filter(item => item.category === selectedTag);
+    ? liveItems
+    : liveItems.filter((item: any) => item.category === selectedTag);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBF9] text-[#1E293B]">
@@ -113,7 +131,7 @@ export default function GalleryPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-            {filteredItems.map((item, idx) => (
+            {filteredItems.map((item: any, idx: number) => (
               <motion.div
                 key={item.id}
                 layout

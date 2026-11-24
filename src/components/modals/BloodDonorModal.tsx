@@ -7,6 +7,7 @@ import { X, CheckCircle2, Droplet, ShieldCheck } from 'lucide-react';
 import { Language } from '@/types';
 import { bloodDonorSchema, BloodDonorFormData } from '@/lib/validations/bloodSchemas';
 import { useRegisterBloodDonorMutation } from '@/store/api/applicationsApi';
+import { toast } from 'sonner';
 
 interface BloodDonorModalProps {
   isOpen: boolean;
@@ -46,10 +47,10 @@ export default function BloodDonorModal({
   const onSubmit = async (data: BloodDonorFormData) => {
     try {
       await registerBloodDonor(data).unwrap();
-    } catch {
-      // optimistic fallback
+      setSubmittedName(data.name);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : (lang === 'bn' ? 'নিবন্ধন করা যায়নি। আবার চেষ্টা করুন।' : 'Registration failed. Please try again.'));
     }
-    setSubmittedName(data.name);
   };
 
   const handleClose = () => {

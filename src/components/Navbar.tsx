@@ -29,9 +29,16 @@ import {
   Phone,
   LayoutDashboard,
   ChevronDown,
+  LogIn,
+  UserPlus,
+  LogOut,
+  User,
 } from 'lucide-react';
 import { Language } from '@/types';
 import TopAnnouncement from '@/components/TopAnnouncement';
+import { useAppStore } from '@/store/useAppStore';
+import { useLogoutMutation, useGetCurrentUserQuery } from '@/store/api/authApi';
+import { toast } from 'sonner';
 
 interface NavbarProps {
   lang: Language;
@@ -88,6 +95,24 @@ const drawerItem: Variants = {
 };
 
 export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarProps) {
+  const currentRole = useAppStore((state) => state.currentRole);
+  const setCurrentRole = useAppStore((state) => state.setCurrentRole);
+  const isAuthenticated = currentRole !== 'COMMUNITY_MEMBER';
+
+  const [logout] = useLogoutMutation();
+  const { data: currentUser } = useGetCurrentUserQuery(undefined, { skip: !isAuthenticated });
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+    } catch {
+      // ignore
+    } finally {
+      setCurrentRole('COMMUNITY_MEMBER');
+      toast.info(lang === 'bn' ? 'লগআউট সম্পন্ন হয়েছে' : 'Logged out successfully');
+    }
+  };
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -285,16 +310,43 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
 
           {/* Actions */}
           <div className="hidden sm:flex items-center gap-2.5 shrink-0">
-            <motion.div whileHover={{ y: -1 }} whileTap={{ scale: 0.97 }}>
-              <Link
-                href="/dashboard"
-                className="px-3.5 py-1.5 rounded-full border border-[#0D5C35] text-[#0D5C35] hover:bg-[#0D5C35] hover:text-white text-xs font-bold transition-colors flex items-center gap-1.5 group"
-                title={lang === 'bn' ? 'অ্যাডমিন ও মেম্বার ড্যাশবোর্ড' : 'Admin & Member Dashboard'}
-              >
-                <LayoutDashboard className="w-3.5 h-3.5 group-hover:rotate-6 transition-transform" />
-                <span>{lang === 'bn' ? 'ড্যাশবোর্ড' : 'Dashboard'}</span>
-              </Link>
-            </motion.div>
+            {isAuthenticated ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/dashboard"
+                  className="px-3 py-1.5 rounded-full border border-[#0D5C35] bg-emerald-50 text-[#0D5C35] hover:bg-[#0D5C35] hover:text-white text-xs font-bold transition flex items-center gap-1.5"
+                  title={lang === 'bn' ? 'ড্যাশবোর্ড' : 'Dashboard'}
+                >
+                  <LayoutDashboard className="w-3.5 h-3.5" />
+                  <span>{lang === 'bn' ? 'ড্যাশবোর্ড' : 'Dashboard'}</span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  title={lang === 'bn' ? 'লগআউট করুন' : 'Logout'}
+                  className="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5">
+                <Link
+                  href="/login"
+                  className="px-3 py-1.5 rounded-lg text-stone-700 hover:text-[#0D5C35] hover:bg-emerald-50 text-xs font-bold transition flex items-center gap-1"
+                >
+                  <LogIn className="w-3.5 h-3.5 text-[#0D5C35]" />
+                  <span>{lang === 'bn' ? 'লগইন' : 'Login'}</span>
+                </Link>
+                <Link
+                  href="/register"
+                  className="px-3 py-1.5 rounded-lg border border-[#0D5C35]/30 text-[#0D5C35] hover:bg-[#0D5C35] hover:text-white text-xs font-bold transition flex items-center gap-1"
+                >
+                  <UserPlus className="w-3.5 h-3.5" />
+                  <span>{lang === 'bn' ? 'রেজিস্টার' : 'Register'}</span>
+                </Link>
+              </div>
+            )}
 
             {onToggleLang && (
               <motion.button
@@ -406,13 +458,42 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
               </nav>
 
               <motion.div variants={drawerItem} className="pt-3 border-t border-stone-100 flex flex-col gap-2">
-                <Link
-                  href="/dashboard"
-                  className="w-full py-2 rounded-full border border-[#0D5C35] bg-emerald-50 text-[#0D5C35] font-bold text-xs flex items-center justify-center gap-1.5 text-center"
-                >
-                  <LayoutDashboard className="w-3.5 h-3.5 text-[#0D5C35]" />
-                  <span>{lang === 'bn' ? 'ড্যাশবোর্ড প্রবেশ' : 'Go to Dashboard'}</span>
-                </Link>
+                {isAuthenticated ? (
+                  <div className="flex gap-2">
+                    <Link
+                      href="/dashboard"
+                      className="flex-1 py-2 rounded-full border border-[#0D5C35] bg-emerald-50 text-[#0D5C35] font-bold text-xs flex items-center justify-center gap-1.5 text-center"
+                    >
+                      <LayoutDashboard className="w-3.5 h-3.5 text-[#0D5C35]" />
+                      <span>{lang === 'bn' ? 'ড্যাশবোর্ড প্রবেশ' : 'Dashboard'}</span>
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="px-4 py-2 rounded-full bg-red-50 text-red-600 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span>{lang === 'bn' ? 'লগআউট' : 'Logout'}</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <Link
+                      href="/login"
+                      className="flex-1 py-2 rounded-full border border-[#0D5C35] text-[#0D5C35] bg-emerald-50/50 hover:bg-emerald-50 font-bold text-xs flex items-center justify-center gap-1.5 text-center"
+                    >
+                      <LogIn className="w-3.5 h-3.5 text-[#0D5C35]" />
+                      <span>{lang === 'bn' ? 'লগইন' : 'Sign In'}</span>
+                    </Link>
+                    <Link
+                      href="/register"
+                      className="flex-1 py-2 rounded-full bg-[#0D5C35] text-white hover:bg-[#094527] font-bold text-xs flex items-center justify-center gap-1.5 text-center"
+                    >
+                      <UserPlus className="w-3.5 h-3.5 text-white" />
+                      <span>{lang === 'bn' ? 'রেজিস্ট্রেশন' : 'Register'}</span>
+                    </Link>
+                  </div>
+                )}
 
                 <div className="flex gap-2">
                   <Link
