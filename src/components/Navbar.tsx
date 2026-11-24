@@ -390,14 +390,6 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
 
           {/* Mobile controls */}
           <div className="flex xl:hidden items-center gap-2">
-            {onToggleLang && (
-              <button
-                onClick={onToggleLang}
-                className="px-2 py-1 rounded border border-stone-200 text-stone-700 text-xs font-semibold"
-              >
-                {lang === 'bn' ? 'EN' : 'বাং'}
-              </button>
-            )}
             <button
               onClick={() => setMobileMenuOpen((o) => !o)}
               aria-label="Toggle mobile menu"
