@@ -71,9 +71,11 @@ export default function RegisterPage() {
     }
 
     // Format phone to international format if starts with 01
-    let formattedPhone = phone.trim().replace(/[ -]/g, '');
-    if (formattedPhone.startsWith('01')) {
+    let formattedPhone = phone.trim().replace(/[\s\-\(\)]/g, '');
+    if (formattedPhone.startsWith('01') && formattedPhone.length === 11) {
       formattedPhone = `+88${formattedPhone}`;
+    } else if (formattedPhone.startsWith('8801') && !formattedPhone.startsWith('+')) {
+      formattedPhone = `+${formattedPhone}`;
     }
 
     try {
