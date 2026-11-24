@@ -17,17 +17,13 @@ const ROUTE_PERMISSIONS: Record<string, string[]> = {
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Only run protection logic for dashboard routes
+  // Protect all /dashboard routes
   if (pathname.startsWith('/dashboard')) {
     const hasSessionCookie = request.cookies.has('rjf_session') || request.cookies.has('rkf_refresh');
-    const userRole = request.cookies.get('rjf_auth_role')?.value || 'COMMUNITY_MEMBER';
+    const userRole = request.cookies.get('rjf_auth_role')?.value;
 
-    // 1. If user is trying to access privileged admin routes without session, redirect to login
-    const isRestrictedAdminRoute = Object.keys(ROUTE_PERMISSIONS).some((route) =>
-      pathname.startsWith(route)
-    );
-
-    if (isRestrictedAdminRoute && !hasSessionCookie && userRole === 'COMMUNITY_MEMBER') {
+    // 1. Unauthenticated users (who have not registered or logged in) MUST be redirected to /login
+    if (!hasSessionCookie || !userRole) {
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);

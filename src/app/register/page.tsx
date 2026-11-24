@@ -35,6 +35,7 @@ export default function RegisterPage() {
   const lang = useAppStore((state) => state.lang);
   const toggleLang = useAppStore((state) => state.toggleLang);
   const setCurrentRole = useAppStore((state) => state.setCurrentRole);
+  const setIsAuthenticated = useAppStore((state) => state.setIsAuthenticated);
   const donationModalOpen = useAppStore((state) => state.donationModalOpen);
   const setDonationModalOpen = useAppStore((state) => state.setDonationModalOpen);
   const assistanceModalOpen = useAppStore((state) => state.assistanceModalOpen);
@@ -94,6 +95,7 @@ export default function RegisterPage() {
       ) as UserRole;
 
       setCurrentRole(primaryRole || 'COMMUNITY_MEMBER');
+      setIsAuthenticated(true);
       toast.success(
         t(
           `অভিনন্দন ${session.user.fullName}! আপনার অ্যাকাউন্ট তৈরি সম্পন্ন হয়েছে।`,

@@ -3,6 +3,7 @@
 import React, { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useAppStore } from "@/store/useAppStore"
 import { ROLE_METAS } from "@/config/dashboard-navigation"
 import { UserRole } from "@/types"
@@ -30,14 +31,19 @@ export function DashboardNavbar({
   onToggleSidebar,
   activeTabTitle,
 }: DashboardNavbarProps) {
-  const { currentRole, setCurrentRole } = useAppStore()
+  const router = useRouter()
+  const { currentRole, setCurrentRole, isAuthenticated, setIsAuthenticated } = useAppStore()
   const [loginModalOpen, setLoginModalOpen] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [login, { isLoading: isLoggingIn }] = useLoginMutation()
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation()
+
+  const isUserAuthenticated =
+    isAuthenticated || (typeof document !== "undefined" && document.cookie.includes("rjf_session=1"))
+
   const { data: currentUser } = useGetCurrentUserQuery(undefined, {
-    skip: currentRole === "COMMUNITY_MEMBER",
+    skip: !isUserAuthenticated,
   })
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -50,7 +56,8 @@ export function DashboardNavbar({
       const session = await login({ email, password }).unwrap()
       const userRoles = session.user.roles || []
       const primaryRole = (typeof userRoles[0] === "object" ? userRoles[0]?.name : userRoles[0]) as UserRole
-      setCurrentRole(primaryRole || "SUPER_ADMIN")
+      setCurrentRole(primaryRole || "COMMUNITY_MEMBER")
+      setIsAuthenticated(true)
       toast.success(`স্বাগতম, ${session.user.fullName}!`)
       setLoginModalOpen(false)
       setPassword("")
@@ -65,12 +72,18 @@ export function DashboardNavbar({
     } catch {
       // ignore
     } finally {
+      setIsAuthenticated(false)
       setCurrentRole("COMMUNITY_MEMBER")
+      if (typeof document !== "undefined") {
+        document.cookie = "rjf_session=; path=/; max-age=0"
+        document.cookie = "rjf_auth_role=; path=/; max-age=0"
+      }
       toast.info("সফলভাবে লগআউট হয়েছে")
+      router.push("/login")
     }
   }
 
-  const isAuthenticated = currentRole !== "COMMUNITY_MEMBER"
+  const isUserLoggedIn = isUserAuthenticated
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-stone-200/70 bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 shadow-[0_1px_0_0_rgba(13,92,53,0.04),0_8px_24px_-12px_rgba(0,0,0,0.08)]">
@@ -159,14 +172,14 @@ export function DashboardNavbar({
           </Link>
 
           {/* User Profile / Login Button */}
-          {isAuthenticated ? (
+          {isUserLoggedIn ? (
             <div className="flex items-center gap-2.5 border-l border-stone-200 pl-3">
               <div className="flex size-9 select-none items-center justify-center rounded-full bg-linear-to-br from-[#0D5C35] to-emerald-600 text-sm font-bold text-white shadow-md ring-2 ring-white outline outline-emerald-100">
-                {currentUser?.fullName ? currentUser.fullName[0] : "ক"}
+                {currentUser?.fullName ? currentUser.fullName[0] : (currentRole === "COMMUNITY_MEMBER" ? "স" : "ক")}
               </div>
               <div className="hidden xl:block text-left">
                 <div className="text-xs font-bold leading-tight text-stone-800">
-                  {currentUser?.fullName || "কর্মকর্তা"}
+                  {currentUser?.fullName || (currentRole === "COMMUNITY_MEMBER" ? "সদস্য" : "কর্মকর্তা")}
                 </div>
                 <div className="mt-0.5 text-[10px] font-medium leading-tight text-stone-500">
                   {ROLE_METAS[currentRole]?.titleBn}

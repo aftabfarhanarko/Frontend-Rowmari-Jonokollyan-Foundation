@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 import { useAppStore } from "@/store/useAppStore"
 import { DashboardNavbar } from "@/components/dashboard/DashboardNavbar"
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar"
@@ -22,11 +22,13 @@ interface DashboardShellProps {
 }
 
 export function DashboardShell({ defaultTab }: DashboardShellProps) {
+  const router = useRouter()
   const searchParams = useSearchParams()
   const initialTab = defaultTab || searchParams.get("tab") || "overview"
 
   const {
     currentRole,
+    isAuthenticated,
     lang,
     bloodRequestModalOpen,
     setBloodRequestModalOpen,
@@ -45,6 +47,18 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
 
   const [activeTab, setActiveTab] = useState(initialTab)
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
+
+  // Client-side authentication verification:
+  // If user is unauthenticated (no session cookie and store is unauthenticated), redirect to login
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      const hasSessionCookie = document.cookie.includes("rjf_session=1")
+      if (!hasSessionCookie && !isAuthenticated) {
+        toast.error("ড্যাশবোর্ডে প্রবেশ করতে অনুগ্রহ করে প্রথমে লগইন বা অ্যাকাউন্ট তৈরি করুন।")
+        router.push("/login?redirect=/dashboard")
+      }
+    }
+  }, [isAuthenticated, router])
 
   // Sync with searchParams or defaultTab if changes
   useEffect(() => {

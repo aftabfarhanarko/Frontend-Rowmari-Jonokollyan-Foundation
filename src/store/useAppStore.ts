@@ -11,6 +11,8 @@ interface AppState {
   // Role Management
   currentRole: UserRole;
   setCurrentRole: (role: UserRole) => void;
+  isAuthenticated: boolean;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
 
   // Emergency Announcement Banner
   topBannerVisible: boolean;
@@ -61,6 +63,8 @@ export const useAppStore = create<AppState>()(
       // visitors must never receive privileged UI by default.
       currentRole: 'COMMUNITY_MEMBER',
       setCurrentRole: (currentRole) => set({ currentRole }),
+      isAuthenticated: false,
+      setIsAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
 
       // Announcement
       topBannerVisible: true,
