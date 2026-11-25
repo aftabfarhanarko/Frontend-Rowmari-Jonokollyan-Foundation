@@ -49,8 +49,8 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
     href: "/dashboard",
     iconName: "LayoutDashboard",
     category: "core",
-    roles: ["SUPER_ADMIN"],
-    descriptionBn: "লাইভ পরিসংখ্যান ও সার্বিক সিস্টেম সারসংক্ষেপ",
+    roles: ["SUPER_ADMIN", "COMMUNITY_MEMBER"],
+    descriptionBn: "লাইভ পরিসংখ্যান ও ব্যক্তিগত সেবার সারসংক্ষেপ",
   },
 
   // 2. Public Website CMS Management
@@ -201,13 +201,33 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
   },
   {
     id: "my-blood-requests",
-    titleBn: "আমার রক্তের অনুরোধ",
-    titleEn: "My Blood Requests",
+    titleBn: "রক্তের অনুরোধ ও ডোনার",
+    titleEn: "Blood Requests & Donor",
     href: "/dashboard?tab=my-blood-requests",
-    iconName: "HeartHandshake",
+    iconName: "Droplet",
     category: "community",
     roles: ["COMMUNITY_MEMBER"],
-    descriptionBn: "আপনার পরিবারের জন্য চাওয়া রক্তের স্ট্যাটাস",
+    descriptionBn: "আপনার রক্তের আবেদন ও রক্তদাতা প্রোফাইল",
+  },
+  {
+    id: "my-volunteer",
+    titleBn: "স্বেচ্ছাসেবক প্রোফাইল",
+    titleEn: "Volunteer Status",
+    href: "/dashboard?tab=my-volunteer",
+    iconName: "Users",
+    category: "community",
+    roles: ["COMMUNITY_MEMBER"],
+    descriptionBn: "আপনার সেবামূলক স্বেচ্ছাসেবী অংশগ্রহণের তথ্য",
+  },
+  {
+    id: "my-profile",
+    titleBn: "আমার প্রোফাইল ও সেটিংস",
+    titleEn: "My Profile",
+    href: "/dashboard?tab=my-profile",
+    iconName: "UserCheck",
+    category: "community",
+    roles: ["COMMUNITY_MEMBER"],
+    descriptionBn: "ব্যক্তিগত তথ্য ও যোগাযোগের বিবরণ",
   },
 
 ]

@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Protect all /dashboard routes: Strictly restricted to SUPER_ADMIN
+  // Protect all /dashboard routes: Accessible by authenticated users (SUPER_ADMIN and COMMUNITY_MEMBER)
   if (pathname.startsWith('/dashboard')) {
     const hasSessionCookie = request.cookies.has('rjf_session') || request.cookies.has('rkf_refresh');
     const userRole = request.cookies.get('rjf_auth_role')?.value;
@@ -17,10 +17,9 @@ export function proxy(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    // 2. Single Super Admin architecture: Normal registered users cannot access the Admin Dashboard
-    if (userRole !== 'SUPER_ADMIN') {
+    // 2. Validate role: Both SUPER_ADMIN and COMMUNITY_MEMBER are valid registered members
+    if (userRole !== 'SUPER_ADMIN' && userRole !== 'COMMUNITY_MEMBER') {
       const homeUrl = new URL('/', request.url);
-      homeUrl.searchParams.set('denied', 'super_admin_only');
       return NextResponse.redirect(homeUrl);
     }
   }

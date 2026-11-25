@@ -49,7 +49,6 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
 
   // Client-side authentication verification:
   // If user is unauthenticated (no session cookie and store is unauthenticated), redirect to login
-  // Single Super Admin architecture: Non-super-admin users are strictly denied dashboard access
   useEffect(() => {
     if (typeof document !== "undefined") {
       const hasSessionCookie = document.cookie.includes("rjf_session=1")
@@ -57,12 +56,9 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
         toast.error("ড্যাশবোর্ডে প্রবেশ করতে অনুগ্রহ করে প্রথমে লগইন করুন।")
         const currentPath = typeof window !== 'undefined' ? (window.location.pathname + window.location.search) : '/dashboard';
         router.push(`/login?redirect=${encodeURIComponent(currentPath)}`)
-      } else if (isAuthenticated && currentRole !== "SUPER_ADMIN") {
-        toast.error("ড্যাশবোর্ডে প্রবেশের অধিকার শুধুমাত্র সুপার অ্যাডমিনের রয়েছে।")
-        router.push("/?denied=super_admin_only")
       }
     }
-  }, [isAuthenticated, currentRole, router])
+  }, [isAuthenticated, router])
 
   // Sync with searchParams or defaultTab if changes
   useEffect(() => {

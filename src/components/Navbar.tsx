@@ -151,7 +151,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
       await logout().unwrap();
     } catch {
       // ignore
-    } finally {
+     } finally {
       setIsAuthenticated(false);
       setHasSessionCookie(false);
       setCurrentRole('COMMUNITY_MEMBER');
@@ -359,15 +359,20 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                   <Link
                     href="/dashboard"
                     className="px-3 py-1.5 rounded-full border border-[#0D5C35] bg-emerald-50 text-[#0D5C35] hover:bg-[#0D5C35] hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-2xs"
-                    title={lang === 'bn' ? 'ড্যাশবোর্ড' : 'Dashboard'}
+                    title={lang === 'bn' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard'}
                   >
                     <LayoutDashboard className="w-3.5 h-3.5" />
-                    <span>{lang === 'bn' ? 'ড্যাশবোর্ড' : 'Dashboard'}</span>
+                    <span>{lang === 'bn' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard'}</span>
                   </Link>
                 ) : (
-                  <span className="px-3 py-1.5 rounded-full bg-stone-100 text-stone-700 text-xs font-bold border border-stone-200">
-                    {currentUser?.fullName || (lang === 'bn' ? 'আমার অ্যাকাউন্ট' : 'Account')}
-                  </span>
+                  <Link
+                    href="/dashboard"
+                    className="px-3 py-1.5 rounded-full border border-[#0D5C35] bg-emerald-50 text-[#0D5C35] hover:bg-[#0D5C35] hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-2xs"
+                    title={lang === 'bn' ? 'আমার ড্যাশবোর্ড' : 'My Dashboard'}
+                  >
+                    <LayoutDashboard className="w-3.5 h-3.5" />
+                    <span>{currentUser?.fullName || (lang === 'bn' ? 'আমার ড্যাশবোর্ড' : 'My Dashboard')}</span>
+                  </Link>
                 )}
                 <button
                   type="button"
@@ -579,7 +584,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
 
                 {/* Account Button (Warm Yellow Pill matching screenshot) */}
                 <Link
-                  href={isUserLoggedIn ? (currentRole === 'SUPER_ADMIN' ? '/dashboard' : '/') : '/login'}
+                  href={isUserLoggedIn ? '/dashboard' : '/login'}
                   onClick={() => setMobileMenuOpen(false)}
                   className="w-full py-3 px-4 rounded-xl border border-[#F3C474] bg-[#FDE29A] hover:bg-[#FCD880] text-stone-900 font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-xs transition active:scale-[0.99] text-center"
                 >
@@ -588,7 +593,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                     {isUserLoggedIn
                       ? (currentRole === 'SUPER_ADMIN'
                           ? (lang === 'bn' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard')
-                          : (currentUser?.fullName || (lang === 'bn' ? 'আমার অ্যাকাউন্ট' : 'My Account')))
+                          : (lang === 'bn' ? 'আমার ড্যাশবোর্ড' : 'My Dashboard'))
                       : (lang === 'bn' ? 'আমার অ্যাকাউন্ট' : 'My Account')}
                   </span>
                 </Link>

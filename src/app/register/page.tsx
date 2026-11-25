@@ -130,7 +130,7 @@ export default function RegisterPage() {
       );
 
       setTimeout(() => {
-        window.location.href = '/';
+        window.location.href = '/dashboard';
       }, 700);
     } catch (err: any) {
       setIsRedirecting(false);

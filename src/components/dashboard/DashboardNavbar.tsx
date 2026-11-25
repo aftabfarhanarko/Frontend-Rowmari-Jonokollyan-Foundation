@@ -118,7 +118,7 @@ export function DashboardNavbar({
                 রৌমারী জনকল্যাণ ফাউন্ডেশন
               </div>
               <div className="mt-0.5 flex items-center gap-1.5 text-sm font-extrabold leading-tight text-[#0D5C35]">
-                <span>অ্যাডমিন ড্যাশবোর্ড</span>
+                <span>{currentRole === 'SUPER_ADMIN' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'সদস্য ড্যাশবোর্ড'}</span>
                 {activeTabTitle && (
                   <>
                     <span className="text-stone-300 font-normal">/</span>

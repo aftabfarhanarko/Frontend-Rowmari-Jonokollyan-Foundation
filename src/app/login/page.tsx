@@ -52,18 +52,10 @@ function LoginForm() {
   // If already authenticated, redirect safely
   useEffect(() => {
     if (isAuthenticated) {
-      if (currentRole === 'SUPER_ADMIN') {
-        const target = redirectParam ? decodeURIComponent(redirectParam) : '/dashboard';
-        window.location.href = target;
-      } else {
-        const target =
-          redirectParam && !decodeURIComponent(redirectParam).startsWith('/dashboard')
-            ? decodeURIComponent(redirectParam)
-            : '/';
-        window.location.href = target;
-      }
+      const target = redirectParam ? decodeURIComponent(redirectParam) : '/dashboard';
+      window.location.href = target;
     }
-  }, [isAuthenticated, currentRole, redirectParam]);
+  }, [isAuthenticated, redirectParam]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,11 +92,7 @@ function LoginForm() {
       );
       toast.success(welcomeMsg);
 
-      const target = isSuperAdmin
-        ? (redirectParam ? decodeURIComponent(redirectParam) : '/dashboard')
-        : (redirectParam && !decodeURIComponent(redirectParam).startsWith('/dashboard')
-            ? decodeURIComponent(redirectParam)
-            : '/');
+      const target = redirectParam ? decodeURIComponent(redirectParam) : '/dashboard';
 
       // Use a brief timeout so mobile users clearly see the green toast before redirecting,
       // and use window.location.href to guarantee browser HTTP cookie submission to Next.js middleware

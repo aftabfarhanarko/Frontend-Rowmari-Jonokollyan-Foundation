@@ -69,6 +69,7 @@ import {
 import { useGetBloodRequestsQuery } from "@/store/api/bloodApi"
 import { useGetCampaignsQuery } from "@/store/api/campaignsApi"
 import { useGetAdminDashboardQuery } from "@/store/api/adminApi"
+import { useGetCurrentUserQuery } from "@/store/api/authApi"
 import { CmsPagesTab } from "@/components/dashboard/cms/CmsPagesTab"
 import { CmsNewsTab } from "@/components/dashboard/cms/CmsNewsTab"
 import { CmsGalleryTab } from "@/components/dashboard/cms/CmsGalleryTab"
@@ -93,6 +94,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
     setVolunteerModalOpen,
   } = useAppStore()
   const roleMeta = ROLE_METAS[currentRole] || ROLE_METAS.COMMUNITY_MEMBER
+  const { data: currentUser } = useGetCurrentUserQuery()
 
   // --- Real Backend API Hooks ---
   const isPrivileged = ["SUPER_ADMIN", "ADMIN", "FINANCE_MANAGER"].includes(currentRole)
@@ -909,8 +911,239 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
         </div>
       </div>
 
-      {/* 2. Overview Tab (Single Super Admin CMS Control Center) */}
-      {activeTab === "overview" && (
+      {/* 2. Overview Tab: Community Member View */}
+      {activeTab === "overview" && currentRole === "COMMUNITY_MEMBER" && (
+        <div className="space-y-6">
+          {/* Member Welcome Banner */}
+          <div className="bg-gradient-to-br from-[#0D5C35] via-[#0b4d2c] to-[#07361e] text-white p-6 sm:p-7 rounded-2xl shadow-md relative overflow-hidden">
+            <div className="absolute -top-12 -right-12 w-48 h-48 bg-emerald-400/15 rounded-full blur-2xl pointer-events-none" />
+            <div className="relative z-10 space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-emerald-200 text-xs font-bold shadow-2xs">
+                  <UserCheck className="w-3.5 h-3.5" />
+                  <span>কমিউনিটি মেম্বার / সাধারণ নাগরিক</span>
+                </span>
+                <span className="text-xs text-emerald-200/80 font-mono">
+                  আইডি: {currentUser?.id?.slice(0, 8) || "RJF-MBR"}
+                </span>
+              </div>
+
+              <div>
+                <h2 className="text-xl sm:text-2xl font-black text-white">
+                  স্বাগতম, {currentUser?.fullName || "সম্মানিত সদস্য"}!
+                </h2>
+                <p className="text-xs sm:text-sm text-emerald-100/90 mt-1 max-w-2xl leading-relaxed">
+                  রৌমারী জনকল্যাণ ফাউন্ডেশনের মেম্বার পোর্টালে আপনার সকল ব্যক্তিগত সেবা, রক্তের অনুরোধ ও মানবিক সহায়তা আবেদন এখান থেকেই এক ক্লিকে পর্যবেক্ষণ ও পরিচালনা করতে পারবেন।
+                </p>
+              </div>
+
+              {/* Contact & District Chips */}
+              <div className="pt-2 flex flex-wrap items-center gap-2.5 text-xs text-emerald-100">
+                <span className="bg-black/20 px-3 py-1 rounded-lg backdrop-blur-xs">
+                  মোবাইল: <strong>{currentUser?.phone || "সংরক্ষিত"}</strong>
+                </span>
+                <span className="bg-black/20 px-3 py-1 rounded-lg backdrop-blur-xs">
+                  ইমেইল: <strong>{currentUser?.email || "সংরক্ষিত"}</strong>
+                </span>
+                <span className="bg-black/20 px-3 py-1 rounded-lg backdrop-blur-xs">
+                  শাখা: <strong>রৌমারী, কুড়িগ্রাম</strong>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* 4 Quick Activity Stats Cards */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div
+              onClick={() => onSelectTab?.("my-applications")}
+              className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs hover:shadow-md transition-all cursor-pointer group"
+            >
+              <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
+                <span>আমার সহায়তা আবেদন</span>
+                <div className="p-2 rounded-xl bg-emerald-50 text-[#0D5C35] group-hover:bg-[#0D5C35] group-hover:text-white transition-colors">
+                  <FileText className="size-4" />
+                </div>
+              </div>
+              <div className="text-2xl font-black text-stone-900">
+                {displayMyApps.length} টি
+              </div>
+              <div className="text-[11px] text-emerald-700 font-semibold mt-1">
+                {displayMyApps.filter((a: any) => a.status === "approved" || a.statusTitle === "অনুমোদিত").length} টি অনুমোদিত
+              </div>
+            </div>
+
+            <div
+              onClick={() => onSelectTab?.("my-blood-requests")}
+              className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs hover:shadow-md transition-all cursor-pointer group"
+            >
+              <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
+                <span>রক্তের জরুরি অনুরোধ</span>
+                <div className="p-2 rounded-xl bg-red-50 text-red-600 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                  <Droplet className="size-4" />
+                </div>
+              </div>
+              <div className="text-2xl font-black text-stone-900">
+                {displayMyBlood.length} টি
+              </div>
+              <div className="text-[11px] text-red-700 font-semibold mt-1">
+                জরুরি রক্তের হিস্ট্রি
+              </div>
+            </div>
+
+            <div
+              onClick={() => setBloodDonorModalOpen(true)}
+              className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs hover:shadow-md transition-all cursor-pointer group"
+            >
+              <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
+                <span>রক্তদাতা স্ট্যাটাস</span>
+                <div className="p-2 rounded-xl bg-rose-50 text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors">
+                  <HeartPulse className="size-4" />
+                </div>
+              </div>
+              <div className="text-lg font-black text-stone-900">
+                নিবন্ধিত ডোনার
+              </div>
+              <div className="text-[11px] text-rose-700 font-semibold mt-1 flex items-center gap-1">
+                <CheckCircle2 className="size-3" />
+                <span>তথ্য আপডেট করুন</span>
+              </div>
+            </div>
+
+            <div
+              onClick={() => setVolunteerModalOpen(true)}
+              className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs hover:shadow-md transition-all cursor-pointer group"
+            >
+              <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
+                <span>স্বেচ্ছাসেবক কার্যক্রম</span>
+                <div className="p-2 rounded-xl bg-amber-50 text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                  <Users className="size-4" />
+                </div>
+              </div>
+              <div className="text-lg font-black text-stone-900">
+                কমিউনিটি উইং
+              </div>
+              <div className="text-[11px] text-amber-700 font-semibold mt-1 flex items-center gap-1">
+                <Plus className="size-3" />
+                <span>অংশগ্রহণ করুন</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Member Quick Action Buttons */}
+          <div className="bg-stone-50/80 p-4 sm:p-5 rounded-2xl border border-stone-200">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-stone-600 mb-3">
+              এক ক্লিকে আপনার প্রয়োজনীয় সেবা গ্রহণ করুন
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <Button
+                onClick={() => setBloodRequestModalOpen(true)}
+                className="bg-red-600 hover:bg-red-700 text-white text-xs py-2.5 h-auto justify-start gap-2 shadow-xs cursor-pointer"
+              >
+                <Droplet className="size-4" />
+                <span>জরুরি রক্তের আবেদন</span>
+              </Button>
+
+              <Button
+                onClick={() => setBloodDonorModalOpen(true)}
+                variant="outline"
+                className="border-red-200 bg-white hover:bg-red-50 text-red-700 text-xs py-2.5 h-auto justify-start gap-2 shadow-xs cursor-pointer"
+              >
+                <HeartPulse className="size-4 text-red-600" />
+                <span>রক্তদাতা হিসেবে নিবন্ধন</span>
+              </Button>
+
+              <Button
+                onClick={() => setAssistanceModalOpen(true)}
+                className="bg-[#0D5C35] hover:bg-[#094527] text-white text-xs py-2.5 h-auto justify-start gap-2 shadow-xs cursor-pointer"
+              >
+                <FileText className="size-4" />
+                <span>সহায়তার নতুন আবেদন</span>
+              </Button>
+
+              <Button
+                onClick={() => setVolunteerModalOpen(true)}
+                variant="outline"
+                className="border-stone-300 bg-white hover:bg-stone-100 text-stone-800 text-xs py-2.5 h-auto justify-start gap-2 shadow-xs cursor-pointer"
+              >
+                <Users className="size-4 text-stone-600" />
+                <span>স্বেচ্ছাসেবক আবেদন</span>
+              </Button>
+            </div>
+          </div>
+
+          {/* Recent Activities Preview */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {/* Assistance Applications Preview */}
+            <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-stone-100">
+                <h4 className="text-sm font-bold text-stone-900 flex items-center gap-2">
+                  <FileText className="size-4 text-[#0D5C35]" />
+                  <span>আমার সহায়তা আবেদনসমূহ</span>
+                </h4>
+                <button
+                  onClick={() => onSelectTab?.("my-applications")}
+                  className="text-xs font-semibold text-[#0D5C35] hover:underline cursor-pointer"
+                >
+                  সব দেখুন
+                </button>
+              </div>
+
+              {displayMyApps.length === 0 ? (
+                <p className="text-xs text-stone-400 py-3 text-center">এখনো কোনো আবেদন করা হয়নি</p>
+              ) : (
+                displayMyApps.slice(0, 3).map((app: any) => (
+                  <div key={app.id} className="p-3 rounded-xl bg-stone-50 border border-stone-200/70 text-xs space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono font-bold text-stone-800">{app.id}</span>
+                      <Badge className="bg-emerald-600 text-white text-[10px]">{app.statusTitle}</Badge>
+                    </div>
+                    <div className="font-semibold text-stone-900">{app.categoryBn}</div>
+                    <div className="text-stone-500 text-[11px]">{app.note}</div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Blood Requests Preview */}
+            <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-stone-100">
+                <h4 className="text-sm font-bold text-stone-900 flex items-center gap-2">
+                  <Droplet className="size-4 text-red-600" />
+                  <span>আমার রক্তের অনুরোধসমূহ</span>
+                </h4>
+                <button
+                  onClick={() => onSelectTab?.("my-blood-requests")}
+                  className="text-xs font-semibold text-red-700 hover:underline cursor-pointer"
+                >
+                  সব দেখুন
+                </button>
+              </div>
+
+              {displayMyBlood.length === 0 ? (
+                <p className="text-xs text-stone-400 py-3 text-center">এখনো কোনো রক্তের অনুরোধ করা হয়নি</p>
+              ) : (
+                displayMyBlood.slice(0, 3).map((b: any) => (
+                  <div key={b.id} className="p-3 rounded-xl bg-stone-50 border border-stone-200/70 text-xs space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-bold text-[10px]">
+                        {b.bloodGroup}
+                      </span>
+                      <Badge variant="outline" className="border-amber-400 text-amber-700 bg-amber-50 text-[10px]">
+                        {b.status}
+                      </Badge>
+                    </div>
+                    <div className="font-semibold text-stone-900">রোগী: {b.patient} ({b.bags} ব্যাগ)</div>
+                    <div className="text-stone-500 text-[11px]">হাসপাতাল: {b.hospital}</div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2. Overview Tab: Super Admin CMS Control Center */}
+      {activeTab === "overview" && currentRole !== "COMMUNITY_MEMBER" && (
         <>
           {/* Top Real-time Statistics */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -1484,6 +1717,84 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* 12. Community Member: Volunteer Profile */}
+      {activeTab === "my-volunteer" && (
+        <div className="bg-white p-5 sm:p-6 rounded-2xl border border-stone-200/90 shadow-2xs space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-100">
+            <div>
+              <h2 className="text-lg font-bold text-stone-900">স্বেচ্ছাসেবক প্রোফাইল ও কার্যক্রম</h2>
+              <p className="text-xs text-stone-500">রৌমারী জনকল্যাণ ফাউন্ডেশনের মানবিক সেবা কার্যক্রমে আপনার সক্রিয় অংশগ্রহণ</p>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => setVolunteerModalOpen(true)}
+              className="bg-[#0D5C35] hover:bg-[#094527] text-white text-xs gap-1.5 cursor-pointer shadow-xs"
+            >
+              <Plus className="size-3.5" />
+              <span>স্বেচ্ছাসেবক নিবন্ধন / তথ্য আপডেট</span>
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-5 rounded-2xl bg-emerald-50/70 border border-emerald-200/70 space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse" />
+                <h3 className="font-bold text-emerald-950 text-sm">মাঠপর্যায়ের সেবায় অংশগ্রহণ</h3>
+              </div>
+              <p className="text-xs text-emerald-900/80 leading-relaxed font-normal">
+                বন্যা ত্রাণ, শীতবস্ত্র বিতরণ, চক্ষু ও মেডিকেল ক্যাম্প এবং রক্তের প্রয়োজনে জরুরি সমন্বয়ের জন্য তরুণ ও যুবসমাজের স্বেচ্ছাশ্রমই আমাদের ফাউন্ডেশনের মূল চালিকাশক্তি।
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-stone-50 border border-stone-200 space-y-3">
+              <h3 className="font-bold text-stone-900 text-sm">কার্যক্রম এলাকা ও ফিল্ড শাখা</h3>
+              <p className="text-xs text-stone-600 leading-relaxed font-normal">
+                রৌমারী সদর, দাঁতভাঙ্গা, যাদুরচর, বন্দবেড়, শৌলমারী ও ব্রহ্মপুত্রের নদীবেষ্টিত চরাঞ্চল।
+              </p>
+              <div className="text-xs text-stone-500">
+                স্বেচ্ছাসেবক আইডি: <strong>{currentUser?.id ? `RJF-VOL-${currentUser.id.slice(0, 6).toUpperCase()}` : "RJF-VOL-PENDING"}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 13. Community Member: Profile & Settings */}
+      {activeTab === "my-profile" && (
+        <div className="bg-white p-5 sm:p-6 rounded-2xl border border-stone-200/90 shadow-2xs space-y-5">
+          <div className="pb-4 border-b border-stone-100">
+            <h2 className="text-lg font-bold text-stone-900">আমার প্রোফাইল ও অ্যাকাউন্ট তথ্য</h2>
+            <p className="text-xs text-stone-500">আপনার সংরক্ষিত যোগাযোগের তথ্য ও অ্যাকাউন্ট বিবরণী</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
+              <span className="text-xs text-stone-400 font-medium">পুরো নাম</span>
+              <div className="font-bold text-stone-900 text-sm">{currentUser?.fullName || "তথ্য সংরক্ষিত"}</div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
+              <span className="text-xs text-stone-400 font-medium">ইমেইল ঠিকানা</span>
+              <div className="font-bold text-stone-900 text-sm">{currentUser?.email || "তথ্য সংরক্ষিত"}</div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
+              <span className="text-xs text-stone-400 font-medium">মোবাইল নম্বর</span>
+              <div className="font-bold text-stone-900 text-sm">{currentUser?.phone || "তথ্য সংরক্ষিত"}</div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
+              <span className="text-xs text-stone-400 font-medium">বর্তমান পদমর্যাদা (Role)</span>
+              <div>
+                <span className="inline-block px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0D5C35] font-bold text-xs">
+                  {currentRole === "SUPER_ADMIN" ? "সুপার অ্যাডমিন" : "কমিউনিটি মেম্বার / সাধারণ নাগরিক"}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       )}
