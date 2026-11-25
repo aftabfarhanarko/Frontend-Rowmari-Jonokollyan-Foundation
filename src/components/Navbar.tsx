@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
@@ -96,6 +97,11 @@ const mobileDrawerLinks = [
 
 export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarProps) {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const currentRole = useAppStore((state) => state.currentRole);
   const setCurrentRole = useAppStore((state) => state.setCurrentRole);
   const isAuthenticated = useAppStore((state) => state.isAuthenticated);
@@ -199,7 +205,8 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
   const isSecondaryActive = secondaryDesktopLinks.some((l) => isActive(l.href));
 
   return (
-    <div className="sticky top-0 z-40 w-full">
+    <>
+      <div className="sticky top-0 z-40 w-full">
       <TopAnnouncement lang={lang} />
       <motion.header
         initial={reduceMotion ? false : { y: -80, opacity: 0 }}
@@ -440,27 +447,37 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
         </motion.div>
       </div>
 
-      {/* Mobile Side Navigation Drawer & Backdrop (As-Sunnah style) */}
+      {/* Reading-progress line */}
+      <motion.div
+        aria-hidden
+        style={{ scaleX: progress }}
+        className="absolute bottom-[-1px] left-0 right-0 h-[2px] origin-left bg-gradient-to-r from-[#0D5C35] to-[#E53935]"
+      />
+    </motion.header>
+    </div>
+
+    {/* Mobile Side Navigation Drawer Portal (Rendered directly in document.body to slide from side full screen) */}
+    {mounted && typeof document !== 'undefined' && createPortal(
       <AnimatePresence>
         {mobileMenuOpen && (
-          <div className="fixed inset-0 z-50 xl:hidden">
+          <div className="fixed inset-0 z-[9999] xl:hidden flex">
             {/* Backdrop Dimming Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.22 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-xs cursor-pointer"
+              className="fixed inset-0 bg-black/60 backdrop-blur-xs cursor-pointer"
             />
 
-            {/* Side Navigation Panel */}
+            {/* Side Navigation Panel sliding from left */}
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-              className="relative w-[85vw] max-w-[320px] bg-white h-full shadow-2xl flex flex-col justify-between overflow-hidden"
+              transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+              className="relative z-10 w-[85vw] max-w-[320px] bg-white h-[100dvh] shadow-2xl flex flex-col justify-between overflow-hidden"
             >
               {/* Header: Logo + Organization Name + Close Icon */}
               <div className="px-5 py-4 border-b border-stone-200/90 flex items-center justify-between bg-white shrink-0">
@@ -585,15 +602,9 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
             </motion.div>
           </div>
         )}
-      </AnimatePresence>
-
-      {/* Reading-progress line */}
-      <motion.div
-        aria-hidden
-        style={{ scaleX: progress }}
-        className="absolute bottom-[-1px] left-0 right-0 h-[2px] origin-left bg-gradient-to-r from-[#0D5C35] to-[#E53935]"
-      />
-    </motion.header>
-    </div>
+      </AnimatePresence>,
+      document.body
+    )}
+    </>
   );
 }
