@@ -21,6 +21,7 @@ import {
 } from "lucide-react"
 import { useLoginMutation, useLogoutMutation, useGetCurrentUserQuery } from "@/store/api/authApi"
 import { toast } from "sonner"
+import PwaInstallButton from "@/components/pwa/PwaInstallButton"
 
 interface DashboardNavbarProps {
   onToggleSidebar?: () => void
@@ -157,6 +158,9 @@ export function DashboardNavbar({
             <Globe className="size-3.5 text-stone-400" />
             <span>ওয়েবসাইট</span>
           </Link>
+
+          {/* PWA Install Button */}
+          <PwaInstallButton variant="navbar" />
 
           {/* Notification Icon */}
           <Link

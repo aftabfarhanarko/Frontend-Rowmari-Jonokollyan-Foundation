@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "রৌমারী জনকল্যাণ ফাউন্ডেশন | Rowmari Janakalyan Foundation",
+  "short_name": "RJF",
+  "description": "মানুষের পাশে, মানুষের জন্য - শীতবস্ত্র, খাদ্য, শিক্ষা ও চিকিৎসায় রৌমারীর অসহায় মানুষের পাশে দাঁড়ানোই আমাদের কাজ।",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "theme_color": "#0D5C35",
+  "background_color": "#ffffff",
+  "lang": "bn-BD",
+  "dir": "ltr",
+  "categories": ["lifestyle", "social", "community"],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "সহায়তার আবেদন",
+      "short_name": "আবেদন",
+      "description": "অনলাইনে মানবিক সহায়তার আবেদন করুন",
+      "url": "/get-help?source=shortcut",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "আমাদের কার্যক্রম",
+      "short_name": "কার্যক্রম",
+      "description": "চলমান ও বিগত মানবিক কার্যক্রমসমূহ",
+      "url": "/activities?source=shortcut",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "স্বেচ্ছাসেবক নিবন্ধন",
+      "short_name": "স্বেচ্ছাসেবক",
+      "description": "RJF ভলান্টিয়ার নেটওয়ার্কে যোগ দিন",
+      "url": "/volunteer?source=shortcut",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "যোগাযোগ ও হটলাইন",
+      "short_name": "যোগাযোগ",
+      "description": "অফিসিয়াল যোগাযোগ ও জরুরি হটলাইন",
+      "url": "/contact?source=shortcut",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

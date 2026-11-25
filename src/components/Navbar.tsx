@@ -39,6 +39,7 @@ import TopAnnouncement from '@/components/TopAnnouncement';
 import { useAppStore } from '@/store/useAppStore';
 import { useLogoutMutation, useGetCurrentUserQuery } from '@/store/api/authApi';
 import { toast } from 'sonner';
+import PwaInstallButton from '@/components/pwa/PwaInstallButton';
 
 interface NavbarProps {
   lang: Language;
@@ -423,6 +424,8 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                 </AnimatePresence>
               </motion.button>
             )}
+
+            <PwaInstallButton variant="navbar" lang={lang} />
           </div>
 
           {/* Mobile controls */}
@@ -577,6 +580,9 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                     </button>
                   </div>
                 )}
+
+                {/* Install App button in Drawer */}
+                <PwaInstallButton variant="drawer" lang={lang} />
 
                 {/* Account Button (Warm Yellow Pill matching screenshot) */}
                 <Link
