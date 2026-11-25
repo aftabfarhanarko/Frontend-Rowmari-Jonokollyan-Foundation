@@ -40,7 +40,7 @@ export default function ActivitiesPage() {
     { key: 'winter' as ActivityCategory, labelBn: 'শীতবস্ত্র ত্রাণ', labelEn: 'Winter Relief' },
     { key: 'medical' as ActivityCategory, labelBn: 'মেডিকেল ক্যাম্প', labelEn: 'Medical Camps' },
     { key: 'education' as ActivityCategory, labelBn: 'শিক্ষা উপবৃত্তি', labelEn: 'Education Aid' },
-    { key: 'emergency' as ActivityCategory, labelBn: 'জরুরি রক্তদান', labelEn: 'Blood Support' },
+    { key: 'emergency' as ActivityCategory, labelBn: 'জরুরি পুনর্বাসন', labelEn: 'Emergency Relief' },
     { key: 'food' as ActivityCategory, labelBn: 'খাদ্য সহায়তা', labelEn: 'Food Aid' },
   ];
 
@@ -85,8 +85,8 @@ export default function ActivitiesPage() {
               </h1>
               <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed">
                 {t(
-                  'শীতবস্ত্র বিতরণ, বিনামূল্যে চিকিৎসা ক্যাম্প, মুমূর্ষু রোগীর জন্য রক্তদান এবং দরিদ্র শিক্ষার্থীদের শিক্ষাবৃত্তি—আমাদের প্রতিটি উদ্যোগের স্বচ্ছ চিত্র।',
-                  'Verified field relief initiatives in remote chars of Rowmari and Kurigram: winter blankets, physician clinics, donor network, and student scholarships.'
+                  'শীতবস্ত্র বিতরণ, বিনামূল্যে চিকিৎসা ক্যাম্প, জরুরি খাদ্য সহায়তা এবং দরিদ্র শিক্ষার্থীদের শিক্ষাবৃত্তি—আমাদের প্রতিটি উদ্যোগের স্বচ্ছ চিত্র।',
+                  'Verified field relief initiatives in remote chars of Rowmari and Kurigram: winter blankets, physician clinics, food aid, and student scholarships.'
                 )}
               </p>
             </motion.div>
@@ -164,7 +164,7 @@ export default function ActivitiesPage() {
                         {act.category === 'winter' ? t('শীতবস্ত্র', 'Winter') :
                          act.category === 'medical' ? t('চিকিৎসা', 'Medical') :
                          act.category === 'education' ? t('শিক্ষা', 'Education') :
-                         act.category === 'emergency' ? t('রক্তদান', 'Blood') : t('ত্রাণ', 'Relief')}
+                         act.category === 'emergency' ? t('জরুরি পুনর্বাসন', 'Emergency') : t('ত্রাণ', 'Relief')}
                       </span>
                     </div>
 

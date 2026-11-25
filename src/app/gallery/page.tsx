@@ -52,7 +52,7 @@ export default function GalleryPage() {
     { key: 'all', labelBn: 'সকল স্থিরচিত্র', labelEn: 'All Photos' },
     { key: 'winter', labelBn: 'শীতবস্ত্র বিতরণ', labelEn: 'Winter Relief' },
     { key: 'medical', labelBn: 'ফ্রি মেডিকেল ক্যাম্প', labelEn: 'Medical Camps' },
-    { key: 'blood', labelBn: 'জরুরি রক্তদান', labelEn: 'Blood Drives' },
+    { key: 'blood', labelBn: 'জরুরি পুনর্বাসন', labelEn: 'Emergency Relief' },
     { key: 'education', labelBn: 'শিক্ষা উপবৃত্তি', labelEn: 'Char Education' },
     { key: 'flood', labelBn: 'বন্যা ও ত্রাণ পুনর্বাসন', labelEn: 'Flood Relief' },
   ];

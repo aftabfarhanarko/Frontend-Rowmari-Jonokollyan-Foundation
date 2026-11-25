@@ -10,7 +10,7 @@ import { RoleBadge } from "@/components/dashboard/RoleBadge"
 import { ROLE_METAS, ALL_ROLES } from "@/config/dashboard-navigation"
 import {
   Users,
-  Droplet,
+  Target,
   HeartPulse,
   GraduationCap,
   Coins,
@@ -64,9 +64,7 @@ import {
   useGetAdminNotificationsQuery,
   useGetMyApplicationsQuery,
   useGetMyDonationsQuery,
-  useGetMyBloodRequestsQuery,
 } from "@/store/api/dashboardApi"
-import { useGetBloodRequestsQuery } from "@/store/api/bloodApi"
 import { useGetCampaignsQuery } from "@/store/api/campaignsApi"
 import { useGetAdminDashboardQuery } from "@/store/api/adminApi"
 import { useGetCurrentUserQuery } from "@/store/api/authApi"
@@ -87,8 +85,6 @@ interface DashboardContentProps {
 export function DashboardContent({ activeTab, onSelectTab }: DashboardContentProps) {
   const {
     currentRole,
-    setBloodRequestModalOpen,
-    setBloodDonorModalOpen,
     setAssistanceModalOpen,
     setDonationModalOpen,
     setVolunteerModalOpen,
@@ -107,9 +103,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
   const { data: adminDashboard, isLoading: isAdminDashboardLoading, refetch: refetchAdminDashboard } = useGetAdminDashboardQuery(undefined, {
     skip: currentRole !== "SUPER_ADMIN",
   })
-
-  const { data: bloodRequestsRes, isLoading: isBloodLoading, refetch: refetchBlood } = useGetBloodRequestsQuery()
-  const bloodItems = Array.isArray(bloodRequestsRes) ? bloodRequestsRes : (bloodRequestsRes as any)?.items || []
 
   const { data: adminAppsRes, isLoading: isAppsLoading, refetch: refetchApps } = useGetAdminApplicationsQuery(undefined, {
     skip: !isStaff,
@@ -153,11 +146,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
   })
   const myAppItems = Array.isArray(myAppsRes) ? myAppsRes : (myAppsRes as any)?.items || []
 
-  const { data: myBloodRes } = useGetMyBloodRequestsQuery(undefined, {
-    skip: currentRole === "COMMUNITY_MEMBER",
-  })
-  const myBloodItems = Array.isArray(myBloodRes) ? myBloodRes : (myBloodRes as any)?.items || []
-
   const { data: myDonationsRes } = useGetMyDonationsQuery(undefined, {
     skip: currentRole === "COMMUNITY_MEMBER",
   })
@@ -199,54 +187,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
       toast.error(err?.message || "অনুমোদন ব্যর্থ হয়েছে")
     }
   }
-
-  // --- 1. Blood Network Data (API: /api/blood/request & /api/blood/donor) ---
-  const [bloodData] = useState([
-    {
-      id: "BLD-REQ-901",
-      patient: "রাকিব হাসান",
-      bloodGroup: "O+",
-      bags: 2,
-      hospital: "রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্স",
-      phone: "01712-345678",
-      urgency: "খুব জরুরি",
-      status: "রক্তদাতা খোঁজা হচ্ছে",
-      date: "আজ, সকাল ১০:১৫",
-    },
-    {
-      id: "BLD-REQ-902",
-      patient: "মোছাঃ সালেহা বেগম",
-      bloodGroup: "B-",
-      bags: 1,
-      hospital: "কুড়িগ্রাম সদর হাসপাতাল",
-      phone: "01823-456789",
-      urgency: "জরুরি",
-      status: "রক্তদাতা বরাদ্দ হয়েছে",
-      date: "আজ, সকাল ০৮:৩০",
-    },
-    {
-      id: "BLD-REQ-903",
-      patient: "আরিফুল ইসলাম",
-      bloodGroup: "A+",
-      bags: 1,
-      hospital: "রৌমারী মডেল ক্লিনিক",
-      phone: "01934-567890",
-      urgency: "সাধারণ",
-      status: "সম্পন্ন",
-      date: "গতকাল",
-    },
-    {
-      id: "BLD-REQ-904",
-      patient: "খাদিজা আক্তার",
-      bloodGroup: "AB+",
-      bags: 2,
-      hospital: "রৌমারী মাতৃসদন",
-      phone: "01755-123456",
-      urgency: "খুব জরুরি",
-      status: "অনুরোধ গৃহীত",
-      date: "আজ, দুপুর ০১:০০",
-    },
-  ])
 
   // --- 2. Medical Aid Applications (API: /api/assistance) ---
   const [medicalData] = useState([
@@ -479,19 +419,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
     },
   ])
 
-  const [myBloodRequests] = useState([
-    {
-      id: "BLD-REQ-901",
-      patient: "রাকিব হাসান (ভাই)",
-      bloodGroup: "O+",
-      bags: 2,
-      hospital: "রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্স",
-      status: "রক্তদাতা খোঁজা হচ্ছে",
-      coordinator: "মাহমুদুল হাসান তারেক (01812-987654)",
-      date: "আজ, সকাল ১০:১৫",
-    },
-  ])
-
   const [myDonations] = useState([
     {
       receiptNo: "RJF-REC-78219",
@@ -541,21 +468,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
   const [notifFilter, setNotifFilter] = useState<"all" | "unread" | "urgent">("all")
 
   // --- Dynamic Live Mappings from API ---
-  const displayBloodData = bloodItems.length > 0
-    ? bloodItems.map((r: any) => ({
-        id: r.id?.slice(0, 8) || "BLD",
-        patient: r.patientName,
-        bloodGroup: r.bloodGroup,
-        bags: r.unitsNeeded || 1,
-        hospital: r.hospitalName,
-        phone: r.contactPhone,
-        urgency: r.urgency === "EMERGENCY" ? "খুব জরুরি" : "জরুরি",
-        status: r.status === "OPEN" ? "রক্তদাতা খোঁজা হচ্ছে" : r.status === "MATCHED" ? "রক্তদাতা বরাদ্দ হয়েছে" : "সম্পন্ন",
-        date: new Date(r.createdAt || Date.now()).toLocaleDateString("bn-BD"),
-        rawId: r.id,
-      }))
-    : bloodData
-
   const displayMedicalData = appItems.filter((a: any) => a.category === "MEDICAL").length > 0
     ? appItems
         .filter((a: any) => a.category === "MEDICAL")
@@ -691,19 +603,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
       }))
     : myApplications
 
-  const displayMyBlood = myBloodItems.length > 0
-    ? myBloodItems.map((b: any) => ({
-        id: b.id?.slice(0, 8),
-        patient: b.patientName,
-        bloodGroup: b.bloodGroup,
-        bags: b.unitsNeeded,
-        hospital: b.hospitalName,
-        status: b.status === "OPEN" ? "রক্তদাতা খোঁজা হচ্ছে" : b.status === "MATCHED" ? "রক্তদাতা বরাদ্দ হয়েছে" : "সম্পন্ন",
-        coordinator: b.contactPerson || "জরুরি সমন্বয়ক",
-        date: new Date(b.createdAt || Date.now()).toLocaleDateString("bn-BD"),
-      }))
-    : myBloodRequests
-
   const displayMyDonations = myDonationItems.length > 0
     ? myDonationItems.map((d: any) => ({
         receiptNo: d.receipt?.receiptNumber || `RJF-REC-${d.id?.slice(0, 6)}`,
@@ -716,43 +615,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
     : myDonations
 
   // --- Table Column Definitions ---
-  const bloodColumns: TableColumn<any>[] = [
-    { header: "আইডি", accessorKey: "id", sortable: true, className: "font-mono text-xs" },
-    { header: "রোগীর নাম", accessorKey: "patient", sortable: true, className: "font-semibold" },
-    {
-      header: "রক্তের গ্রুপ",
-      accessorKey: "bloodGroup",
-      align: "center",
-      cell: (r) => (
-        <span className="inline-block px-2.5 py-0.5 rounded-full bg-red-100 text-red-700 font-bold text-xs">
-          {r.bloodGroup}
-        </span>
-      ),
-    },
-    { header: "ব্যাগ", accessorKey: "bags", align: "center" },
-    { header: "হাসপাতাল", accessorKey: "hospital" },
-    { header: "জরুরিতা", accessorKey: "urgency", align: "center", cell: (r) => (
-      <Badge className={r.urgency === "খুব জরুরি" ? "bg-red-600 text-white" : "bg-amber-500 text-white"}>
-        {r.urgency}
-      </Badge>
-    )},
-    { header: "অবস্থা", accessorKey: "status", align: "center", cell: (r) => (
-      <Badge variant="outline" className="border-stone-300 text-stone-700 bg-stone-50">
-        {r.status}
-      </Badge>
-    )},
-    {
-      header: "অ্যাকশন",
-      align: "center",
-      cell: () => (
-        <Button size="xs" variant="outline" className="h-7 text-xs gap-1">
-          <Eye className="size-3" />
-          <span>বিবরণ</span>
-        </Button>
-      ),
-    },
-  ]
-
   const medicalColumns: TableColumn<any>[] = [
     { header: "আবেদন আইডি", accessorKey: "id", sortable: true, className: "font-mono text-xs" },
     { header: "আবেদনকারী", accessorKey: "applicant", sortable: true, className: "font-semibold" },
@@ -873,18 +735,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
             <span>রিফ্রেশ</span>
           </Button>
 
-          {/* Role-based quick modal trigger buttons */}
-          {["SUPER_ADMIN", "ADMIN", "BLOOD_COORDINATOR"].includes(currentRole) && (
-            <Button
-              size="sm"
-              onClick={() => setBloodRequestModalOpen(true)}
-              className="text-xs gap-1.5 h-8 bg-red-600 hover:bg-red-700 text-white shadow-xs"
-            >
-              <Droplet className="size-3.5" />
-              <span>রক্তের আবেদন</span>
-            </Button>
-          )}
-
           {["SUPER_ADMIN", "ADMIN", "MEDICAL_COORDINATOR", "EDUCATION_COORDINATOR"].includes(currentRole) && (
             <Button
               size="sm"
@@ -973,39 +823,39 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
             </div>
 
             <div
-              onClick={() => onSelectTab?.("my-blood-requests")}
+              onClick={() => onSelectTab?.("campaigns")}
               className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs hover:shadow-md transition-all cursor-pointer group"
             >
               <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
-                <span>রক্তের জরুরি অনুরোধ</span>
-                <div className="p-2 rounded-xl bg-red-50 text-red-600 group-hover:bg-red-600 group-hover:text-white transition-colors">
-                  <Droplet className="size-4" />
+                <span>চলমান ক্যাম্পেইন</span>
+                <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                  <Target className="size-4" />
                 </div>
               </div>
               <div className="text-2xl font-black text-stone-900">
-                {displayMyBlood.length} টি
+                {campaignsList?.length || 3} টি
               </div>
-              <div className="text-[11px] text-red-700 font-semibold mt-1">
-                জরুরি রক্তের হিস্ট্রি
+              <div className="text-[11px] text-emerald-700 font-semibold mt-1">
+                মাঠপর্যায়ে সক্রিয়
               </div>
             </div>
 
             <div
-              onClick={() => setBloodDonorModalOpen(true)}
+              onClick={() => onSelectTab?.("messages")}
               className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs hover:shadow-md transition-all cursor-pointer group"
             >
               <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
-                <span>রক্তদাতা স্ট্যাটাস</span>
-                <div className="p-2 rounded-xl bg-rose-50 text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors">
-                  <HeartPulse className="size-4" />
+                <span>যোগাযোগ ও বার্তা</span>
+                <div className="p-2 rounded-xl bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                  <Mail className="size-4" />
                 </div>
               </div>
               <div className="text-lg font-black text-stone-900">
-                নিবন্ধিত ডোনার
+                সরাসরি বার্তা
               </div>
-              <div className="text-[11px] text-rose-700 font-semibold mt-1 flex items-center gap-1">
+              <div className="text-[11px] text-blue-700 font-semibold mt-1 flex items-center gap-1">
                 <CheckCircle2 className="size-3" />
-                <span>তথ্য আপডেট করুন</span>
+                <span>হেল্পলাইন ২৪/৭</span>
               </div>
             </div>
 
@@ -1034,24 +884,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
             <h3 className="text-xs font-bold uppercase tracking-wider text-stone-600 mb-3">
               এক ক্লিকে আপনার প্রয়োজনীয় সেবা গ্রহণ করুন
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              <Button
-                onClick={() => setBloodRequestModalOpen(true)}
-                className="bg-red-600 hover:bg-red-700 text-white text-xs py-2.5 h-auto justify-start gap-2 shadow-xs cursor-pointer"
-              >
-                <Droplet className="size-4" />
-                <span>জরুরি রক্তের আবেদন</span>
-              </Button>
-
-              <Button
-                onClick={() => setBloodDonorModalOpen(true)}
-                variant="outline"
-                className="border-red-200 bg-white hover:bg-red-50 text-red-700 text-xs py-2.5 h-auto justify-start gap-2 shadow-xs cursor-pointer"
-              >
-                <HeartPulse className="size-4 text-red-600" />
-                <span>রক্তদাতা হিসেবে নিবন্ধন</span>
-              </Button>
-
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               <Button
                 onClick={() => setAssistanceModalOpen(true)}
                 className="bg-[#0D5C35] hover:bg-[#094527] text-white text-xs py-2.5 h-auto justify-start gap-2 shadow-xs cursor-pointer"
@@ -1068,11 +901,20 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                 <Users className="size-4 text-stone-600" />
                 <span>স্বেচ্ছাসেবক আবেদন</span>
               </Button>
+
+              <Button
+                onClick={() => onSelectTab?.("my-profile")}
+                variant="outline"
+                className="border-purple-200 bg-white hover:bg-purple-50 text-purple-800 text-xs py-2.5 h-auto justify-start gap-2 shadow-xs cursor-pointer"
+              >
+                <UserCheck className="size-4 text-purple-600" />
+                <span>প্রোফাইল সেটিংস</span>
+              </Button>
             </div>
           </div>
 
           {/* Recent Activities Preview */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 gap-5">
             {/* Assistance Applications Preview */}
             <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs space-y-3">
               <div className="flex items-center justify-between pb-2 border-b border-stone-100">
@@ -1091,7 +933,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
               {displayMyApps.length === 0 ? (
                 <p className="text-xs text-stone-400 py-3 text-center">এখনো কোনো আবেদন করা হয়নি</p>
               ) : (
-                displayMyApps.slice(0, 3).map((app: any) => (
+                displayMyApps.slice(0, 5).map((app: any) => (
                   <div key={app.id} className="p-3 rounded-xl bg-stone-50 border border-stone-200/70 text-xs space-y-1.5">
                     <div className="flex items-center justify-between">
                       <span className="font-mono font-bold text-stone-800">{app.id}</span>
@@ -1099,41 +941,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                     </div>
                     <div className="font-semibold text-stone-900">{app.categoryBn}</div>
                     <div className="text-stone-500 text-[11px]">{app.note}</div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            {/* Blood Requests Preview */}
-            <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-stone-100">
-                <h4 className="text-sm font-bold text-stone-900 flex items-center gap-2">
-                  <Droplet className="size-4 text-red-600" />
-                  <span>আমার রক্তের অনুরোধসমূহ</span>
-                </h4>
-                <button
-                  onClick={() => onSelectTab?.("my-blood-requests")}
-                  className="text-xs font-semibold text-red-700 hover:underline cursor-pointer"
-                >
-                  সব দেখুন
-                </button>
-              </div>
-
-              {displayMyBlood.length === 0 ? (
-                <p className="text-xs text-stone-400 py-3 text-center">এখনো কোনো রক্তের অনুরোধ করা হয়নি</p>
-              ) : (
-                displayMyBlood.slice(0, 3).map((b: any) => (
-                  <div key={b.id} className="p-3 rounded-xl bg-stone-50 border border-stone-200/70 text-xs space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-bold text-[10px]">
-                        {b.bloodGroup}
-                      </span>
-                      <Badge variant="outline" className="border-amber-400 text-amber-700 bg-amber-50 text-[10px]">
-                        {b.status}
-                      </Badge>
-                    </div>
-                    <div className="font-semibold text-stone-900">রোগী: {b.patient} ({b.bags} ব্যাগ)</div>
-                    <div className="text-stone-500 text-[11px]">হাসপাতাল: {b.hospital}</div>
                   </div>
                 ))
               )}
@@ -1183,18 +990,18 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
 
             <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs">
               <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
-                <span>জরুরি রক্তের আবেদন</span>
-                <div className="p-2 rounded-xl bg-red-50 text-red-600">
-                  <Droplet className="size-4" />
+                <span>চলমান ক্যাম্পেইন</span>
+                <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
+                  <Target className="size-4" />
                 </div>
               </div>
               <div className="text-2xl font-black text-stone-900">
-                {adminDashboard?.operations?.totalBloodRequests !== undefined
-                  ? `${adminDashboard.operations.totalBloodRequests} টি`
-                  : `${bloodItems.length || 4} টি`}
+                {adminDashboard?.operations?.totalCampaigns !== undefined
+                  ? `${adminDashboard.operations.totalCampaigns} টি`
+                  : `${campaignsList.length || 3} টি`}
               </div>
-              <div className="text-[11px] text-red-600 font-semibold mt-1">
-                লাইভ নেটওয়ার্ক সক্রিয়
+              <div className="text-[11px] text-emerald-700 font-semibold mt-1">
+                মাঠপর্যায়ে সক্রিয়
               </div>
             </div>
 
@@ -1379,19 +1186,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
               </button>
             </div>
           </div>
-
-          {/* Live Blood Requests Table */}
-          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
-            <DataTable
-              title="জরুরি রক্তের অনুরোধসমূহ (লাইভ ফিড)"
-              description="রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্স ও কুড়িগ্রাম সদর হাসপাতালের জরুরি তালিকা"
-              columns={bloodColumns}
-              data={displayBloodData}
-              searchable
-              searchPlaceholder="রোগীর নাম বা রক্তের গ্রুপ দিয়ে খুঁজুন..."
-              pageSize={5}
-            />
-          </div>
         </>
       )}
 
@@ -1409,44 +1203,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
 
       {/* 2.5 Activity & Audit Logs Tab */}
       {activeTab === "activity-logs" && <CmsActivityLogsTab />}
-
-      {/* 3. Blood Network Tab (Role: BLOOD_COORDINATOR, ADMIN, SUPER_ADMIN) */}
-      {activeTab === "blood" && (
-        <div className="space-y-4">
-          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
-            <DataTable
-              title="রক্তদান ব্যবস্থাপনা ও লাইভ রিকোয়েস্ট"
-              description="জরুরি রক্তের আবেদন ও রক্তদাতাদের সমন্বয় (API: /api/blood/request)"
-              columns={bloodColumns}
-              data={displayBloodData}
-              searchable
-              searchPlaceholder="রোগী, হাসপাতাল বা রক্তের গ্রুপ..."
-              pageSize={10}
-              actions={
-                <div className="flex items-center gap-2">
-                  <Button
-                    size="xs"
-                    onClick={() => setBloodDonorModalOpen(true)}
-                    variant="outline"
-                    className="gap-1 border-stone-300 text-stone-700"
-                  >
-                    <UserCheck className="size-3.5" />
-                    <span>রক্তদাতা নিবন্ধন</span>
-                  </Button>
-                  <Button
-                    size="xs"
-                    onClick={() => setBloodRequestModalOpen(true)}
-                    className="gap-1 bg-red-600 hover:bg-red-700 text-white"
-                  >
-                    <Plus className="size-3.5" />
-                    <span>নতুন রক্তের চাহিদা</span>
-                  </Button>
-                </div>
-              }
-            />
-          </div>
-        </div>
-      )}
 
       {/* 4. Medical Aid Tab (Role: MEDICAL_COORDINATOR, ADMIN, SUPER_ADMIN) */}
       {activeTab === "medical" && (
@@ -1671,49 +1427,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                 <div className="flex items-center justify-between text-xs text-stone-500 pt-1">
                   <span>কর্মকর্তা: {app.officer}</span>
                   <span className="font-semibold text-emerald-700">বরাদ্দ: {app.approvedAmount}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* 11. Community Member: My Blood Requests */}
-      {activeTab === "my-blood-requests" && (
-        <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-bold text-stone-900">আমার রক্তের অনুরোধসমূহ</h2>
-              <p className="text-xs text-stone-500">আপনার পরিবারের জন্য চাওয়া রক্তের আপডেট ও সমন্বয়কারীর তথ্য</p>
-            </div>
-            <Button
-              size="sm"
-              onClick={() => setBloodRequestModalOpen(true)}
-              className="bg-red-600 hover:bg-red-700 text-white text-xs gap-1.5"
-            >
-              <Droplet className="size-3.5" />
-              <span>জরুরি রক্তের আবেদন</span>
-            </Button>
-          </div>
-
-          <div className="space-y-3">
-            {displayMyBlood.map((b: any) => (
-              <div key={b.id} className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-bold text-xs">
-                      {b.bloodGroup}
-                    </span>
-                    <span className="font-bold text-stone-900 text-sm">{b.patient}</span>
-                    <span className="text-xs text-stone-500">({b.bags} ব্যাগ)</span>
-                  </div>
-                  <Badge variant="outline" className="border-amber-400 text-amber-700 bg-amber-50">
-                    {b.status}
-                  </Badge>
-                </div>
-                <div className="text-xs text-stone-600">
-                  <div><strong>হাসপাতাল:</strong> {b.hospital}</div>
-                  <div><strong>দায়িত্বপ্রাপ্ত কো-অর্ডিনেটর:</strong> {b.coordinator}</div>
                 </div>
               </div>
             ))}

@@ -1,13 +1,12 @@
 'use client';
 
 import React from 'react';
-import { Heart, Droplet, Users, ArrowRight, Activity, Sparkles } from 'lucide-react';
+import { Heart, Search, Users, ArrowRight, Activity, Sparkles } from 'lucide-react';
 import { Language } from '@/types';
 
 interface QuickActionsProps {
   lang: Language;
   onOpenAssistance: () => void;
-  onOpenBlood: () => void;
   onOpenDonation?: () => void;
   onOpenVolunteer: () => void;
 }
@@ -15,7 +14,6 @@ interface QuickActionsProps {
 export default function QuickActions({
   lang,
   onOpenAssistance,
-  onOpenBlood,
   onOpenVolunteer,
 }: QuickActionsProps) {
   const cards = [
@@ -32,15 +30,19 @@ export default function QuickActions({
       theme: 'emerald',
     },
     {
-      id: 'blood',
-      icon: Droplet,
-      tagBn: '২৪/৭ সক্রিয়',
-      tagEn: '24/7 Available',
-      titleBn: 'জরুরি রক্তদান নেটওয়ার্ক',
-      titleEn: 'Emergency Blood Wing',
-      subtitleBn: 'ডোনার হিসেবে যুক্ত হন বা রক্তের অনুরোধ জানান',
-      subtitleEn: 'Register as Donor or Request Urgent Blood',
-      action: onOpenBlood,
+      id: 'track',
+      icon: Search,
+      tagBn: 'স্বচ্ছ পর্যবেক্ষণ',
+      tagEn: 'Live Status',
+      titleBn: 'আবেদন ট্র্যাকিং',
+      titleEn: 'Track Application',
+      subtitleBn: 'জমা দেওয়া সহায়তার বর্তমান অবস্থা যাচাই করুন',
+      subtitleEn: 'Check real-time application processing status',
+      action: () => {
+        const el = document.getElementById('track');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        else window.location.href = '/#track';
+      },
       theme: 'red',
     },
     {

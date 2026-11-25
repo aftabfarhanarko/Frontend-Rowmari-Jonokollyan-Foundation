@@ -12,7 +12,6 @@ import QuickActions from '@/components/QuickActions';
 import ImpactStats from '@/components/ImpactStats';
 import HowItWorks from '@/components/HowItWorks';
 import RecentActivities from '@/components/RecentActivities';
-import BloodDonationBanner from '@/components/BloodDonationBanner';
 import TrackAndSupport from '@/components/TrackAndSupport';
 import OngoingCampaigns from '@/components/OngoingCampaigns';
 import Testimonials from '@/components/Testimonials';
@@ -24,8 +23,6 @@ import BackToTop from '@/components/BackToTop';
 
 // Interactive Modals
 import AssistanceModal from '@/components/modals/AssistanceModal';
-import BloodRequestModal from '@/components/modals/BloodRequestModal';
-import BloodDonorModal from '@/components/modals/BloodDonorModal';
 import VolunteerModal from '@/components/modals/VolunteerModal';
 import TrackingResultModal from '@/components/modals/TrackingResultModal';
 import AnnouncementModal from '@/components/modals/AnnouncementModal';
@@ -36,8 +33,6 @@ export default function HomePage() {
   const [announcementModalOpen, setAnnouncementModalOpen] = useState(false);
 
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
-  const [bloodRequestModalOpen, setBloodRequestModalOpen] = useState(false);
-  const [bloodDonorModalOpen, setBloodDonorModalOpen] = useState(false);
   const [volunteerModalOpen, setVolunteerModalOpen] = useState(false);
 
   const [trackingModalOpen, setTrackingModalOpen] = useState(false);
@@ -114,14 +109,11 @@ export default function HomePage() {
           lang={lang}
           onOpenAssistance={() => setAssistanceModalOpen(true)}
           onOpenActivities={scrollToActivities}
-          onOpenBlood={() => setBloodRequestModalOpen(true)}
-          onOpenDonor={() => setBloodDonorModalOpen(true)}
         />
 
         <QuickActions
           lang={lang}
           onOpenAssistance={() => setAssistanceModalOpen(true)}
-          onOpenBlood={() => setBloodRequestModalOpen(true)}
           onOpenVolunteer={() => setVolunteerModalOpen(true)}
         />
 
@@ -133,12 +125,6 @@ export default function HomePage() {
         <RecentActivities
           lang={lang}
           onOpenAssistance={() => setAssistanceModalOpen(true)}
-        />
-
-        <BloodDonationBanner
-          lang={lang}
-          onOpenDonorModal={() => setBloodDonorModalOpen(true)}
-          onOpenBloodRequestModal={() => setBloodRequestModalOpen(true)}
         />
 
         <OngoingCampaigns
@@ -169,13 +155,11 @@ export default function HomePage() {
       <Footer
         lang={lang}
         onOpenAssistance={() => setAssistanceModalOpen(true)}
-        onOpenBlood={() => setBloodDonorModalOpen(true)}
       />
 
       <MobileBottomBar
         lang={lang}
         onOpenAssistance={() => setAssistanceModalOpen(true)}
-        onOpenBlood={() => setBloodDonorModalOpen(true)}
       />
 
       <BackToTop />
@@ -186,20 +170,6 @@ export default function HomePage() {
         lang={lang}
         onSubmittedSuccess={handleAssistanceSubmitted}
       />
-
-      <BloodRequestModal
-        isOpen={bloodRequestModalOpen}
-        onClose={() => setBloodRequestModalOpen(false)}
-        lang={lang}
-      />
-
-      <BloodDonorModal
-        isOpen={bloodDonorModalOpen}
-        onClose={() => setBloodDonorModalOpen(false)}
-        lang={lang}
-      />
-
-
 
       <VolunteerModal
         isOpen={volunteerModalOpen}
@@ -219,7 +189,6 @@ export default function HomePage() {
         isOpen={announcementModalOpen}
         onClose={() => setAnnouncementModalOpen(false)}
         lang={lang}
-        onOpenBloodRequest={() => setBloodRequestModalOpen(true)}
         onOpenAssistance={() => setAssistanceModalOpen(true)}
       />
     </div>

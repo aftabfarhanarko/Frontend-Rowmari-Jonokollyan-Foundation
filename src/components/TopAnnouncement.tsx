@@ -30,10 +30,10 @@ export default function TopAnnouncement({
   };
 
   const alertContentBn =
-    'জরুরি রক্তের প্রয়োজন: রৌমারী হাসপাতালে O- ও B+ রক্তের জরুরি আহ্বান • চরাঞ্চলে শীতবস্ত্র ও কম্বল বিতরণ কার্যক্রম চলমান • অসহায় রোগীর চিকিৎসায় জরুরি সহায়তা প্রদান • হটলাইন: +880 1712-345678 • রৌমারী জনকল্যাণ ফাউন্ডেশন মানুষের পাশে, মানুষের জন্য';
+    'জরুরি ঘোষণা: রৌমারী ও দুর্গম চরাঞ্চলে শীতবস্ত্র ও কম্বল বিতরণ কার্যক্রম চলমান • অসহায় রোগীর চিকিৎসায় জরুরি সহায়তা প্রদান • হটলাইন: +880 1712-345678 • রৌমারী জনকল্যাণ ফাউন্ডেশন মানুষের পাশে, মানুষের জন্য';
 
   const alertContentEn =
-    'Emergency Blood Appeal: Urgent need for O- & B+ blood at Rowmari Health Complex • Winter Relief & Blanket Distribution Ongoing • Medical Assistance for Underprivileged Patients • Hotline: +880 1712-345678 • Standing beside humanity, for humanity';
+    'Urgent Alert: Winter Relief & Blanket Distribution Ongoing across Rowmari & Remote Chars • Emergency Healthcare Support for Vulnerable Patients • Hotline: +880 1712-345678 • Standing beside humanity, for humanity';
 
   const { data: announcements = [] } = useGetAnnouncementsQuery();
   const activeAnnouncement = announcements[0];

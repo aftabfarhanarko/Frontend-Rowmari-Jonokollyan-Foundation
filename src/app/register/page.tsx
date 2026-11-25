@@ -12,7 +12,6 @@ import {
   Eye,
   EyeOff,
   MapPin,
-  Droplet,
   UserPlus,
   ShieldCheck,
   CheckCircle2,
@@ -57,16 +56,12 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [upazila, setUpazila] = useState('Roumari');
   const [address, setAddress] = useState('');
-  const [bloodGroup, setBloodGroup] = useState('');
-  const [consentToDonateBlood, setConsentToDonateBlood] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   const [registerUser, { isLoading }] = useRegisterUserMutation();
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
-
-  const bloodGroupOptions = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,8 +98,6 @@ export default function RegisterPage() {
         district: 'Kurigram',
         upazila,
         address: address.trim() || undefined,
-        bloodGroup: bloodGroup || undefined,
-        consentToDonateBlood,
       }).unwrap();
 
       const userRoles = session.user.roles || [];
@@ -322,49 +315,6 @@ export default function RegisterPage() {
                   className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] focus:border-transparent transition bg-white"
                 />
               </div>
-            </div>
-
-            {/* Blood Donation Voluntary Opt-in */}
-            <div className="p-3.5 rounded-2xl bg-red-50/60 border border-red-200/70 space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-red-900 flex items-center gap-1.5">
-                  <Droplet className="w-3.5 h-3.5 text-red-600" />
-                  <span>{t('রক্তের গ্রুপ (ঐচ্ছিক)', 'Blood Group (Optional)')}</span>
-                </label>
-                <div className="flex flex-wrap gap-1">
-                  {bloodGroupOptions.map((bg) => (
-                    <button
-                      type="button"
-                      key={bg}
-                      onClick={() => setBloodGroup(bloodGroup === bg ? '' : bg)}
-                      className={`px-2 py-0.5 rounded-md text-xs font-bold transition cursor-pointer ${
-                        bloodGroup === bg
-                          ? 'bg-red-600 text-white'
-                          : 'bg-white text-stone-700 border border-stone-200 hover:border-red-300'
-                      }`}
-                    >
-                      {bg}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {bloodGroup && (
-                <label className="flex items-center gap-2 cursor-pointer pt-1">
-                  <input
-                    type="checkbox"
-                    checked={consentToDonateBlood}
-                    onChange={(e) => setConsentToDonateBlood(e.target.checked)}
-                    className="rounded text-red-600 focus:ring-red-500 w-4 h-4 cursor-pointer"
-                  />
-                  <span className="text-xs text-stone-700">
-                    {t(
-                      'জরুরি প্রয়োজনে রোগীদের রক্তদানে আমি আগ্রহী (গোপনীয়তা সংরক্ষিত)',
-                      'I consent to be contacted for emergency voluntary blood donation'
-                    )}
-                  </span>
-                </label>
-              )}
             </div>
 
             <button

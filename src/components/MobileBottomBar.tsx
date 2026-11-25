@@ -2,20 +2,20 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Droplet, HandHeart } from 'lucide-react';
+import { Users, HandHeart } from 'lucide-react';
 import { Language } from '@/types';
 
 interface MobileBottomBarProps {
   lang: Language;
   onOpenAssistance?: () => void;
   onOpenDonation?: () => void;
-  onOpenBlood?: () => void;
+  onOpenVolunteer?: () => void;
 }
 
 export default function MobileBottomBar({
   lang,
   onOpenAssistance,
-  onOpenBlood,
+  onOpenVolunteer,
 }: MobileBottomBarProps) {
   return (
     <aside aria-label="Quick Actions" className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200 px-4 py-2.5 flex items-center gap-3 sm:hidden shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
@@ -37,21 +37,21 @@ export default function MobileBottomBar({
         </Link>
       )}
 
-      {onOpenBlood ? (
+      {onOpenVolunteer ? (
         <button
-          onClick={onOpenBlood}
+          onClick={onOpenVolunteer}
           className="flex-1 py-2.5 px-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition active:scale-[0.98] cursor-pointer"
         >
-          <Droplet className="w-4 h-4 fill-white text-white" />
-          <span>{lang === 'bn' ? 'রক্তদান পোর্টাল' : 'Blood Portal'}</span>
+          <Users className="w-4 h-4 text-white" />
+          <span>{lang === 'bn' ? 'স্বেচ্ছাসেবক হোন' : 'Join Us'}</span>
         </button>
       ) : (
         <Link
-          href="/blood-donation"
+          href="/volunteer"
           className="flex-1 py-2.5 px-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition active:scale-[0.98]"
         >
-          <Droplet className="w-4 h-4 fill-white text-white" />
-          <span>{lang === 'bn' ? 'রক্তদান পোর্টাল' : 'Blood Portal'}</span>
+          <Users className="w-4 h-4 text-white" />
+          <span>{lang === 'bn' ? 'স্বেচ্ছাসেবক হোন' : 'Join Us'}</span>
         </Link>
       )}
     </aside>

@@ -7,7 +7,6 @@ import {
   MapPin,
   Phone,
   Mail,
-  Droplet,
   ShieldCheck,
   Heart,
   ArrowRight,
@@ -24,14 +23,12 @@ import { FOUNDATION_INFO } from '@/data/mockData';
 interface FooterProps {
   lang: Language;
   onOpenAssistance?: () => void;
-  onOpenBlood?: () => void;
   onOpenDonation?: () => void;
 }
 
 export default function Footer({
   lang,
   onOpenAssistance,
-  onOpenBlood,
   onOpenDonation,
 }: FooterProps) {
   const isBn = lang === 'bn';
@@ -76,17 +73,17 @@ export default function Footer({
 
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
                 </span>
                 <span className="text-stone-400 font-medium">
-                  {isBn ? 'জরুরি ব্লাড হটলাইন:' : 'Blood Emergency:'}
+                  {isBn ? 'ইমেইল যোগাযোগ:' : 'Official Email:'}
                 </span>
                 <a
-                  href={`tel:${FOUNDATION_INFO.emergencyBloodHotline.replace(/\s+/g, '')}`}
-                  className="font-mono font-bold text-red-400 hover:text-red-300 transition"
+                  href={`mailto:${FOUNDATION_INFO.email}`}
+                  className="font-mono font-bold text-emerald-400 hover:text-emerald-300 transition"
                 >
-                  {FOUNDATION_INFO.emergencyBloodHotline}
+                  {FOUNDATION_INFO.email}
                 </a>
               </div>
             </div>
@@ -102,17 +99,6 @@ export default function Footer({
                   <span>{isBn ? 'সহায়তা চাই' : 'Request Aid'}</span>
                 </button>
               )}
-
-              {onOpenBlood && (
-                <button
-                  onClick={onOpenBlood}
-                  className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-semibold text-white transition active:scale-95 cursor-pointer flex items-center gap-1.5 shadow-2xs"
-                >
-                  <Droplet className="w-3.5 h-3.5 text-red-400" />
-                  <span>{isBn ? 'রক্ত প্রয়োজন' : 'Need Blood'}</span>
-                </button>
-              )}
-
 
             </div>
           </div>
@@ -283,16 +269,16 @@ export default function Footer({
 
               <li>
                 <Link
-                  href="/blood-donation"
+                  href="/campaigns"
                   className="group flex items-start gap-2 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition"
                 >
-                  <Droplet className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
+                  <Heart className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
                   <div>
-                    <span className="block font-semibold text-white group-hover:text-red-300 transition text-xs sm:text-sm">
-                      {isBn ? 'রক্তদান ও ডোনার নেটওয়ার্ক' : 'Blood Donation Portal'}
+                    <span className="block font-semibold text-white group-hover:text-emerald-300 transition text-xs sm:text-sm">
+                      {isBn ? 'চলমান মানবিক ক্যাম্পেইন' : 'Active Relief Campaigns'}
                     </span>
                     <span className="text-[11px] text-stone-400 block">
-                      {isBn ? '১,২০০+ নিবন্ধিত রক্তদাতা প্রস্তুত' : '1,200+ ready volunteer donors'}
+                      {isBn ? 'শীতবস্ত্র, খাদ্য ও জরুরি পুনর্বাসন' : 'Winter warmth, food & char rehabilitation'}
                     </span>
                   </div>
                 </Link>

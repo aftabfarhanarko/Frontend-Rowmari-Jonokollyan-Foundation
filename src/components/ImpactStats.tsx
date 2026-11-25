@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { CheckCircle2, Users, HeartHandshake, Droplet, Sparkles } from 'lucide-react';
+import { CheckCircle2, Users, HeartHandshake, Sparkles } from 'lucide-react';
 import { Language } from '@/types';
 import { IMPACT_STATS } from '@/data/mockData';
 import { useGetPublicSummaryQuery } from '@/store/api/dashboardApi';
@@ -38,14 +38,14 @@ export default function ImpactStats({ lang }: ImpactStatsProps) {
       accent: 'emerald',
     },
     {
-      icon: Droplet,
-      countBn: summary?.registeredBloodDonors ? `${toBnNum(summary.registeredBloodDonors)}+` : IMPACT_STATS[2].countBn,
-      countEn: summary?.registeredBloodDonors ? `${summary.registeredBloodDonors}+` : IMPACT_STATS[2].countEn,
+      icon: HeartHandshake,
+      countBn: IMPACT_STATS[2].countBn,
+      countEn: IMPACT_STATS[2].countEn,
       labelBn: IMPACT_STATS[2].labelBn,
       labelEn: IMPACT_STATS[2].labelEn,
       descBn: IMPACT_STATS[2].descBn,
       descEn: IMPACT_STATS[2].descEn,
-      accent: 'red',
+      accent: 'emerald',
     },
     {
       icon: HeartHandshake,

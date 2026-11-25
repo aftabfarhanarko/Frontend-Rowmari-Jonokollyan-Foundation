@@ -23,7 +23,6 @@ import {
   Info,
   Activity,
   Target,
-  Droplet,
   HandHeart,
   Image as ImageIcon,
   Newspaper,
@@ -53,7 +52,6 @@ const navLinks = [
   { href: '/team', labelBn: 'টিম ও কমিটি', labelEn: 'Our Team', icon: Users },
   { href: '/activities', labelBn: 'কার্যক্রম', labelEn: 'Activities', icon: Activity },
   { href: '/campaigns', labelBn: 'ক্যাম্পেইন', labelEn: 'Campaigns', icon: Target },
-  { href: '/blood-donation', labelBn: 'রক্তদান', labelEn: 'Blood', icon: Droplet },
   { href: '/get-help', labelBn: 'সহায়তা চাই', labelEn: 'Get Help', icon: HandHeart },
   { href: '/gallery', labelBn: 'গ্যালারি', labelEn: 'Gallery', icon: ImageIcon },
   { href: '/news', labelBn: 'সংবাদ ও ইভেন্ট', labelEn: 'News', icon: Newspaper },
@@ -65,14 +63,13 @@ const navLinks = [
 const primaryDesktopLinks = [
   { href: '/', labelBn: 'হোম', labelEn: 'Home', icon: Home },
   { href: '/campaigns', labelBn: 'ক্যাম্পেইন', labelEn: 'Campaigns', icon: Target },
-  { href: '/blood-donation', labelBn: 'রক্তদান', labelEn: 'Blood', icon: Droplet },
+  { href: '/activities', labelBn: 'কার্যক্রম', labelEn: 'Activities', icon: Activity },
   { href: '/get-help', labelBn: 'সহায়তা চাই', labelEn: 'Get Help', icon: HandHeart },
 ];
 
 // 2. Secondary links placed in "আরও" (More) dropdown on desktop
 const secondaryDesktopLinks = [
   { href: '/about', labelBn: 'আমাদের কথা', labelEn: 'About Us', icon: Info },
-  { href: '/activities', labelBn: 'কার্যক্রম', labelEn: 'Activities', icon: Activity },
   { href: '/team', labelBn: 'টিম ও কমিটি', labelEn: 'Our Team', icon: Users },
   { href: '/gallery', labelBn: 'গ্যালারি', labelEn: 'Gallery', icon: ImageIcon },
   { href: '/news', labelBn: 'সংবাদ ও ইভেন্ট', labelEn: 'News', icon: Newspaper },
@@ -87,7 +84,6 @@ const mobileDrawerLinks = [
   { href: '/about', labelBn: 'আমাদের সম্পর্কে', labelEn: 'About Us' },
   { href: '/activities', labelBn: 'কার্যক্রমসমূহ', labelEn: 'Activities' },
   { href: '/campaigns', labelBn: 'ক্যাম্পেইন', labelEn: 'Campaigns' },
-  { href: '/blood-donation', labelBn: 'জরুরি রক্তদান', labelEn: 'Blood Donation' },
   { href: '/get-help', labelBn: 'সহায়তা আবেদন', labelEn: 'Request Aid' },
   { href: '/gallery', labelBn: 'গ্যালারি', labelEn: 'Gallery' },
   { href: '/volunteer', labelBn: 'আমাদের সাথে যুক্ত হোন', labelEn: 'Join Us' },

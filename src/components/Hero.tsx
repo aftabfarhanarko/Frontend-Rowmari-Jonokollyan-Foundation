@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   MapPin,
   Sparkles,
-  Droplet,
   Users,
   HeartPulse,
   HeartHandshake,
@@ -25,8 +24,6 @@ interface HeroProps {
   lang: Language;
   onOpenAssistance: () => void;
   onOpenActivities: () => void;
-  onOpenBlood?: () => void;
-  onOpenDonor?: () => void;
   onOpenDonation?: (campaignId?: string) => void;
 }
 
@@ -34,8 +31,6 @@ export default function Hero({
   lang,
   onOpenAssistance,
   onOpenActivities,
-  onOpenBlood,
-  onOpenDonor,
   onOpenDonation,
 }: HeroProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -51,9 +46,9 @@ export default function Hero({
       titleBn: 'মানুষের পাশে, মানুষের জন্য',
       titleEn: 'Standing by People, For Humanity',
       subtitleBn:
-        'রৌমারী ও ব্রহ্মপুত্রের দুর্গম চরাঞ্চলের অসহায় শীতার্ত মানুষের পাশে দাঁড়ানোই আমাদের কাজ। শীতবস্ত্র, খাদ্য, শিক্ষা, চিকিৎসা ও রক্তদানে আমরা সার্বক্ষণিক নিবেদিত।',
+        'রৌমারী ও ব্রহ্মপুত্রের দুর্গম চরাঞ্চলের অসহায় শীতার্ত মানুষের পাশে দাঁড়ানোই আমাদের কাজ। শীতবস্ত্র, খাদ্য, শিক্ষা ও জরুরি চিকিৎসাসেবায় আমরা সার্বক্ষণিক নিবেদিত।',
       subtitleEn:
-        'Dedicated to serving the underprivileged in Rowmari and remote river island chars through winter relief, food aid, education, healthcare, and emergency blood donor coordination.',
+        'Dedicated to serving the underprivileged in Rowmari and remote river island chars through winter relief, food aid, education, and healthcare support.',
       btnPrimaryBn: 'সহায়তার আবেদন',
       btnPrimaryEn: 'Request Assistance',
       btnPrimaryAction: 'assistance',
@@ -67,25 +62,25 @@ export default function Hero({
     },
     {
       id: 'slide-2',
-      badgeBn: '২৪/৭ লাইভ ইমার্জেন্সি ব্লাড নেটওয়ার্ক',
-      badgeEn: '24/7 Live Emergency Blood Network',
-      categoryBn: 'জরুরি রক্তদান উইং',
-      categoryEn: 'Blood Donation Wing',
-      titleBn: 'এক ব্যাগ রক্ত, একটি মুমূর্ষু জীবনের আলো',
-      titleEn: 'One Bag of Blood, A Lifeline for Humanity',
+      badgeBn: 'শীতবস্ত্র ও জরুরি খাদ্য সহায়তা তহবিল',
+      badgeEn: 'Winter Warmth & Food Aid Relief',
+      categoryBn: 'ত্রাণ ও পুনর্বাসন উইং',
+      categoryEn: 'Relief & Rehabilitation Wing',
+      titleBn: 'চরাঞ্চলের শীতার্ত মানুষের মুখে ফুটুক উষ্ণতার হাসি',
+      titleEn: 'Spreading Warmth & Nutrition to Char Families',
       subtitleBn:
-        'রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্স ও কুড়িগ্রামের হাসপাতালে রক্তের প্রয়োজনে ১,২০০+ নিবন্ধিত রক্তদাতা মানুষের জীবন বাঁচাতে সদা প্রস্তুত।',
+        'তীব্র শীতে রৌমারীর ব্রহ্মপুত্র নদের প্রত্যন্ত চরাঞ্চলের অসহায় পরিবার, বৃদ্ধ ও শিশুদের মাঝে কম্বল, খাদ্যসামগ্রী ও জরুরি মানবিক সহায়তা প্রদান।',
       subtitleEn:
-        'Ready 24/7 for emergency blood requirements at Rowmari Upazila Health Complex and Kurigram hospitals with a dedicated network of verified blood donors.',
-      btnPrimaryBn: 'জরুরি রক্তের আবেদন',
-      btnPrimaryEn: 'Request Blood',
-      btnPrimaryAction: 'blood-request',
-      btnPrimaryIcon: Droplet,
-      btnSecondaryBn: 'রক্তদাতা নিবন্ধন',
-      btnSecondaryEn: 'Become Blood Donor',
-      btnSecondaryAction: 'blood-donor',
-      btnSecondaryIcon: Users,
-      imageUrl: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=1800&q=85',
+        'Distributing warm blankets, food supplies, and urgent humanitarian relief to vulnerable families across river-island char unions.',
+      btnPrimaryBn: 'সহায়তার আবেদন',
+      btnPrimaryEn: 'Request Assistance',
+      btnPrimaryAction: 'assistance',
+      btnPrimaryIcon: FileText,
+      btnSecondaryBn: 'কার্যক্রম দেখুন',
+      btnSecondaryEn: 'Explore Activities',
+      btnSecondaryAction: 'activities',
+      btnSecondaryIcon: Search,
+      imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1800&q=85',
       overlayGradient: 'from-[#7f1d1d]/90 via-[#991b1b]/65 to-black/30',
     },
     {
@@ -162,14 +157,6 @@ export default function Hero({
       case 'activities':
         onOpenActivities();
         break;
-      case 'blood-request':
-        if (onOpenBlood) onOpenBlood();
-        else onOpenAssistance();
-        break;
-      case 'blood-donor':
-        if (onOpenDonor) onOpenDonor();
-        else onOpenAssistance();
-        break;
       case 'donation':
         onOpenActivities();
         break;
@@ -200,18 +187,18 @@ export default function Hero({
     },
     {
       id: 'field-2',
-      titleBn: 'জরুরি রক্তদান ও ডোনার নেটওয়ার্ক',
-      titleEn: 'Emergency Blood Donation Network',
-      tagBn: 'রক্তদান সেবা',
-      tagEn: 'Blood Service',
-      badgeColor: 'bg-red-600',
-      statBn: '১,২০০+ ব্যাগ সরবরাহ',
-      statEn: '1,200+ Units Donated',
-      locationBn: 'রৌমারী উপজেলা হাসপাতাল',
-      locationEn: 'Rowmari Health Complex',
-      descBn: 'মুমূর্ষু রোগীর জীবন বাঁচাতে ২৪/৭ জরুরি রক্তের ব্যবস্থা ও ফ্রি ব্লাড গ্রুপিং ক্যাম্প।',
-      descEn: '24/7 volunteer emergency blood supply and regular community donor camps.',
-      imageUrl: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=800&q=80',
+      titleBn: 'জরুরি খাদ্য ও পুষ্টি সহায়তা বিতরণ',
+      titleEn: 'Emergency Food & Relief Assistance',
+      tagBn: 'খাদ্য সহায়তা',
+      tagEn: 'Food Support',
+      badgeColor: 'bg-emerald-600',
+      statBn: '৩,২০০+ পরিবার উপকৃত',
+      statEn: '3,200+ Families',
+      locationBn: 'চর শৌলমারী ও কর্তিমারী',
+      locationEn: 'Char Shoulmari & Kartimari',
+      descBn: 'চরাঞ্চলের বন্যাপীড়িত ও দিনমজুর পরিবারের মাঝে চাল, ডাল, তেলসহ নিত্যপ্রয়োজনীয় খাদ্য বিতরণ।',
+      descEn: 'Distributing food packages containing rice, lentils, and essentials to impoverished char families.',
+      imageUrl: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=800&q=80',
     },
     {
       id: 'field-3',
@@ -417,7 +404,7 @@ export default function Hero({
           <div className="hidden md:flex items-center gap-2 text-stone-600 font-medium">
             <span>১২,৫০০+ মানুষ সহায়তাপ্রাপ্ত</span>
             <span>•</span>
-            <span>১,২০০+ রক্তদাতা</span>
+            <span>৪৫০+ সক্রিয় স্বেচ্ছাসেবক</span>
             <span>•</span>
             <span>৮+ বছরের নিবেদিত মানবিক সেবা</span>
           </div>
@@ -445,8 +432,8 @@ export default function Hero({
               </h2>
               <p className="text-xs sm:text-sm text-stone-600 mt-1 max-w-2xl">
                 {lang === 'bn'
-                  ? 'শীতবস্ত্র বিতরণ, বিনামূল্যে চিকিৎসা ক্যাম্প, জরুরি রক্তদান এবং সুবিধাবঞ্চিত শিশুদের শিক্ষার আলোকচ্ছটা।'
-                  : 'Delivering winter warmth, emergency medical relief, blood donor network, and underprivileged child education.'}
+                  ? 'শীতবস্ত্র বিতরণ, বিনামূল্যে চিকিৎসা ক্যাম্প, জরুরি খাদ্য সহায়তা এবং সুবিধাবঞ্চিত শিশুদের শিক্ষার আলোকচ্ছটা।'
+                  : 'Delivering winter warmth, emergency medical relief, food packages, and underprivileged child education.'}
               </p>
             </div>
 

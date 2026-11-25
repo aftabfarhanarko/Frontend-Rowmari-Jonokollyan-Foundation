@@ -8,7 +8,7 @@ interface AnnouncementModalProps {
   isOpen: boolean;
   onClose: () => void;
   lang: Language;
-  onOpenBloodRequest: () => void;
+  onOpenBloodRequest?: () => void;
   onOpenAssistance: () => void;
 }
 
@@ -16,7 +16,6 @@ export default function AnnouncementModal({
   isOpen,
   onClose,
   lang,
-  onOpenBloodRequest,
   onOpenAssistance,
 }: AnnouncementModalProps) {
   if (!isOpen) return null;
@@ -56,34 +55,34 @@ export default function AnnouncementModal({
 
         <div className="p-6">
           <div className="mb-4">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-full">
-              {lang === 'bn' ? 'রক্তদান ও শীতবস্ত্র জরুরি সমন্বয়' : 'Emergency Blood & Relief Alert'}
+            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+              {lang === 'bn' ? 'শীতবস্ত্র ও জরুরি মানবিক ত্রাণ ঘোষণা' : 'Winter Relief & Humanitarian Notice'}
             </span>
             <h3 className="text-lg md:text-xl font-bold text-stone-900 mt-2">
               {lang === 'bn'
-                ? 'রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্সের জন্য জরুরি রক্তের আহ্বান'
-                : 'Emergency Blood Requirement at Rowmari Health Complex'}
+                ? 'রৌমারী ও দুর্গম চরাঞ্চলের শীতার্ত পরিবারের পাশে দাঁড়ান'
+                : 'Support Vulnerable Families in Remote Rowmari Chars'}
             </h3>
             <p className="text-xs md:text-sm text-stone-600 mt-2 leading-relaxed">
               {lang === 'bn'
-                ? 'বর্তমানে রৌমারী হাসপাতালে দুইজন সংকটাপন্ন প্রসূতি ও সড়ক দুর্ঘটনায় আহত রোগীর জন্য "O নেগেটিভ" ও "B পজিটিভ" রক্তের জরুরি প্রয়োজন। সক্ষম রক্তদাতাদের অবিলম্বে যোগাযোগ করার অনুরোধ করা হচ্ছে।'
-                : 'Urgent need of O- and B+ blood for critically ill emergency patients at Rowmari Hospital.'}
+                ? 'তীব্র শীতে রৌমারীর ব্রহ্মপুত্র নদের দুর্গম চরাঞ্চলের অসহায় পরিবারের মাঝে কম্বল ও শীতবস্ত্র বিতরণ কার্যক্রম পুরোদমে শুরু হয়েছে। যেকোনো জরুরি মানবিক সহায়তার জন্য আবেদন করুন।'
+                : 'Winter relief and blanket distribution campaigns are actively ongoing across river-island char communities. Please apply for verified humanitarian aid.'}
             </p>
           </div>
 
-          <div className="p-3.5 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-950 mb-5 flex items-center justify-between">
+          <div className="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-950 mb-5 flex items-center justify-between">
             <div>
-              <span className="font-bold block">২৪/৭ জরুরি রক্তদাতা হটলাইন:</span>
-              <span className="font-mono font-bold text-sm text-red-700">+880 1812-987654</span>
+              <span className="font-bold block">২৪/৭ কেন্দ্রীয় জরুরি হটলাইন:</span>
+              <span className="font-mono font-bold text-sm text-emerald-800">+880 1712-345678</span>
             </div>
             <button
               onClick={() => {
                 onClose();
-                onOpenBloodRequest();
+                onOpenAssistance();
               }}
-              className="px-3 py-1.5 bg-red-700 text-white rounded-lg text-xs font-semibold hover:bg-red-800 transition"
+              className="px-3 py-1.5 bg-[#0D5C35] text-white rounded-lg text-xs font-semibold hover:bg-[#094527] transition cursor-pointer"
             >
-              {lang === 'bn' ? 'রক্তের বিস্তারিত' : 'Blood Details'}
+              {lang === 'bn' ? 'সহায়তা চান' : 'Get Help'}
             </button>
           </div>
 

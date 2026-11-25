@@ -10,8 +10,6 @@ import { canAccessNavItem, DASHBOARD_NAV_ITEMS } from "@/config/dashboard-naviga
 import { ShieldAlert } from "lucide-react"
 import { toast } from "sonner"
 
-import BloodRequestModal from "@/components/modals/BloodRequestModal"
-import BloodDonorModal from "@/components/modals/BloodDonorModal"
 import AssistanceModal from "@/components/modals/AssistanceModal"
 import VolunteerModal from "@/components/modals/VolunteerModal"
 import AnnouncementModal from "@/components/modals/AnnouncementModal"
@@ -29,10 +27,6 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
     currentRole,
     isAuthenticated,
     lang,
-    bloodRequestModalOpen,
-    setBloodRequestModalOpen,
-    bloodDonorModalOpen,
-    setBloodDonorModalOpen,
     assistanceModalOpen,
     setAssistanceModalOpen,
     donationModalOpen,
@@ -143,18 +137,6 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
       </div>
 
       {/* Modals integrated with Dashboard quick actions */}
-      <BloodRequestModal
-        isOpen={bloodRequestModalOpen}
-        onClose={() => setBloodRequestModalOpen(false)}
-        lang={lang}
-      />
-
-      <BloodDonorModal
-        isOpen={bloodDonorModalOpen}
-        onClose={() => setBloodDonorModalOpen(false)}
-        lang={lang}
-      />
-
       <AssistanceModal
         isOpen={assistanceModalOpen}
         onClose={() => setAssistanceModalOpen(false)}
@@ -173,10 +155,6 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
         isOpen={announcementModalOpen}
         onClose={() => setAnnouncementModalOpen(false)}
         lang={lang}
-        onOpenBloodRequest={() => {
-          setAnnouncementModalOpen(false)
-          setBloodRequestModalOpen(true)
-        }}
         onOpenAssistance={() => {
           setAnnouncementModalOpen(false)
           setAssistanceModalOpen(true)
