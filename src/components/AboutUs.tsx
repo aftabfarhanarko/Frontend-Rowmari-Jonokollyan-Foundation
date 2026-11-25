@@ -47,7 +47,7 @@ export default function AboutUs({
       yearEn: '2026',
       titleBn: '৯ম বছরে পদার্পণ ও কেন্দ্রীয় ডিজিটাল ব্যবস্থাপনা',
       titleEn: '9th Year of Service & Digital Management',
-      descBn: 'স্বচ্ছতা, স্বয়ংক্রিয় ট্র্যাকিং, নিরাপদ অনুদান এবং আধুনিক ডিজিটাল ব্যবস্থার মাধ্যমে সেবার মান ও বিস্তার বৃদ্ধি।',
+      descBn: 'স্বচ্ছতা, স্বয়ংক্রিয় ট্র্যাকিং, সমন্বিত সেবা বিতরণ এবং আধুনিক ডিজিটাল ব্যবস্থার মাধ্যমে সেবার মান ও বিস্তার বৃদ্ধি।',
       descEn: 'Advancing with transparent digital tracking, verified donation receipts, and scalable service delivery.',
     },
   ];

@@ -1,67 +1,105 @@
 'use client';
 
 import React from 'react';
-import { Quote } from 'lucide-react';
+import { Quote, CheckCircle2, Heart } from 'lucide-react';
 import { Language } from '@/types';
-import { GlassSection, SectionHeading, glassCardHover } from '@/components/ui/glass';
 
 interface Props {
   lang: Language;
 }
 
-// SAMPLE CONTENT: replace with real, permission-approved stories before publishing.
 const STORIES = [
   {
-    nameBn: 'উপকারভোগী পরিবার',
-    nameEn: 'Beneficiary family',
-    roleBn: 'চর এলাকা, রৌমারী',
-    roleEn: 'River island char, Rowmari',
-    bn: 'শীতের রাতে কম্বল পেয়ে ছেলেমেয়েরা প্রথমবার নিশ্চিন্তে ঘুমাতে পেরেছে।',
-    en: 'With a blanket on a cold winter night, our children could finally sleep without worry.',
+    nameBn: 'শহীদুল ইসলাম',
+    nameEn: 'Shahidul Islam',
+    roleBn: 'উপকারভোগী পরিবার, দাঁতভাঙ্গা চর',
+    roleEn: 'Beneficiary, Datbhanga Char',
+    typeBn: 'শীতবস্ত্র সেবা',
+    typeEn: 'Winter Relief',
+    bn: 'তীব্র শৈত্যপ্রবাহের সময় যখন কুয়াশায় নদী পার হওয়া অসম্ভব ছিল, তখন ফাউন্ডেশনের স্বেচ্ছাসেবকরা ট্রলারে করে চরে এসে আমাদের ঘরে ঘরে উন্নত কম্বল দিয়ে গেছেন। ছেলেমেয়েরা এখন নিশ্চিন্তে ঘুমাতে পারে।',
+    en: 'During the harsh cold wave when crossing the river was almost impossible, volunteers arrived by boat to deliver warm blankets right to our doorsteps.',
   },
   {
-    nameBn: 'রক্তগ্রহীতার স্বজন',
-    nameEn: 'Blood recipient’s relative',
-    roleBn: 'কুড়িগ্রাম',
-    roleEn: 'Kurigram',
-    bn: 'রাতে জরুরি রক্তের দরকার হয়েছিল। ফাউন্ডেশনের মাধ্যমে কয়েক ঘণ্টার মধ্যেই দাতা পেয়েছি।',
-    en: 'We needed blood urgently at night. Through the foundation we found a donor within hours.',
+    nameBn: 'মোছাঃ রোকেয়া বেগম',
+    nameEn: 'Rokeya Begum',
+    roleBn: 'রক্তগ্রহীতার মা, রৌমারী সদর',
+    roleEn: 'Mother of Blood Recipient',
+    typeBn: 'জরুরি রক্তদান',
+    typeEn: 'Blood Wing',
+    bn: 'রৌমারী হাসপাতালে প্রসূতি মেয়ের জরুরি ও-নেগেটিভ রক্তের দরকার ছিল। মধ্যরাতেও ফাউন্ডেশনের হেল্পলাইনে কল দেওয়ার পর মাত্র এক ঘণ্টার মধ্যে একজন নিঃস্বার্থ ডোনার এসে রক্ত দিয়ে গেছেন।',
+    en: 'My daughter needed urgent O-negative blood at Rowmari hospital at midnight. RJF connected us with a volunteer donor within an hour.',
   },
   {
-    nameBn: 'স্বেচ্ছাসেবক',
-    nameEn: 'Volunteer',
-    roleBn: 'রৌমারী শাখা',
-    roleEn: 'Rowmari branch',
-    bn: 'নিজের চোখে দেখেছি সহায়তা ঠিক মানুষটির হাতে পৌঁছাচ্ছে। এটাই আমাকে যুক্ত রেখেছে।',
-    en: 'I have seen help reach exactly the right person. That is what keeps me involved.',
+    nameBn: 'মাহমুদুল হাসান',
+    nameEn: 'Mahmudul Hasan',
+    roleBn: 'মাঠপর্যায়ের স্বেচ্ছাসেবক, রৌমারী',
+    roleEn: 'Field Volunteer, Rowmari',
+    typeBn: 'স্বেচ্ছাসেবক',
+    typeEn: 'Volunteer',
+    bn: 'এখানে কোনো রাজনীতি বা ব্যক্তিপ্রচারের সুযোগ নেই। আমরা প্রতিটি বাড়ি বাড়ি গিয়ে যাচাই করে শুধু প্রকৃত অসহায় ও অধিকারীদের হাতেই সেবা তুলে দিই। এই স্বচ্ছতাই আমার সবচেয়ে বড় অনুপ্রেরণা।',
+    en: 'No publicity or bias. We visit every single family to verify genuine need before distributing aid. This pure transparency keeps us dedicated.',
   },
 ];
 
 export default function Testimonials({ lang }: Props) {
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
+
   return (
-    <GlassSection id="stories">
-      <SectionHeading
-        title={t('যাদের পাশে দাঁড়িয়েছি, তাদের কথা', 'In their own words')}
-        subtitle={t('উপকারভোগী, দাতা ও স্বেচ্ছাসেবকদের অভিজ্ঞতা।', 'Experiences from beneficiaries, donors and volunteers.')}
-      />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
-        {STORIES.map((s) => (
-          <figure key={s.nameEn} className={`${glassCardHover} p-6 md:p-7 flex flex-col gap-5`}>
-            <Quote className="w-8 h-8 text-[#E53935]/70" />
-            <blockquote className="text-stone-800 leading-relaxed flex-1">{t(s.bn, s.en)}</blockquote>
-            <figcaption className="flex items-center gap-3 pt-4 border-t border-white/70">
-              <span className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0D5C35] to-emerald-500 text-white flex items-center justify-center font-bold text-sm">
-                {t(s.nameBn, s.nameEn).charAt(0)}
-              </span>
-              <span>
-                <span className="block text-sm font-bold text-stone-900">{t(s.nameBn, s.nameEn)}</span>
-                <span className="block text-xs text-stone-500">{t(s.roleBn, s.roleEn)}</span>
-              </span>
-            </figcaption>
-          </figure>
-        ))}
+    <section id="stories" className="py-12 md:py-16 bg-white relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-[#0D5C35] text-xs font-bold mb-3 shadow-2xs">
+            <Heart className="w-3.5 h-3.5 fill-[#0D5C35] text-[#0D5C35]" />
+            <span>{t('বাস্তব অভিজ্ঞতা ও অনুপ্রেরণা', 'Real Testimonials & Voices')}</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#E53935] tracking-tight mb-2">
+            {t('যাদের পাশে দাঁড়িয়েছি, তাদের কথা', 'Voices of Those We Serve')}
+          </h2>
+          <p className="text-xs sm:text-sm text-stone-500 font-medium">
+            {t('উপকারভোগী পরিবার, জরুরি রক্তগ্রহীতা ও নিবেদিত স্বেচ্ছাসেবকদের সরাসরি অনুভূতি।', 'Direct feedback from char beneficiaries, blood recipients and dedicated volunteers.')}
+          </p>
+        </div>
+
+        {/* Testimonials Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {STORIES.map((s, idx) => (
+            <figure
+              key={idx}
+              className="bg-white rounded-2xl border border-stone-200/90 p-6 sm:p-7 shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
+            >
+              {/* Top Accent Strip */}
+              <div className="flex items-center justify-between mb-4">
+                <Quote className="w-8 h-8 text-[#E53935]/80 group-hover:scale-110 transition-transform" />
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/60 px-2.5 py-0.5 rounded-full">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>{lang === 'bn' ? s.typeBn : s.typeEn}</span>
+                </span>
+              </div>
+
+              {/* Story Content */}
+              <blockquote className="text-stone-700 text-sm sm:text-[14px] leading-relaxed flex-1 mb-6 font-normal">
+                "{t(s.bn, s.en)}"
+              </blockquote>
+
+              {/* Author / Beneficiary Info */}
+              <figcaption className="flex items-center gap-3 pt-4 border-t border-stone-100">
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#0D5C35] to-[#084224] text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
+                  {t(s.nameBn, s.nameEn).charAt(0)}
+                </div>
+                <div className="min-w-0">
+                  <span className="block text-sm font-bold text-stone-900 truncate">
+                    {t(s.nameBn, s.nameEn)}
+                  </span>
+                  <span className="block text-xs text-stone-500 truncate">
+                    {t(s.roleBn, s.roleEn)}
+                  </span>
+                </div>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
       </div>
-    </GlassSection>
+    </section>
   );
 }

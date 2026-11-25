@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Heart, Droplet, HandHeart, Users, ArrowRight, Activity } from 'lucide-react';
+import { Heart, Droplet, Users, ArrowRight, Activity, Sparkles } from 'lucide-react';
 import { Language } from '@/types';
 
 interface QuickActionsProps {
@@ -16,37 +16,42 @@ export default function QuickActions({
   lang,
   onOpenAssistance,
   onOpenBlood,
-  onOpenDonation,
   onOpenVolunteer,
 }: QuickActionsProps) {
   const cards = [
     {
       id: 'aid',
       icon: Heart,
-      titleBn: 'সহায়তা চাই',
+      tagBn: 'জরুরি সেবা',
+      tagEn: 'Emergency Aid',
+      titleBn: 'সহায়তার আবেদন',
       titleEn: 'Request Help',
-      subtitleBn: 'চিকিৎসা, শিক্ষা, খাদ্য, শীতবস্ত্র',
-      subtitleEn: 'Medical, Education, Food & Winter Aid',
+      subtitleBn: 'চিকিৎসা, শিক্ষা, খাদ্য ও শীতবস্ত্র সহায়তা',
+      subtitleEn: 'Medical, Education, Food & Winter Relief',
       action: onOpenAssistance,
       theme: 'emerald',
     },
     {
       id: 'blood',
       icon: Droplet,
-      titleBn: 'রক্তদান',
-      titleEn: 'Blood Donation',
-      subtitleBn: 'ডোনার হন বা রক্তের অনুরোধ',
-      subtitleEn: 'Register as Donor or Request Blood',
+      tagBn: '২৪/৭ সক্রিয়',
+      tagEn: '24/7 Available',
+      titleBn: 'জরুরি রক্তদান নেটওয়ার্ক',
+      titleEn: 'Emergency Blood Wing',
+      subtitleBn: 'ডোনার হিসেবে যুক্ত হন বা রক্তের অনুরোধ জানান',
+      subtitleEn: 'Register as Donor or Request Urgent Blood',
       action: onOpenBlood,
       theme: 'red',
     },
     {
       id: 'activities',
       icon: Activity,
+      tagBn: 'মাঠপর্যায়ে',
+      tagEn: 'On Ground',
       titleBn: 'আমাদের কার্যক্রম',
       titleEn: 'Our Activities',
-      subtitleBn: 'মাঠপর্যায়ের মানবিক সেবামূলক কাজ',
-      subtitleEn: 'Grassroots Humanitarian Work',
+      subtitleBn: 'রৌমারী ও দুর্গম চরাঞ্চলের সেবামূলক চিত্র',
+      subtitleEn: 'Grassroots Humanitarian Work & Reports',
       action: () => {
         const el = document.getElementById('activities');
         if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -57,10 +62,12 @@ export default function QuickActions({
     {
       id: 'volunteer',
       icon: Users,
+      tagBn: 'যুক্ত হোন',
+      tagEn: 'Join Us',
       titleBn: 'স্বেচ্ছাসেবক হোন',
       titleEn: 'Join as Volunteer',
-      subtitleBn: 'আমাদের সঙ্গে কাজ করুন',
-      subtitleEn: 'Serve the Community with Us',
+      subtitleBn: 'মানবতার সেবায় তরুণ ও যুবসমাজ একত্রিত',
+      subtitleEn: 'Serve the Community With Dedication',
       action: onOpenVolunteer,
       theme: 'red',
     },
@@ -76,46 +83,74 @@ export default function QuickActions({
             <button
               key={card.id}
               onClick={card.action}
-              className={`group text-left p-5 sm:p-6 rounded-2xl bg-white border border-stone-200 transition-all duration-200 shadow-md hover:shadow-xl hover:-translate-y-1 cursor-pointer flex flex-col justify-between ${
+              className={`group text-left p-5 sm:p-6 rounded-2xl bg-white border border-stone-200/90 transition-all duration-300 shadow-md hover:shadow-2xl hover:-translate-y-1.5 cursor-pointer flex flex-col justify-between relative overflow-hidden ${
                 isRed
-                  ? 'border-t-4 border-t-[#E53935] hover:border-red-300'
-                  : 'border-t-4 border-t-[#0D5C35] hover:border-emerald-300'
+                  ? 'hover:border-red-300'
+                  : 'hover:border-emerald-300'
               }`}
             >
+              {/* Top Accent Strip */}
+              <div
+                className={`absolute top-0 left-0 right-0 h-1.5 transition-all duration-300 ${
+                  isRed
+                    ? 'bg-[#E53935] group-hover:h-2'
+                    : 'bg-[#0D5C35] group-hover:h-2'
+                }`}
+              />
+
+              {/* Top Row: Icon & Tag */}
               <div className="flex items-center justify-between mb-4 w-full">
                 <span
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition duration-200 ${
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 shadow-xs ${
                     isRed
-                      ? 'bg-red-50 text-[#E53935] group-hover:bg-red-100 group-hover:scale-110'
-                      : 'bg-emerald-50 text-[#0D5C35] group-hover:bg-emerald-100 group-hover:scale-110'
+                      ? 'bg-rose-50 text-[#E53935] group-hover:bg-[#E53935] group-hover:text-white group-hover:scale-105'
+                      : 'bg-emerald-50 text-[#0D5C35] group-hover:bg-[#0D5C35] group-hover:text-white group-hover:scale-105'
                   }`}
                 >
-                  <IconComp className="w-6 h-6" />
+                  <IconComp className="w-6 h-6 transition-transform duration-300" />
+                </span>
+
+                <span
+                  className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border transition-colors ${
+                    isRed
+                      ? 'bg-red-50 text-[#E53935] border-red-200 group-hover:bg-red-100'
+                      : 'bg-emerald-50 text-[#0D5C35] border-emerald-200 group-hover:bg-emerald-100'
+                  }`}
+                >
+                  {lang === 'bn' ? card.tagBn : card.tagEn}
+                </span>
+              </div>
+
+              {/* Title & Subtitle */}
+              <div>
+                <h3 className="text-base sm:text-lg font-bold text-stone-900 group-hover:text-[#0D5C35] transition-colors leading-snug mb-1.5">
+                  {lang === 'bn' ? card.titleBn : card.titleEn}
+                </h3>
+                <p className="text-xs sm:text-[13px] text-stone-500 group-hover:text-stone-700 leading-relaxed font-normal">
+                  {lang === 'bn' ? card.subtitleBn : card.subtitleEn}
+                </p>
+              </div>
+
+              {/* Bottom Arrow Indicator */}
+              <div className="mt-5 pt-3 border-t border-stone-100 flex items-center justify-between text-xs font-semibold">
+                <span
+                  className={`transition-colors ${
+                    isRed
+                      ? 'text-[#E53935] group-hover:text-red-700'
+                      : 'text-[#0D5C35] group-hover:text-emerald-800'
+                  }`}
+                >
+                  {lang === 'bn' ? 'ক্লিক করুন' : 'Proceed'}
                 </span>
                 <span
-                  className={`w-7 h-7 rounded-full flex items-center justify-center transition ${
+                  className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${
                     isRed
-                      ? 'text-[#E53935] bg-red-50 group-hover:bg-[#E53935] group-hover:text-white'
-                      : 'text-[#0D5C35] bg-emerald-50 group-hover:bg-[#0D5C35] group-hover:text-white'
+                      ? 'text-[#E53935] bg-red-50 group-hover:bg-[#E53935] group-hover:text-white group-hover:translate-x-1'
+                      : 'text-[#0D5C35] bg-emerald-50 group-hover:bg-[#0D5C35] group-hover:text-white group-hover:translate-x-1'
                   }`}
                 >
                   <ArrowRight className="w-3.5 h-3.5" />
                 </span>
-              </div>
-
-              <div>
-                <h3
-                  className={`text-lg font-bold transition mb-1 ${
-                    isRed
-                      ? 'text-stone-900 group-hover:text-[#E53935]'
-                      : 'text-stone-900 group-hover:text-[#0D5C35]'
-                  }`}
-                >
-                  {lang === 'bn' ? card.titleBn : card.titleEn}
-                </h3>
-                <p className="text-xs text-stone-500 font-medium">
-                  {lang === 'bn' ? card.subtitleBn : card.subtitleEn}
-                </p>
               </div>
             </button>
           );
