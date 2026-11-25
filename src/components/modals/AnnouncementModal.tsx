@@ -71,8 +71,9 @@ export default function AnnouncementModal({
 
           <div className="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-950 mb-5 flex items-center justify-between">
             <div>
-              <span className="font-bold block">২৪/৭ কেন্দ্রীয় জরুরি হটলাইন:</span>
+              <span className="font-bold block">২৪/৭ কেন্দ্রীয় জরুরি হটলাইন ও ঠিকানা:</span>
               <span className="font-mono font-bold text-sm text-emerald-800">+880 1712-345678</span>
+              <span className="text-[11px] text-stone-600 block mt-0.5">ভোলামোড়, রৌমারী উপজেলা, রংপুর, বাংলাদেশ (৫৬৪০)</span>
             </div>
             <button
               onClick={() => {

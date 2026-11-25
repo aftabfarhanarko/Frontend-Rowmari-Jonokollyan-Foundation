@@ -52,10 +52,10 @@ export function CmsSettingsTab() {
       setContactHotline(settings.contact_hotline || "+880 1712-345678")
       setEmergencyHotline(settings.emergency_hotline || "+880 1812-987654")
       setContactEmail(settings.contact_email || "contact@rowmarijanakalyan.org")
-      setOfficeAddress(settings.office_address || "ডাকবাংলো রোড, থানা রোড, রৌমারী সদর, রৌমারী, কুড়িগ্রাম ৫৬৫০")
+      setOfficeAddress(settings.office_address || "ভোলামোড়, রৌমারী উপজেলা, রংপুর, বাংলাদেশ ৫৬৪০")
       setNoticeBannerText(
         settings.notice_banner_text ||
-          "জরুরি রক্তের প্রয়োজন: রৌমারী হাসপাতালে O- ও B+ রক্তের জরুরি আহ্বান • চরাঞ্চলে শীতবস্ত্র বিতরণ চলমান • হটলাইন: +880 1712-345678"
+          "রৌমারী জনকল্যাণ ফাউন্ডেশন, ভোলামোড়, রৌমারী উপজেলা, রংপুর, বাংলাদেশ, ৫৬৪০ • চরাঞ্চলে শীতবস্ত্র ও জরুরি মানবিক ত্রাণ বিতরণ চলমান • হটলাইন: +880 1712-345678"
       )
       setNoticeBannerActive(settings.notice_banner_active || "true")
       setFacebookUrl(settings.facebook_url || "https://facebook.com/rowmarijanakalyan")

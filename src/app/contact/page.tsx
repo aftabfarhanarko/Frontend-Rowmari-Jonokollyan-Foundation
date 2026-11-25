@@ -13,7 +13,7 @@ import {
   CheckCircle2, 
   ShieldCheck, 
   Sparkles,
-  Droplet
+  MessageSquare
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -121,6 +121,15 @@ export default function ContactPage() {
                     <span className="text-[11px] text-[#0D5C35] font-semibold block mt-1">
                       {t('কুড়িগ্রাম জেলা, রংপুর বিভাগ', 'Kurigram District, Bangladesh')}
                     </span>
+                    <a
+                      href={`https://wa.me/${FOUNDATION_INFO.phonePrimary.replace(/[^0-9]/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 mt-2.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#0D5C35] text-xs font-bold border border-emerald-200 transition"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      <span>{t('Message রৌমারী জনকল্যাণ ফাউন্ডেশন', 'WhatsApp Us')}</span>
+                    </a>
                   </div>
                 </div>
 
