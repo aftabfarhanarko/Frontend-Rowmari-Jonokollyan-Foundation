@@ -56,7 +56,8 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
       const hasSessionCookie = document.cookie.includes("rjf_session=1")
       if (!hasSessionCookie && !isAuthenticated) {
         toast.error("ড্যাশবোর্ডে প্রবেশ করতে অনুগ্রহ করে প্রথমে লগইন করুন।")
-        router.push("/login?redirect=/dashboard")
+        const currentPath = typeof window !== 'undefined' ? (window.location.pathname + window.location.search) : '/dashboard';
+        router.push(`/login?redirect=${encodeURIComponent(currentPath)}`)
       } else if (isAuthenticated && currentRole !== "SUPER_ADMIN") {
         toast.error("ড্যাশবোর্ডে প্রবেশের অধিকার শুধুমাত্র সুপার অ্যাডমিনের রয়েছে।")
         router.push("/?denied=super_admin_only")

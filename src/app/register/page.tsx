@@ -35,14 +35,15 @@ export default function RegisterPage() {
   const lang = useAppStore((state) => state.lang);
   const toggleLang = useAppStore((state) => state.toggleLang);
   const setCurrentRole = useAppStore((state) => state.setCurrentRole);
+  const currentRole = useAppStore((state) => state.currentRole);
   const setIsAuthenticated = useAppStore((state) => state.setIsAuthenticated);
   const isAuthenticated = useAppStore((state) => state.isAuthenticated);
 
   React.useEffect(() => {
-    if (isAuthenticated || (typeof document !== 'undefined' && document.cookie.includes('rjf_session=1'))) {
+    if (isAuthenticated && currentRole === 'SUPER_ADMIN') {
       router.replace('/dashboard');
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, currentRole, router]);
   const donationModalOpen = useAppStore((state) => state.donationModalOpen);
   const setDonationModalOpen = useAppStore((state) => state.setDonationModalOpen);
   const assistanceModalOpen = useAppStore((state) => state.assistanceModalOpen);
@@ -111,7 +112,7 @@ export default function RegisterPage() {
           `Welcome ${session.user.fullName}! Account created successfully.`
         )
       );
-      router.push('/dashboard');
+      router.push('/');
     } catch (err: any) {
       toast.error(
         err?.message ||

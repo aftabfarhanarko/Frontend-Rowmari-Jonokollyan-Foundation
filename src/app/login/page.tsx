@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   Mail,
@@ -11,10 +11,8 @@ import {
   EyeOff,
   LogIn,
   ShieldCheck,
-  CheckCircle2,
+  AlertCircle,
   Loader2,
-  Sparkles,
-  Heart,
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -27,19 +25,18 @@ import { useAppStore } from '@/store/useAppStore';
 import { UserRole } from '@/types';
 import { toast } from 'sonner';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams?.get('redirect');
+
   const lang = useAppStore((state) => state.lang);
   const toggleLang = useAppStore((state) => state.toggleLang);
   const setCurrentRole = useAppStore((state) => state.setCurrentRole);
+  const currentRole = useAppStore((state) => state.currentRole);
   const setIsAuthenticated = useAppStore((state) => state.setIsAuthenticated);
   const isAuthenticated = useAppStore((state) => state.isAuthenticated);
 
-  React.useEffect(() => {
-    if (isAuthenticated || (typeof document !== 'undefined' && document.cookie.includes('rjf_session=1'))) {
-      router.replace('/dashboard');
-    }
-  }, [isAuthenticated, router]);
   const donationModalOpen = useAppStore((state) => state.donationModalOpen);
   const setDonationModalOpen = useAppStore((state) => state.setDonationModalOpen);
   const assistanceModalOpen = useAppStore((state) => state.assistanceModalOpen);
@@ -53,6 +50,25 @@ export default function LoginPage() {
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
 
+  // If already authenticated as SUPER_ADMIN, automatically redirect to target or /dashboard
+  useEffect(() => {
+    if (isAuthenticated && currentRole === 'SUPER_ADMIN') {
+      const target = redirectParam ? decodeURIComponent(redirectParam) : '/dashboard';
+      router.replace(target);
+    }
+  }, [isAuthenticated, currentRole, redirectParam, router]);
+
+  // Clean stale/invalid session cookies if client store is not authenticated
+  // to prevent infinite redirect loops between login and dashboard proxy
+  useEffect(() => {
+    if (!isAuthenticated && typeof document !== 'undefined') {
+      if (document.cookie.includes('rjf_session=1') && !document.cookie.includes('rjf_auth_role=SUPER_ADMIN')) {
+        document.cookie = 'rjf_session=; path=/; max-age=0; SameSite=Lax';
+        document.cookie = 'rjf_auth_role=; path=/; max-age=0; SameSite=Lax';
+      }
+    }
+  }, [isAuthenticated]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password) {
@@ -63,22 +79,42 @@ export default function LoginPage() {
     try {
       const session = await login({ email: email.trim(), password }).unwrap();
       const userRoles = session.user.roles || [];
-      const primaryRole = (
-        typeof userRoles[0] === 'object' ? userRoles[0]?.name : userRoles[0]
-      ) as UserRole;
+      const isSuperAdmin = userRoles.some(
+        (r: any) => (typeof r === 'object' ? r?.name : r) === 'SUPER_ADMIN'
+      );
+      const primaryRole: UserRole = isSuperAdmin ? 'SUPER_ADMIN' : 'COMMUNITY_MEMBER';
 
-      setCurrentRole(primaryRole || 'COMMUNITY_MEMBER');
+      // Ensure cookies are synchronously written so proxy and subsequent pages see credentials
+      if (typeof document !== 'undefined') {
+        document.cookie = `rjf_auth_role=${primaryRole}; path=/; max-age=604800; SameSite=Lax`;
+        document.cookie = `rjf_session=1; path=/; max-age=604800; SameSite=Lax`;
+      }
+
+      setCurrentRole(primaryRole);
       setIsAuthenticated(true);
+
       toast.success(
         t(
           `স্বাগতম, ${session.user.fullName}!`,
           `Welcome back, ${session.user.fullName}!`
         )
       );
-      router.push('/dashboard');
+
+      if (isSuperAdmin) {
+        const target = redirectParam ? decodeURIComponent(redirectParam) : '/dashboard';
+        router.push(target);
+      } else {
+        // Normal community members cannot access the dashboard
+        const target =
+          redirectParam && !decodeURIComponent(redirectParam).startsWith('/dashboard')
+            ? decodeURIComponent(redirectParam)
+            : '/';
+        router.push(target);
+      }
     } catch (err: any) {
       toast.error(
-        err?.message ||
+        err?.data?.message ||
+          err?.message ||
           t('লগইন ব্যর্থ হয়েছে। সঠিক ইমেইল ও পাসওয়ার্ড দিন।', 'Login failed. Please check credentials.')
       );
     }
@@ -104,7 +140,7 @@ export default function LoginPage() {
           <div className="absolute -top-12 -right-12 w-32 h-32 bg-emerald-100/60 rounded-full blur-2xl pointer-events-none" />
           <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-red-100/40 rounded-full blur-2xl pointer-events-none" />
 
-          <div className="text-center space-y-2 mb-7 relative z-10">
+          <div className="text-center space-y-2 mb-6 relative z-10">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[#0D5C35] text-xs font-bold border border-emerald-200">
               <ShieldCheck className="w-3.5 h-3.5 text-[#0D5C35]" />
               <span>{t('সুরক্ষিত লগইন পোর্টাল', 'Secure Login Portal')}</span>
@@ -119,6 +155,19 @@ export default function LoginPage() {
               )}
             </p>
           </div>
+
+          {/* Notice when redirected from protected dashboard route */}
+          {redirectParam && (
+            <div className="mb-5 p-3 rounded-2xl bg-amber-50/80 border border-amber-200 text-amber-900 text-xs flex items-center gap-2.5 relative z-10">
+              <AlertCircle className="w-4 h-4 shrink-0 text-amber-600" />
+              <span>
+                {t(
+                  'ড্যাশবোর্ডে প্রবেশ করতে আপনার সুপার অ্যাডমিন অ্যাকাউন্টে লগইন করুন।',
+                  'Please sign in with your Super Admin account to access the dashboard.'
+                )}
+              </span>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
             <div className="space-y-1">
@@ -204,7 +253,7 @@ export default function LoginPage() {
             <p className="text-xs text-stone-600">
               {t('আপনার কি কোনো অ্যাকাউন্ট নেই?', "Don't have an account yet?")}{' '}
               <Link
-                href="/register"
+                href={redirectParam ? `/register?redirect=${encodeURIComponent(redirectParam)}` : '/register'}
                 className="font-bold text-[#E53935] hover:underline"
               >
                 {t('নতুন অ্যাকাউন্ট খুলুন', 'Create an Account')}
@@ -240,5 +289,19 @@ export default function LoginPage() {
         lang={lang}
       />
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-[#FAFBF9]">
+          <Loader2 className="w-8 h-8 animate-spin text-[#0D5C35]" />
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

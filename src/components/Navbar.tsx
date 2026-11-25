@@ -115,15 +115,26 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
   const isUserLoggedIn = isAuthenticated || hasSessionCookie;
 
   const [logout] = useLogoutMutation();
-  const { data: currentUser } = useGetCurrentUserQuery(undefined, { skip: !isUserLoggedIn });
+  const { data: currentUser, isError: isUserError } = useGetCurrentUserQuery(undefined, { skip: !isUserLoggedIn });
 
   useEffect(() => {
-    if (currentUser?.roles?.[0]) {
-      const roleName =
-        typeof currentUser.roles[0] === 'object'
-          ? (currentUser.roles[0] as any).name
-          : currentUser.roles[0];
-      if (roleName && roleName !== currentRole) {
+    if (isUserError) {
+      setIsAuthenticated(false);
+      setHasSessionCookie(false);
+      if (typeof document !== 'undefined') {
+        document.cookie = 'rjf_session=; path=/; max-age=0; SameSite=Lax';
+        document.cookie = 'rjf_auth_role=; path=/; max-age=0; SameSite=Lax';
+      }
+    }
+  }, [isUserError, setIsAuthenticated]);
+
+  useEffect(() => {
+    if (currentUser?.roles && currentUser.roles.length > 0) {
+      const isSuperAdmin = currentUser.roles.some((r: any) =>
+        (typeof r === 'object' ? r?.name : r) === 'SUPER_ADMIN'
+      );
+      const roleName = isSuperAdmin ? 'SUPER_ADMIN' : 'COMMUNITY_MEMBER';
+      if (roleName !== currentRole) {
         setCurrentRole(roleName as UserRole);
       }
     }
@@ -369,7 +380,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
               <motion.button
                 onClick={onToggleLang}
                 whileTap={{ scale: 0.95 }}
-                className="px-2.5 py-1.5 rounded-lg border border-stone-200 text-stone-700 hover:bg-stone-50 text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
+                className="hidden lg:flex px-2.5 py-1.5 rounded-lg border border-stone-200 text-stone-700 hover:bg-stone-50 text-xs font-semibold transition-colors items-center gap-1.5 cursor-pointer"
                 title="Change Language"
               >
                 <Globe className="w-3.5 h-3.5 text-stone-600" />

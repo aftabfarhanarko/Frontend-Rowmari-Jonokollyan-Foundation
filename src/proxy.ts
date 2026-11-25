@@ -12,7 +12,8 @@ export function proxy(request: NextRequest) {
     // 1. Unauthenticated visitors must be redirected to /login
     if (!hasSessionCookie || !userRole) {
       const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
+      const fullPath = pathname + request.nextUrl.search;
+      loginUrl.searchParams.set('redirect', fullPath);
       return NextResponse.redirect(loginUrl);
     }
 

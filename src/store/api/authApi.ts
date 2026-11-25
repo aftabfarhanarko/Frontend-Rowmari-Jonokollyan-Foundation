@@ -26,9 +26,10 @@ export const authApi = baseApi.injectEndpoints({
           const { data } = await queryFulfilled;
           setAccessToken(data.accessToken);
           if (typeof document !== 'undefined') {
-            const roleName = data.user.roles?.[0]
-              ? (typeof data.user.roles[0] === 'object' ? (data.user.roles[0] as any).name : data.user.roles[0])
-              : 'COMMUNITY_MEMBER';
+            const isSuperAdmin = data.user.roles?.some((r: any) =>
+              (typeof r === 'object' ? r?.name : r) === 'SUPER_ADMIN'
+            );
+            const roleName = isSuperAdmin ? 'SUPER_ADMIN' : 'COMMUNITY_MEMBER';
             document.cookie = `rjf_auth_role=${roleName}; path=/; max-age=604800; SameSite=Lax`;
             document.cookie = `rjf_session=1; path=/; max-age=604800; SameSite=Lax`;
           }
@@ -44,9 +45,10 @@ export const authApi = baseApi.injectEndpoints({
           const { data } = await queryFulfilled;
           setAccessToken(data.accessToken);
           if (typeof document !== 'undefined') {
-            const roleName = data.user.roles?.[0]
-              ? (typeof data.user.roles[0] === 'object' ? (data.user.roles[0] as any).name : data.user.roles[0])
-              : 'COMMUNITY_MEMBER';
+            const isSuperAdmin = data.user.roles?.some((r: any) =>
+              (typeof r === 'object' ? r?.name : r) === 'SUPER_ADMIN'
+            );
+            const roleName = isSuperAdmin ? 'SUPER_ADMIN' : 'COMMUNITY_MEMBER';
             document.cookie = `rjf_auth_role=${roleName}; path=/; max-age=604800; SameSite=Lax`;
             document.cookie = `rjf_session=1; path=/; max-age=604800; SameSite=Lax`;
           }
@@ -62,9 +64,10 @@ export const authApi = baseApi.injectEndpoints({
           const { data } = await queryFulfilled;
           setAccessToken(data.accessToken);
           if (typeof document !== 'undefined') {
-            const roleName = data.user.roles?.[0]
-              ? (typeof data.user.roles[0] === 'object' ? (data.user.roles[0] as any).name : data.user.roles[0])
-              : 'COMMUNITY_MEMBER';
+            const isSuperAdmin = data.user.roles?.some((r: any) =>
+              (typeof r === 'object' ? r?.name : r) === 'SUPER_ADMIN'
+            );
+            const roleName = isSuperAdmin ? 'SUPER_ADMIN' : 'COMMUNITY_MEMBER';
             document.cookie = `rjf_auth_role=${roleName}; path=/; max-age=604800; SameSite=Lax`;
             document.cookie = `rjf_session=1; path=/; max-age=604800; SameSite=Lax`;
           }
