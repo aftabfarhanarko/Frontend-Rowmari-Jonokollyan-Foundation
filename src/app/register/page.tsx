@@ -16,6 +16,7 @@ import {
   UserPlus,
   ShieldCheck,
   CheckCircle2,
+  AlertCircle,
   Loader2,
   Heart,
 } from 'lucide-react';
@@ -58,6 +59,8 @@ export default function RegisterPage() {
   const [address, setAddress] = useState('');
   const [bloodGroup, setBloodGroup] = useState('');
   const [consentToDonateBlood, setConsentToDonateBlood] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const [registerUser, { isLoading }] = useRegisterUserMutation();
 
@@ -67,14 +70,19 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
 
     if (!fullName.trim() || !email.trim() || !phone.trim() || !password) {
-      toast.error(t('অনুগ্রহ করে প্রয়োজনীয় তথ্যসমূহ পূরণ করুন', 'Please fill in all required fields'));
+      const msg = t('অনুগ্রহ করে প্রয়োজনীয় তথ্যসমূহ পূরণ করুন', 'Please fill in all required fields');
+      setFormError(msg);
+      toast.error(msg);
       return;
     }
 
     if (password.length < 8) {
-      toast.error(t('পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে', 'Password must be at least 8 characters'));
+      const msg = t('পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে', 'Password must be at least 8 characters');
+      setFormError(msg);
+      toast.error(msg);
       return;
     }
 
@@ -104,20 +112,34 @@ export default function RegisterPage() {
         typeof userRoles[0] === 'object' ? userRoles[0]?.name : userRoles[0]
       ) as UserRole;
 
+      // Ensure cookies are synchronously written
+      if (typeof document !== 'undefined') {
+        document.cookie = `rjf_auth_role=${primaryRole || 'COMMUNITY_MEMBER'}; path=/; max-age=604800; SameSite=Lax`;
+        document.cookie = `rjf_session=1; path=/; max-age=604800; SameSite=Lax`;
+      }
+
       setCurrentRole(primaryRole || 'COMMUNITY_MEMBER');
       setIsAuthenticated(true);
+      setIsRedirecting(true);
+
       toast.success(
         t(
           `অভিনন্দন ${session.user.fullName}! আপনার অ্যাকাউন্ট তৈরি সম্পন্ন হয়েছে।`,
           `Welcome ${session.user.fullName}! Account created successfully.`
         )
       );
-      router.push('/');
+
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 700);
     } catch (err: any) {
-      toast.error(
+      setIsRedirecting(false);
+      const errorMsg =
+        err?.data?.message ||
         err?.message ||
-          t('নিবন্ধন ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।', 'Registration failed. Please try again.')
-      );
+        t('নিবন্ধন ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।', 'Registration failed. Please try again.');
+      setFormError(errorMsg);
+      toast.error(errorMsg);
     }
   };
 
@@ -156,6 +178,22 @@ export default function RegisterPage() {
               )}
             </p>
           </div>
+
+          {/* Visible Inline Error Alert */}
+          {formError && (
+            <div className="mb-4 p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2.5 relative z-10 shadow-2xs">
+              <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+              <span className="font-semibold">{formError}</span>
+            </div>
+          )}
+
+          {/* Visible Inline Success/Redirecting Alert */}
+          {isRedirecting && (
+            <div className="mb-4 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-[#0D5C35] text-xs flex items-center gap-2.5 relative z-10 shadow-2xs">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 animate-bounce" />
+              <span className="font-semibold">{t('নিবন্ধন সফল! অ্যাকাউন্টে প্রবেশ করানো হচ্ছে...', 'Registration successful! Redirecting...')}</span>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
             {/* Full Name */}

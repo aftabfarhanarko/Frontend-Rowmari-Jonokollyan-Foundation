@@ -355,14 +355,20 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
           <div className="hidden sm:flex items-center gap-2.5 shrink-0">
             {isUserLoggedIn ? (
               <div className="flex items-center gap-2">
-                <Link
-                  href="/dashboard"
-                  className="px-3 py-1.5 rounded-full border border-[#0D5C35] bg-emerald-50 text-[#0D5C35] hover:bg-[#0D5C35] hover:text-white text-xs font-bold transition flex items-center gap-1.5"
-                  title={lang === 'bn' ? 'ড্যাশবোর্ড' : 'Dashboard'}
-                >
-                  <LayoutDashboard className="w-3.5 h-3.5" />
-                  <span>{lang === 'bn' ? 'ড্যাশবোর্ড' : 'Dashboard'}</span>
-                </Link>
+                {currentRole === 'SUPER_ADMIN' ? (
+                  <Link
+                    href="/dashboard"
+                    className="px-3 py-1.5 rounded-full border border-[#0D5C35] bg-emerald-50 text-[#0D5C35] hover:bg-[#0D5C35] hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-2xs"
+                    title={lang === 'bn' ? 'ড্যাশবোর্ড' : 'Dashboard'}
+                  >
+                    <LayoutDashboard className="w-3.5 h-3.5" />
+                    <span>{lang === 'bn' ? 'ড্যাশবোর্ড' : 'Dashboard'}</span>
+                  </Link>
+                ) : (
+                  <span className="px-3 py-1.5 rounded-full bg-stone-100 text-stone-700 text-xs font-bold border border-stone-200">
+                    {currentUser?.fullName || (lang === 'bn' ? 'আমার অ্যাকাউন্ট' : 'Account')}
+                  </span>
+                )}
                 <button
                   type="button"
                   onClick={handleLogout}
@@ -573,14 +579,16 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
 
                 {/* Account Button (Warm Yellow Pill matching screenshot) */}
                 <Link
-                  href={isUserLoggedIn ? '/dashboard' : '/login'}
+                  href={isUserLoggedIn ? (currentRole === 'SUPER_ADMIN' ? '/dashboard' : '/') : '/login'}
                   onClick={() => setMobileMenuOpen(false)}
                   className="w-full py-3 px-4 rounded-xl border border-[#F3C474] bg-[#FDE29A] hover:bg-[#FCD880] text-stone-900 font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-xs transition active:scale-[0.99] text-center"
                 >
                   <User className="w-5 h-5 text-stone-900" />
                   <span>
                     {isUserLoggedIn
-                      ? (lang === 'bn' ? 'আমার ড্যাশবোর্ড' : 'My Dashboard')
+                      ? (currentRole === 'SUPER_ADMIN'
+                          ? (lang === 'bn' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard')
+                          : (currentUser?.fullName || (lang === 'bn' ? 'আমার অ্যাকাউন্ট' : 'My Account')))
                       : (lang === 'bn' ? 'আমার অ্যাকাউন্ট' : 'My Account')}
                   </span>
                 </Link>

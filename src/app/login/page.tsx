@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   Mail,
@@ -13,20 +13,19 @@ import {
   ShieldCheck,
   AlertCircle,
   Loader2,
+  CheckCircle2,
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
 import AssistanceModal from '@/components/modals/AssistanceModal';
-import DonationModal from '@/components/modals/DonationModal';
 import { useLoginMutation } from '@/store/api/authApi';
 import { useAppStore } from '@/store/useAppStore';
 import { UserRole } from '@/types';
 import { toast } from 'sonner';
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectParam = searchParams?.get('redirect');
 
@@ -37,42 +36,43 @@ function LoginForm() {
   const setIsAuthenticated = useAppStore((state) => state.setIsAuthenticated);
   const isAuthenticated = useAppStore((state) => state.isAuthenticated);
 
-  const donationModalOpen = useAppStore((state) => state.donationModalOpen);
-  const setDonationModalOpen = useAppStore((state) => state.setDonationModalOpen);
   const assistanceModalOpen = useAppStore((state) => state.assistanceModalOpen);
   const setAssistanceModalOpen = useAppStore((state) => state.setAssistanceModalOpen);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const [login, { isLoading }] = useLoginMutation();
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
 
-  // If already authenticated as SUPER_ADMIN, automatically redirect to target or /dashboard
+  // If already authenticated, redirect safely
   useEffect(() => {
-    if (isAuthenticated && currentRole === 'SUPER_ADMIN') {
-      const target = redirectParam ? decodeURIComponent(redirectParam) : '/dashboard';
-      router.replace(target);
-    }
-  }, [isAuthenticated, currentRole, redirectParam, router]);
-
-  // Clean stale/invalid session cookies if client store is not authenticated
-  // to prevent infinite redirect loops between login and dashboard proxy
-  useEffect(() => {
-    if (!isAuthenticated && typeof document !== 'undefined') {
-      if (document.cookie.includes('rjf_session=1') && !document.cookie.includes('rjf_auth_role=SUPER_ADMIN')) {
-        document.cookie = 'rjf_session=; path=/; max-age=0; SameSite=Lax';
-        document.cookie = 'rjf_auth_role=; path=/; max-age=0; SameSite=Lax';
+    if (isAuthenticated) {
+      if (currentRole === 'SUPER_ADMIN') {
+        const target = redirectParam ? decodeURIComponent(redirectParam) : '/dashboard';
+        window.location.href = target;
+      } else {
+        const target =
+          redirectParam && !decodeURIComponent(redirectParam).startsWith('/dashboard')
+            ? decodeURIComponent(redirectParam)
+            : '/';
+        window.location.href = target;
       }
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, currentRole, redirectParam]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
+
     if (!email.trim() || !password) {
-      toast.error(t('অনুগ্রহ করে ইমেইল ও পাসওয়ার্ড প্রদান করুন', 'Please enter email and password'));
+      const msg = t('অনুগ্রহ করে ইমেইল ও পাসওয়ার্ড প্রদান করুন', 'Please enter email and password');
+      setFormError(msg);
+      toast.error(msg);
       return;
     }
 
@@ -92,40 +92,43 @@ function LoginForm() {
 
       setCurrentRole(primaryRole);
       setIsAuthenticated(true);
+      setIsRedirecting(true);
 
-      toast.success(
-        t(
-          `স্বাগতম, ${session.user.fullName}!`,
-          `Welcome back, ${session.user.fullName}!`
-        )
+      const welcomeMsg = t(
+        `স্বাগতম, ${session.user.fullName}! সফলভাবে লগইন হয়েছে।`,
+        `Welcome back, ${session.user.fullName}! Successfully signed in.`
       );
+      toast.success(welcomeMsg);
 
-      if (isSuperAdmin) {
-        const target = redirectParam ? decodeURIComponent(redirectParam) : '/dashboard';
-        router.push(target);
-      } else {
-        // Normal community members cannot access the dashboard
-        const target =
-          redirectParam && !decodeURIComponent(redirectParam).startsWith('/dashboard')
+      const target = isSuperAdmin
+        ? (redirectParam ? decodeURIComponent(redirectParam) : '/dashboard')
+        : (redirectParam && !decodeURIComponent(redirectParam).startsWith('/dashboard')
             ? decodeURIComponent(redirectParam)
-            : '/';
-        router.push(target);
-      }
+            : '/');
+
+      // Use a brief timeout so mobile users clearly see the green toast before redirecting,
+      // and use window.location.href to guarantee browser HTTP cookie submission to Next.js middleware
+      setTimeout(() => {
+        window.location.href = target;
+      }, 700);
     } catch (err: any) {
-      toast.error(
+      setIsRedirecting(false);
+      const errorMsg =
         err?.data?.message ||
-          err?.message ||
-          t('লগইন ব্যর্থ হয়েছে। সঠিক ইমেইল ও পাসওয়ার্ড দিন।', 'Login failed. Please check credentials.')
-      );
+        err?.message ||
+        t('লগইন ব্যর্থ হয়েছে। সঠিক ইমেইল ও পাসওয়ার্ড দিন।', 'Login failed. Please check credentials.');
+      setFormError(errorMsg);
+      toast.error(errorMsg);
     }
   };
+
+  const isWorking = isLoading || isRedirecting;
 
   return (
     <div className="min-h-screen flex flex-col justify-between bg-white text-stone-900 selection:bg-emerald-100 selection:text-emerald-900">
       <Navbar
         lang={lang}
         onToggleLang={toggleLang}
-        onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       {/* Main Login Card */}
@@ -141,7 +144,7 @@ function LoginForm() {
           <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-red-100/40 rounded-full blur-2xl pointer-events-none" />
 
           <div className="text-center space-y-2 mb-6 relative z-10">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[#0D5C35] text-xs font-bold border border-emerald-200">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[#0D5C35] text-xs font-bold border border-emerald-200 shadow-2xs">
               <ShieldCheck className="w-3.5 h-3.5 text-[#0D5C35]" />
               <span>{t('সুরক্ষিত লগইন পোর্টাল', 'Secure Login Portal')}</span>
             </div>
@@ -158,7 +161,7 @@ function LoginForm() {
 
           {/* Notice when redirected from protected dashboard route */}
           {redirectParam && (
-            <div className="mb-5 p-3 rounded-2xl bg-amber-50/80 border border-amber-200 text-amber-900 text-xs flex items-center gap-2.5 relative z-10">
+            <div className="mb-4 p-3 rounded-2xl bg-amber-50/90 border border-amber-200 text-amber-900 text-xs flex items-center gap-2.5 relative z-10 shadow-2xs">
               <AlertCircle className="w-4 h-4 shrink-0 text-amber-600" />
               <span>
                 {t(
@@ -166,6 +169,22 @@ function LoginForm() {
                   'Please sign in with your Super Admin account to access the dashboard.'
                 )}
               </span>
+            </div>
+          )}
+
+          {/* Visible Inline Error Alert */}
+          {formError && (
+            <div className="mb-4 p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2.5 relative z-10 shadow-2xs">
+              <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+              <span className="font-semibold">{formError}</span>
+            </div>
+          )}
+
+          {/* Visible Inline Success/Redirecting Alert */}
+          {isRedirecting && (
+            <div className="mb-4 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-[#0D5C35] text-xs flex items-center gap-2.5 relative z-10 shadow-2xs">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 animate-bounce" />
+              <span className="font-semibold">{t('লগইন সফল! ড্যাশবোর্ডে নিয়ে যাওয়া হচ্ছে...', 'Login successful! Redirecting...')}</span>
             </div>
           )}
 
@@ -183,7 +202,8 @@ function LoginForm() {
                   placeholder="name@example.com"
                   autoComplete="email"
                   required
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] focus:border-transparent transition bg-white"
+                  disabled={isWorking}
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] focus:border-transparent transition bg-white disabled:bg-stone-50"
                 />
               </div>
             </div>
@@ -206,7 +226,8 @@ function LoginForm() {
                   placeholder="••••••••"
                   autoComplete="current-password"
                   required
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] focus:border-transparent transition bg-white"
+                  disabled={isWorking}
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] focus:border-transparent transition bg-white disabled:bg-stone-50"
                 />
                 <button
                   type="button"
@@ -221,13 +242,13 @@ function LoginForm() {
 
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isWorking}
               className="w-full mt-2 py-3 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-sm transition shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
             >
-              {isLoading ? (
+              {isWorking ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>{t('যাচাই করা হচ্ছে...', 'Signing in...')}</span>
+                  <span>{isRedirecting ? t('প্রবেশ করা হচ্ছে...', 'Entering...') : t('যাচাই করা হচ্ছে...', 'Signing in...')}</span>
                 </>
               ) : (
                 <>
@@ -266,13 +287,11 @@ function LoginForm() {
       <Footer
         lang={lang}
         onOpenAssistance={() => setAssistanceModalOpen(true)}
-        onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <MobileBottomBar
         lang={lang}
         onOpenAssistance={() => setAssistanceModalOpen(true)}
-        onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <BackToTop />
@@ -280,12 +299,6 @@ function LoginForm() {
       <AssistanceModal
         isOpen={assistanceModalOpen}
         onClose={() => setAssistanceModalOpen(false)}
-        lang={lang}
-      />
-
-      <DonationModal
-        isOpen={donationModalOpen}
-        onClose={() => setDonationModalOpen(false)}
         lang={lang}
       />
     </div>
