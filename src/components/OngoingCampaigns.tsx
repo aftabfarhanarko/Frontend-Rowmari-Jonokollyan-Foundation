@@ -1,13 +1,14 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { Target, Clock, Heart, Users, CheckCircle2 } from 'lucide-react';
 import { Language } from '@/types';
 import { useGetCampaignsQuery } from '@/store/api/campaignsApi';
 
 interface OngoingCampaignsProps {
   lang: Language;
-  onOpenDonation: (campaignId?: string) => void;
+  onOpenDonation?: (campaignId?: string) => void;
 }
 
 export default function OngoingCampaigns({
@@ -101,15 +102,15 @@ export default function OngoingCampaigns({
 
                 <div className="pt-4 border-t border-stone-100 flex items-center justify-between">
                   <span className="text-xs text-stone-500">
-                    {lang === 'bn' ? 'bKash / Nagad / Bank সমর্থিত' : 'bKash / Nagad / Bank'}
+                    {lang === 'bn' ? 'ফাউন্ডেশনের প্রত্যক্ষ তত্ত্বাবধানে পরিচালিত' : 'Directly Supervised by RJF'}
                   </span>
-                  <button
-                    onClick={() => onOpenDonation(camp.category)}
-                    className="px-5 py-2.5 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-semibold text-xs sm:text-sm transition shadow-sm flex items-center gap-1.5 cursor-pointer"
+                  <Link
+                    href="/get-help"
+                    className="px-5 py-2.5 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-semibold text-xs sm:text-sm transition shadow-sm flex items-center gap-1.5 cursor-pointer"
                   >
                     <Heart className="w-3.5 h-3.5 fill-white text-white" />
-                    <span>{lang === 'bn' ? 'এই তহবিলে অনুদান দিন' : 'Donate to Fund'}</span>
-                  </button>
+                    <span>{lang === 'bn' ? 'সহায়তার আবেদন' : 'Apply for Aid'}</span>
+                  </Link>
                 </div>
               </div>
             );

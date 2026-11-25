@@ -272,12 +272,6 @@ export default function TeamPage() {
               >
                 {t('স্বেচ্ছাসেবক হিসেবে যোগ দিন', 'Apply as Volunteer')}
               </button>
-              <button
-                onClick={() => setDonationModalOpen(true)}
-                className="px-6 py-3 rounded-full bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs sm:text-sm transition shadow-lg cursor-pointer"
-              >
-                {t('অনুদান দিন', 'Donate to Support')}
-              </button>
             </div>
           </div>
         </section>

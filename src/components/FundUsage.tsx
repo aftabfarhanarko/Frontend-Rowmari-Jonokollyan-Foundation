@@ -24,10 +24,10 @@ export default function FundUsage({ lang }: Props) {
   return (
     <GlassSection id="transparency" tone="red">
       <SectionHeading
-        title={t('আপনার অনুদান কোথায় যায়', 'Where your donation goes')}
+        title={t('আমাদের সেবা ও সম্পদ বণ্টন', 'How Our Humanitarian Aid is Allocated')}
         subtitle={t(
-          'প্রতিটি টাকার হিসাব আমরা প্রকাশ করি, যাতে আপনি নিশ্চিন্তে পাশে থাকতে পারেন।',
-          'We publish where every taka goes, so you can give with confidence.'
+          'প্রতিটি সেবামূলক উদ্যোগের স্বচ্ছ বিবরণী আমরা প্রকাশ করি।',
+          'We maintain transparent records for all field operations and relief activities.'
         )}
       />
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">

@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Heart, Users, Mail } from 'lucide-react';
+import Link from 'next/link';
+import { Heart, Users, Mail, HandHeart } from 'lucide-react';
 import { Language } from '@/types';
 
 interface Props {
   lang: Language;
-  onOpenDonation: () => void;
+  onOpenDonation?: () => void;
   onOpenVolunteer: () => void;
 }
 
@@ -35,23 +36,23 @@ export default function JoinCTA({ lang, onOpenDonation, onOpenVolunteer }: Props
                 {t('আপনার ছোট একটি পদক্ষেপ বদলে দিতে পারে একটি পরিবারের জীবন', 'One small step from you can change a family’s life')}
               </h2>
               <p className="text-emerald-50/85 leading-relaxed">
-                {t('অনুদান দিন, স্বেচ্ছাসেবক হোন, অথবা আমাদের সঙ্গে যুক্ত থাকুন।', 'Donate, volunteer, or simply stay connected with us.')}
+                {t('স্বেচ্ছাসেবক হোন, অথবা আমাদের মানবিক কার্যক্রমে যুক্ত থাকুন।', 'Join as a volunteer, or stay connected with our humanitarian work.')}
               </p>
               <div className="flex flex-wrap gap-3 pt-1">
                 <button
-                  onClick={onOpenDonation}
+                  onClick={onOpenVolunteer}
                   className="px-6 py-3 rounded-full bg-[#E53935] hover:bg-[#D32F2F] font-bold text-sm flex items-center gap-2 shadow-lg shadow-red-900/30 transition active:scale-[0.98] cursor-pointer"
                 >
-                  <Heart className="w-4 h-4 fill-white" />
-                  {t('অনুদান দিন', 'Donate')}
-                </button>
-                <button
-                  onClick={onOpenVolunteer}
-                  className="px-6 py-3 rounded-full bg-white/15 hover:bg-white/25 border border-white/30 backdrop-blur-md font-bold text-sm flex items-center gap-2 transition active:scale-[0.98] cursor-pointer"
-                >
                   <Users className="w-4 h-4" />
-                  {t('স্বেচ্ছাসেবক হোন', 'Volunteer')}
+                  {t('স্বেচ্ছাসেবক হোন', 'Join as Volunteer')}
                 </button>
+                <Link
+                  href="/get-help"
+                  className="px-6 py-3 rounded-full bg-white/15 hover:bg-white/25 border border-white/30 backdrop-blur-md font-bold text-sm flex items-center gap-2 transition active:scale-[0.98] cursor-pointer text-white"
+                >
+                  <HandHeart className="w-4 h-4 text-emerald-300" />
+                  {t('সহায়তার আবেদন', 'Request Aid')}
+                </Link>
               </div>
             </div>
 

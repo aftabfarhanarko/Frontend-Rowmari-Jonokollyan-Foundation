@@ -26,7 +26,6 @@ import BackToTop from '@/components/BackToTop';
 import AssistanceModal from '@/components/modals/AssistanceModal';
 import BloodRequestModal from '@/components/modals/BloodRequestModal';
 import BloodDonorModal from '@/components/modals/BloodDonorModal';
-import DonationModal from '@/components/modals/DonationModal';
 import VolunteerModal from '@/components/modals/VolunteerModal';
 import TrackingResultModal from '@/components/modals/TrackingResultModal';
 import AnnouncementModal from '@/components/modals/AnnouncementModal';
@@ -39,8 +38,6 @@ export default function HomePage() {
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [bloodRequestModalOpen, setBloodRequestModalOpen] = useState(false);
   const [bloodDonorModalOpen, setBloodDonorModalOpen] = useState(false);
-  const [donationModalOpen, setDonationModalOpen] = useState(false);
-  const [preselectedCampaign, setPreselectedCampaign] = useState<string>('general');
   const [volunteerModalOpen, setVolunteerModalOpen] = useState(false);
 
   const [trackingModalOpen, setTrackingModalOpen] = useState(false);
@@ -64,11 +61,6 @@ export default function HomePage() {
 
   const handleToggleLang = () => {
     setLang((prev) => (prev === 'bn' ? 'en' : 'bn'));
-  };
-
-  const handleOpenDonation = (campaignId?: string) => {
-    setPreselectedCampaign(campaignId || 'general');
-    setDonationModalOpen(true);
   };
 
   const handleSearchTracking = async (id: string) => {
@@ -115,7 +107,6 @@ export default function HomePage() {
       <Navbar
         lang={lang}
         onToggleLang={handleToggleLang}
-        onOpenDonation={() => handleOpenDonation('general')}
       />
 
       <main className="flex-1">
@@ -125,14 +116,12 @@ export default function HomePage() {
           onOpenActivities={scrollToActivities}
           onOpenBlood={() => setBloodRequestModalOpen(true)}
           onOpenDonor={() => setBloodDonorModalOpen(true)}
-          onOpenDonation={(campaign) => handleOpenDonation(campaign || 'general')}
         />
 
         <QuickActions
           lang={lang}
           onOpenAssistance={() => setAssistanceModalOpen(true)}
           onOpenBlood={() => setBloodRequestModalOpen(true)}
-          onOpenDonation={() => handleOpenDonation('general')}
           onOpenVolunteer={() => setVolunteerModalOpen(true)}
         />
 
@@ -154,13 +143,11 @@ export default function HomePage() {
 
         <OngoingCampaigns
           lang={lang}
-          onOpenDonation={handleOpenDonation}
         />
 
         <TrackAndSupport
           lang={lang}
           onSearchTracking={handleSearchTracking}
-          onOpenDonation={() => handleOpenDonation('general')}
           onOpenVolunteer={() => setVolunteerModalOpen(true)}
         />
 
@@ -170,13 +157,11 @@ export default function HomePage() {
         <AboutUs
           lang={lang}
           onOpenAssistance={() => setAssistanceModalOpen(true)}
-          onOpenDonation={() => handleOpenDonation('general')}
         />
 
         {/* Join CTA & Newsletter Subscription */}
         <JoinCTA
           lang={lang}
-          onOpenDonation={() => handleOpenDonation('general')}
           onOpenVolunteer={() => setVolunteerModalOpen(true)}
         />
       </main>
@@ -185,13 +170,12 @@ export default function HomePage() {
         lang={lang}
         onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenBlood={() => setBloodDonorModalOpen(true)}
-        onOpenDonation={() => handleOpenDonation('general')}
       />
 
       <MobileBottomBar
         lang={lang}
         onOpenAssistance={() => setAssistanceModalOpen(true)}
-        onOpenDonation={() => handleOpenDonation('general')}
+        onOpenBlood={() => setBloodDonorModalOpen(true)}
       />
 
       <BackToTop />
@@ -215,12 +199,7 @@ export default function HomePage() {
         lang={lang}
       />
 
-      <DonationModal
-        isOpen={donationModalOpen}
-        onClose={() => setDonationModalOpen(false)}
-        lang={lang}
-        preselectedCampaign={preselectedCampaign}
-      />
+
 
       <VolunteerModal
         isOpen={volunteerModalOpen}

@@ -18,7 +18,6 @@ import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
 import AssistanceModal from '@/components/modals/AssistanceModal';
-import DonationModal from '@/components/modals/DonationModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { GALLERY_ITEMS } from '@/data/mockData';
 import { Language } from '@/types';
@@ -46,7 +45,6 @@ export default function GalleryPage() {
 
   const [previewItem, setPreviewItem] = useState<typeof GALLERY_ITEMS[0] | null>(null);
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
-  const [donationModalOpen, setDonationModalOpen] = useState(false);
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
 
@@ -68,7 +66,6 @@ export default function GalleryPage() {
       <Navbar 
         lang={lang} 
         onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} 
-        onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <main className="flex-1 pb-20 sm:pb-24">
@@ -234,18 +231,9 @@ export default function GalleryPage() {
                   <button
                     onClick={() => {
                       setPreviewItem(null);
-                      setDonationModalOpen(true);
-                    }}
-                    className="flex-1 py-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center"
-                  >
-                    {t('অনুরূপ কার্যক্রমে অনুদান দিন', 'Support Similar Relief Work')}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setPreviewItem(null);
                       setAssistanceModalOpen(true);
                     }}
-                    className="flex-1 py-3 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center border border-white/25"
+                    className="w-full py-3 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center shadow-md"
                   >
                     {t('সহায়তার আবেদন করুন', 'Request Help in this Area')}
                   </button>
@@ -259,13 +247,11 @@ export default function GalleryPage() {
       <Footer 
         lang={lang} 
         onOpenAssistance={() => setAssistanceModalOpen(true)}
-        onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <MobileBottomBar
         lang={lang}
         onOpenAssistance={() => setAssistanceModalOpen(true)}
-        onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <BackToTop />
@@ -273,12 +259,6 @@ export default function GalleryPage() {
       <AssistanceModal
         isOpen={assistanceModalOpen}
         onClose={() => setAssistanceModalOpen(false)}
-        lang={lang}
-      />
-
-      <DonationModal
-        isOpen={donationModalOpen}
-        onClose={() => setDonationModalOpen(false)}
         lang={lang}
       />
     </div>

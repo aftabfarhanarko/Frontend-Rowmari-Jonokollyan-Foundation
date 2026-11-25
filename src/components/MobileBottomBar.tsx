@@ -2,19 +2,20 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Heart, HandHeart } from 'lucide-react';
+import { Droplet, HandHeart } from 'lucide-react';
 import { Language } from '@/types';
 
 interface MobileBottomBarProps {
   lang: Language;
   onOpenAssistance?: () => void;
   onOpenDonation?: () => void;
+  onOpenBlood?: () => void;
 }
 
 export default function MobileBottomBar({
   lang,
   onOpenAssistance,
-  onOpenDonation,
+  onOpenBlood,
 }: MobileBottomBarProps) {
   return (
     <aside aria-label="Quick Actions" className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200 px-4 py-2.5 flex items-center gap-3 sm:hidden shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
@@ -36,21 +37,21 @@ export default function MobileBottomBar({
         </Link>
       )}
 
-      {onOpenDonation ? (
+      {onOpenBlood ? (
         <button
-          onClick={onOpenDonation}
+          onClick={onOpenBlood}
           className="flex-1 py-2.5 px-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition active:scale-[0.98] cursor-pointer"
         >
-          <Heart className="w-4 h-4 fill-white text-white" />
-          <span>{lang === 'bn' ? 'অনুদান দিন' : 'Donate Now'}</span>
+          <Droplet className="w-4 h-4 fill-white text-white" />
+          <span>{lang === 'bn' ? 'রক্তদান পোর্টাল' : 'Blood Portal'}</span>
         </button>
       ) : (
         <Link
-          href="/donate"
+          href="/blood-donation"
           className="flex-1 py-2.5 px-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition active:scale-[0.98]"
         >
-          <Heart className="w-4 h-4 fill-white text-white" />
-          <span>{lang === 'bn' ? 'অনুদান দিন' : 'Donate Now'}</span>
+          <Droplet className="w-4 h-4 fill-white text-white" />
+          <span>{lang === 'bn' ? 'রক্তদান পোর্টাল' : 'Blood Portal'}</span>
         </Link>
       )}
     </aside>

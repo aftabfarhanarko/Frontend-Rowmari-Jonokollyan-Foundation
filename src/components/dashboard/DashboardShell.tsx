@@ -13,7 +13,6 @@ import { toast } from "sonner"
 import BloodRequestModal from "@/components/modals/BloodRequestModal"
 import BloodDonorModal from "@/components/modals/BloodDonorModal"
 import AssistanceModal from "@/components/modals/AssistanceModal"
-import DonationModal from "@/components/modals/DonationModal"
 import VolunteerModal from "@/components/modals/VolunteerModal"
 import AnnouncementModal from "@/components/modals/AnnouncementModal"
 
@@ -166,12 +165,7 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
         lang={lang}
       />
 
-      <DonationModal
-        isOpen={donationModalOpen}
-        onClose={() => setDonationModalOpen(false)}
-        lang={lang}
-        preselectedCampaign={preselectedCampaign}
-      />
+
 
       <VolunteerModal
         isOpen={volunteerModalOpen}

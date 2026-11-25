@@ -894,16 +894,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
             </Button>
           )}
 
-          {["SUPER_ADMIN", "ADMIN", "FINANCE_MANAGER"].includes(currentRole) && (
-            <Button
-              size="sm"
-              onClick={() => setDonationModalOpen(true)}
-              className="text-xs gap-1.5 h-8 bg-amber-600 hover:bg-amber-700 text-white shadow-xs"
-            >
-              <Coins className="size-3.5" />
-              <span>অনুদান সংগ্রহ</span>
-            </Button>
-          )}
+
 
           {currentRole === "COMMUNITY_MEMBER" && (
             <Button
@@ -944,20 +935,16 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
 
             <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs">
               <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
-                <span>সংগৃহীত অনুদান তহবিল</span>
+                <span>স্বেচ্ছাসেবক নেটওয়ার্ক</span>
                 <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
-                  <Coins className="size-4" />
+                  <Users className="size-4" />
                 </div>
               </div>
               <div className="text-2xl font-black text-stone-900">
-                {adminDashboard?.operations?.totalDonationsAmount !== undefined
-                  ? `৳${adminDashboard.operations.totalDonationsAmount.toLocaleString("bn-BD")}`
-                  : "৳১,৩২,৫০০"}
+                {volunteerItems.length ? `${volunteerItems.length} জন` : "১৩০+ জন"}
               </div>
               <div className="text-[11px] text-amber-700 font-semibold mt-1">
-                {adminDashboard?.operations?.totalDonations !== undefined
-                  ? `${adminDashboard.operations.totalDonations} টি সফল ট্রানজ্যাকশন`
-                  : "মোট অনুদান রেকর্ড"}
+                মাঠপর্যায়ে সক্রিয় টিম
               </div>
             </div>
 
@@ -1362,36 +1349,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
         </div>
       )}
 
-      {/* 8. Finance Tab (Role: FINANCE_MANAGER, ADMIN, SUPER_ADMIN) */}
-      {activeTab === "finance" && (
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
-          <DataTable
-            title="অর্থ ও অনুদান প্রাপ্তি হিসাব"
-            description="বিকাশ, নগদ ও ব্যাংক মাধ্যমে সংগৃহীত অনুদান ও মানি রিসিট (API: /api/donate)"
-            columns={financeColumns}
-            data={displayFinanceData}
-            searchable
-            searchPlaceholder="দাতার নাম, ক্যাম্পেইন বা রশিদ নং..."
-            pageSize={10}
-            actions={
-              <div className="flex items-center gap-2">
-                <Button
-                  size="xs"
-                  onClick={() => setDonationModalOpen(true)}
-                  className="gap-1 bg-[#0D5C35] text-white"
-                >
-                  <Plus className="size-3.5" />
-                  <span>নতুন অনুদান এন্ট্রি</span>
-                </Button>
-                <Button size="xs" variant="outline" className="gap-1 border-stone-300">
-                  <FileSpreadsheet className="size-3.5 text-emerald-700" />
-                  <span>রিপোর্ট ডাউনলোড</span>
-                </Button>
-              </div>
-            }
-          />
-        </div>
-      )}
+
 
       {/* 9. Campaigns & Content Tab */}
       {(activeTab === "content" || activeTab === "campaigns" || activeTab === "activities") && (
@@ -1530,48 +1488,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
         </div>
       )}
 
-      {/* 12. Community Member: My Donations */}
-      {activeTab === "my-donations" && (
-        <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-bold text-stone-900">আমার অনুদান ও রশিদ হিস্ট্রি</h2>
-              <p className="text-xs text-stone-500">ফাউন্ডেশনে আপনার প্রদত্ত অর্থ অনুদান ও মানি রিসিট (API: /api/donate)</p>
-            </div>
-            <Button
-              size="sm"
-              onClick={() => setDonationModalOpen(true)}
-              className="bg-[#0D5C35] text-white text-xs gap-1.5"
-            >
-              <Coins className="size-3.5" />
-              <span>অনুদান দিন</span>
-            </Button>
-          </div>
 
-          <div className="space-y-3">
-            {displayMyDonations.map((d: any) => (
-              <div key={d.receiptNo} className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 flex items-center justify-between flex-wrap gap-3">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-[#0D5C35]">{d.receiptNo}</span>
-                    <span className="font-bold text-stone-900 text-sm">{d.campaign}</span>
-                  </div>
-                  <div className="text-xs text-stone-500 mt-1">
-                    তারিখ: {d.date} • মাধ্যম: {d.paymentMethod} • TrxID: {d.transactionId}
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-base font-black text-emerald-700">৳{d.amount.toLocaleString("bn-BD")}</span>
-                  <Button size="xs" variant="outline" className="gap-1 border-stone-300">
-                    <Download className="size-3" />
-                    <span>রশিদ</span>
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* 13. Notifications Tab */}
       {activeTab === "notifications" && (

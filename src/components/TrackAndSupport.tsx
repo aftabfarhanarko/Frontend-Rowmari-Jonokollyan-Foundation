@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, HandHeart, Users } from 'lucide-react';
+import Link from 'next/link';
+import { Search, HandHeart, Users, Droplet } from 'lucide-react';
 import { Language } from '@/types';
 
 interface TrackAndSupportProps {
   lang: Language;
   onSearchTracking: (id: string) => void;
-  onOpenDonation: () => void;
+  onOpenDonation?: () => void;
   onOpenVolunteer: () => void;
 }
 
@@ -108,19 +109,19 @@ export default function TrackAndSupport({
               </h2>
               <p className="text-xs sm:text-sm text-emerald-100/90 mt-1">
                 {lang === 'bn'
-                  ? 'প্রতিটি অনুদানের পুঙ্খানুপুঙ্খ হিসাব প্রকাশ করা হয়।'
-                  : 'Every single donation is accounted for and audited transparently.'}
+                  ? 'স্বেচ্ছাসেবী হিসেবে যোগ দিন অথবা জরুরি রক্তদানে এগিয়ে আসুন।'
+                  : 'Join as a volunteer or step forward for voluntary blood donation.'}
               </p>
 
-              {/* Action Buttons matching wireframe */}
+              {/* Action Buttons */}
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <button
-                  onClick={onOpenDonation}
+                <Link
+                  href="/blood-donation"
                   className="px-6 py-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-sm transition shadow-md hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center gap-2"
                 >
-                  <HandHeart className="w-4 h-4 text-white" />
-                  <span>{lang === 'bn' ? 'অনুদান দিন' : 'Donate Now'}</span>
-                </button>
+                  <Droplet className="w-4 h-4 fill-white text-white" />
+                  <span>{lang === 'bn' ? 'রক্তদান পোর্টাল' : 'Blood Portal'}</span>
+                </Link>
 
                 <button
                   onClick={onOpenVolunteer}
@@ -134,8 +135,8 @@ export default function TrackAndSupport({
 
             <p className="text-xs text-emerald-200/70 mt-6 pt-4 border-t border-emerald-800/80 relative z-10">
               {lang === 'bn'
-                ? 'অনুদানের ক্ষেত্রে তাৎক্ষণিক ডিজিটাল রসিদ ও বাৎসরিক নিরীক্ষা বিবরণী প্রদান করা হয়।'
-                : 'Instant digital donation receipt and annual audit reports provided.'}
+                ? 'সকল মানবিক কার্যক্রমের তথ্য ও সেবা বিবরণী স্বচ্ছতার সাথে প্রকাশ করা হয়।'
+                : 'All humanitarian operations and relief details are published transparently.'}
             </p>
           </div>
         </div>

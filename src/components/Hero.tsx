@@ -97,16 +97,16 @@ export default function Hero({
       titleBn: 'অসহায় রোগীর সুচিকিৎসায় আমাদের নিরলস অঙ্গীকার',
       titleEn: 'Quality Healthcare for Every Underprivileged Life',
       subtitleBn:
-        'বিনা চিকিৎসায় যেন কোনো প্রাণ না হারায়—অসহায় রোগীদের বড় ধরনের অপারেশন, জটিল হৃদরোগ, থ্যালাসেমিয়া ও ওষুধে জরুরি আর্থিক অনুদান ও সহায়তা প্রদান।',
+        'বিনা চিকিৎসায় যেন কোনো প্রাণ না হারায়—অসহায় রোগীদের বড় ধরনের অপারেশন, জটিল হৃদরোগ, থ্যালাসেমিয়া ও ওষুধে জরুরি স্বাস্থ্যসেবা ও সহায়তা প্রদান।',
       subtitleEn:
         'No life should be lost for lack of medicine. Providing vital medical grants, complex surgery support, and free physician camps in remote river island unions.',
       btnPrimaryBn: 'চিকিৎসা সহায়তা আবেদন',
       btnPrimaryEn: 'Apply Medical Aid',
       btnPrimaryAction: 'assistance',
       btnPrimaryIcon: HeartPulse,
-      btnSecondaryBn: 'চিকিৎসায় অনুদান দিন',
-      btnSecondaryEn: 'Donate For Patients',
-      btnSecondaryAction: 'donation',
+      btnSecondaryBn: 'কার্যক্রম দেখুন',
+      btnSecondaryEn: 'View Healthcare Work',
+      btnSecondaryAction: 'activities',
       btnSecondaryIcon: HeartHandshake,
       imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1800&q=85',
       overlayGradient: 'from-[#064e3b]/90 via-[#065f46]/65 to-black/30',
@@ -127,9 +127,9 @@ export default function Hero({
       btnPrimaryEn: 'Scholarship Aid',
       btnPrimaryAction: 'assistance',
       btnPrimaryIcon: GraduationCap,
-      btnSecondaryBn: 'শিক্ষা তহবিলে অনুদান',
-      btnSecondaryEn: 'Support Education',
-      btnSecondaryAction: 'donation',
+      btnSecondaryBn: 'কার্যক্রম দেখুন',
+      btnSecondaryEn: 'View Education Work',
+      btnSecondaryAction: 'activities',
       btnSecondaryIcon: Sparkles,
       imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1800&q=85',
       overlayGradient: 'from-[#1e1b4b]/90 via-[#312e81]/65 to-black/30',
@@ -171,8 +171,7 @@ export default function Hero({
         else onOpenAssistance();
         break;
       case 'donation':
-        if (onOpenDonation) onOpenDonation('general');
-        else onOpenAssistance();
+        onOpenActivities();
         break;
       default:
         onOpenActivities();

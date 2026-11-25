@@ -113,15 +113,7 @@ export default function Footer({
                 </button>
               )}
 
-              {onOpenDonation && (
-                <button
-                  onClick={onOpenDonation}
-                  className="px-4 py-1.5 rounded-full bg-[#E53935] hover:bg-[#D32F2F] text-xs font-bold text-white transition active:scale-95 cursor-pointer flex items-center gap-1.5 shadow-sm shadow-red-950/40"
-                >
-                  <Heart className="w-3.5 h-3.5 fill-white" />
-                  <span>{isBn ? 'অনুদান দিন' : 'Donate'}</span>
-                </button>
-              )}
+
             </div>
           </div>
         </div>
@@ -308,16 +300,16 @@ export default function Footer({
 
               <li>
                 <Link
-                  href="/donate"
+                  href="/activities"
                   className="group flex items-start gap-2 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition"
                 >
-                  <Heart className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
+                  <FileText className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
                   <div>
                     <span className="block font-semibold text-white group-hover:text-emerald-300 transition text-xs sm:text-sm">
-                      {isBn ? 'অনুদানের পদ্ধতি ও ডিজিটাল রসিদ' : 'Donate & Instant Receipt'}
+                      {isBn ? 'আমাদের মানবিক কার্যক্রম' : 'Our Relief Activities'}
                     </span>
                     <span className="text-[11px] text-stone-400 block">
-                      {isBn ? 'বিকাশ, নগদ ও ব্যাংক মাধ্যমে স্বচ্ছ' : '100% transparent records'}
+                      {isBn ? 'চরাঞ্চলের অসহায় মানুষের সেবায়' : 'Dedicated to river island welfare'}
                     </span>
                   </div>
                 </Link>
@@ -405,10 +397,6 @@ export default function Footer({
             <span className="text-emerald-900 hidden sm:inline">•</span>
             <Link href="/terms" className="hover:text-emerald-300 hover:underline transition">
               {isBn ? 'ব্যবহারের শর্তাবলী' : 'Terms of Use'}
-            </Link>
-            <span className="text-emerald-900 hidden sm:inline">•</span>
-            <Link href="/donation-policy" className="hover:text-emerald-300 hover:underline transition">
-              {isBn ? 'অনুদান ও আর্থিক স্বচ্ছতা বিধি' : 'Donation Policy'}
             </Link>
             <span className="text-emerald-900 hidden sm:inline">•</span>
             <Link href="/blood-donation" className="hover:text-emerald-300 hover:underline transition">

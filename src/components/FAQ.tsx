@@ -30,10 +30,10 @@ const FAQS = [
     aEn: 'Click “Become a donor” in the blood donation section and fill in the form. We will contact you when someone needs your blood group.',
   },
   {
-    qBn: 'অনুদান কীভাবে ব্যবহার করা হয়?',
-    qEn: 'How are donations used?',
-    aBn: 'অনুদান নির্ধারিত ক্যাম্পেইন বা সাধারণ তহবিলে যায় এবং সরাসরি সহায়তা কার্যক্রমে ব্যয় হয়। হিসাব নিয়মিত প্রকাশ করা হয়।',
-    aEn: 'Donations go to the campaign you choose or the general fund and are spent on relief work. Accounts are published regularly.',
+    qBn: 'ফাউন্ডেশনের মানবিক সেবা কার্যক্রম কীভাবে পরিচালিত হয়?',
+    qEn: 'How are the foundation relief operations conducted?',
+    aBn: 'আমাদের সকল সেবামূলক কার্যক্রম ও ক্যাম্পেইন সম্পূর্ণ নিজস্ব স্বেচ্ছাসেবক দল এবং স্থানীয় প্রতিনিধিদের প্রত্যক্ষ অংশগ্রহণে পরিচালিত হয়।',
+    aEn: 'All our relief activities and campaigns are directly organized and executed by registered volunteers and field teams.',
   },
   {
     qBn: 'স্বেচ্ছাসেবক হতে কী করতে হবে?',

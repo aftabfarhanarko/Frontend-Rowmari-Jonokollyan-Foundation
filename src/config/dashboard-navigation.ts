@@ -29,7 +29,7 @@ export const ROLE_METAS: Record<string, RoleMeta> = {
     role: "COMMUNITY_MEMBER" as UserRole,
     titleBn: "সাধারণ সদস্য / নাগরিক",
     titleEn: "Community Member",
-    descriptionBn: "ব্যক্তিগত আবেদন, রক্তের অনুরোধ ও অনুদানের হিস্ট্রি",
+    descriptionBn: "ব্যক্তিগত আবেদন, রক্তের অনুরোধ ও সেবা হিস্ট্রি",
     colorScheme: {
       bg: "bg-stone-100 text-stone-800",
       text: "text-stone-700",
@@ -144,16 +144,7 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
     roles: ["SUPER_ADMIN"],
     descriptionBn: "স্বেচ্ছাসেবী নিবন্ধন ও টিম পরিচালনা",
   },
-  {
-    id: "finance",
-    titleBn: "অনুদান হিসাব ও রশিদ",
-    titleEn: "Donations & Funds",
-    href: "/dashboard?tab=finance",
-    iconName: "Coins",
-    category: "finance",
-    roles: ["SUPER_ADMIN"],
-    descriptionBn: "অনুদান সংগ্রহ, ব্যাংক রশিদ ও হিসাব পর্যালোচনা",
-  },
+
   {
     id: "messages",
     titleBn: "যোগাযোগের বার্তা",
@@ -218,16 +209,7 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
     roles: ["COMMUNITY_MEMBER"],
     descriptionBn: "আপনার পরিবারের জন্য চাওয়া রক্তের স্ট্যাটাস",
   },
-  {
-    id: "my-donations",
-    titleBn: "আমার অনুদান ও রশিদ",
-    titleEn: "My Donations",
-    href: "/dashboard?tab=my-donations",
-    iconName: "Receipt",
-    category: "community",
-    roles: ["COMMUNITY_MEMBER"],
-    descriptionBn: "আপনার প্রদত্ত সকল অনুদানের ইতিহাস ও রশিদ",
-  },
+
 ]
 
 export function getNavItemsForRole(role: UserRole): NavItemConfig[] {

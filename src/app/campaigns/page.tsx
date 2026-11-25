@@ -18,7 +18,6 @@ import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
 import AssistanceModal from '@/components/modals/AssistanceModal';
-import DonationModal from '@/components/modals/DonationModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { useGetCampaignsQuery } from '@/store/api/campaignsApi';
 import { Language } from '@/types';
@@ -26,7 +25,6 @@ import { Language } from '@/types';
 export default function CampaignsPage() {
   const [lang, setLang] = useState<Language>('bn');
   const [activeTab, setActiveTab] = useState<'all' | 'winter' | 'medical' | 'education'>('all');
-  const [modalOpen, setModalOpen] = useState(false);
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [selectedCampaignCategory, setSelectedCampaignCategory] = useState('general');
   const { data: campaigns = [], isLoading, isError } = useGetCampaignsQuery();
@@ -50,7 +48,6 @@ export default function CampaignsPage() {
       <Navbar 
         lang={lang} 
         onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} 
-        onOpenDonation={() => setModalOpen(true)}
       />
 
       <main className="flex-1 pb-20 sm:pb-24">
@@ -190,14 +187,11 @@ export default function CampaignsPage() {
 
                   <div className="p-5 sm:p-6 pt-0">
                     <button
-                      onClick={() => {
-                        setSelectedCampaignCategory(camp.category);
-                        setModalOpen(true);
-                      }}
-                      className="w-full py-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-md shadow-red-950/20 active:scale-98"
+                      onClick={() => setAssistanceModalOpen(true)}
+                      className="w-full py-3 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-md active:scale-98"
                     >
-                      <Heart className="w-4 h-4 fill-white" />
-                      <span>{t('এই তহবিলে অনুদান দিন', 'Donate to this Campaign')}</span>
+                      <Heart className="w-4 h-4 text-emerald-300" />
+                      <span>{t('সহায়তার আবেদন করুন', 'Apply for Assistance')}</span>
                     </button>
                   </div>
                 </motion.div>
@@ -210,23 +204,14 @@ export default function CampaignsPage() {
       <Footer 
         lang={lang} 
         onOpenAssistance={() => setAssistanceModalOpen(true)}
-        onOpenDonation={() => setModalOpen(true)}
       />
 
       <MobileBottomBar
         lang={lang}
         onOpenAssistance={() => setAssistanceModalOpen(true)}
-        onOpenDonation={() => setModalOpen(true)}
       />
 
       <BackToTop />
-
-      <DonationModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        lang={lang}
-        preselectedCampaign={selectedCampaignCategory}
-      />
 
       <AssistanceModal
         isOpen={assistanceModalOpen}

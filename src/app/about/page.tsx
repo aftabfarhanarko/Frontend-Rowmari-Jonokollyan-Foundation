@@ -406,17 +406,17 @@ export default function AboutPage() {
 
           <div className="p-6 sm:p-7 rounded-2xl bg-white border-2 border-[#E53935] flex flex-col justify-between shadow-xl shadow-red-950/10">
             <div>
-              <h3 className="text-lg sm:text-xl font-bold text-[#E53935] mb-2">{t('মানুষের পাশে দাঁড়াতে চান?', 'Want to Support?')}</h3>
+              <h3 className="text-lg sm:text-xl font-bold text-[#E53935] mb-2">{t('রক্তদানে জীবন বাঁচান', 'Donate Blood, Save Lives')}</h3>
               <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-4">
-                {t('আপনার যেকোনো পরিমাণ অনুদান চরাঞ্চলের শীতার্ত পরিবার ও অসহায় রোগীর চিকিৎসার ভরসা জোগাতে পারে।', 'Your charitable donation directly funds life-saving emergency medical aid and blankets.')}
+                {t('আপনার এক ব্যাগ রক্ত চরাঞ্চলের মুমূর্ষু রোগী ও প্রসূতি মায়ের অমূল্য জীবন বাঁচাতে পারে।', 'Your single unit of blood can save a critical patient or expectant mother.')}
               </p>
             </div>
-            <button
-              onClick={() => setDonationModalOpen(true)}
-              className="w-full py-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs sm:text-sm transition cursor-pointer shadow-md"
+            <Link
+              href="/blood-donation"
+              className="w-full py-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs sm:text-sm transition cursor-pointer shadow-md text-center block"
             >
-              {t('তহবিলে অনুদান দিন', 'Donate to Relief Fund')}
-            </button>
+              {t('রক্তদান পোর্টালে যান', 'Visit Blood Portal')}
+            </Link>
           </div>
         </div>
       </main>

@@ -1,14 +1,14 @@
 'use client';
 
 import React from 'react';
-import { Heart, Droplet, HandHeart, Users, ArrowRight } from 'lucide-react';
+import { Heart, Droplet, HandHeart, Users, ArrowRight, Activity } from 'lucide-react';
 import { Language } from '@/types';
 
 interface QuickActionsProps {
   lang: Language;
   onOpenAssistance: () => void;
   onOpenBlood: () => void;
-  onOpenDonation: () => void;
+  onOpenDonation?: () => void;
   onOpenVolunteer: () => void;
 }
 
@@ -41,13 +41,17 @@ export default function QuickActions({
       theme: 'red',
     },
     {
-      id: 'donate',
-      icon: HandHeart,
-      titleBn: 'অনুদান দিন',
-      titleEn: 'Donate Funds',
-      subtitleBn: 'স্বচ্ছ হিসাবসহ, ডিজিটাল রসিদ',
-      subtitleEn: 'Transparent Records & Instant Receipt',
-      action: onOpenDonation,
+      id: 'activities',
+      icon: Activity,
+      titleBn: 'আমাদের কার্যক্রম',
+      titleEn: 'Our Activities',
+      subtitleBn: 'মাঠপর্যায়ের মানবিক সেবামূলক কাজ',
+      subtitleEn: 'Grassroots Humanitarian Work',
+      action: () => {
+        const el = document.getElementById('activities');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        else window.location.href = '/activities';
+      },
       theme: 'emerald',
     },
     {

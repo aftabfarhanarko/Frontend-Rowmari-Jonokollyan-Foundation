@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { Landmark, Target, Eye, Clock } from 'lucide-react';
 import { Language } from '@/types';
 import { FOUNDATION_INFO } from '@/data/mockData';
@@ -8,7 +9,7 @@ import { FOUNDATION_INFO } from '@/data/mockData';
 interface AboutUsProps {
   lang: Language;
   onOpenAssistance: () => void;
-  onOpenDonation: () => void;
+  onOpenDonation?: () => void;
 }
 
 export default function AboutUs({
@@ -108,12 +109,12 @@ export default function AboutUs({
               >
                 {lang === 'bn' ? 'সহায়তার আবেদন করুন' : 'Request Assistance'}
               </button>
-              <button
-                onClick={onOpenDonation}
+              <Link
+                href="/volunteer"
                 className="px-5 py-2.5 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-semibold text-xs sm:text-sm transition shadow-sm cursor-pointer"
               >
-                {lang === 'bn' ? 'তহবিলে অনুদান দিন' : 'Donate to Fund'}
-              </button>
+                {lang === 'bn' ? 'স্বেচ্ছাসেবক হিসেবে যুক্ত হোন' : 'Join as Volunteer'}
+              </Link>
             </div>
           </div>
 

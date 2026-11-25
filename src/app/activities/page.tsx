@@ -21,7 +21,6 @@ import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
 import AssistanceModal from '@/components/modals/AssistanceModal';
-import DonationModal from '@/components/modals/DonationModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { useGetActivitiesQuery } from '@/store/api/activitiesApi';
 import { Language, ActivityCategory, ActivityItem } from '@/types';
@@ -32,7 +31,6 @@ export default function ActivitiesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedActivity, setSelectedActivity] = useState<ActivityItem | null>(null);
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
-  const [donationModalOpen, setDonationModalOpen] = useState(false);
   const { data: activities = [], isLoading, isError } = useGetActivitiesQuery();
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
@@ -61,7 +59,6 @@ export default function ActivitiesPage() {
       <Navbar 
         lang={lang} 
         onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} 
-        onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <main className="flex-1 pb-20 sm:pb-24">
@@ -278,18 +275,9 @@ export default function ActivitiesPage() {
                   <button
                     onClick={() => {
                       setSelectedActivity(null);
-                      setDonationModalOpen(true);
-                    }}
-                    className="flex-1 py-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center shadow-md"
-                  >
-                    {t('অনুরূপ কার্যক্রমে অনুদান দিন', 'Donate to this Wing')}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setSelectedActivity(null);
                       setAssistanceModalOpen(true);
                     }}
-                    className="flex-1 py-3 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center shadow-md"
+                    className="w-full py-3 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center shadow-md"
                   >
                     {t('সহায়তার আবেদন করুন', 'Request Help in Area')}
                   </button>
@@ -303,13 +291,11 @@ export default function ActivitiesPage() {
       <Footer 
         lang={lang} 
         onOpenAssistance={() => setAssistanceModalOpen(true)}
-        onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <MobileBottomBar
         lang={lang}
         onOpenAssistance={() => setAssistanceModalOpen(true)}
-        onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <BackToTop />
@@ -317,12 +303,6 @@ export default function ActivitiesPage() {
       <AssistanceModal
         isOpen={assistanceModalOpen}
         onClose={() => setAssistanceModalOpen(false)}
-        lang={lang}
-      />
-
-      <DonationModal
-        isOpen={donationModalOpen}
-        onClose={() => setDonationModalOpen(false)}
         lang={lang}
       />
     </div>
