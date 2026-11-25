@@ -11,7 +11,7 @@ export default function DashboardPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#FDFBF9] flex items-center justify-center">
+        <div className="min-h-screen bg-white flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
             <div className="size-8 border-3 border-[#0D5C35] border-t-transparent rounded-full animate-spin" />
             <p className="text-sm text-stone-600 font-medium">ড্যাশবোর্ড লোড হচ্ছে...</p>

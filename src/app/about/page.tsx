@@ -121,7 +121,7 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAFBF9] text-[#1E293B]">
+    <div className="min-h-screen flex flex-col bg-white text-[#1E293B]">
       <Navbar 
         lang={lang} 
         onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} 
@@ -130,7 +130,7 @@ export default function AboutPage() {
 
       <main className="flex-1 pb-20 sm:pb-24">
         {/* Hero Section with Ambient Gradient Orbs */}
-        <section className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16 bg-gradient-to-b from-emerald-50/50 via-white to-[#FAFBF9]">
+        <section className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16 bg-gradient-to-b from-emerald-50/50 via-white to-white">
           <div aria-hidden className="pointer-events-none absolute inset-0">
             <div className="absolute -top-20 -left-20 h-72 w-72 rounded-full bg-emerald-300/30 blur-3xl" />
             <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />

@@ -51,7 +51,7 @@ export default function ImpactStats({ lang }: ImpactStatsProps) {
     },
   ];
   return (
-    <section className="py-10 md:py-14 bg-stone-50/40 border-y border-stone-200/50">
+    <section className="py-10 md:py-14 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-8">

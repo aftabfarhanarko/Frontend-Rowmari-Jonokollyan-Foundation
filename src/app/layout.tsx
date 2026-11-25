@@ -30,7 +30,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-full flex flex-col bg-[#FAFBF9] text-[#1E293B]">
+      <body className="min-h-full flex flex-col bg-white text-[#1E293B]">
         <ReduxProvider>
           {children}
         </ReduxProvider>

@@ -91,7 +91,7 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
   const isPermitted = canAccessNavItem(currentRole, activeTab)
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-x-clip bg-linear-to-b from-[#FDFBF9] via-[#FAF8F5] to-[#F5F3EE] font-sans text-[#1E293B] antialiased selection:bg-emerald-200/60 selection:text-emerald-950">
+    <div className="relative flex min-h-screen flex-col overflow-x-clip bg-white font-sans text-[#1E293B] antialiased selection:bg-emerald-200/60 selection:text-emerald-950">
       {/* Decorative ambient background */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-40 -left-32 size-120 rounded-full bg-emerald-200/30 blur-3xl" />

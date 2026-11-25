@@ -103,7 +103,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAFBF9] text-[#1E293B]">
+    <div className="min-h-screen flex flex-col bg-white text-[#1E293B]">
       <Navbar
         lang={lang}
         onToggleLang={handleToggleLang}

@@ -121,7 +121,7 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-[#FAFBF9] text-stone-900 selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="min-h-screen flex flex-col justify-between bg-white text-stone-900 selection:bg-emerald-100 selection:text-emerald-900">
       <Navbar
         lang={lang}
         onToggleLang={toggleLang}
@@ -296,7 +296,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-[#FAFBF9]">
+        <div className="min-h-screen flex items-center justify-center bg-white">
           <Loader2 className="w-8 h-8 animate-spin text-[#0D5C35]" />
         </div>
       }
