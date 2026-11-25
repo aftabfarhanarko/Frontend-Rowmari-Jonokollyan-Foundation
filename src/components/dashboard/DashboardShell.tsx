@@ -50,15 +50,19 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
 
   // Client-side authentication verification:
   // If user is unauthenticated (no session cookie and store is unauthenticated), redirect to login
+  // Single Super Admin architecture: Non-super-admin users are strictly denied dashboard access
   useEffect(() => {
     if (typeof document !== "undefined") {
       const hasSessionCookie = document.cookie.includes("rjf_session=1")
       if (!hasSessionCookie && !isAuthenticated) {
-        toast.error("ড্যাশবোর্ডে প্রবেশ করতে অনুগ্রহ করে প্রথমে লগইন বা অ্যাকাউন্ট তৈরি করুন।")
+        toast.error("ড্যাশবোর্ডে প্রবেশ করতে অনুগ্রহ করে প্রথমে লগইন করুন।")
         router.push("/login?redirect=/dashboard")
+      } else if (isAuthenticated && currentRole !== "SUPER_ADMIN") {
+        toast.error("ড্যাশবোর্ডে প্রবেশের অধিকার শুধুমাত্র সুপার অ্যাডমিনের রয়েছে।")
+        router.push("/?denied=super_admin_only")
       }
     }
-  }, [isAuthenticated, router])
+  }, [isAuthenticated, currentRole, router])
 
   // Sync with searchParams or defaultTab if changes
   useEffect(() => {
@@ -119,7 +123,7 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
                 key={activeTab}
                 className="animate-in fade-in slide-in-from-bottom-2 duration-300"
               >
-                <DashboardContent activeTab={activeTab} />
+                <DashboardContent activeTab={activeTab} onSelectTab={(tabId) => setActiveTab(tabId)} />
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center p-8 text-center min-h-[50vh]">

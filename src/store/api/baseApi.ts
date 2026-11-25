@@ -23,6 +23,9 @@ export const baseApi = createApi({
     'MyRecords',
     'AccessControl',
     'AuditLogs',
+    'Pages',
+    'Settings',
+    'Media',
   ],
   endpoints: () => ({}),
 });

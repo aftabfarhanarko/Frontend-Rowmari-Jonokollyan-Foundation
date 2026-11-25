@@ -26,11 +26,13 @@ import { FOUNDATION_INFO } from '@/data/mockData';
 import { Language } from '@/types';
 import { contactSchema, ContactFormData } from '@/lib/validations/contactSchema';
 import { useSendContactMessageMutation } from '@/store/api/applicationsApi';
+import { useGetPublicSettingsQuery } from '@/store/api/adminApi';
 import { toast } from 'sonner';
 
 export default function ContactPage() {
   const [lang, setLang] = useState<Language>('bn');
   const [sendContactMessage, { isLoading: isSubmitting }] = useSendContactMessageMutation();
+  const { data: publicSettings } = useGetPublicSettingsQuery();
   const [submitted, setSubmitted] = useState(false);
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);

@@ -23,12 +23,14 @@ import BackToTop from '@/components/BackToTop';
 import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
+import { useGetPublicPageQuery } from '@/store/api/adminApi';
 import { Language } from '@/types';
 
 export default function AboutPage() {
   const [lang, setLang] = useState<Language>('bn');
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
+  const { data: pageData } = useGetPublicPageQuery('about-us');
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
 

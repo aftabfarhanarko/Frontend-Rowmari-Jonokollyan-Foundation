@@ -42,6 +42,9 @@ import {
   UserCog,
   Check,
   X,
+  Image as ImageIcon,
+  Newspaper,
+  Mail,
 } from "lucide-react"
 import {
   useGetExecutiveDashboardQuery,
@@ -65,13 +68,22 @@ import {
 } from "@/store/api/dashboardApi"
 import { useGetBloodRequestsQuery } from "@/store/api/bloodApi"
 import { useGetCampaignsQuery } from "@/store/api/campaignsApi"
+import { useGetAdminDashboardQuery } from "@/store/api/adminApi"
+import { CmsPagesTab } from "@/components/dashboard/cms/CmsPagesTab"
+import { CmsNewsTab } from "@/components/dashboard/cms/CmsNewsTab"
+import { CmsGalleryTab } from "@/components/dashboard/cms/CmsGalleryTab"
+import { CmsSettingsTab } from "@/components/dashboard/cms/CmsSettingsTab"
+import { CmsUsersTab } from "@/components/dashboard/cms/CmsUsersTab"
+import { CmsMessagesTab } from "@/components/dashboard/cms/CmsMessagesTab"
+import { CmsActivityLogsTab } from "@/components/dashboard/cms/CmsActivityLogsTab"
 import { toast } from "sonner"
 
 interface DashboardContentProps {
   activeTab: string
+  onSelectTab?: (tab: string) => void
 }
 
-export function DashboardContent({ activeTab }: DashboardContentProps) {
+export function DashboardContent({ activeTab, onSelectTab }: DashboardContentProps) {
   const {
     currentRole,
     setBloodRequestModalOpen,
@@ -88,6 +100,10 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
 
   const { data: execDashboard, isLoading: isDashboardLoading, refetch: refetchDashboard } = useGetExecutiveDashboardQuery(undefined, {
     skip: !isPrivileged,
+  })
+
+  const { data: adminDashboard, isLoading: isAdminDashboardLoading, refetch: refetchAdminDashboard } = useGetAdminDashboardQuery(undefined, {
+    skip: currentRole !== "SUPER_ADMIN",
   })
 
   const { data: bloodRequestsRes, isLoading: isBloodLoading, refetch: refetchBlood } = useGetBloodRequestsQuery()
@@ -902,10 +918,49 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
         </div>
       </div>
 
-      {/* 2. Overview Tab */}
+      {/* 2. Overview Tab (Single Super Admin CMS Control Center) */}
       {activeTab === "overview" && (
         <>
+          {/* Top Real-time Statistics */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs">
+              <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
+                <span>মোট নিবন্ধিত ইউজার</span>
+                <div className="p-2 rounded-xl bg-purple-50 text-purple-600">
+                  <Users className="size-4" />
+                </div>
+              </div>
+              <div className="text-2xl font-black text-stone-900">
+                {adminDashboard?.users?.total !== undefined
+                  ? `${adminDashboard.users.total} জন`
+                  : `${userItems.length || 24} জন`}
+              </div>
+              <div className="text-[11px] text-purple-700 font-semibold mt-1">
+                {adminDashboard?.users?.active !== undefined
+                  ? `${adminDashboard.users.active} জন সক্রিয় সদস্য`
+                  : "সকল সাধারণ সদস্য"}
+              </div>
+            </div>
+
+            <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs">
+              <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
+                <span>সংগৃহীত অনুদান তহবিল</span>
+                <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
+                  <Coins className="size-4" />
+                </div>
+              </div>
+              <div className="text-2xl font-black text-stone-900">
+                {adminDashboard?.operations?.totalDonationsAmount !== undefined
+                  ? `৳${adminDashboard.operations.totalDonationsAmount.toLocaleString("bn-BD")}`
+                  : "৳১,৩২,৫০০"}
+              </div>
+              <div className="text-[11px] text-amber-700 font-semibold mt-1">
+                {adminDashboard?.operations?.totalDonations !== undefined
+                  ? `${adminDashboard.operations.totalDonations} টি সফল ট্রানজ্যাকশন`
+                  : "মোট অনুদান রেকর্ড"}
+              </div>
+            </div>
+
             <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs">
               <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
                 <span>জরুরি রক্তের আবেদন</span>
@@ -914,73 +969,198 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
                 </div>
               </div>
               <div className="text-2xl font-black text-stone-900">
-                {execDashboard?.bloodNetwork?.totalBloodRequests !== undefined
-                  ? `${execDashboard.bloodNetwork.totalBloodRequests} টি`
-                  : "৪ টি"}
+                {adminDashboard?.operations?.totalBloodRequests !== undefined
+                  ? `${adminDashboard.operations.totalBloodRequests} টি`
+                  : `${bloodItems.length || 4} টি`}
               </div>
               <div className="text-[11px] text-red-600 font-semibold mt-1">
-                {execDashboard?.bloodNetwork?.availableDonors !== undefined
-                  ? `${execDashboard.bloodNetwork.availableDonors} জন রক্তদাতা প্রস্তুত`
-                  : "২ টিতে জরুরি রক্তদাতা প্রয়োজন"}
+                লাইভ নেটওয়ার্ক সক্রিয়
               </div>
             </div>
 
             <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs">
               <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
-                <span>সহায়তা আবেদনপত্র</span>
+                <span>সহায়তার আবেদন</span>
                 <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
                   <HeartPulse className="size-4" />
                 </div>
               </div>
               <div className="text-2xl font-black text-stone-900">
-                {execDashboard?.assistance?.totalApplicationsSubmitted !== undefined
-                  ? `${execDashboard.assistance.totalApplicationsSubmitted} টি`
-                  : "১২ টি"}
+                {adminDashboard?.operations?.totalApplications !== undefined
+                  ? `${adminDashboard.operations.totalApplications} টি`
+                  : `${appItems.length || 12} টি`}
               </div>
               <div className="text-[11px] text-emerald-700 font-semibold mt-1">
-                {execDashboard?.assistance?.applicationsApproved !== undefined
-                  ? `${execDashboard.assistance.applicationsApproved} টি যাচাই সম্পন্ন`
-                  : "৮ টি যাচাই সম্পন্ন"}
-              </div>
-            </div>
-
-            <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs">
-              <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
-                <span>চলতি মাসের তহবিল</span>
-                <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
-                  <Coins className="size-4" />
-                </div>
-              </div>
-              <div className="text-2xl font-black text-stone-900">
-                {execDashboard?.financials?.totalDonationsReceived !== undefined
-                  ? `৳${execDashboard.financials.totalDonationsReceived.toLocaleString("bn-BD")}`
-                  : "৳১,৩২,৫০০"}
-              </div>
-              <div className="text-[11px] text-stone-500 font-semibold mt-1">
-                {execDashboard?.financials?.totalExpensesDisbursed !== undefined
-                  ? `ব্যয়: ৳${execDashboard.financials.totalExpensesDisbursed.toLocaleString("bn-BD")}`
-                  : "মোট ৪২ জন শুভাকাঙ্ক্ষী"}
-              </div>
-            </div>
-
-            <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs">
-              <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
-                <span>সক্রিয় স্বেচ্ছাসেবক</span>
-                <div className="p-2 rounded-xl bg-teal-50 text-teal-600">
-                  <Users className="size-4" />
-                </div>
-              </div>
-              <div className="text-2xl font-black text-stone-900">
-                {execDashboard?.volunteers?.activeApprovedVolunteers !== undefined
-                  ? `${execDashboard.volunteers.activeApprovedVolunteers} জন`
-                  : "৪৮ জন"}
-              </div>
-              <div className="text-[11px] text-teal-700 font-semibold mt-1">
-                ৬টি ইউনিয়ন টিম
+                চিকিৎসা ও শিক্ষা সহায়তা
               </div>
             </div>
           </div>
 
+          {/* Super Admin CMS Management Quick Access Hub */}
+          <div className="bg-white p-5 rounded-3xl border border-stone-200/90 shadow-2xs">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-stone-100 pb-3 mb-4">
+              <div>
+                <h3 className="text-base font-extrabold text-stone-900">
+                  পাবলিক ওয়েবসাইট CMS নিয়ন্ত্রণ কেন্দ্র (Content Management)
+                </h3>
+                <p className="text-xs text-stone-500">
+                  ওয়েবসাইটের প্রতিটি পাবলিক পেজ, খবর, নোটিশ, গ্যালারি ও সেটিংস এক ক্লিকে নিয়ন্ত্রণ করুন
+                </p>
+              </div>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200">
+                <ShieldCheck className="size-3.5 text-emerald-600" />
+                একচ্ছত্র সুপার অ্যাডমিন নিয়ন্ত্রণ
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <button
+                type="button"
+                onClick={() => onSelectTab?.("pages")}
+                className="flex items-start gap-3 p-3.5 rounded-2xl border border-stone-200/80 bg-stone-50/50 hover:bg-emerald-50/50 hover:border-emerald-300 text-left transition-all group cursor-pointer"
+              >
+                <div className="p-2.5 rounded-xl bg-white border border-stone-200 text-[#0D5C35] group-hover:bg-[#0D5C35] group-hover:text-white transition-colors shadow-2xs">
+                  <FileText className="size-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-stone-900 text-xs group-hover:text-[#0D5C35]">
+                      পাবলিক পেজ ম্যানেজমেন্ট
+                    </span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-stone-200 text-stone-700">
+                      {adminDashboard?.cms?.totalPages !== undefined ? `${adminDashboard.cms.totalPages}টি` : "CMS"}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
+                    হোম, আমাদের কথা, যোগাযোগ, পলিসি ইত্যাদির টেক্সট ও ব্যানার আপডেট
+                  </p>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onSelectTab?.("news")}
+                className="flex items-start gap-3 p-3.5 rounded-2xl border border-stone-200/80 bg-stone-50/50 hover:bg-emerald-50/50 hover:border-emerald-300 text-left transition-all group cursor-pointer"
+              >
+                <div className="p-2.5 rounded-xl bg-white border border-stone-200 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors shadow-2xs">
+                  <Newspaper className="size-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-stone-900 text-xs group-hover:text-blue-700">
+                      নিউজ ও নোটিশ বোর্ড
+                    </span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-100 text-blue-800">
+                      {adminDashboard?.cms?.totalNews !== undefined ? `${adminDashboard.cms.totalNews}টি` : "লাইভ"}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
+                    জরুরি বিজ্ঞপ্তি, প্রেস রিলিজ ও কার্যক্রমের সংবাদ প্রকাশনা
+                  </p>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onSelectTab?.("gallery")}
+                className="flex items-start gap-3 p-3.5 rounded-2xl border border-stone-200/80 bg-stone-50/50 hover:bg-emerald-50/50 hover:border-emerald-300 text-left transition-all group cursor-pointer"
+              >
+                <div className="p-2.5 rounded-xl bg-white border border-stone-200 text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors shadow-2xs">
+                  <ImageIcon className="size-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-stone-900 text-xs group-hover:text-purple-700">
+                      গ্যালারি ও মিডিয়া ফাইলস
+                    </span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-purple-100 text-purple-800">
+                      {adminDashboard?.cms?.totalGallery !== undefined ? `${adminDashboard.cms.totalGallery}টি` : "ছবি"}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
+                    অনুষ্ঠান ও ত্রাণের ফটো অ্যালবাম ও কন্টেন্ট মিডিয়া লিংক
+                  </p>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onSelectTab?.("messages")}
+                className="flex items-start gap-3 p-3.5 rounded-2xl border border-stone-200/80 bg-stone-50/50 hover:bg-emerald-50/50 hover:border-emerald-300 text-left transition-all group cursor-pointer"
+              >
+                <div className="p-2.5 rounded-xl bg-white border border-stone-200 text-teal-600 group-hover:bg-teal-600 group-hover:text-white transition-colors shadow-2xs">
+                  <Mail className="size-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-stone-900 text-xs group-hover:text-teal-700">
+                      যোগাযোগের বার্তা
+                    </span>
+                    {adminDashboard?.operations?.totalContactMessages ? (
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-100 text-red-700 animate-pulse">
+                        {adminDashboard.operations.totalContactMessages} বার্তা
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-stone-200 text-stone-700">
+                        ইনবক্স
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
+                    পাবলিক ওয়েবসাইট থেকে পাঠানো সরাসরি নাগরিক বার্তা
+                  </p>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onSelectTab?.("users")}
+                className="flex items-start gap-3 p-3.5 rounded-2xl border border-stone-200/80 bg-stone-50/50 hover:bg-emerald-50/50 hover:border-emerald-300 text-left transition-all group cursor-pointer"
+              >
+                <div className="p-2.5 rounded-xl bg-white border border-stone-200 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors shadow-2xs">
+                  <UserCheck className="size-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-stone-900 text-xs group-hover:text-indigo-700">
+                      ইউজার ও অ্যাকাউন্ট
+                    </span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-800">
+                      ব্যবহারকারী
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
+                    নিবন্ধিত সকল সদস্যের তালিকা, অনুসন্ধান ও এক্সেস স্ট্যাটাস
+                  </p>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onSelectTab?.("settings")}
+                className="flex items-start gap-3 p-3.5 rounded-2xl border border-stone-200/80 bg-stone-50/50 hover:bg-emerald-50/50 hover:border-emerald-300 text-left transition-all group cursor-pointer"
+              >
+                <div className="p-2.5 rounded-xl bg-white border border-stone-200 text-stone-700 group-hover:bg-stone-800 group-hover:text-white transition-colors shadow-2xs">
+                  <Key className="size-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-stone-900 text-xs group-hover:text-stone-900">
+                      ওয়েবসাইট সেটিংস ও এসইও
+                    </span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-stone-200 text-stone-700">
+                      কনফিগ
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
+                    হটলাইন, ইমার্জেন্সি ফোন, অফিস ঠিকানা ও গ্লোবাল মেটাট্যাগ
+                  </p>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Live Blood Requests Table */}
           <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
             <DataTable
               title="জরুরি রক্তের অনুরোধসমূহ (লাইভ ফিড)"
@@ -994,6 +1174,21 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
           </div>
         </>
       )}
+
+      {/* 2.1 Public Pages CMS Tab */}
+      {activeTab === "pages" && <CmsPagesTab />}
+
+      {/* 2.2 News & Notices Tab */}
+      {activeTab === "news" && <CmsNewsTab />}
+
+      {/* 2.3 Gallery & Media Tab */}
+      {activeTab === "gallery" && <CmsGalleryTab />}
+
+      {/* 2.4 Contact Messages Tab */}
+      {activeTab === "messages" && <CmsMessagesTab />}
+
+      {/* 2.5 Activity & Audit Logs Tab */}
+      {activeTab === "activity-logs" && <CmsActivityLogsTab />}
 
       {/* 3. Blood Network Tab (Role: BLOOD_COORDINATOR, ADMIN, SUPER_ADMIN) */}
       {activeTab === "blood" && (
@@ -1198,8 +1393,8 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
         </div>
       )}
 
-      {/* 9. Campaigns & Content Tab (Role: CONTENT_MANAGER, ADMIN, SUPER_ADMIN) */}
-      {activeTab === "content" && (
+      {/* 9. Campaigns & Content Tab */}
+      {(activeTab === "content" || activeTab === "campaigns" || activeTab === "activities") && (
         <div className="space-y-6">
           <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
             <DataTable
@@ -1435,390 +1630,11 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
         </div>
       )}
 
-      {/* 14. Users & Roles Tab (SUPER_ADMIN, ADMIN) */}
-      {activeTab === "users" && (
-        <div className="space-y-6">
-          {/* Super Admin User Overview Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            <div className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs">
-              <span className="text-xs font-medium text-stone-500">মোট ব্যবহারকারী</span>
-              <div className="text-xl sm:text-2xl font-black text-stone-900 mt-1">{displayUsersData.length} জন</div>
-              <span className="text-[10px] text-emerald-600 font-bold mt-1 inline-block">নিবন্ধিত অ্যাকাউন্ট</span>
-            </div>
-            <div className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs">
-              <span className="text-xs font-medium text-stone-500">সক্রিয় অ্যাকাউন্ট</span>
-              <div className="text-xl sm:text-2xl font-black text-emerald-700 mt-1">
-                {displayUsersData.filter((u: any) => u.status === "ACTIVE").length} জন
-              </div>
-              <span className="text-[10px] text-stone-400 font-medium mt-1 inline-block">সম্পূর্ণ সচল</span>
-            </div>
-            <div className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs">
-              <span className="text-xs font-medium text-stone-500">স্থগিত / ব্লকড</span>
-              <div className="text-xl sm:text-2xl font-black text-red-600 mt-1">
-                {displayUsersData.filter((u: any) => u.status !== "ACTIVE").length} জন
-              </div>
-              <span className="text-[10px] text-stone-400 font-medium mt-1 inline-block">নিরাপত্তা পর্যালোচনা</span>
-            </div>
-            <div className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs">
-              <span className="text-xs font-medium text-stone-500">দায়িত্বপ্রাপ্ত কর্মকর্তা</span>
-              <div className="text-xl sm:text-2xl font-black text-[#0D5C35] mt-1">
-                {displayUsersData.filter((u: any) => u.role !== "COMMUNITY_MEMBER").length} জন
-              </div>
-              <span className="text-[10px] text-stone-400 font-medium mt-1 inline-block">প্রশাসনিক রোল সক্রিয়</span>
-            </div>
-          </div>
+      {/* 14. User Management Tab (Single Super Admin) */}
+      {activeTab === "users" && <CmsUsersTab />}
 
-          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
-            <DataTable
-              title="ইউজার ও রোল ব্যবস্থাপনা"
-              description="ফাউন্ডেশনের কর্মকর্তাদের ভূমিকা, স্ট্যাটাস ও পারমিশন কন্ট্রোল"
-              columns={[
-                { header: "আইডি", accessorKey: "id", className: "font-mono text-xs" },
-                { header: "কর্মকর্তার নাম", accessorKey: "name", sortable: true, className: "font-semibold" },
-                { header: "যোগাযোগ", accessorKey: "contact", className: "text-xs" },
-                {
-                  header: "স্ট্যাটাস",
-                  accessorKey: "status",
-                  align: "center",
-                  cell: (r: any) => (
-                    <Badge
-                      variant="outline"
-                      className={
-                        r.status === "ACTIVE"
-                          ? "border-emerald-300 bg-emerald-50 text-emerald-800 text-[10px] font-bold"
-                          : "border-red-300 bg-red-50 text-red-800 text-[10px] font-bold"
-                      }
-                    >
-                      {r.status === "ACTIVE" ? "সক্রিয়" : "স্থগিত"}
-                    </Badge>
-                  ),
-                },
-                {
-                  header: "বরাদ্দকৃত রোল",
-                  accessorKey: "roles",
-                  cell: (r: any) => (
-                    <div className="flex flex-wrap gap-1">
-                      {r.roles && r.roles.length > 0 ? (
-                        r.roles.map((rl: string) => (
-                          <RoleBadge key={rl} role={rl as UserRole} size="sm" />
-                        ))
-                      ) : (
-                        <RoleBadge role={r.role as UserRole} size="sm" />
-                      )}
-                    </div>
-                  ),
-                },
-                {
-                  header: "অ্যাকশন",
-                  align: "center",
-                  cell: (r: any) => (
-                    <Button
-                      size="xs"
-                      variant="outline"
-                      className="h-7 text-xs font-bold text-[#0D5C35] hover:bg-emerald-50 hover:text-emerald-800"
-                      onClick={() => {
-                        setSelectedUserForEdit(r)
-                        setSelectedRoles(r.roles && r.roles.length > 0 ? r.roles : [r.role || "COMMUNITY_MEMBER"])
-                        setSelectedStatus(r.status || "ACTIVE")
-                      }}
-                    >
-                      রোল ও পারমিশন
-                    </Button>
-                  ),
-                },
-              ]}
-              data={displayUsersData}
-              searchable
-              pageSize={10}
-            />
-          </div>
-
-          {/* User Role & Status Edit Modal */}
-          {selectedUserForEdit && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-              <div className="w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl border border-stone-200 animate-in fade-in zoom-in-95 duration-200">
-                <div className="flex items-center justify-between border-b border-stone-200 pb-3 mb-4">
-                  <div>
-                    <h3 className="text-base font-extrabold text-stone-900">
-                      ব্যবহারকারীর ভূমিকা ও স্ট্যাটাস নির্ধারণ
-                    </h3>
-                    <p className="text-xs text-stone-500 mt-0.5">
-                      {selectedUserForEdit.name} ({selectedUserForEdit.contact})
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setSelectedUserForEdit(null)}
-                    className="p-1 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-
-                {/* Account Status Toggle */}
-                <div className="mb-4 p-3 rounded-2xl bg-stone-50 border border-stone-200">
-                  <span className="text-xs font-bold text-stone-700 block mb-2">অ্যাকাউন্ট স্ট্যাটাস:</span>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedStatus("ACTIVE")}
-                      className={`flex-1 py-1.5 px-3 rounded-xl text-xs font-bold transition-all ${
-                        selectedStatus === "ACTIVE"
-                          ? "bg-emerald-600 text-white shadow-xs"
-                          : "bg-white text-stone-600 border border-stone-200 hover:bg-stone-100"
-                      }`}
-                    >
-                      ✓ সক্রিয় (Active)
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedStatus("SUSPENDED")}
-                      className={`flex-1 py-1.5 px-3 rounded-xl text-xs font-bold transition-all ${
-                        selectedStatus === "SUSPENDED"
-                          ? "bg-red-600 text-white shadow-xs"
-                          : "bg-white text-stone-600 border border-stone-200 hover:bg-stone-100"
-                      }`}
-                    >
-                      ⚠ স্থগিত (Suspended)
-                    </button>
-                  </div>
-                </div>
-
-                {/* Role Selection Checkboxes */}
-                <div className="mb-4">
-                  <span className="text-xs font-bold text-stone-700 block mb-2">
-                    সিস্টেম রোলসমূহ নির্বাচন করুন (একাধিক নির্বাচনযোগ্য):
-                  </span>
-                  <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1 scrollbar-thin">
-                    {ALL_ROLES.map((rName) => {
-                      const meta = ROLE_METAS[rName]
-                      const isChecked = selectedRoles.includes(rName)
-                      const isSuperAdminRole = rName === "SUPER_ADMIN"
-                      const canModifySuperAdmin = currentRole === "SUPER_ADMIN"
-
-                      return (
-                        <label
-                          key={rName}
-                          className={`flex items-start gap-2.5 p-2 rounded-xl border text-xs cursor-pointer transition-all ${
-                            isChecked
-                              ? "bg-emerald-50/60 border-emerald-300"
-                              : "bg-white border-stone-200/80 hover:bg-stone-50"
-                          } ${isSuperAdminRole && !canModifySuperAdmin ? "opacity-50 cursor-not-allowed" : ""}`}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            disabled={isSuperAdminRole && !canModifySuperAdmin}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedRoles([...selectedRoles, rName])
-                              } else {
-                                setSelectedRoles(selectedRoles.filter((r) => r !== rName))
-                              }
-                            }}
-                            className="mt-0.5 rounded text-[#0D5C35] focus:ring-[#0D5C35]"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <span className="font-bold text-stone-900">{meta?.titleBn || rName}</span>
-                              <span className="text-[10px] text-stone-400 font-mono">({rName})</span>
-                            </div>
-                            <p className="text-[10px] text-stone-500 leading-snug mt-0.5">{meta?.descriptionBn}</p>
-                          </div>
-                        </label>
-                      )
-                    })}
-                  </div>
-                </div>
-
-                {/* Footer Buttons */}
-                <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-200">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setSelectedUserForEdit(null)}
-                    disabled={isUpdatingRole || isUpdatingStatus}
-                  >
-                    বাতিল
-                  </Button>
-                  <Button
-                    size="sm"
-                    className="bg-[#0D5C35] hover:bg-[#094226] text-white font-bold"
-                    onClick={handleSaveUserRolesAndStatus}
-                    disabled={isUpdatingRole || isUpdatingStatus}
-                  >
-                    {isUpdatingRole || isUpdatingStatus ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin mr-1" />
-                        সংরক্ষণ হচ্ছে...
-                      </>
-                    ) : (
-                      "সংরক্ষণ করুন"
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* 15. System Settings & Audit Trail Tab (SUPER_ADMIN Only) */}
-      {activeTab === "settings" && (
-        <div className="space-y-6">
-          {/* Security Overview Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            <div className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs">
-              <div className="flex items-center gap-2 text-[#0D5C35] mb-2">
-                <Lock className="w-5 h-5" />
-                <span className="text-xs font-bold uppercase tracking-wider">পাসওয়ার্ড সিকিউরিটি</span>
-              </div>
-              <div className="text-sm font-bold text-stone-900">Argon2 Password Hashing</div>
-              <p className="text-[11px] text-stone-500 mt-1">মেমোরি-হার্ডেনড ও ব্রুট-ফোর্স প্রটেক্টেড</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs">
-              <div className="flex items-center gap-2 text-blue-600 mb-2">
-                <Key className="w-5 h-5" />
-                <span className="text-xs font-bold uppercase tracking-wider">সেশন ও টোকেন</span>
-              </div>
-              <div className="text-sm font-bold text-stone-900">JWT Token Rotation</div>
-              <p className="text-[11px] text-stone-500 mt-1">HttpOnly নিরাপদ কুকি ও স্বয়ংক্রিয় রিফ্রেশ</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs">
-              <div className="flex items-center gap-2 text-purple-600 mb-2">
-                <ShieldCheck className="w-5 h-5" />
-                <span className="text-xs font-bold uppercase tracking-wider">এক্সেস কন্ট্রোল</span>
-              </div>
-              <div className="text-sm font-bold text-stone-900">11 System Roles (RBAC)</div>
-              <p className="text-[11px] text-stone-500 mt-1">সেন্ট্রালাইজড ভূমিকা ও রুট নিরাপত্তা</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs">
-              <div className="flex items-center gap-2 text-amber-600 mb-2">
-                <Activity className="w-5 h-5" />
-                <span className="text-xs font-bold uppercase tracking-wider">অডিট ট্রেইল</span>
-              </div>
-              <div className="text-sm font-bold text-stone-900">Immutable Audit Logs</div>
-              <p className="text-[11px] text-stone-500 mt-1">যাবতীয় প্রশাসনিক কাজের স্থায়ী লগ</p>
-            </div>
-          </div>
-
-          {/* Audit Logs Table */}
-          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
-            <DataTable
-              title="সিস্টেম অডিট ট্রেইল ও নিরাপত্তা লগ"
-              description="সকল সংবেদনশীল ও প্রশাসনিক কার্যক্রমের স্থায়ী রেকর্ড"
-              columns={[
-                {
-                  header: "সময়",
-                  accessorKey: "createdAt",
-                  cell: (r: any) => (
-                    <span className="text-xs font-mono text-stone-500">
-                      {new Date(r.createdAt || Date.now()).toLocaleString("bn-BD")}
-                    </span>
-                  ),
-                },
-                {
-                  header: "অ্যাকশন",
-                  accessorKey: "action",
-                  cell: (r: any) => (
-                    <Badge variant="outline" className="font-mono text-xs font-bold text-indigo-700 bg-indigo-50 border-indigo-200">
-                      {r.action}
-                    </Badge>
-                  ),
-                },
-                {
-                  header: "এন্টিটি",
-                  accessorKey: "entityType",
-                  cell: (r: any) => (
-                    <span className="text-xs font-medium text-stone-700">{r.entityType}</span>
-                  ),
-                },
-                {
-                  header: "আইপি অ্যাড্রেস",
-                  accessorKey: "ipAddress",
-                  cell: (r: any) => (
-                    <span className="text-xs font-mono text-stone-500">{r.ipAddress || "127.0.0.1"}</span>
-                  ),
-                },
-                {
-                  header: "ইউজার আইডি",
-                  accessorKey: "actorId",
-                  cell: (r: any) => (
-                    <span className="text-xs font-mono text-stone-400">{r.actorId?.slice(0, 8) || "System"}</span>
-                  ),
-                },
-              ]}
-              data={
-                auditLogs.length > 0
-                  ? auditLogs
-                  : [
-                      {
-                        id: "aud-01",
-                        action: "UPDATE_USER_ROLES",
-                        entityType: "User",
-                        ipAddress: "103.205.71.18",
-                        actorId: "usr-admin-01",
-                        createdAt: new Date().toISOString(),
-                      },
-                      {
-                        id: "aud-02",
-                        action: "APPROVE_APPLICATION",
-                        entityType: "HelpApplication",
-                        ipAddress: "103.205.71.18",
-                        actorId: "usr-admin-01",
-                        createdAt: new Date(Date.now() - 3600000).toISOString(),
-                      },
-                    ]
-              }
-              searchable
-              pageSize={10}
-            />
-          </div>
-
-          {/* Role-to-Permissions Matrix Table */}
-          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
-            <h3 className="text-base font-extrabold text-stone-900 mb-1">
-              রোল ও পারমিশন ম্যাট্রিক্স (RBAC Matrix)
-            </h3>
-            <p className="text-xs text-stone-500 mb-4">
-              সিস্টেমের প্রতিটি রোলের দায়িত্ব, অ্যাক্সেস স্তর ও অনুমোদিত মডিউলসমূহ
-            </p>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="border-b border-stone-200 text-stone-500 font-bold uppercase tracking-wider">
-                    <th className="py-2.5 px-3">রোল কোড</th>
-                    <th className="py-2.5 px-3">পদবি (বাংলা)</th>
-                    <th className="py-2.5 px-3">বর্ণনা</th>
-                    <th className="py-2.5 px-3">অনুমোদিত মডিউল ও পারমিশন</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-stone-100">
-                  {ALL_ROLES.map((rCode) => {
-                    const meta = ROLE_METAS[rCode]
-                    const matchedRole = accessRoles.find((ar: any) => ar.name === rCode)
-                    const permissionsCount = matchedRole?.permissions?.length
-
-                    return (
-                      <tr key={rCode} className="hover:bg-stone-50/60 transition-colors">
-                        <td className="py-3 px-3 font-mono font-bold text-stone-800">{rCode}</td>
-                        <td className="py-3 px-3">
-                          <RoleBadge role={rCode} size="sm" />
-                        </td>
-                        <td className="py-3 px-3 text-stone-600 max-w-xs">{meta?.descriptionBn}</td>
-                        <td className="py-3 px-3">
-                          <Badge variant="outline" className="text-xs font-semibold">
-                            {permissionsCount !== undefined ? `${permissionsCount} টি পারমিশন` : "পূর্ণ কাস্টমাইজযোগ্য"}
-                          </Badge>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 15. Website Settings & SEO Tab (Single Super Admin) */}
+      {activeTab === "settings" && <CmsSettingsTab />}
     </div>
   )
 }

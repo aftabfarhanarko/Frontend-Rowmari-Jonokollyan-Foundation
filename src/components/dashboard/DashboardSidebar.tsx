@@ -1,16 +1,13 @@
 "use client"
 
 import React from "react"
-import Link from "next/link"
 import { useAppStore } from "@/store/useAppStore"
-import { getNavItemsForRole, ROLE_METAS, NavItemConfig } from "@/config/dashboard-navigation"
+import { getNavItemsForRole, ROLE_METAS } from "@/config/dashboard-navigation"
 import { RoleBadge } from "@/components/dashboard/RoleBadge"
 import { cn } from "@/lib/utils"
 import {
   LayoutDashboard,
   Droplet,
-  HeartPulse,
-  GraduationCap,
   Users,
   ClipboardCheck,
   Coins,
@@ -19,19 +16,21 @@ import {
   HeartHandshake,
   Receipt,
   ShieldAlert,
-  Bell,
   Settings,
   X,
   ChevronRight,
   Shield,
+  Newspaper,
+  Image as ImageIcon,
+  Layers,
+  Mail,
+  UserCheck,
 } from "lucide-react"
 
 // Icon Resolver
 const ICON_MAP: Record<string, React.ElementType> = {
   LayoutDashboard,
   Droplet,
-  HeartPulse,
-  GraduationCap,
   Users,
   ClipboardCheck,
   Coins,
@@ -40,8 +39,12 @@ const ICON_MAP: Record<string, React.ElementType> = {
   HeartHandshake,
   Receipt,
   ShieldAlert,
-  Bell,
   Settings,
+  Newspaper,
+  Image: ImageIcon,
+  Layers,
+  Mail,
+  UserCheck,
 }
 
 interface DashboardSidebarProps {
@@ -64,13 +67,14 @@ export function DashboardSidebar({
     return getNavItemsForRole(currentRole)
   }, [currentRole])
 
-  // Group items by category
+  // Group items by category for Single Super Admin CMS
   const categories = [
-    { key: "core", title: "প্রধান কার্যক্রম" },
-    { key: "operations", title: "সেবামূলক উইং ও অপারেশন" },
-    { key: "finance", title: "হিসাব ও অর্থ" },
-    { key: "community", title: "আমার সেবা ও আবেদন" },
-    { key: "admin", title: "প্রশাসন ও সেটিংস" },
+    { key: "core", title: "সার্বিক ড্যাশবোর্ড" },
+    { key: "cms", title: "ওয়েবসাইট কন্টেন্ট (CMS)" },
+    { key: "operations", title: "প্রজেক্ট ও ফিল্ড অপারেশন" },
+    { key: "finance", title: "অনুদান ও তহবিল" },
+    { key: "system", title: "প্রশাসন ও অডিট লগ" },
+    { key: "community", title: "ব্যক্তিগত সেবা ও আবেদন" },
   ] as const
 
   const renderNavGroup = (categoryKey: typeof categories[number]["key"], title: string) => {
@@ -96,7 +100,7 @@ export function DashboardSidebar({
                   onCloseMobile?.()
                 }}
                 className={cn(
-                  "w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all text-left",
+                  "w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all text-left cursor-pointer",
                   isActive
                     ? "bg-[#0D5C35] text-white shadow-xs font-bold"
                     : "text-stone-600 hover:text-stone-900 hover:bg-stone-100/80"
@@ -121,7 +125,7 @@ export function DashboardSidebar({
                           ? "bg-white/20 text-white"
                           : item.badgeVariant === "urgent"
                           ? "bg-red-100 text-red-700 animate-pulse"
-                          : "bg-stone-200/80 text-stone-700"
+                          : "bg-emerald-100 text-[#0D5C35]"
                       )}
                     >
                       {item.badge}
@@ -145,7 +149,7 @@ export function DashboardSidebar({
         <button
           type="button"
           onClick={onCloseMobile}
-          className="p-1 rounded-md text-stone-500 hover:bg-stone-100"
+          className="p-1 rounded-md text-stone-500 hover:bg-stone-100 cursor-pointer"
           aria-label="Close Sidebar"
         >
           <X className="size-5" />
@@ -156,11 +160,11 @@ export function DashboardSidebar({
       <div className="p-3 m-3 rounded-2xl bg-stone-50 border border-stone-200/80">
         <div className="flex items-center gap-2 mb-1">
           <Shield className="size-3.5 text-[#0D5C35]" />
-          <span className="text-[11px] font-bold text-stone-700">বর্তমান এক্সেস রোল:</span>
+          <span className="text-[11px] font-bold text-stone-700">অ্যাডমিন সিস্টেম:</span>
         </div>
         <RoleBadge role={currentRole} size="sm" />
         <p className="text-[10px] text-stone-500 mt-1.5 leading-snug">
-          {ROLE_METAS[currentRole]?.descriptionBn}
+          {ROLE_METAS[currentRole]?.descriptionBn || "সুপার অ্যাডমিন সেন্ট্রাল কন্ট্রোল প্যানেল"}
         </p>
       </div>
 

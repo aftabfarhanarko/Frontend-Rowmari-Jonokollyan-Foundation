@@ -8,127 +8,28 @@ export interface NavItemConfig {
   iconName: string
   badge?: string | number
   badgeVariant?: "default" | "urgent" | "info" | "success"
-  category: "core" | "operations" | "finance" | "community" | "admin"
+  category: "core" | "cms" | "operations" | "finance" | "system" | "community"
   roles: UserRole[]
   descriptionBn?: string
 }
 
-export const ROLE_METAS: Record<UserRole, RoleMeta> = {
+export const ROLE_METAS: Record<string, RoleMeta> = {
   SUPER_ADMIN: {
-    role: "SUPER_ADMIN",
-    titleBn: "সুপার অ্যাডমিন",
+    role: "SUPER_ADMIN" as UserRole,
+    titleBn: "সুপার অ্যাডমিন (পূর্ণ নিয়ন্ত্রক)",
     titleEn: "Super Admin",
-    descriptionBn: "ফাউন্ডেশনের সকল অপারেশন ও সিস্টেমের পূর্ণ নিয়ন্ত্রক",
+    descriptionBn: "ফাউন্ডেশনের সমগ্র ওয়েবসাইট, কন্টেন্ট CMS, ইউজার ও অপারেশনের একচ্ছত্র নিয়ন্ত্রক",
     colorScheme: {
       bg: "bg-purple-100 text-purple-800",
       text: "text-purple-700",
       border: "border-purple-300",
     },
   },
-  ADMIN: {
-    role: "ADMIN",
-    titleBn: "অ্যাডমিনিস্ট্রেটর",
-    titleEn: "Administrator",
-    descriptionBn: "দৈনন্দিন প্রশাসনিক কার্যক্রম ও অনুমোদন ব্যবস্থাপক",
-    colorScheme: {
-      bg: "bg-blue-100 text-blue-800",
-      text: "text-blue-700",
-      border: "border-blue-300",
-    },
-  },
-  BLOOD_COORDINATOR: {
-    role: "BLOOD_COORDINATOR",
-    titleBn: "ব্লাড কো-অর্ডিনেটর",
-    titleEn: "Blood Coordinator",
-    descriptionBn: "জরুরি রক্তের অনুরোধ, রক্তদাতা নেটওয়ার্ক ও ব্লাড ব্যাংক যোগাযোগ",
-    colorScheme: {
-      bg: "bg-red-100 text-red-800",
-      text: "text-red-700",
-      border: "border-red-300",
-    },
-  },
-  MEDICAL_COORDINATOR: {
-    role: "MEDICAL_COORDINATOR",
-    titleBn: "চিকিৎসা সমন্বয়ক",
-    titleEn: "Medical Coordinator",
-    descriptionBn: "অসহায় রোগীদের চিকিৎসা অনুদান ও হাসপাতাল সমন্বয়",
-    colorScheme: {
-      bg: "bg-emerald-100 text-emerald-800",
-      text: "text-emerald-700",
-      border: "border-emerald-300",
-    },
-  },
-  EDUCATION_COORDINATOR: {
-    role: "EDUCATION_COORDINATOR",
-    titleBn: "শিক্ষা সমন্বয়ক",
-    titleEn: "Education Coordinator",
-    descriptionBn: "দরিদ্র শিক্ষার্থীদের বৃত্তি ও শিক্ষা উপকরণ বিতরণ",
-    colorScheme: {
-      bg: "bg-indigo-100 text-indigo-800",
-      text: "text-indigo-700",
-      border: "border-indigo-300",
-    },
-  },
-  VOLUNTEER_MANAGER: {
-    role: "VOLUNTEER_MANAGER",
-    titleBn: "স্বেচ্ছাসেবক ব্যবস্থাপক",
-    titleEn: "Volunteer Manager",
-    descriptionBn: "স্বেচ্ছাসেবক নিবন্ধন, দায়িত্ব বণ্টন ও ইভেন্ট টিম পরিচালনা",
-    colorScheme: {
-      bg: "bg-teal-100 text-teal-800",
-      text: "text-teal-700",
-      border: "border-teal-300",
-    },
-  },
-  VOLUNTEER_COORDINATOR: {
-    role: "VOLUNTEER_COORDINATOR",
-    titleBn: "স্বেচ্ছাসেবক সমন্বয়ক",
-    titleEn: "Volunteer Coordinator",
-    descriptionBn: "মাঠপর্যায়ে স্বেচ্ছাসেবী ক্যাম্প ও টিম সমন্বয়",
-    colorScheme: {
-      bg: "bg-cyan-100 text-cyan-800",
-      text: "text-cyan-700",
-      border: "border-cyan-300",
-    },
-  },
-  CONTENT_MANAGER: {
-    role: "CONTENT_MANAGER",
-    titleBn: "কন্টেন্ট ও প্রচার ব্যবস্থাপক",
-    titleEn: "Content Manager",
-    descriptionBn: "ক্যাম্পেইন প্রকাশ, ছবি গ্যালারি, নিউজ ও সোশ্যাল মিডিয়া কন্টেন্ট",
-    colorScheme: {
-      bg: "bg-amber-100 text-amber-800",
-      text: "text-amber-700",
-      border: "border-amber-300",
-    },
-  },
-  FINANCE_MANAGER: {
-    role: "FINANCE_MANAGER",
-    titleBn: "অর্থ ও হিসাব ব্যবস্থাপক",
-    titleEn: "Finance Manager",
-    descriptionBn: "অনুদান প্রাপ্তি, ব্যাংক ও বিকাশ ট্রানজেকশন এবং অডিট রিপোর্ট",
-    colorScheme: {
-      bg: "bg-green-100 text-green-800",
-      text: "text-green-700",
-      border: "border-green-300",
-    },
-  },
-  CASE_WORKER: {
-    role: "CASE_WORKER",
-    titleBn: "ফিল্ড কেস ওয়ার্কার",
-    titleEn: "Field Case Worker",
-    descriptionBn: "সরেজমিনে আবেদনকারী পরিবার যাচাই ও সাহায্য বিতরণ রিপোর্ট",
-    colorScheme: {
-      bg: "bg-orange-100 text-orange-800",
-      text: "text-orange-700",
-      border: "border-orange-300",
-    },
-  },
   COMMUNITY_MEMBER: {
-    role: "COMMUNITY_MEMBER",
-    titleBn: "সাধারণ সদস্য / আবেদনকারী",
+    role: "COMMUNITY_MEMBER" as UserRole,
+    titleBn: "সাধারণ সদস্য / নাগরিক",
     titleEn: "Community Member",
-    descriptionBn: "নিজের আবেদন ট্র্যাকিং, রক্তের অনুরোধ ও অনুদানের হিস্ট্রি",
+    descriptionBn: "ব্যক্তিগত আবেদন, রক্তের অনুরোধ ও অনুদানের হিস্ট্রি",
     colorScheme: {
       bg: "bg-stone-100 text-stone-800",
       text: "text-stone-700",
@@ -137,22 +38,10 @@ export const ROLE_METAS: Record<UserRole, RoleMeta> = {
   },
 }
 
-export const ALL_ROLES: UserRole[] = [
-  "SUPER_ADMIN",
-  "ADMIN",
-  "BLOOD_COORDINATOR",
-  "MEDICAL_COORDINATOR",
-  "EDUCATION_COORDINATOR",
-  "VOLUNTEER_MANAGER",
-  "VOLUNTEER_COORDINATOR",
-  "CONTENT_MANAGER",
-  "FINANCE_MANAGER",
-  "CASE_WORKER",
-  "COMMUNITY_MEMBER",
-]
+export const ALL_ROLES: UserRole[] = ["SUPER_ADMIN", "COMMUNITY_MEMBER"]
 
 export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
-  // 1. Overview (All Roles)
+  // 1. Core Overview
   {
     id: "overview",
     titleBn: "ড্যাশবোর্ড ওভারভিউ",
@@ -160,99 +49,155 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
     href: "/dashboard",
     iconName: "LayoutDashboard",
     category: "core",
-    roles: ALL_ROLES,
-    descriptionBn: "সার্বিক পরিসংখ্যান ও জরুরি তথ্য",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "লাইভ পরিসংখ্যান ও সার্বিক সিস্টেম সারসংক্ষেপ",
   },
 
-  // 2. Blood Network (Super Admin, Admin, Blood Coordinator)
+  // 2. Public Website CMS Management
+  {
+    id: "pages",
+    titleBn: "পাবলিক পেজ ম্যানেজমেন্ট (CMS)",
+    titleEn: "Public Pages CMS",
+    href: "/dashboard?tab=pages",
+    iconName: "FileText",
+    badge: "CMS",
+    badgeVariant: "info",
+    category: "cms",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "হোম, আমাদের কথা, যোগাযোগ, পলিসি ইত্যাদি পেজ সম্পাদন",
+  },
+  {
+    id: "news",
+    titleBn: "নিউজ ও নোটিশ বোর্ড",
+    titleEn: "News & Notices",
+    href: "/dashboard?tab=news",
+    iconName: "Newspaper",
+    category: "cms",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "সংবাদ, জরুরি নোটিশ ও ইভেন্ট প্রকাশনা",
+  },
+  {
+    id: "gallery",
+    titleBn: "গ্যালারি ও মিডিয়া ফাইলস",
+    titleEn: "Gallery & Media",
+    href: "/dashboard?tab=gallery",
+    iconName: "Image",
+    category: "cms",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "ছবি ও ডকুমেন্ট মিডিয়া লাইব্রেরি",
+  },
+
+  // 3. Projects & Campaigns
+  {
+    id: "campaigns",
+    titleBn: "ক্যাম্পেইন ও ফান্ডরেইজিং",
+    titleEn: "Campaigns",
+    href: "/dashboard?tab=campaigns",
+    iconName: "Megaphone",
+    category: "operations",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "ত্রাণ ও সাহায্য তহবিলের ক্যাম্পেইন পরিচালনা",
+  },
+  {
+    id: "activities",
+    titleBn: "প্রজেক্ট ও কার্যক্রম",
+    titleEn: "Projects & Activities",
+    href: "/dashboard?tab=activities",
+    iconName: "Layers",
+    category: "operations",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "ফাউন্ডেশনের বাস্তবায়িত উন্নয়নমূলক প্রজেক্ট",
+  },
+
+  // 4. Community Aid & Operations
+  {
+    id: "cases",
+    titleBn: "সহায়তার আবেদনসমূহ",
+    titleEn: "Help Applications",
+    href: "/dashboard?tab=cases",
+    iconName: "ClipboardCheck",
+    badge: "যাচাই",
+    badgeVariant: "urgent",
+    category: "operations",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "চিকিৎসা ও সামাজিক সাহায্য আবেদন নিষ্পত্তি",
+  },
   {
     id: "blood",
-    titleBn: "রক্তদান সেবা",
+    titleBn: "রক্তদান সেবা নেটওয়ার্ক",
     titleEn: "Blood Network",
     href: "/dashboard?tab=blood",
     iconName: "Droplet",
-    badge: "৩ জরুরি",
+    badge: "জরুরি",
     badgeVariant: "urgent",
     category: "operations",
-    roles: ["SUPER_ADMIN", "ADMIN", "BLOOD_COORDINATOR"],
-    descriptionBn: "রক্তের আবেদন ও রক্তদাতা নেটওয়ার্ক",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "জরুরি রক্তের আবেদন ও রক্তদাতা তালিকা",
   },
-
-  // 3. Medical Aid (Super Admin, Admin, Medical Coordinator, Case Worker)
-  {
-    id: "medical",
-    titleBn: "চিকিৎসা সহায়তা",
-    titleEn: "Medical Aid",
-    href: "/dashboard?tab=medical",
-    iconName: "HeartPulse",
-    badge: 5,
-    category: "operations",
-    roles: ["SUPER_ADMIN", "ADMIN", "MEDICAL_COORDINATOR", "CASE_WORKER"],
-    descriptionBn: "অসুস্থ রোগীদের চিকিৎসা ও ওষুধ বিতরণ",
-  },
-
-  // 4. Education Wing (Super Admin, Admin, Education Coordinator)
-  {
-    id: "education",
-    titleBn: "শিক্ষা সহায়তা",
-    titleEn: "Education Wing",
-    href: "/dashboard?tab=education",
-    iconName: "GraduationCap",
-    category: "operations",
-    roles: ["SUPER_ADMIN", "ADMIN", "EDUCATION_COORDINATOR"],
-    descriptionBn: "শিক্ষা বৃত্তি ও উপকরণ বিতরণ",
-  },
-
-  // 5. Volunteer Management (Super Admin, Admin, Volunteer Manager)
   {
     id: "volunteers",
-    titleBn: "স্বেচ্ছাসেবক উইং",
+    titleBn: "স্বেচ্ছাসেবক ব্যবস্থাপনা",
     titleEn: "Volunteers",
     href: "/dashboard?tab=volunteers",
     iconName: "Users",
     category: "operations",
-    roles: ["SUPER_ADMIN", "ADMIN", "VOLUNTEER_MANAGER", "VOLUNTEER_COORDINATOR"],
-    descriptionBn: "স্বেচ্ছাসেবক আবেদন ও দায়িত্ব বণ্টন",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "স্বেচ্ছাসেবী নিবন্ধন ও টিম পরিচালনা",
   },
-
-  // 6. Field Case Investigation (Super Admin, Admin, Case Worker, Medical Coordinator)
-  {
-    id: "cases",
-    titleBn: "মাঠপর্যায় তদন্ত (কেস)",
-    titleEn: "Field Cases",
-    href: "/dashboard?tab=cases",
-    iconName: "ClipboardCheck",
-    badge: 8,
-    category: "operations",
-    roles: ["SUPER_ADMIN", "ADMIN", "CASE_WORKER", "MEDICAL_COORDINATOR"],
-    descriptionBn: "সরেজমিনে আবেদনকারী যাচাইকরণ রিপোর্ট",
-  },
-
-  // 7. Finance & Accounts (Super Admin, Admin, Finance Manager)
   {
     id: "finance",
-    titleBn: "অর্থ ও অনুদান হিসাব",
-    titleEn: "Finance & Accounts",
+    titleBn: "অনুদান হিসাব ও রশিদ",
+    titleEn: "Donations & Funds",
     href: "/dashboard?tab=finance",
     iconName: "Coins",
     category: "finance",
-    roles: ["SUPER_ADMIN", "ADMIN", "FINANCE_MANAGER"],
-    descriptionBn: "অনুদান সংগ্রহ, ব্যাংক ট্রানজেকশন ও অডিট",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "অনুদান সংগ্রহ, ব্যাংক রশিদ ও হিসাব পর্যালোচনা",
   },
-
-  // 8. Campaigns & Content (Super Admin, Admin, Content Manager)
   {
-    id: "content",
-    titleBn: "ক্যাম্পেইন ও কন্টেন্ট",
-    titleEn: "Content & Media",
-    href: "/dashboard?tab=content",
-    iconName: "Megaphone",
+    id: "messages",
+    titleBn: "যোগাযোগের বার্তা",
+    titleEn: "Contact Messages",
+    href: "/dashboard?tab=messages",
+    iconName: "Mail",
     category: "operations",
-    roles: ["SUPER_ADMIN", "ADMIN", "CONTENT_MANAGER"],
-    descriptionBn: "ক্যাম্পেইন প্রকাশ, ছবি ও খবর আপডেট",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "ওয়েবসাইট থেকে আসা পাবলিক অনুসন্ধান বার্তা",
   },
 
-  // 9. Community Member Routes (Personal dashboard for regular members)
+  // 5. System Administration & Security
+  {
+    id: "users",
+    titleBn: "ইউজার ব্যবস্থাপনা",
+    titleEn: "User Management",
+    href: "/dashboard?tab=users",
+    iconName: "UserCheck",
+    category: "system",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "সকল নিবন্ধিত সদস্যের অ্যাকাউন্ট ও স্ট্যাটাস",
+  },
+  {
+    id: "settings",
+    titleBn: "ওয়েবসাইট সেটিংস ও এসইও",
+    titleEn: "Website Settings & SEO",
+    href: "/dashboard?tab=settings",
+    iconName: "Settings",
+    category: "system",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "ওয়েবসাইটের ফোন, ঠিকানা, লোগো ও গ্লোবাল এসইও",
+  },
+  {
+    id: "activity-logs",
+    titleBn: "সিস্টেম অ্যাক্টিভিটি অডিট",
+    titleEn: "Audit & Activity Logs",
+    href: "/dashboard?tab=activity-logs",
+    iconName: "ShieldAlert",
+    category: "system",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "সকল প্রশাসনিক ক্রিয়াকলাপের অপরিবর্তনীয় অডিট লগ",
+  },
+
+  // 6. Community Member Portal (Personal records)
   {
     id: "my-applications",
     titleBn: "আমার সাহায্য আবেদন",
@@ -283,57 +228,18 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
     roles: ["COMMUNITY_MEMBER"],
     descriptionBn: "আপনার প্রদত্ত সকল অনুদানের ইতিহাস ও রশিদ",
   },
-
-  // 10. User & Role Management (Super Admin, Admin)
-  {
-    id: "users",
-    titleBn: "ইউজার ও রোল ব্যবস্থাপনা",
-    titleEn: "Users & Roles",
-    href: "/dashboard?tab=users",
-    iconName: "ShieldAlert",
-    category: "admin",
-    roles: ["SUPER_ADMIN", "ADMIN"],
-    descriptionBn: "কমিটি মেম্বারদের রোল বরাদ্দ ও পারমিশন",
-  },
-
-  // 11. System Notifications (All Roles)
-  {
-    id: "notifications",
-    titleBn: "নোটিফিকেশন",
-    titleEn: "Notifications",
-    href: "/dashboard?tab=notifications",
-    iconName: "Bell",
-    badge: 3,
-    badgeVariant: "urgent",
-    category: "core",
-    roles: ALL_ROLES,
-    descriptionBn: "আপনার দায়িত্বে থাকা সাম্প্রতিক বার্তা",
-  },
-
-  // 12. System Settings (Super Admin Only)
-  {
-    id: "settings",
-    titleBn: "সিস্টেম সেটিংস ও অডিট",
-    titleEn: "System Settings",
-    href: "/dashboard?tab=settings",
-    iconName: "Settings",
-    category: "admin",
-    roles: ["SUPER_ADMIN"],
-    descriptionBn: "সিস্টেম কনফিগারেশন ও অডিট ট্রেইল",
-  },
 ]
 
-/**
- * Filter navigation items dynamically based on the active role
- */
 export function getNavItemsForRole(role: UserRole): NavItemConfig[] {
+  if (role === "SUPER_ADMIN") {
+    // Super admin sees all administrative and CMS modules
+    return DASHBOARD_NAV_ITEMS.filter((item) => item.category !== "community")
+  }
   return DASHBOARD_NAV_ITEMS.filter((item) => item.roles.includes(role))
 }
 
-/**
- * Check if a role has access to a specific nav item ID
- */
 export function canAccessNavItem(role: UserRole, itemId: string): boolean {
+  if (role === "SUPER_ADMIN") return true
   const item = DASHBOARD_NAV_ITEMS.find((it) => it.id === itemId)
   if (!item) return false
   return item.roles.includes(role)

@@ -7,3 +7,4 @@ export * from './applicationsApi';
 export * from './dashboardApi';
 export * from './bloodApi';
 export * from './contentApi';
+export * from './adminApi';
