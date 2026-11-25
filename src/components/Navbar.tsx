@@ -80,19 +80,19 @@ const secondaryDesktopLinks = [
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-const drawerVariants: Variants = {
-  closed: { opacity: 0, height: 0, transition: { duration: 0.25, ease: EASE } },
-  open: {
-    opacity: 1,
-    height: 'auto',
-    transition: { duration: 0.35, ease: EASE, when: 'beforeChildren', staggerChildren: 0.035 },
-  },
-};
-
-const drawerItem: Variants = {
-  closed: { opacity: 0, y: -8 },
-  open: { opacity: 1, y: 0, transition: { duration: 0.28, ease: EASE } },
-};
+// Mobile Side Navigation links matching the drawer design
+const mobileDrawerLinks = [
+  { href: '/', labelBn: 'হোম', labelEn: 'Home' },
+  { href: '/about', labelBn: 'আমাদের সম্পর্কে', labelEn: 'About Us' },
+  { href: '/activities', labelBn: 'কার্যক্রমসমূহ', labelEn: 'Activities' },
+  { href: '/campaigns', labelBn: 'ক্যাম্পেইন', labelEn: 'Campaigns' },
+  { href: '/blood-donation', labelBn: 'জরুরি রক্তদান', labelEn: 'Blood Donation' },
+  { href: '/get-help', labelBn: 'সহায়তা আবেদন', labelEn: 'Request Aid' },
+  { href: '/gallery', labelBn: 'গ্যালারি', labelEn: 'Gallery' },
+  { href: '/volunteer', labelBn: 'আমাদের সাথে যুক্ত হোন', labelEn: 'Join Us' },
+  { href: '/news', labelBn: 'সংবাদ ও নোটিশ', labelEn: 'News & Notices' },
+  { href: '/contact', labelBn: 'যোগাযোগ', labelEn: 'Contact' },
+];
 
 export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarProps) {
   const router = useRouter();
@@ -180,6 +180,18 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
     setMobileMenuOpen(false);
     setMoreMenuOpen(false);
   }, [pathname]);
+
+  // Lock body scroll when mobile side drawer is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
 
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
@@ -428,93 +440,150 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
         </motion.div>
       </div>
 
-      {/* Mobile drawer */}
-      <AnimatePresence initial={false}>
+      {/* Mobile Side Navigation Drawer & Backdrop (As-Sunnah style) */}
+      <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
-            key="drawer"
-            variants={drawerVariants}
-            initial="closed"
-            animate="open"
-            exit="closed"
-            className="xl:hidden overflow-hidden border-t border-stone-200 bg-white shadow-lg"
-          >
-            <div className="px-4 pt-3 pb-6 space-y-2">
-              <nav className="grid grid-cols-2 gap-1.5" aria-label="Mobile">
-                {navLinks.map((link) => {
-                  const Icon = link.icon;
+          <div className="fixed inset-0 z-50 xl:hidden">
+            {/* Backdrop Dimming Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-xs cursor-pointer"
+            />
+
+            {/* Side Navigation Panel */}
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+              className="relative w-[85vw] max-w-[320px] bg-white h-full shadow-2xl flex flex-col justify-between overflow-hidden"
+            >
+              {/* Header: Logo + Organization Name + Close Icon */}
+              <div className="px-5 py-4 border-b border-stone-200/90 flex items-center justify-between bg-white shrink-0">
+                <Link
+                  href="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5"
+                >
+                  <div className="w-10 h-10 rounded-xl overflow-hidden bg-white p-0.5 shrink-0 border border-emerald-500/30 shadow-xs flex items-center justify-center">
+                    <Image
+                      src="/logo.png"
+                      alt="রৌমারী জনকল্যাণ ফাউন্ডেশন"
+                      width={38}
+                      height={38}
+                      className="w-full h-full object-contain"
+                      priority
+                    />
+                  </div>
+                  <div>
+                    <h2 className="font-extrabold text-stone-900 text-sm leading-tight">
+                      {lang === 'bn' ? 'রৌমারী জনকল্যাণ ফাউন্ডেশন' : 'Rowmari Janakalyan Foundation'}
+                    </h2>
+                    <p className="text-[11px] text-[#0D5C35] font-semibold mt-0.5">
+                      {lang === 'bn' ? 'উম্মাহর স্বার্থে মানবতার সাথে' : 'Dedicated to Humanity'}
+                    </p>
+                  </div>
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-label="Close menu"
+                  className="p-1.5 rounded-lg text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition-colors cursor-pointer"
+                >
+                  <X className="w-5 h-5 text-stone-700" />
+                </button>
+              </div>
+
+              {/* Navigation Links (Clean vertical list matching reference design) */}
+              <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4">
+                {mobileDrawerLinks.map((link) => {
                   const active = isActive(link.href);
                   return (
-                    <motion.div key={link.href} variants={drawerItem}>
-                      <Link
-                        href={link.href}
-                        aria-current={active ? 'page' : undefined}
-                        className={`px-3 py-2 rounded-lg font-medium text-xs transition-colors flex items-center gap-2 ${
-                          active
-                            ? 'bg-emerald-50 text-emerald-900 font-bold'
-                            : 'text-stone-700 hover:bg-stone-50'
-                        }`}
-                      >
-                        <Icon
-                          className={`w-3.5 h-3.5 shrink-0 ${active ? 'text-emerald-800' : 'text-stone-500'}`}
-                        />
-                        <span>{lang === 'bn' ? link.labelBn : link.labelEn}</span>
-                      </Link>
-                    </motion.div>
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`block text-[17px] font-bold transition-colors ${
+                        active
+                          ? 'text-[#0D5C35] underline decoration-2 underline-offset-4 decoration-[#0D5C35]'
+                          : 'text-stone-900 hover:text-[#0D5C35]'
+                      }`}
+                    >
+                      {lang === 'bn' ? link.labelBn : link.labelEn}
+                    </Link>
                   );
                 })}
-              </nav>
+              </div>
 
-              <motion.div variants={drawerItem} className="pt-3 border-t border-stone-100 flex flex-col gap-2">
-                {isUserLoggedIn ? (
-                  <div className="flex gap-2">
-                    <Link
-                      href="/dashboard"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex-1 py-2 rounded-full border border-[#0D5C35] bg-emerald-50 text-[#0D5C35] font-bold text-xs flex items-center justify-center gap-1.5 text-center"
-                    >
-                      <LayoutDashboard className="w-3.5 h-3.5 text-[#0D5C35]" />
-                      <span>{lang === 'bn' ? 'ড্যাশবোর্ড প্রবেশ' : 'Dashboard'}</span>
-                    </Link>
+              {/* Footer: Segmented Language Switch & Account Button */}
+              <div className="p-5 border-t border-stone-200/90 bg-white space-y-3 shrink-0">
+                {/* Language Toggle (বাং | EN) */}
+                {onToggleLang && (
+                  <div className="grid grid-cols-2 p-1 rounded-xl bg-stone-100 border border-stone-200/80">
                     <button
                       type="button"
                       onClick={() => {
-                        setMobileMenuOpen(false);
-                        handleLogout();
+                        if (lang !== 'bn') onToggleLang();
                       }}
-                      className="px-4 py-2 rounded-full bg-red-50 text-red-600 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                      className={`py-2 rounded-lg text-sm font-bold transition-all text-center cursor-pointer ${
+                        lang === 'bn'
+                          ? 'bg-[#A3D9B1] text-[#0A4D2E] shadow-2xs'
+                          : 'text-stone-600 hover:text-stone-900'
+                      }`}
                     >
-                      <LogOut className="w-3.5 h-3.5" />
-                      <span>{lang === 'bn' ? 'লগআউট' : 'Logout'}</span>
+                      বাং
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (lang !== 'en') onToggleLang();
+                      }}
+                      className={`py-2 rounded-lg text-sm font-bold transition-all text-center cursor-pointer ${
+                        lang === 'en'
+                          ? 'bg-[#A3D9B1] text-[#0A4D2E] shadow-2xs'
+                          : 'text-stone-600 hover:text-stone-900'
+                      }`}
+                    >
+                      EN
                     </button>
                   </div>
-                ) : (
-                  <div className="flex gap-2">
-                    {pathname !== '/login' && (
-                      <Link
-                        href="/login"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="flex-1 py-2 rounded-full border border-[#0D5C35] text-[#0D5C35] bg-emerald-50/50 hover:bg-emerald-50 font-bold text-xs flex items-center justify-center gap-1.5 text-center"
-                      >
-                        <LogIn className="w-3.5 h-3.5 text-[#0D5C35]" />
-                        <span>{lang === 'bn' ? 'লগইন' : 'Sign In'}</span>
-                      </Link>
-                    )}
-                    {pathname !== '/register' && (
-                      <Link
-                        href="/register"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="flex-1 py-2 rounded-full bg-[#0D5C35] text-white hover:bg-[#094527] font-bold text-xs flex items-center justify-center gap-1.5 text-center"
-                      >
-                        <UserPlus className="w-3.5 h-3.5 text-white" />
-                        <span>{lang === 'bn' ? 'রেজিস্ট্রেশন' : 'Register'}</span>
-                      </Link>
-                    )}
-                  </div>
                 )}
-              </motion.div>
-            </div>
-          </motion.div>
+
+                {/* Account Button (Warm Yellow Pill matching screenshot) */}
+                <Link
+                  href={isUserLoggedIn ? '/dashboard' : '/login'}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full py-3 px-4 rounded-xl border border-[#F3C474] bg-[#FDE29A] hover:bg-[#FCD880] text-stone-900 font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-xs transition active:scale-[0.99] text-center"
+                >
+                  <User className="w-5 h-5 text-stone-900" />
+                  <span>
+                    {isUserLoggedIn
+                      ? (lang === 'bn' ? 'আমার ড্যাশবোর্ড' : 'My Dashboard')
+                      : (lang === 'bn' ? 'আমার অ্যাকাউন্ট' : 'My Account')}
+                  </span>
+                </Link>
+
+                {isUserLoggedIn && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleLogout();
+                    }}
+                    className="w-full py-1 text-center text-xs font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>{lang === 'bn' ? 'লগআউট' : 'Logout'}</span>
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
