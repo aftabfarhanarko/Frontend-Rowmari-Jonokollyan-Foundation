@@ -61,22 +61,6 @@ export const API_ENDPOINTS = {
     adminAssign: (id: string) => `/admin/assistance-applications/${id}/assign`,
     my: '/assistance-applications/my',
   },
-  donors: {
-    register: '/blood/donors',
-    search: '/blood/donors/search',
-    admin: '/blood/donors/admin/list',
-    availability: (id: string) => `/blood/donors/${id}/availability`,
-    verify: (id: string) => `/blood/donors/${id}/verify`,
-  },
-  bloodRequests: {
-    list: '/blood/requests',
-    create: '/blood/requests',
-    my: '/blood/requests/my',
-    detail: (id: string) => `/blood/requests/${id}`,
-    match: (id: string) => `/blood/requests/${id}/matches`,
-    updateMatch: (id: string) => `/blood/requests/matches/${id}/status`,
-    recordOutcome: (id: string) => `/blood/requests/matches/${id}/outcomes`,
-  },
   volunteers: {
     list: '/volunteers',
     register: '/volunteers/register',

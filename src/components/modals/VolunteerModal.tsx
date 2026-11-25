@@ -187,7 +187,7 @@ export default function VolunteerModal({
                   >
                     <option value="relief">ত্রাণ ও শীতবস্ত্র বিতরণ</option>
                     <option value="medical">মেডিকেল ক্যাম্প সহায়তা</option>
-                    <option value="blood">রক্তদাতা নেটওয়ার্ক সমন্বয়</option>
+                    <option value="welfare">সামাজিক পুনর্বাসন ও সেবা</option>
                     <option value="media">ফটোগ্রাফি ও মিডিয়া প্রচার</option>
                     <option value="it">আইটি ও ডেটা ম্যানেজমেন্ট</option>
                     <option value="education">শিশুকল্যাণ ও শিক্ষাবৃত্তি</option>

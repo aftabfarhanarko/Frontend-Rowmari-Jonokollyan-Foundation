@@ -24,12 +24,6 @@ interface AppState {
   assistanceModalOpen: boolean;
   setAssistanceModalOpen: (open: boolean) => void;
 
-  bloodRequestModalOpen: boolean;
-  setBloodRequestModalOpen: (open: boolean) => void;
-
-  bloodDonorModalOpen: boolean;
-  setBloodDonorModalOpen: (open: boolean) => void;
-
   donationModalOpen: boolean;
   preselectedCampaign: string;
   setDonationModalOpen: (open: boolean, campaign?: string) => void;
@@ -78,12 +72,6 @@ export const useAppStore = create<AppState>()(
       // Modals
       assistanceModalOpen: false,
       setAssistanceModalOpen: (assistanceModalOpen) => set({ assistanceModalOpen }),
-
-      bloodRequestModalOpen: false,
-      setBloodRequestModalOpen: (bloodRequestModalOpen) => set({ bloodRequestModalOpen }),
-
-      bloodDonorModalOpen: false,
-      setBloodDonorModalOpen: (bloodDonorModalOpen) => set({ bloodDonorModalOpen }),
 
       donationModalOpen: false,
       preselectedCampaign: 'general',

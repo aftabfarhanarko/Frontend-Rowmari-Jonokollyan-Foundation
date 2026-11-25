@@ -85,7 +85,7 @@ export default function NewsPage() {
               <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed font-normal">
                 {t(
                   'রৌমারী জনকল্যাণ ফাউন্ডেশনের চলমান মানবিক উদ্যোগ, ত্রাণ বিতরণ প্রতিবেদন এবং আসন্ন ফ্রি চিকিৎসা ক্যাম্পের সর্বশেষ আপডেট।',
-                  'Stay informed with verified reports on relief drives, free doctor clinics, voluntary blood drives, and upcoming char community assemblies.'
+                  'Stay informed with verified reports on relief drives, free doctor clinics, education aid, and upcoming char community assemblies.'
                 )}
               </p>
             </motion.div>

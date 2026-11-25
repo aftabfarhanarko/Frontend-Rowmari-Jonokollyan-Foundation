@@ -109,21 +109,6 @@ export interface BackendNotification {
   createdAt: string;
 }
 
-export interface BackendBloodRequest {
-  id: string;
-  patientName: string;
-  bloodGroup: string;
-  unitsNeeded: number;
-  unitsFulfilled?: number;
-  hospitalName: string;
-  requiredDate: string;
-  urgency: string;
-  contactPerson: string;
-  contactPhone: string;
-  status: string;
-  createdAt: string;
-  matches?: Array<{ id: string; status: string; donorProfile?: { fullName: string; phone: string } }>;
-}
 
 export interface PaginatedResponse<T> {
   items: T[];
@@ -279,10 +264,6 @@ export const dashboardApi = baseApi.injectEndpoints({
       query: () => ({ url: API_ENDPOINTS.donations.my }),
       providesTags: ['MyRecords'],
     }),
-    getMyBloodRequests: builder.query<PaginatedResponse<BackendBloodRequest> | BackendBloodRequest[], void>({
-      query: () => ({ url: API_ENDPOINTS.bloodRequests.my }),
-      providesTags: ['MyRecords'],
-    }),
   }),
 });
 
@@ -307,5 +288,4 @@ export const {
   useGetAdminNotificationsQuery,
   useGetMyApplicationsQuery,
   useGetMyDonationsQuery,
-  useGetMyBloodRequestsQuery,
 } = dashboardApi;

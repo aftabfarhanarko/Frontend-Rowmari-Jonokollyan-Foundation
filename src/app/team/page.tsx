@@ -26,7 +26,7 @@ import { Language } from '@/types';
 
 export default function TeamPage() {
   const [lang, setLang] = useState<Language>('bn');
-  const [activeTab, setActiveTab] = useState<'all' | 'exec' | 'blood' | 'relief'>('all');
+  const [activeTab, setActiveTab] = useState<'all' | 'exec' | 'education' | 'relief'>('all');
   const [volunteerModalOpen, setVolunteerModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
   const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
@@ -94,15 +94,15 @@ export default function TeamPage() {
       id: 'member-5',
       nameBn: 'মোছাঃ তানজিনা আক্তার',
       nameEn: 'Mst. Tanjina Akter',
-      roleBn: 'জরুরি রক্তদান সমন্বয়ক',
-      roleEn: 'Emergency Blood Coordinator',
-      wing: 'blood',
-      wingBn: 'রক্তদান সেবা উইং',
-      wingEn: 'Blood Donation Wing',
+      roleBn: 'শিক্ষা ও পাঠাগার সমন্বয়ক',
+      roleEn: 'Education & Youth Coordinator',
+      wing: 'education',
+      wingBn: 'শিক্ষা ও মেধা বিকাশ উইং',
+      wingEn: 'Education & Youth Wing',
       phone: '+880 1756-789012',
-      descBn: 'রৌমারী হাসপাতালের সাথে যুক্ত থেকে ২৪/৭ জরুরি রক্তদাতাদের যোগাযোগ ও ব্লাড গ্রুপিং পরিচালনা।',
-      descEn: 'Managing 24/7 emergency blood requests and donor-patient coordination at Rowmari Hospital.',
-      badgeColor: 'bg-[#E53935]',
+      descBn: 'চরাঞ্চলের সুবিধাবঞ্চিত শিশুদের শিক্ষাসামগ্রী বিতরণ ও ভ্রাম্যমাণ পাঠাগার কার্যক্রম পরিচালনা।',
+      descEn: 'Managing char educational scholarship drives, book distribution, and youth skill workshops.',
+      badgeColor: 'bg-indigo-700',
     },
     {
       id: 'member-6',
@@ -186,14 +186,14 @@ export default function TeamPage() {
                 {t('পরিচালনা পরিষদ', 'Executive Board')}
               </button>
               <button
-                onClick={() => setActiveTab('blood')}
+                onClick={() => setActiveTab('education')}
                 className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-                  activeTab === 'blood'
-                    ? 'bg-[#E53935] text-white shadow-md'
+                  activeTab === 'education'
+                    ? 'bg-indigo-700 text-white shadow-md'
                     : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
                 }`}
               >
-                {t('জরুরি রক্তদান উইং', 'Blood Donation Wing')}
+                {t('শিক্ষা ও যুব উইং', 'Education & Youth Wing')}
               </button>
               <button
                 onClick={() => setActiveTab('relief')}
@@ -261,7 +261,7 @@ export default function TeamPage() {
                 {t('আপনিও আমাদের নিবেদিত স্বেচ্ছাসেবক দলের অংশ হতে পারেন', 'Become a Volunteer in Rowmari Humanitarian Network')}
               </h2>
               <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed">
-                {t('রক্তদান সমন্বয়, ত্রাণ বিতরণ, মেডিকেল ক্যাম্প পরিচালনা কিংবা আইটি ডেস্কে কাজ করার আগ্রহ থাকলে আজই নিবন্ধন করুন।', 'Join our specialized wings for emergency blood coordination, food packing, doctor assistance, or media communications.')}
+                {t('ত্রাণ বিতরণ, শীতবস্ত্র প্রদান, মেডিকেল ক্যাম্প পরিচালনা কিংবা আইটি ডেস্কে কাজ করার আগ্রহ থাকলে আজই নিবন্ধন করুন।', 'Join our specialized wings for food packing, winter relief, doctor assistance, or media communications.')}
               </p>
             </div>
 

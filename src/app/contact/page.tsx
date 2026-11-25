@@ -95,8 +95,8 @@ export default function ContactPage() {
               </h1>
               <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed font-normal">
                 {t(
-                  'রৌমারী জনকল্যাণ ফাউন্ডেশনের কার্যালয়ে সরাসরি উপস্থিত হয়ে, জরুরি রক্তদান ডেস্কে কল করে অথবা অনলাইন বার্তার মাধ্যমে যেকোনো প্রয়োজনে যোগাযোগ করুন।',
-                  'Visit our central office in Rowmari, Kurigram, dial our 24/7 emergency blood line, or send an inquiry directly to our administrative committee.'
+                  'রৌমারী জনকল্যাণ ফাউন্ডেশনের কার্যালয়ে সরাসরি উপস্থিত হয়ে, জরুরি ত্রাণ ও সেবা ডেস্কে কল করে অথবা অনলাইন বার্তার মাধ্যমে যেকোনো প্রয়োজনে যোগাযোগ করুন।',
+                  'Visit our central office in Rowmari, Kurigram, dial our 24/7 emergency relief line, or send an inquiry directly to our administrative committee.'
                 )}
               </p>
             </motion.div>
@@ -132,7 +132,7 @@ export default function ContactPage() {
                     <h2 className="text-base font-bold text-stone-900 mb-1">{t('জরুরি হটলাইন', 'Emergency Hotlines')}</h2>
                     <div className="space-y-0.5 text-xs sm:text-sm font-mono font-bold text-stone-800">
                       <div>{FOUNDATION_INFO.phonePrimary} ({t('সাধারণ তথ্য', 'General')})</div>
-                      <div className="text-[#E53935]">{FOUNDATION_INFO.emergencyBloodHotline} ({t('জরুরি রক্তদান', 'Blood Desk')})</div>
+                      <div className="text-[#0D5C35]">{FOUNDATION_INFO.emergencyHotline} ({t('জরুরি ত্রাণ ও সেবা', 'Emergency Relief Desk')})</div>
                     </div>
                   </div>
                 </div>
@@ -159,8 +159,8 @@ export default function ContactPage() {
                     <p className="text-xs sm:text-sm text-stone-600">
                       {t('শনিবার - বৃহস্পতিবার: সকাল ৯টা - বিকাল ৫টা', 'Sat - Thu: 9:00 AM - 5:00 PM')}
                     </p>
-                    <span className="text-[11px] text-red-600 font-bold block mt-0.5">
-                      {t('জরুরি রক্তদান ও ত্রাণ হটলাইন ২৪/৭ খোলা', 'Emergency blood & relief desk is open 24/7')}
+                    <span className="text-[11px] text-[#0D5C35] font-bold block mt-0.5">
+                      {t('জরুরি ত্রাণ ও সহায়তা ডেস্ক ২৪/৭ খোলা', 'Emergency relief & assistance desk is open 24/7')}
                     </span>
                   </div>
                 </div>

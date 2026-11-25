@@ -12,7 +12,7 @@ import {
   Clock, 
   CheckCircle2, 
   ArrowRight,
-  Droplet,
+  BookOpen,
   FileText
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -35,12 +35,12 @@ export default function VolunteerPage() {
 
   const wings = [
     {
-      icon: Droplet,
-      titleBn: 'জরুরি রক্তদান সমন্বয় সেল',
-      titleEn: 'Blood Donation Coordination',
-      descBn: 'রৌমারী হাসপাতালের সাথে সমন্বয় করে মুমূর্ষু রোগীর জন্য রক্তদাতা খুঁজে দেওয়া ও ডোনার ক্যাম্পে সহায়তা।',
-      descEn: 'Assisting hospital patients by matching donors from our 24/7 volunteer database and donor camps.',
-      color: 'bg-red-100 text-[#E53935]',
+      icon: BookOpen,
+      titleBn: 'শিক্ষা ও মেধা বিকাশ সেল',
+      titleEn: 'Education & Youth Development',
+      descBn: 'সুবিধাবঞ্চিত শিশুদের স্কুল উপকরণ বিতরণ, পাঠাগার পরিচালনা এবং শিক্ষাবৃত্তি কার্যক্রমে সহায়তা।',
+      descEn: 'Assisting marginalized students with school supplies, library operations, and scholarship programs.',
+      color: 'bg-amber-100 text-amber-800',
     },
     {
       icon: HeartHandshake,

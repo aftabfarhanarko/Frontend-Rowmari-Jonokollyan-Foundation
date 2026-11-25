@@ -36,7 +36,7 @@ export interface AdminDashboardOverview {
   operations: {
     totalCampaigns: number;
     totalApplications: number;
-    totalBloodRequests: number;
+    totalBloodRequests?: number;
     totalContactMessages: number;
     totalDonations: number;
     totalDonationsAmount: number;

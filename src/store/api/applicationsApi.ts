@@ -6,13 +6,6 @@ export interface AssistancePayload {
   category: string; fullName: string; phone: string; nid?: string; unionName: string; village: string;
   amountOrItems?: string; description: string; agreeConsent: boolean;
 }
-export interface BloodDonorPayload {
-  name: string; phone: string; bloodGroup: string; upazila: string; village?: string; lastDonation?: string; availability: string;
-}
-export interface BloodRequestPayload {
-  patientName: string; bloodGroup: string; unitsNeeded: number; hospital: string; location: string; dateNeeded: string;
-  urgency: string; contactPhone: string; contactName?: string; notes?: string;
-}
 export interface VolunteerPayload {
   name: string; phone: string; email?: string; age: number; profession?: string; preferredWing: string; availability: string; motivation?: string;
 }
@@ -65,21 +58,6 @@ export const applicationsApi = baseApi.injectEndpoints({
         };
       },
     }),
-    registerBloodDonor: builder.mutation<unknown, BloodDonorPayload>({
-      query: (form) => ({
-        url: API_ENDPOINTS.donors.register, method: 'POST',
-        data: { fullName: form.name, phone: phoneValue(form.phone), bloodGroup: form.bloodGroup, upazila: form.upazila, address: form.village,
-          ...(form.lastDonation && !Number.isNaN(Date.parse(form.lastDonation)) ? { lastDonationDate: new Date(form.lastDonation).toISOString() } : {}), consentToContact: true },
-      }),
-    }),
-    requestBlood: builder.mutation<{ id: string }, BloodRequestPayload>({
-      query: (form) => ({
-        url: API_ENDPOINTS.bloodRequests.create, method: 'POST',
-        data: { patientName: form.patientName, bloodGroup: form.bloodGroup, unitsNeeded: Number(form.unitsNeeded),
-          hospitalName: form.hospital, hospitalAddress: form.location, requiredDate: new Date(form.dateNeeded).toISOString(),
-          urgency: form.urgency === 'scheduled' ? 'ROUTINE' : enumValue(form.urgency), contactPhone: phoneValue(form.contactPhone), contactPerson: form.contactName || form.contactPhone, medicalReason: form.notes },
-      }),
-    }),
     applyVolunteer: builder.mutation<unknown, VolunteerPayload>({
       query: (form) => ({ url: API_ENDPOINTS.volunteers.register, method: 'POST', data: {
         fullName: form.name, phone: phoneValue(form.phone), email: form.email, upazila: form.preferredWing,
@@ -93,6 +71,6 @@ export const applicationsApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useGetNewsQuery, useLazyTrackApplicationQuery, useSubmitAssistanceMutation, useRegisterBloodDonorMutation,
-  useRequestBloodMutation, useApplyVolunteerMutation, useSendContactMessageMutation,
+  useGetNewsQuery, useLazyTrackApplicationQuery, useSubmitAssistanceMutation,
+  useApplyVolunteerMutation, useSendContactMessageMutation,
 } = applicationsApi;

@@ -11,8 +11,6 @@ export const baseApi = createApi({
     'Gallery',
     'Announcements',
     'Applications',
-    'BloodDonors',
-    'BloodRequests',
     'Volunteers',
     'Donations',
     'Expenses',

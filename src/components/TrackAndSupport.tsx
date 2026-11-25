@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Search, HandHeart, Users, Droplet, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { Search, HandHeart, Users, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 import { Language } from '@/types';
 
 interface TrackAndSupportProps {
@@ -111,27 +111,27 @@ export default function TrackAndSupport({
               </h2>
               <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed font-normal">
                 {lang === 'bn'
-                  ? 'রৌমারীর প্রত্যন্ত চরাঞ্চলের অসহায় শীতার্ত মানুষের সেবা কিংবা জরুরি রক্তদানে আপনার মেধা, সময় ও সহমর্মিতা যুক্ত করুন।'
-                  : 'Contribute your time, skills, volunteerism, and blood donation to serve the marginalized people of Rowmari.'}
+                  ? 'রৌমারীর প্রত্যন্ত চরাঞ্চলের অসহায় শীতার্ত মানুষের সেবায় আপনার মেধা, সময়, শ্রম ও সহমর্মিতা যুক্ত করুন।'
+                  : 'Contribute your time, skills, volunteerism, and compassion to serve the marginalized people of Rowmari.'}
               </p>
 
               {/* Action Buttons */}
               <div className="mt-8 flex flex-wrap items-center gap-3.5">
-                <Link
-                  href="/blood-donation"
-                  className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#E53935] to-[#D32F2F] hover:from-[#D32F2F] hover:to-[#B71C1C] text-white font-bold text-sm transition-all shadow-lg shadow-red-950/30 hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center gap-2"
-                >
-                  <Droplet className="w-4 h-4 fill-white text-white" />
-                  <span>{lang === 'bn' ? 'জরুরি রক্তদান পোর্টাল' : 'Blood Portal'}</span>
-                </Link>
-
                 <button
                   onClick={onOpenVolunteer}
                   className="px-6 py-3.5 rounded-2xl bg-white text-[#0D5C35] hover:bg-emerald-50 font-bold text-sm transition-all shadow-md hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center gap-2"
                 >
                   <Users className="w-4 h-4 text-[#0D5C35]" />
-                  <span>{lang === 'bn' ? 'স্বেচ্ছাসেবক হোন' : 'Join as Volunteer'}</span>
+                  <span>{lang === 'bn' ? 'স্বেচ্ছাসেবক হিসেবে যুক্ত হোন' : 'Join as Volunteer'}</span>
                 </button>
+
+                <Link
+                  href="/activities"
+                  className="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm transition-all shadow-md hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center gap-2"
+                >
+                  <span>{lang === 'bn' ? 'আমাদের কার্যক্রম দেখুন' : 'View Activities'}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
             </div>
 

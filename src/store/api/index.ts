@@ -5,6 +5,6 @@ export * from './campaignsApi';
 export * from './activitiesApi';
 export * from './applicationsApi';
 export * from './dashboardApi';
-export * from './bloodApi';
 export * from './contentApi';
 export * from './adminApi';
+

@@ -34,15 +34,15 @@ export default function PrivacyPolicyPage() {
       num: '১',
       titleBn: 'ব্যক্তিগত তথ্য সংগ্রহ ও মানবিক সেবার উদ্দেশ্য',
       titleEn: 'Collection & Purpose of Personal Data',
-      descBn: 'রৌমারী জনকল্যাণ ফাউন্ডেশন কেবলমাত্র প্রকৃত মানবিক ত্রাণ, চিকিৎসা সহায়তা এবং রক্তদান সমন্বয়ের উদ্দেশ্যেই সীমিত আকারে তথ্য (যেমন: নাম, যোগাযোগের নম্বর, রক্তের গ্রুপ, বসবাসের চর বা এলাকা) সংগ্রহ করে। কোনো বাণিজ্যিক বা অননুমোদিত উদ্দেশ্যে ব্যবহার করা হয় না।',
-      descEn: 'Rowmari Janakalyan Foundation collects personal data exclusively for emergency relief delivery, verified patient aid, and voluntary blood donor coordination without any commercial intent.',
+      descBn: 'রৌমারী জনকল্যাণ ফাউন্ডেশন কেবলমাত্র প্রকৃত মানবিক ত্রাণ, চিকিৎসা সহায়তা এবং সমাজকল্যাণ সমন্বয়ের উদ্দেশ্যেই সীমিত আকারে তথ্য (যেমন: নাম, যোগাযোগের নম্বর, বসবাসের চর বা এলাকা) সংগ্রহ করে। কোনো বাণিজ্যিক বা অননুমোদিত উদ্দেশ্যে ব্যবহার করা হয় না।',
+      descEn: 'Rowmari Janakalyan Foundation collects personal data exclusively for emergency relief delivery, verified patient aid, and humanitarian coordination without any commercial intent.',
     },
     {
       num: '২',
-      titleBn: 'রক্তদাতার তথ্যের কঠোর গোপনীয়তা ও সুরক্ষা (কঠোর নিয়ম)',
-      titleEn: 'Strict Voluntary Blood Donor Confidentiality',
-      descBn: 'রক্তদাতাদের ফোন নম্বর বা ব্যক্তিগত পরিচয় কোনো অবস্থাতেই উন্মুক্ত ওয়েবসাইট, সামাজিক যোগাযোগ মাধ্যম বা গ্রুপে প্রচার করা হয় না। হাসপাতালে মুমূর্ষু রোগীর রক্তের প্রয়োজনে অনুমোদিত ব্লাড কো-অর্ডিনেটর কেবল রক্তদাতার সম্মতিক্রমে ব্যক্তিগতভাবে যোগাযোগ করেন।',
-      descEn: 'Volunteer donor phone numbers and addresses are strictly protected and never published on public websites or social channels. Coordinators contact donors only upon consent during emergencies.',
+      titleBn: 'স্বেচ্ছাসেবক ও আবেদনকারীর তথ্যের কঠোর গোপনীয়তা',
+      titleEn: 'Strict Volunteer & Applicant Confidentiality',
+      descBn: 'আবেদনকারী ও স্বেচ্ছাসেবকদের ফোন নম্বর বা ব্যক্তিগত পরিচয় কোনো অবস্থাতেই উন্মুক্ত ওয়েবসাইট, সামাজিক যোগাযোগ মাধ্যম বা গ্রুপে প্রচার করা হয় না। অনুমোদিত কো-অর্ডিনেটর কেবল যাচাই ও সহায়তার প্রয়োজনেই যোগাযোগ করেন।',
+      descEn: 'Applicant and volunteer contact numbers are strictly protected and never published on public channels. Coordinators contact individuals solely for service verification and relief logistics.',
     },
     {
       num: '৩',
@@ -99,8 +99,8 @@ export default function PrivacyPolicyPage() {
               </h1>
               <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed font-normal">
                 {t(
-                  'রৌমারী জনকল্যাণ ফাউন্ডেশন রক্তদাতা, সহায়তাপ্রার্থী এবং দাতাদের তথ্যের সর্বোচ্চ নিরাপত্তা ও গোপনীয়তা রক্ষায় দৃঢ়ভাবে অঙ্গীকারবদ্ধ।',
-                  'Committed to the highest standards of data confidentiality, respecting the human dignity of beneficiaries, and safeguarding voluntary blood donors.'
+                  'রৌমারী জনকল্যাণ ফাউন্ডেশন সহায়তাপ্রার্থী, স্বেচ্ছাসেবক এবং দাতাদের তথ্যের সর্বোচ্চ নিরাপত্তা ও গোপনীয়তা রক্ষায় দৃঢ়ভাবে অঙ্গীকারবদ্ধ।',
+                  'Committed to the highest standards of data confidentiality, respecting the human dignity of beneficiaries, and safeguarding all community members.'
                 )}
               </p>
             </motion.div>

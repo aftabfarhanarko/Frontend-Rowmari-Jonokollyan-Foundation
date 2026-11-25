@@ -52,7 +52,7 @@ export default function GalleryPage() {
     { key: 'all', labelBn: 'সকল স্থিরচিত্র', labelEn: 'All Photos' },
     { key: 'winter', labelBn: 'শীতবস্ত্র বিতরণ', labelEn: 'Winter Relief' },
     { key: 'medical', labelBn: 'ফ্রি মেডিকেল ক্যাম্প', labelEn: 'Medical Camps' },
-    { key: 'blood', labelBn: 'জরুরি পুনর্বাসন', labelEn: 'Emergency Relief' },
+    { key: 'welfare', labelBn: 'জরুরি পুনর্বাসন', labelEn: 'Emergency Relief' },
     { key: 'education', labelBn: 'শিক্ষা উপবৃত্তি', labelEn: 'Char Education' },
     { key: 'flood', labelBn: 'বন্যা ও ত্রাণ পুনর্বাসন', labelEn: 'Flood Relief' },
   ];
@@ -154,7 +154,7 @@ export default function GalleryPage() {
                       {item.category === 'winter' ? t('শীতবস্ত্র', 'Winter') :
                        item.category === 'medical' ? t('চিকিৎসা', 'Medical') :
                        item.category === 'education' ? t('শিক্ষা', 'Education') :
-                       item.category === 'blood' ? t('রক্তদান', 'Blood') : t('ত্রাণ', 'Relief')}
+                       item.category === 'welfare' ? t('পুনর্বাসন', 'Relief') : t('ত্রাণ', 'Relief')}
                     </span>
                   </div>
 

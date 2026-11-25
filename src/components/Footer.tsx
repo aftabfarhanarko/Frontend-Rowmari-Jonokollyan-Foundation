@@ -385,8 +385,8 @@ export default function Footer({
               {isBn ? 'ব্যবহারের শর্তাবলী' : 'Terms of Use'}
             </Link>
             <span className="text-emerald-900 hidden sm:inline">•</span>
-            <Link href="/blood-donation" className="hover:text-emerald-300 hover:underline transition">
-              {isBn ? 'রক্তদাতা সুরক্ষা নীতিমালা' : 'Donor Protection'}
+            <Link href="/about" className="hover:text-emerald-300 hover:underline transition">
+              {isBn ? 'আমাদের সম্পর্কে' : 'About Us'}
             </Link>
           </div>
         </div>

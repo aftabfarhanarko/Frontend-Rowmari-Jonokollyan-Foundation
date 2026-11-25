@@ -22,12 +22,12 @@ const STORIES = [
   {
     nameBn: 'মোছাঃ রোকেয়া বেগম',
     nameEn: 'Rokeya Begum',
-    roleBn: 'রক্তগ্রহীতার মা, রৌমারী সদর',
-    roleEn: 'Mother of Blood Recipient',
-    typeBn: 'জরুরি রক্তদান',
-    typeEn: 'Blood Wing',
-    bn: 'রৌমারী হাসপাতালে প্রসূতি মেয়ের জরুরি ও-নেগেটিভ রক্তের দরকার ছিল। মধ্যরাতেও ফাউন্ডেশনের হেল্পলাইনে কল দেওয়ার পর মাত্র এক ঘণ্টার মধ্যে একজন নিঃস্বার্থ ডোনার এসে রক্ত দিয়ে গেছেন।',
-    en: 'My daughter needed urgent O-negative blood at Rowmari hospital at midnight. RJF connected us with a volunteer donor within an hour.',
+    roleBn: 'চিকিৎসা সহায়তা গ্রহীতা, রৌমারী সদর',
+    roleEn: 'Medical Aid Recipient',
+    typeBn: 'চিকিৎসা সহায়তা',
+    typeEn: 'Medical Aid',
+    bn: 'রৌমারী হাসপাতালে প্রসূতি মেয়ের জরুরি চিকিৎসার দরকার ছিল। ফাউন্ডেশনের সহায়তায় দ্রুত প্রয়োজনীয় ওষুধ ও চিকিৎসা সহায়তার ব্যবস্থা হয়েছিল।',
+    en: 'My daughter needed urgent medical assistance at Rowmari hospital. RJF quickly provided essential medicines and direct medical support.',
   },
   {
     nameBn: 'মাহমুদুল হাসান',
@@ -57,7 +57,7 @@ export default function Testimonials({ lang }: Props) {
             {t('যাদের পাশে দাঁড়িয়েছি, তাদের কথা', 'Voices of Those We Serve')}
           </h2>
           <p className="text-xs sm:text-sm text-stone-500 font-medium">
-            {t('উপকারভোগী পরিবার, জরুরি রক্তগ্রহীতা ও নিবেদিত স্বেচ্ছাসেবকদের সরাসরি অনুভূতি।', 'Direct feedback from char beneficiaries, blood recipients and dedicated volunteers.')}
+            {t('উপকারভোগী পরিবার, চিকিৎসা সহায়তা গ্রহীতা ও নিবেদিত স্বেচ্ছাসেবকদের সরাসরি অনুভূতি।', 'Direct feedback from char beneficiaries, aid recipients and dedicated volunteers.')}
           </p>
         </div>
 

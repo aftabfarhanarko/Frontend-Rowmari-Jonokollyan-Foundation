@@ -8,7 +8,6 @@ interface AnnouncementModalProps {
   isOpen: boolean;
   onClose: () => void;
   lang: Language;
-  onOpenBloodRequest?: () => void;
   onOpenAssistance: () => void;
 }
 

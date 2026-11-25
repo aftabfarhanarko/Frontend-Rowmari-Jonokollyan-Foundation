@@ -13,8 +13,6 @@ export interface RegisterPayload {
   district?: string;
   upazila?: string;
   address?: string;
-  bloodGroup?: string;
-  consentToDonateBlood?: boolean;
 }
 
 export const authApi = baseApi.injectEndpoints({

@@ -26,12 +26,12 @@ const ITEMS = [
   {
     dateBn: 'সম্প্রতি',
     dateEn: 'Recent',
-    tagBn: 'রক্তদান',
-    tagEn: 'Blood',
-    titleBn: 'স্বেচ্ছায় রক্তদান কর্মসূচি',
-    titleEn: 'Voluntary blood donation drive',
-    textBn: 'নতুন দাতাদের নিবন্ধনসহ রক্তদান কর্মসূচির আয়োজন।',
-    textEn: 'A blood donation drive with registration for new donors.',
+    tagBn: 'শিক্ষা',
+    tagEn: 'Education',
+    titleBn: 'চরাঞ্চলে শিক্ষাসামগ্রী বিতরণ',
+    titleEn: 'Char Education Material Distribution',
+    textBn: 'সুবিধাবঞ্চিত শিক্ষার্থীদের মাঝে খাতা-কলম ও স্কুল ব্যাগ বিতরণ।',
+    textEn: 'Distributing school supplies and bags among underprivileged students.',
   },
   {
     dateBn: 'শিগগিরই',

@@ -47,11 +47,11 @@ export default function AboutPage() {
     {
       yearBn: '২০২০',
       yearEn: '2020',
-      titleBn: 'জরুরি রক্তদাতা নেটওয়ার্ক ও করোনা মহামারী সহায়তা',
-      titleEn: 'Emergency Blood Network & Pandemic Relief',
-      descBn: 'রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্সের রোগীদের জন্য সার্বক্ষণিক ব্লাড ডোনার গ্রুপ গঠন এবং লকডাউনে কর্মহীন দিনমজুর পরিবারে জরুরি খাদ্য সহায়তা প্রদান।',
-      descEn: 'Established 24/7 volunteer blood donor network for Rowmari Upazila Health Complex and dispatched emergency pandemic food packs to daily wage earners.',
-      theme: 'red',
+      titleBn: 'করোনা মহামারী ও পরিবার পুনর্বাসন সহায়তা',
+      titleEn: 'Pandemic Relief & Family Rehabilitation',
+      descBn: 'লকডাউনে কর্মহীন চরাঞ্চলের দিনমজুর পরিবারে জরুরি খাদ্য সহায়তা এবং স্বাস্থ্য সুরক্ষা সামগ্রী বিতরণ।',
+      descEn: 'Dispatched emergency pandemic food packs and hygiene supplies to daily wage-earning char families during lockdown.',
+      theme: 'emerald',
     },
     {
       yearBn: '২০২২',
@@ -108,14 +108,14 @@ export default function AboutPage() {
       icon: Clock,
       titleBn: '২৪/৭ দ্রুত সাড়া প্রদান',
       titleEn: '24/7 Rapid Emergency Response',
-      descBn: 'মুহূর্তের প্রয়োজনে রক্তের ব্যবস্থা এবং আকস্মিক দুর্যোগে দুর্গম চরে স্পিডবোট ও ট্রলারযোগে ত্রাণ পৌঁছে দেওয়া।',
-      descEn: 'Swift volunteer mobilization with emergency blood supplies and boat relief missions during floods.',
+      descBn: 'আকস্মিক দুর্যোগ ও জরুরি সংকটে দুর্গম চরে স্পিডবোট ও ট্রলারযোগে দ্রুত ত্রাণ পৌঁছে দেওয়া।',
+      descEn: 'Swift volunteer mobilization with emergency relief and boat missions during flood crises.',
     },
   ];
 
   const stats = [
     { valueBn: '১২,৫০০+', valueEn: '12,500+', labelBn: 'সহায়তাপ্রাপ্ত মানুষ', labelEn: 'People Supported' },
-    { valueBn: '১,২০০+', valueEn: '1,200+', labelBn: 'নিবন্ধিত রক্তদাতা', labelEn: 'Registered Donors' },
+    { valueBn: '৬+', valueEn: '6+', labelBn: 'সক্রিয় ইউনিয়ন', labelEn: 'Char Unions' },
     { valueBn: '৮+ বছর', valueEn: '8+ Years', labelBn: 'মাঠপর্যায়ে সেবা', labelEn: 'Field Service' },
     { valueBn: '১০০%', valueEn: '100%', labelBn: 'সরাসরি চরে বিতরণ', labelEn: 'Direct Char Delivery' },
   ];
@@ -153,7 +153,7 @@ export default function AboutPage() {
               <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed font-normal">
                 {t(
                   'রৌমারী জনকল্যাণ ফাউন্ডেশন (RJF) কুড়িগ্রামের দুর্গম ব্রহ্মপুত্র চরাঞ্চলের সুবিধাবঞ্চিত, শীতার্ত, দরিদ্র ও মুমূর্ষু মানুষের পাশে নিঃস্বার্থভাবে কাজ করে যাওয়া একটি স্থানীয় মানবিক সংগঠন।',
-                  'Rowmari Janakalyan Foundation is a verified grassroots humanitarian foundation dedicated to uplifting vulnerable river-island char communities of Kurigram through winter warmth, emergency blood, healthcare, and education.'
+                  'Rowmari Janakalyan Foundation is a verified grassroots humanitarian foundation dedicated to uplifting vulnerable river-island char communities of Kurigram through winter warmth, healthcare, and education.'
                 )}
               </p>
             </motion.div>
@@ -201,7 +201,7 @@ export default function AboutPage() {
                 {t('চরাঞ্চলের প্রতিটি বাড়িতে সরাসরি গিয়ে যাচাই ও অনুদান বিতরণ', 'Direct door-to-door verification and relief delivery in isolated chars')}
               </h2>
               <p className="text-xs sm:text-sm text-stone-200 mt-1 hidden sm:block drop-shadow-xs">
-                {t('কনকনে শীতে কম্বল বিতরণ থেকে শুরু করে মুমূর্ষু রোগীর রক্তের ব্যবস্থা—সবকিছুতেই আমাদের স্বেচ্ছাসেবকরা নিয়োজিত।', 'From winter blanket relief to emergency blood donor dispatch, our volunteer force stands with the marginalized.')}
+                {t('কনকনে শীতে কম্বল বিতরণ থেকে শুরু করে জরুরি চিকিৎসা সহায়তা—সবকিছুতেই আমাদের স্বেচ্ছাসেবকরা নিয়োজিত।', 'From winter blanket relief to emergency healthcare support, our volunteer force stands with the marginalized.')}
               </p>
             </div>
           </motion.div>
@@ -227,8 +227,8 @@ export default function AboutPage() {
                 <h3 className="text-xl font-bold text-stone-900 mb-3">{t('আমাদের লক্ষ্য (Mission)', 'Our Mission')}</h3>
                 <p className="text-sm sm:text-base text-stone-600 leading-relaxed">
                   {t(
-                    'কুড়িগ্রামের রৌমারী ও দুর্গম চরাঞ্চলের অসহায়, শীতার্ত ও প্রান্তিক জনগোষ্ঠীর মাঝে জরুরি মানবিক সহায়তা, বিনামূল্যে স্বাস্থ্যসেবা, মুমূর্ষু রোগীর জন্য রক্তদান এবং দরিদ্র শিক্ষার্থীদের শিক্ষাবৃত্তি পৌঁছে দিয়ে তাদের জীবনমানের টেকসই উন্নয়ন নিশ্চিত করা।',
-                    'Providing emergency humanitarian relief, free medical care, volunteer blood donor networking, and educational scholarships to uplift marginalized families in flood-prone river island chars of Rowmari.'
+                    'কুড়িগ্রামের রৌমারী ও দুর্গম চরাঞ্চলের অসহায়, শীতার্ত ও প্রান্তিক জনগোষ্ঠীর মাঝে জরুরি মানবিক সহায়তা, বিনামূল্যে স্বাস্থ্যসেবা এবং দরিদ্র শিক্ষার্থীদের শিক্ষাবৃত্তি পৌঁছে দিয়ে তাদের জীবনমানের টেকসই উন্নয়ন নিশ্চিত করা।',
+                    'Providing emergency humanitarian relief, free medical care, and educational scholarships to uplift marginalized families in flood-prone river island chars of Rowmari.'
                   )}
                 </p>
               </div>
@@ -375,8 +375,8 @@ export default function AboutPage() {
                   <div className="text-sm font-bold text-white">{t('বার্ষিক হিসাব ও ব্যয়ের নিরীক্ষা সম্পন্ন', 'Annual External Audit Verified')}</div>
                 </div>
                 <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
-                  <div className="text-xs font-semibold text-emerald-300 mb-1">{t('রক্তদাতা ডাটাবেজ', 'Blood Donor Base')}</div>
-                  <div className="text-sm font-bold text-white">{t('১,২০০+ রক্তদাতার মোবাইল ভেরিফাইড নেটওয়ার্ক', '1,200+ Verified Donors')}</div>
+                  <div className="text-xs font-semibold text-emerald-300 mb-1">{t('জরুরি ত্রাণ সেল', 'Emergency Relief Cell')}</div>
+                  <div className="text-sm font-bold text-white">{t('চরাঞ্চলে তাৎক্ষণিক খাদ্য ও শীতবস্ত্র সরবরাহ', 'Immediate Char Relief Dispatch')}</div>
                 </div>
                 <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
                   <div className="text-xs font-semibold text-emerald-300 mb-1">{t('স্বেচ্ছাসেবক সেল', 'Volunteer Network')}</div>
@@ -393,7 +393,7 @@ export default function AboutPage() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-2">{t('সহায়তা প্রয়োজন?', 'Need Assistance?')}</h3>
               <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed mb-4">
-                {t('চিকিৎসা, শীতবস্ত্র, খাদ্য বা জরুরি রক্তের জন্য অনলাইনে সরাসরি আবেদন করুন। ট্র্যাকিং আইডিসহ দ্রুত সমাধান মিলবে।', 'Submit an assistance request for healthcare, winter aid, or food relief with an online tracking ID.')}
+                {t('চিকিৎসা, শীতবস্ত্র, শিক্ষা বা খাদ্য সহায়তার জন্য অনলাইনে সরাসরি আবেদন করুন। ট্র্যাকিং আইডিসহ দ্রুত সমাধান মিলবে।', 'Submit an assistance request for healthcare, winter aid, or food relief with an online tracking ID.')}
               </p>
             </div>
             <button
@@ -404,18 +404,18 @@ export default function AboutPage() {
             </button>
           </div>
 
-          <div className="p-6 sm:p-7 rounded-2xl bg-white border-2 border-[#E53935] flex flex-col justify-between shadow-xl shadow-red-950/10">
+          <div className="p-6 sm:p-7 rounded-2xl bg-white border-2 border-[#0D5C35] flex flex-col justify-between shadow-xl shadow-emerald-950/10">
             <div>
-              <h3 className="text-lg sm:text-xl font-bold text-[#E53935] mb-2">{t('রক্তদানে জীবন বাঁচান', 'Donate Blood, Save Lives')}</h3>
+              <h3 className="text-lg sm:text-xl font-bold text-[#0D5C35] mb-2">{t('স্বেচ্ছাসেবক হিসেবে যুক্ত হোন', 'Join as Volunteer')}</h3>
               <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-4">
-                {t('আপনার এক ব্যাগ রক্ত চরাঞ্চলের মুমূর্ষু রোগী ও প্রসূতি মায়ের অমূল্য জীবন বাঁচাতে পারে।', 'Your single unit of blood can save a critical patient or expectant mother.')}
+                {t('চর ও প্রত্যন্ত অঞ্চলের মানুষের পাশে দাঁড়াতে আমাদের নিবেদিত স্বেচ্ছাসেবক দলে নাম নিবন্ধন করুন।', 'Join our dedicated volunteer team to stand beside marginalized communities in remote char regions.')}
               </p>
             </div>
             <Link
-              href="/blood-donation"
-              className="w-full py-3 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs sm:text-sm transition cursor-pointer shadow-md text-center block"
+              href="/volunteer"
+              className="w-full py-3 rounded-xl bg-[#0D5C35] hover:bg-[#0A4729] text-white font-bold text-xs sm:text-sm transition cursor-pointer shadow-md text-center block"
             >
-              {t('রক্তদান পোর্টালে যান', 'Visit Blood Portal')}
+              {t('স্বেচ্ছাসেবক নিবন্ধন', 'Register as Volunteer')}
             </Link>
           </div>
         </div>

@@ -29,10 +29,10 @@ export default function AboutUs({
     {
       year: '২০২০',
       yearEn: '2020',
-      titleBn: 'জরুরি রক্তদাতা নেটওয়ার্ক ও করোনা সহায়তা',
-      titleEn: 'Emergency Blood Wing & Pandemic Relief',
-      descBn: 'রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্সের রোগীদের জন্য সার্বক্ষণিক ব্লাড ডোনার গ্রুপ ও মহামারীকালীন জরুরি খাদ্য কর্মসূচি চালু।',
-      descEn: 'Established 24/7 volunteer blood donor network and dispatched emergency pandemic rations.',
+      titleBn: 'মহামারীকালীন খাদ্য ও জরুরি সহায়তা',
+      titleEn: 'Pandemic Relief & Food Assistance',
+      descBn: 'লকডাউনে কর্মহীন চরাঞ্চলের পরিবারগুলোর জন্য বাড়ি বাড়ি জরুরি খাদ্য ও স্বাস্থ্য সুরক্ষা সামগ্রী বিতরণ।',
+      descEn: 'Dispatched emergency family food packs and sanitation relief kits across remote char settlements.',
     },
     {
       year: '২০২৩',
