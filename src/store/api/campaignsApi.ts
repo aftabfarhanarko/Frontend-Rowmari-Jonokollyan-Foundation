@@ -59,7 +59,19 @@ export const campaignsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'Campaigns', id: 'LIST' }],
     }),
+    createCampaign: builder.mutation<any, { title: string; description: string; targetAmount: number; startDate?: string; endDate?: string; category?: string; bannerImageUrl?: string; status?: string }>({
+      query: (data) => ({
+        url: API_ENDPOINTS.campaigns.list,
+        method: 'POST',
+        data: {
+          ...data,
+          startDate: data.startDate || new Date().toISOString(),
+          status: data.status || 'ACTIVE',
+        },
+      }),
+      invalidatesTags: [{ type: 'Campaigns', id: 'LIST' }],
+    }),
   }),
 });
 
-export const { useGetCampaignsQuery, useSubmitDonationMutation } = campaignsApi;
+export const { useGetCampaignsQuery, useSubmitDonationMutation, useCreateCampaignMutation } = campaignsApi;

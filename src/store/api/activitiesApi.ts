@@ -34,7 +34,18 @@ export const activitiesApi = baseApi.injectEndpoints({
       }),
       providesTags: (_result, _error, id) => [{ type: 'Activities', id }],
     }),
+    createActivity: builder.mutation<any, { title: string; summary: string; content: string; location: string; activityDate: string; coverImageUrl?: string; beneficiariesCount?: number; isPublished?: boolean }>({
+      query: (data) => ({
+        url: API_ENDPOINTS.activities.list,
+        method: 'POST',
+        data: {
+          ...data,
+          isPublished: data.isPublished !== undefined ? data.isPublished : true,
+        },
+      }),
+      invalidatesTags: [{ type: 'Activities', id: 'LIST' }],
+    }),
   }),
 });
 
-export const { useGetActivitiesQuery, useGetActivityByIdQuery } = activitiesApi;
+export const { useGetActivitiesQuery, useGetActivityByIdQuery, useCreateActivityMutation } = activitiesApi;

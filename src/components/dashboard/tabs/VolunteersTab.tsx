@@ -1,10 +1,12 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import { Plus, CheckCircle, XCircle, Loader2 } from "lucide-react"
 import { useAppStore } from "@/store/useAppStore"
+import { useApproveVolunteerMutation } from "@/store/api/dashboardApi"
+import { toast } from "sonner"
 
 interface VolunteersTabProps {
   volunteersData: any[]
@@ -12,11 +14,25 @@ interface VolunteersTabProps {
 
 export function VolunteersTab({ volunteersData }: VolunteersTabProps) {
   const { setVolunteerModalOpen } = useAppStore()
+  const [approveVolunteer, { isLoading: isApproving }] = useApproveVolunteerMutation()
+  const [loadingId, setLoadingId] = useState<string | null>(null)
+
+  const handleToggleApprove = async (volunteerId: string, currentStatus: boolean) => {
+    setLoadingId(volunteerId)
+    try {
+      await approveVolunteer({ id: volunteerId, isApproved: !currentStatus }).unwrap()
+      toast.success(!currentStatus ? "স্বেচ্ছাসেবক সফলভাবে অনুমোদন করা হয়েছে!" : "স্বেচ্ছাসেবক অনুমোদন বাতিল করা হয়েছে")
+    } catch (err: any) {
+      toast.error(err?.data?.message || err?.message || "অনুমোদন পরিবর্তন ব্যর্থ হয়েছে")
+    } finally {
+      setLoadingId(null)
+    }
+  }
 
   const columns = [
     { header: "আইডি", accessorKey: "id", className: "font-mono text-xs font-bold text-[#D62828]" },
     { header: "নাম", accessorKey: "name", sortable: true, className: "font-semibold" },
-    { header: "উইং", accessorKey: "wing" },
+    { header: "দক্ষতা ও উইং", accessorKey: "wing" },
     { header: "ইউনিয়ন", accessorKey: "union" },
     { header: "মোবাইল নম্বর", accessorKey: "phone", className: "font-mono text-xs" },
     {
@@ -24,18 +40,45 @@ export function VolunteersTab({ volunteersData }: VolunteersTabProps) {
       accessorKey: "status",
       align: "center" as const,
       cell: (r: any) => (
-        <span className="inline-block px-2.5 py-0.5 rounded-full bg-red-50 text-[#D62828] border border-red-200 text-xs font-bold">
+        <span
+          className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold border ${
+            r.isApprovedRaw
+              ? "bg-red-50 text-[#D62828] border-red-200"
+              : "bg-stone-100 text-stone-600 border-stone-200"
+          }`}
+        >
           {r.status}
         </span>
+      ),
+    },
+    {
+      header: "অ্যাকশন",
+      align: "center" as const,
+      cell: (r: any) => (
+        <Button
+          size="xs"
+          variant="outline"
+          disabled={loadingId === r.rawId}
+          onClick={() => handleToggleApprove(r.rawId, r.isApprovedRaw)}
+          className="h-7 text-xs border-stone-300 hover:border-red-300 hover:text-[#D62828] cursor-pointer"
+        >
+          {loadingId === r.rawId ? (
+            <Loader2 className="size-3.5 animate-spin" />
+          ) : r.isApprovedRaw ? (
+            <span className="flex items-center gap-1 text-stone-600"><XCircle className="size-3.5" /> বাতিল</span>
+          ) : (
+            <span className="flex items-center gap-1 text-[#D62828] font-bold"><CheckCircle className="size-3.5" /> অনুমোদন</span>
+          )}
+        </Button>
       ),
     },
   ]
 
   return (
-    <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+    <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs space-y-4">
       <DataTable
         title="স্বেচ্ছাসেবক তালিকা ও উইং বণ্টন"
-        description="নিবন্ধিত স্বেচ্ছাসেবক ও দায়িত্ব বণ্টন (API: /api/volunteer)"
+        description="নিবন্ধিত স্বেচ্ছাসেবক ও দায়িত্ব বণ্টন (API: /api/volunteers)"
         columns={columns}
         data={volunteersData}
         searchable

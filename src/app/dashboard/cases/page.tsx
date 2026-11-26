@@ -14,12 +14,13 @@ export default function CasesDashboardPage() {
 
   const displayCasesData = appItems.map((r: any) => ({
     id: r.referenceCode || r.id?.slice(0, 8),
+    rawId: r.id,
     applicant: r.applicantName,
     category: r.category === "MEDICAL" ? "চিকিৎসা" : "শিক্ষা",
-    village: r.applicantAddress || "রৌমারী",
-    officer: "তদন্ত টিম-১",
+    village: r.applicantAddress || r.address || "রৌমারী",
+    officer: r.assignedTo?.fullName || "তদন্ত টিম-১",
     visitStatus: r.status === "APPROVED" ? "সম্পন্ন" : "প্রক্রিয়াধীন",
-    recommendation: r.adminRemarks || "জরুরি সহায়তা প্রযোজ্য",
+    recommendation: r.adminRemarks || r.description || "জরুরি সহায়তা প্রযোজ্য",
   }))
 
   return (

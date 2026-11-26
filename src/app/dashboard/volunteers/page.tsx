@@ -14,9 +14,11 @@ export default function VolunteersDashboardPage() {
 
   const displayVolunteersData = volunteerItems.map((r: any) => ({
     id: r.referenceCode || r.id?.slice(0, 8),
-    name: r.user?.fullName || r.name || "স্বেচ্ছাসেবক",
-    wing: r.bloodGroup ? `রক্তদান (${r.bloodGroup})` : "ত্রাণ ও পুনর্বাসন",
-    union: r.user?.upazila || "রৌমারী সদর",
+    rawId: r.id,
+    isApprovedRaw: !!r.isApproved,
+    name: r.fullName || r.user?.fullName || r.name || "স্বেচ্ছাসেবক",
+    wing: r.skills ? r.skills : (r.bloodGroup ? `রক্তদান (${r.bloodGroup})` : "ত্রাণ ও পুনর্বাসন"),
+    union: r.upazila || r.user?.upazila || "রৌমারী সদর",
     phone: r.phone || r.user?.phone || "+8801700000000",
     status: r.isApproved ? "সক্রিয়" : "অপেক্ষমান",
   }))
