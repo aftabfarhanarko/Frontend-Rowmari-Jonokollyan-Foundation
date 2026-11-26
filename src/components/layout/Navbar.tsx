@@ -33,6 +33,7 @@ import {
   UserPlus,
   LogOut,
   User,
+  MapPin,
 } from 'lucide-react';
 import { Language, UserRole } from '@/types';
 import TopAnnouncement from '@/components/TopAnnouncement';
@@ -49,6 +50,7 @@ interface NavbarProps {
 
 const navLinks = [
   { href: '/', labelBn: 'হোম', labelEn: 'Home', icon: Home },
+  { href: '/roumari', labelBn: 'আমাদের রৌমারী', labelEn: 'Our Roumari', icon: MapPin },
   { href: '/about', labelBn: 'আমাদের কথা', labelEn: 'About Us', icon: Info },
   { href: '/team', labelBn: 'টিম ও কমিটি', labelEn: 'Our Team', icon: Users },
   { href: '/activities', labelBn: 'কার্যক্রম', labelEn: 'Activities', icon: Activity },
@@ -60,9 +62,10 @@ const navLinks = [
   { href: '/dashboard', labelBn: 'ড্যাশবোর্ড', labelEn: 'Dashboard', icon: LayoutDashboard },
 ];
 
-// 1. Core important links directly visible on Desktop & Laptop (Ultra-clean 4 links)
+// 1. Core important links directly visible on Desktop & Laptop
 const primaryDesktopLinks = [
   { href: '/', labelBn: 'হোম', labelEn: 'Home', icon: Home },
+  { href: '/roumari', labelBn: 'আমাদের রৌমারী', labelEn: 'Our Roumari', icon: MapPin },
   { href: '/campaigns', labelBn: 'ক্যাম্পেইন', labelEn: 'Campaigns', icon: Target },
   { href: '/activities', labelBn: 'কার্যক্রম', labelEn: 'Activities', icon: Activity },
   { href: '/volunteer', labelBn: 'স্বেচ্ছাসেবক', labelEn: 'Volunteer', icon: Users },
@@ -82,6 +85,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 // Mobile Side Navigation links matching the drawer design
 const mobileDrawerLinks = [
   { href: '/', labelBn: 'হোম', labelEn: 'Home' },
+  { href: '/roumari', labelBn: 'আমাদের রৌমারী (তথ্য ও সংবাদ)', labelEn: 'Our Roumari' },
   { href: '/about', labelBn: 'আমাদের সম্পর্কে', labelEn: 'About Us' },
   { href: '/activities', labelBn: 'কার্যক্রমসমূহ', labelEn: 'Activities' },
   { href: '/campaigns', labelBn: 'ক্যাম্পেইন', labelEn: 'Campaigns' },

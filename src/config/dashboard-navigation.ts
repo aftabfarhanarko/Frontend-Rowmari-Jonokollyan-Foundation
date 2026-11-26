@@ -86,6 +86,18 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
     roles: ["SUPER_ADMIN"],
     descriptionBn: "ছবি ও ডকুমেন্ট মিডিয়া লাইব্রেরি",
   },
+  {
+    id: "roumari",
+    titleBn: "আমাদের রৌমারী পোর্টাল",
+    titleEn: "Our Roumari CMS",
+    href: "/dashboard/roumari",
+    iconName: "MapPin",
+    badge: "রৌমারী",
+    badgeVariant: "urgent",
+    category: "cms",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "রৌমারী ডিরেক্টরি, হটলাইন, দর্শনীয় স্থান ও স্থানীয় সংবাদ পরিচালনা",
+  },
 
   // 3. Projects & Campaigns
   {

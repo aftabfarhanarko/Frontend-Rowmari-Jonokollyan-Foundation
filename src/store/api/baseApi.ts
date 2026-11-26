@@ -24,6 +24,7 @@ export const baseApi = createApi({
     'Pages',
     'Settings',
     'Media',
+    'Roumari',
   ],
   endpoints: () => ({}),
 });

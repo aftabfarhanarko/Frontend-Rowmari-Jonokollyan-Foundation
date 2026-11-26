@@ -15,6 +15,7 @@ import {
   TrackAndSupport,
   OngoingCampaigns,
   DonorShowcaseSection,
+  RoumariHomeSection,
   Testimonials,
   AboutUs,
   JoinCTA,
@@ -140,6 +141,9 @@ export default function HomePage() {
 
         {/* Verified Public Donor Showcase */}
         <DonorShowcaseSection lang={lang} />
+
+        {/* Dedicated Roumari Information & Community News Feature */}
+        <RoumariHomeSection />
 
         <TrackAndSupport
           lang={lang}
