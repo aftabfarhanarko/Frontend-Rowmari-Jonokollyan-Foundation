@@ -79,8 +79,8 @@ export default function TrackingResultModal({
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
-            <Search className="w-6 h-6 text-emerald-800" />
+          <div className="w-11 h-11 rounded-xl bg-red-100 text-red-800 flex items-center justify-center">
+            <Search className="w-6 h-6 text-red-800" />
           </div>
           <div>
             <h2 className="text-xl md:text-2xl font-bold text-stone-900">
@@ -88,7 +88,7 @@ export default function TrackingResultModal({
             </h2>
             <p className="text-xs md:text-sm font-mono text-stone-500">
               {lang === 'bn' ? 'রেফারেন্স কোড:' : 'Reference ID:'}{' '}
-              <span className="font-bold text-emerald-800">{searchedId}</span>
+              <span className="font-bold text-red-800">{searchedId}</span>
             </p>
           </div>
         </div>
@@ -105,7 +105,7 @@ export default function TrackingResultModal({
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${
                     application.status === 'completed'
-                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      ? 'bg-red-100 text-red-800 border border-red-300'
                       : application.status === 'approved'
                       ? 'bg-blue-100 text-blue-800 border border-blue-300'
                       : application.status === 'under_review'
@@ -152,7 +152,7 @@ export default function TrackingResultModal({
                       <div
                         className={`absolute -left-6 top-0.5 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-white ${
                           state === 'completed'
-                            ? 'bg-emerald-600 text-white'
+                            ? 'bg-red-600 text-white'
                             : state === 'current'
                             ? 'bg-amber-500 text-white animate-pulse'
                             : 'bg-stone-200 text-stone-400'
@@ -164,7 +164,7 @@ export default function TrackingResultModal({
                         <p
                           className={`text-sm font-semibold ${
                             state === 'completed'
-                              ? 'text-emerald-900'
+                              ? 'text-red-900'
                               : state === 'current'
                               ? 'text-amber-900 font-bold'
                               : 'text-stone-400'
@@ -180,16 +180,16 @@ export default function TrackingResultModal({
             </div>
 
             {/* Verification Note Box */}
-            <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-stone-700 space-y-2">
-              <span className="font-bold text-emerald-900 block flex items-center gap-1.5">
-                <ClipboardList className="w-4 h-4 text-emerald-900 shrink-0" />
+            <div className="p-4 bg-red-50 rounded-xl border border-red-200 text-xs text-stone-700 space-y-2">
+              <span className="font-bold text-red-900 block flex items-center gap-1.5">
+                <ClipboardList className="w-4 h-4 text-red-900 shrink-0" />
                 <span>{lang === 'bn' ? 'রিভিউ কমিটির মন্তব্য ও আপডেট:' : 'Review Committee Note:'}</span>
               </span>
               <p className="text-stone-700 leading-relaxed">
                 {lang === 'bn' ? application.statusNoteBn : application.statusNoteEn}
               </p>
               {application.assignedOfficerBn && (
-                <p className="text-emerald-800 font-medium pt-1 border-t border-emerald-200/60">
+                <p className="text-red-800 font-medium pt-1 border-t border-red-200/60">
                   {lang === 'bn' ? 'দায়িত্বপ্রাপ্ত সমন্বয়ক:' : 'Assigned Coordinator:'}{' '}
                   <strong>{application.assignedOfficerBn}</strong>
                 </p>
@@ -197,7 +197,7 @@ export default function TrackingResultModal({
               {application.amountOrSupportBn && (
                 <p className="text-stone-900 font-bold">
                   {lang === 'bn' ? 'অনুমোদিত সহায়তা:' : 'Approved Support:'}{' '}
-                  <span className="text-emerald-700">{application.amountOrSupportBn}</span>
+                  <span className="text-red-700">{application.amountOrSupportBn}</span>
                 </p>
               )}
             </div>
@@ -228,7 +228,7 @@ export default function TrackingResultModal({
             </div>
             <button
               onClick={onClose}
-              className="px-6 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-sm font-medium transition"
+              className="px-6 py-2.5 bg-red-800 hover:bg-red-900 text-white rounded-xl text-sm font-medium transition"
             >
               {lang === 'bn' ? 'পুনরায় চেষ্টা করুন' : 'Try Again'}
             </button>

@@ -42,7 +42,7 @@ export default function AboutPage() {
       titleEn: 'Foundation Established & First Winter Relief',
       descBn: 'রৌমারীর একদল তরুণ ও সমাজসেবীদের উদ্যোগে দুর্গম চরাঞ্চলের শীতার্ত ও বন্যাপীড়িত মানুষের সেবায় আত্মপ্রকাশ। ৫০০ কম্বল ও জরুরি খাদ্য বিতরণের মাধ্যমে শুরু।',
       descEn: 'Initiated by committed local youth to serve flood-hit and winter-affected river island char families in Rowmari with 500 blankets and dry rations.',
-      theme: 'green',
+      theme: 'red',
     },
     {
       yearBn: '২০২০',
@@ -51,7 +51,7 @@ export default function AboutPage() {
       titleEn: 'Pandemic Relief & Family Rehabilitation',
       descBn: 'লকডাউনে কর্মহীন চরাঞ্চলের দিনমজুর পরিবারে জরুরি খাদ্য সহায়তা এবং স্বাস্থ্য সুরক্ষা সামগ্রী বিতরণ।',
       descEn: 'Dispatched emergency pandemic food packs and hygiene supplies to daily wage-earning char families during lockdown.',
-      theme: 'emerald',
+      theme: 'red',
     },
     {
       yearBn: '২০২২',
@@ -60,7 +60,7 @@ export default function AboutPage() {
       titleEn: 'Flood Rehabilitation & Safe Water Project',
       descBn: 'ব্রহ্মপুত্রের তীব্র বন্যায় দুর্গত চরাঞ্চলে উদ্ধার অভিযান, ভাসমান মেডিকেল ক্যাম্প পরিচালনা এবং ২০টি গভীর নলকূপ স্থাপন।',
       descEn: 'Rescued stranded families during Brahmaputra flash floods, ran boat-based medical relief camps, and installed 20 deep tube-wells in remote chars.',
-      theme: 'green',
+      theme: 'red',
     },
     {
       yearBn: '২০২৪',
@@ -78,7 +78,7 @@ export default function AboutPage() {
       titleEn: 'Digital Governance & 100% Transparent Relief',
       descBn: 'স্বয়ংক্রিয় অনলাইন আবেদন, রিয়েল-টাইম ট্র্যাকিং, নিরাপদ অনুদান এবং আধুনিক ডিজিটাল ব্যবস্থার মাধ্যমে সেবার মান ও বিস্তার উত্তরোত্তর বৃদ্ধি।',
       descEn: 'Scaling humanitarian reach through digital application tracking, transparent financial reporting, and audited direct community delivery.',
-      theme: 'green',
+      theme: 'red',
     },
   ];
 
@@ -130,9 +130,9 @@ export default function AboutPage() {
 
       <main className="flex-1 pb-20 sm:pb-24">
         {/* Hero Section with Ambient Gradient Orbs */}
-        <section className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16 bg-gradient-to-b from-emerald-50/50 via-white to-white">
+        <section className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16 bg-gradient-to-b from-red-50/50 via-white to-white">
           <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-20 -left-20 h-72 w-72 rounded-full bg-emerald-300/30 blur-3xl" />
+            <div className="absolute -top-20 -left-20 h-72 w-72 rounded-full bg-red-300/30 blur-3xl" />
             <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
           </div>
 
@@ -143,8 +143,8 @@ export default function AboutPage() {
               transition={{ duration: 0.5 }}
               className="max-w-3xl"
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/80 border border-emerald-300/50 text-[#0D5C35] text-xs font-bold mb-3 shadow-2xs">
-                <Award className="w-3.5 h-3.5 text-[#0D5C35]" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100/80 border border-red-300/50 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
+                <Award className="w-3.5 h-3.5 text-[#D62828]" />
                 <span>{t('স্থাপিত ২০১৮ • রৌমারী, কুড়িগ্রাম • সামাজিক অলাভজনক সংস্থা', 'Est. 2018 • Rowmari, Kurigram • Non-Profit Organization')}</span>
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
@@ -167,7 +167,7 @@ export default function AboutPage() {
             >
               {stats.map((s, idx) => (
                 <div key={idx} className={`${glassCard} p-4 sm:p-5 text-center`}>
-                  <div className="text-2xl sm:text-3xl font-black text-[#0D5C35] mb-1">{t(s.valueBn, s.valueEn)}</div>
+                  <div className="text-2xl sm:text-3xl font-black text-[#D62828] mb-1">{t(s.valueBn, s.valueEn)}</div>
                   <div className="text-xs sm:text-sm font-semibold text-stone-600">{t(s.labelBn, s.labelEn)}</div>
                 </div>
               ))}
@@ -218,11 +218,11 @@ export default function AboutPage() {
             <motion.div 
               whileHover={{ y: -4 }}
               transition={{ duration: 0.2 }}
-              className={`${glassCard} p-6 sm:p-8 border-t-4 border-t-[#0D5C35] flex flex-col justify-between`}
+              className={`${glassCard} p-6 sm:p-8 border-t-4 border-t-[#D62828] flex flex-col justify-between`}
             >
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-[#0D5C35] flex items-center justify-center mb-5 shadow-xs">
-                  <Target className="w-6 h-6 text-[#0D5C35]" />
+                <div className="w-12 h-12 rounded-2xl bg-red-100 text-[#D62828] flex items-center justify-center mb-5 shadow-xs">
+                  <Target className="w-6 h-6 text-[#D62828]" />
                 </div>
                 <h3 className="text-xl font-bold text-stone-900 mb-3">{t('আমাদের লক্ষ্য (Mission)', 'Our Mission')}</h3>
                 <p className="text-sm sm:text-base text-stone-600 leading-relaxed">
@@ -232,8 +232,8 @@ export default function AboutPage() {
                   )}
                 </p>
               </div>
-              <div className="mt-6 pt-4 border-t border-stone-200/60 flex items-center gap-2 text-xs font-bold text-[#0D5C35]">
-                <CheckCircle2 className="w-4 h-4 text-[#0D5C35]" />
+              <div className="mt-6 pt-4 border-t border-stone-200/60 flex items-center gap-2 text-xs font-bold text-[#D62828]">
+                <CheckCircle2 className="w-4 h-4 text-[#D62828]" />
                 <span>{t('জরুরি ত্রাণ ও দীর্ঘমেয়াদী পুনর্বাসন', 'Emergency relief & long-term rehabilitation')}</span>
               </div>
             </motion.div>
@@ -276,7 +276,7 @@ export default function AboutPage() {
               return (
                 <div key={idx} className={`${glassCardHover} p-5 sm:p-6 flex flex-col justify-between`}>
                   <div>
-                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#0D5C35] to-emerald-600 text-white flex items-center justify-center mb-4 shadow-md shadow-emerald-900/20">
+                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#D62828] to-red-600 text-white flex items-center justify-center mb-4 shadow-md shadow-red-900/20">
                       <Icon className="w-5 h-5" />
                     </div>
                     <h3 className="text-base font-bold text-stone-900 mb-2">{t(p.titleBn, p.titleEn)}</h3>
@@ -296,9 +296,9 @@ export default function AboutPage() {
           />
 
           <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 relative">
-            <div className="hidden sm:block absolute left-8 top-6 bottom-6 w-0.5 bg-gradient-to-b from-[#0D5C35] via-[#E53935] to-[#0D5C35]" />
+            <div className="hidden sm:block absolute left-8 top-6 bottom-6 w-0.5 bg-gradient-to-b from-[#D62828] via-[#E53935] to-[#D62828]" />
             {milestones.map((m, idx) => {
-              const isGreen = m.theme === 'green';
+              const isRed = m.theme === 'red';
               return (
                 <motion.div
                   key={idx}
@@ -309,14 +309,14 @@ export default function AboutPage() {
                   className={`${glassCardHover} p-5 sm:p-6 relative sm:ml-16`}
                 >
                   <div className={`hidden sm:flex absolute -left-[54px] top-6 w-8 h-8 rounded-full border-2 border-white items-center justify-center shadow-md ${
-                    isGreen ? 'bg-[#0D5C35] text-white' : 'bg-[#E53935] text-white'
+                    isRed ? 'bg-[#D62828] text-white' : 'bg-[#E53935] text-white'
                   }`}>
                     <span className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
                   </div>
 
                   <div className="flex items-center gap-2.5 mb-2">
                     <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold font-mono shadow-2xs ${
-                      isGreen ? 'bg-emerald-100 text-[#0D5C35]' : 'bg-red-100 text-[#E53935]'
+                      isRed ? 'bg-red-100 text-[#D62828]' : 'bg-red-100 text-[#E53935]'
                     }`}>
                       {t(m.yearBn, m.yearEn)}
                     </span>
@@ -331,19 +331,19 @@ export default function AboutPage() {
 
         {/* Governance & Trust Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
-          <div className="rounded-3xl bg-gradient-to-br from-[#0D5C35] via-[#094828] to-stone-950 p-6 sm:p-10 md:p-12 text-white shadow-2xl relative overflow-hidden">
-            <div aria-hidden className="pointer-events-none absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-emerald-400/20 blur-3xl" />
+          <div className="rounded-3xl bg-gradient-to-br from-[#D62828] via-[#B91C1C] to-stone-950 p-6 sm:p-10 md:p-12 text-white shadow-2xl relative overflow-hidden">
+            <div aria-hidden className="pointer-events-none absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-red-400/20 blur-3xl" />
             
             <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-emerald-200 text-xs font-bold">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-red-200 text-xs font-bold">
                   <FileCheck className="w-4 h-4" />
                   <span>{t('আইনি অনুমোদন ও প্রশাসনিক ভিত্তি', 'Legal Status & Affiliation')}</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-black leading-tight">
                   {t('সরকারি সমাজসেবা ট্রাস্ট ও অনুমোদিত কাঠামোর অধীনে পরিচালিত', 'Operating Under Official Non-Profit Social Welfare Standards')}
                 </h2>
-                <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed">
+                <p className="text-xs sm:text-sm text-red-100/90 leading-relaxed">
                   {t(
                     'রৌমারী জনকল্যাণ ফাউন্ডেশনের প্রতিটি কার্যক্রম উন্মুক্ত ও অডিটযোগ্য। সকল অনুদান নির্ধারিত ব্যাংক ও অফিসিয়াল মার্চেন্ট একাউন্টে সংরক্ষিত হয় এবং সরাসরি মাঠপর্যায়ে ব্যয়িত হয়।',
                     'Every activity is fully auditable. Donations are received exclusively through authorized institutional banking channels and dispatched directly to vetted recipients.'
@@ -352,7 +352,7 @@ export default function AboutPage() {
                 <div className="flex flex-wrap gap-3 pt-2">
                   <Link
                     href="/team"
-                    className="px-5 py-2.5 rounded-full bg-white text-[#0D5C35] font-bold text-xs sm:text-sm hover:bg-emerald-50 transition"
+                    className="px-5 py-2.5 rounded-full bg-white text-[#D62828] font-bold text-xs sm:text-sm hover:bg-red-50 transition"
                   >
                     {t('পরিচালনা কমিটি দেখুন', 'View Executive Committee')}
                   </Link>
@@ -367,19 +367,19 @@ export default function AboutPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
-                  <div className="text-xs font-semibold text-emerald-300 mb-1">{t('নিবন্ধন ও ছাড়পত্র', 'Registration')}</div>
+                  <div className="text-xs font-semibold text-red-300 mb-1">{t('নিবন্ধন ও ছাড়পত্র', 'Registration')}</div>
                   <div className="text-sm font-bold text-white">{t('রৌমারী উপজেলা সমাজসেবা ট্রাস্ট নথিভুক্ত', 'Rowmari Social Welfare Affiliated')}</div>
                 </div>
                 <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
-                  <div className="text-xs font-semibold text-emerald-300 mb-1">{t('আর্থিক স্বচ্ছতা', 'Financial Audit')}</div>
+                  <div className="text-xs font-semibold text-red-300 mb-1">{t('আর্থিক স্বচ্ছতা', 'Financial Audit')}</div>
                   <div className="text-sm font-bold text-white">{t('বার্ষিক হিসাব ও ব্যয়ের নিরীক্ষা সম্পন্ন', 'Annual External Audit Verified')}</div>
                 </div>
                 <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
-                  <div className="text-xs font-semibold text-emerald-300 mb-1">{t('জরুরি ত্রাণ সেল', 'Emergency Relief Cell')}</div>
+                  <div className="text-xs font-semibold text-red-300 mb-1">{t('জরুরি ত্রাণ সেল', 'Emergency Relief Cell')}</div>
                   <div className="text-sm font-bold text-white">{t('চরাঞ্চলে তাৎক্ষণিক খাদ্য ও শীতবস্ত্র সরবরাহ', 'Immediate Char Relief Dispatch')}</div>
                 </div>
                 <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
-                  <div className="text-xs font-semibold text-emerald-300 mb-1">{t('স্বেচ্ছাসেবক সেল', 'Volunteer Network')}</div>
+                  <div className="text-xs font-semibold text-red-300 mb-1">{t('স্বেচ্ছাসেবক সেল', 'Volunteer Network')}</div>
                   <div className="text-sm font-bold text-white">{t('৬টি ইউনিয়নে সক্রিয় ফিল্ড টিম', 'Active in 6 Char Unions')}</div>
                 </div>
               </div>
@@ -389,31 +389,31 @@ export default function AboutPage() {
 
         {/* Action Callout Boxes */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="p-6 sm:p-7 rounded-2xl bg-[#0D5C35] text-white flex flex-col justify-between shadow-xl shadow-emerald-950/20">
+          <div className="p-6 sm:p-7 rounded-2xl bg-[#D62828] text-white flex flex-col justify-between shadow-xl shadow-red-950/20">
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-2">{t('সহায়তা প্রয়োজন?', 'Need Assistance?')}</h3>
-              <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed mb-4">
+              <p className="text-xs sm:text-sm text-red-100/90 leading-relaxed mb-4">
                 {t('চিকিৎসা, শীতবস্ত্র, শিক্ষা বা খাদ্য সহায়তার জন্য অনলাইনে সরাসরি আবেদন করুন। ট্র্যাকিং আইডিসহ দ্রুত সমাধান মিলবে।', 'Submit an assistance request for healthcare, winter aid, or food relief with an online tracking ID.')}
               </p>
             </div>
             <button
               onClick={() => setAssistanceModalOpen(true)}
-              className="w-full py-3 rounded-xl bg-white text-[#0D5C35] font-bold text-xs sm:text-sm hover:bg-emerald-50 transition cursor-pointer"
+              className="w-full py-3 rounded-xl bg-white text-[#D62828] font-bold text-xs sm:text-sm hover:bg-red-50 transition cursor-pointer"
             >
               {t('সহায়তার আবেদন করুন', 'Request Help Online')}
             </button>
           </div>
 
-          <div className="p-6 sm:p-7 rounded-2xl bg-white border-2 border-[#0D5C35] flex flex-col justify-between shadow-xl shadow-emerald-950/10">
+          <div className="p-6 sm:p-7 rounded-2xl bg-white border-2 border-[#D62828] flex flex-col justify-between shadow-xl shadow-red-950/10">
             <div>
-              <h3 className="text-lg sm:text-xl font-bold text-[#0D5C35] mb-2">{t('স্বেচ্ছাসেবক হিসেবে যুক্ত হোন', 'Join as Volunteer')}</h3>
+              <h3 className="text-lg sm:text-xl font-bold text-[#D62828] mb-2">{t('স্বেচ্ছাসেবক হিসেবে যুক্ত হোন', 'Join as Volunteer')}</h3>
               <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-4">
                 {t('চর ও প্রত্যন্ত অঞ্চলের মানুষের পাশে দাঁড়াতে আমাদের নিবেদিত স্বেচ্ছাসেবক দলে নাম নিবন্ধন করুন।', 'Join our dedicated volunteer team to stand beside marginalized communities in remote char regions.')}
               </p>
             </div>
             <Link
               href="/volunteer"
-              className="w-full py-3 rounded-xl bg-[#0D5C35] hover:bg-[#0A4729] text-white font-bold text-xs sm:text-sm transition cursor-pointer shadow-md text-center block"
+              className="w-full py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition cursor-pointer shadow-md text-center block"
             >
               {t('স্বেচ্ছাসেবক নিবন্ধন', 'Register as Volunteer')}
             </Link>

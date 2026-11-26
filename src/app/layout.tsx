@@ -38,7 +38,7 @@ export default function RootLayout({
     <html lang="bn" className="h-full antialiased scroll-smooth font-sans">
       <head>
         <link rel="manifest" href="/manifest.webmanifest" />
-        <meta name="theme-color" content="#0D5C35" />
+        <meta name="theme-color" content="#D62828" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />

@@ -46,7 +46,7 @@ export default function TeamPage() {
       phone: '+880 1712-345678',
       descBn: 'ফাউন্ডেশনের প্রতিষ্ঠাতাদের একজন ও প্রধান সামাজিক অভিভাবক। বিগত ৮ বছর ধরে ত্রাণ কার্যক্রমে নেতৃত্ব দিচ্ছেন।',
       descEn: 'Founding member and social patron directing char humanitarian relief operations for 8+ years.',
-      badgeColor: 'bg-[#0D5C35]',
+      badgeColor: 'bg-[#D62828]',
     },
     {
       id: 'member-2',
@@ -60,7 +60,7 @@ export default function TeamPage() {
       phone: '+880 1723-456789',
       descBn: 'মাঠপর্যায়ের সার্বিক সমন্বয়, প্রশাসনিক অনুমোদন এবং সরকারি দপ্তরের সাথে যৌথ সমন্বয়কারী।',
       descEn: 'Coordinating on-ground execution, administrative relations, and government social welfare liaisons.',
-      badgeColor: 'bg-[#0D5C35]',
+      badgeColor: 'bg-[#D62828]',
     },
     {
       id: 'member-3',
@@ -74,7 +74,7 @@ export default function TeamPage() {
       phone: '+880 1734-567890',
       descBn: 'আর্থিক স্বচ্ছতা, ডিজিটাল হিসাব সংরক্ষণ এবং দাতাদের রসিদ প্রেরণের দায়িত্বপ্রাপ্ত কর্মকর্তা।',
       descEn: 'Managing transparent institutional accounts, financial audits, and verified digital donor receipts.',
-      badgeColor: 'bg-emerald-700',
+      badgeColor: 'bg-red-700',
     },
     {
       id: 'member-4',
@@ -138,7 +138,7 @@ export default function TeamPage() {
         <section className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16 bg-gradient-to-b from-red-50/40 via-white to-white">
           <div aria-hidden className="pointer-events-none absolute inset-0">
             <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-red-300/25 blur-3xl" />
-            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-emerald-300/25 blur-3xl" />
+            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/25 blur-3xl" />
           </div>
 
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -169,7 +169,7 @@ export default function TeamPage() {
                 onClick={() => setActiveTab('all')}
                 className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                   activeTab === 'all'
-                    ? 'bg-[#0D5C35] text-white shadow-md'
+                    ? 'bg-[#D62828] text-white shadow-md'
                     : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
                 }`}
               >
@@ -179,7 +179,7 @@ export default function TeamPage() {
                 onClick={() => setActiveTab('exec')}
                 className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                   activeTab === 'exec'
-                    ? 'bg-[#0D5C35] text-white shadow-md'
+                    ? 'bg-[#D62828] text-white shadow-md'
                     : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
                 }`}
               >
@@ -222,7 +222,7 @@ export default function TeamPage() {
               >
                 <div>
                   <div className="flex items-start gap-4 mb-4">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0D5C35] to-emerald-600 text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-emerald-950/20 shrink-0">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#D62828] to-red-600 text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-red-950/20 shrink-0">
                       {t(m.nameBn, m.nameEn).charAt(0)}
                     </div>
                     <div>
@@ -241,7 +241,7 @@ export default function TeamPage() {
 
                 <div className="pt-4 border-t border-stone-200/70 flex items-center justify-between text-xs text-stone-500">
                   <div className="flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-red-600" />
                     <span>{t('যাচাইকৃত প্রতিনিধি', 'Verified Officer')}</span>
                   </div>
                   <span className="font-mono text-stone-600">{m.phone}</span>
@@ -251,16 +251,16 @@ export default function TeamPage() {
           </div>
 
           {/* Join Committee / Volunteer CTA */}
-          <div className="mt-12 sm:mt-16 rounded-3xl bg-gradient-to-br from-[#0D5C35] via-[#094828] to-stone-950 p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="mt-12 sm:mt-16 rounded-3xl bg-gradient-to-br from-[#D62828] via-[#B91C1C] to-stone-950 p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2 max-w-xl text-center md:text-left">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-emerald-200 text-xs font-bold">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-red-200 text-xs font-bold">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{t('মানবতার সেবায় এগিয়ে আসুন', 'Join the Movement')}</span>
               </div>
               <h2 className="text-xl sm:text-2xl md:text-3xl font-black leading-tight">
                 {t('আপনিও আমাদের নিবেদিত স্বেচ্ছাসেবক দলের অংশ হতে পারেন', 'Become a Volunteer in Rowmari Humanitarian Network')}
               </h2>
-              <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed">
+              <p className="text-xs sm:text-sm text-red-100/90 leading-relaxed">
                 {t('ত্রাণ বিতরণ, শীতবস্ত্র প্রদান, মেডিকেল ক্যাম্প পরিচালনা কিংবা আইটি ডেস্কে কাজ করার আগ্রহ থাকলে আজই নিবন্ধন করুন।', 'Join our specialized wings for food packing, winter relief, doctor assistance, or media communications.')}
               </p>
             </div>
@@ -268,7 +268,7 @@ export default function TeamPage() {
             <div className="flex flex-wrap gap-3 shrink-0">
               <button
                 onClick={() => setVolunteerModalOpen(true)}
-                className="px-6 py-3 rounded-full bg-white text-[#0D5C35] font-bold text-xs sm:text-sm hover:bg-emerald-50 transition shadow-lg cursor-pointer"
+                className="px-6 py-3 rounded-full bg-white text-[#D62828] font-bold text-xs sm:text-sm hover:bg-red-50 transition shadow-lg cursor-pointer"
               >
                 {t('স্বেচ্ছাসেবক হিসেবে যোগ দিন', 'Apply as Volunteer')}
               </button>

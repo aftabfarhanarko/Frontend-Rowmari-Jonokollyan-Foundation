@@ -100,7 +100,7 @@ export function DataTableDemo() {
       sortable: true,
       align: "right",
       cell: (row) => (
-        <span className="font-semibold text-emerald-700">
+        <span className="font-semibold text-red-700">
           ৳{row.amount.toLocaleString("bn-BD")}
         </span>
       ),
@@ -128,7 +128,7 @@ export function DataTableDemo() {
       cell: (row) => {
         if (row.status === "completed") {
           return (
-            <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200">
+            <Badge className="bg-red-50 text-red-700 border-red-200">
               সফল
             </Badge>
           )
@@ -158,7 +158,7 @@ export function DataTableDemo() {
             e.stopPropagation()
             alert(`বিস্তারিত দেখছেন: ${row.id} - ${row.donorName}`)
           }}
-          className="h-7 px-2 text-xs gap-1 hover:text-[#0D5C35]"
+          className="h-7 px-2 text-xs gap-1 hover:text-[#D62828]"
         >
           <Eye className="size-3.5" />
           <span>দেখুন</span>
@@ -178,7 +178,7 @@ export function DataTableDemo() {
         searchPlaceholder="নাম, ক্যাম্পেইন বা মাধ্যম দিয়ে খুঁজুন..."
         pageSize={5}
         actions={
-          <Button size="xs" className="gap-1 bg-[#0D5C35] hover:bg-[#094527] text-white">
+          <Button size="xs" className="gap-1 bg-[#D62828] hover:bg-[#B91C1C] text-white">
             <Plus className="size-3.5" />
             <span>নতুন অনুদান</span>
           </Button>

@@ -55,7 +55,7 @@ export default function CampaignsPage() {
         <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-red-50/50 via-white to-white">
           <div aria-hidden className="pointer-events-none absolute inset-0">
             <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-red-400/20 blur-3xl" />
-            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-emerald-300/20 blur-3xl" />
+            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
           </div>
 
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -133,7 +133,7 @@ export default function CampaignsPage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-transparent" />
                       
                       <div className="absolute top-3 left-3 z-10">
-                        <span className="bg-[#0D5C35] text-white text-[11px] font-bold px-3 py-1 rounded-md shadow-md backdrop-blur-md">
+                        <span className="bg-[#D62828] text-white text-[11px] font-bold px-3 py-1 rounded-md shadow-md backdrop-blur-md">
                           {t('সক্রিয় ক্যাম্পেইন', 'Active Campaign')}
                         </span>
                       </div>
@@ -144,7 +144,7 @@ export default function CampaignsPage() {
                           <span>{t(camp.deadlineBn, camp.deadlineEn)} {t('বাকি', 'left')}</span>
                         </span>
                         <span className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/20">
-                          <Users className="w-3 h-3 text-emerald-300 shrink-0" />
+                          <Users className="w-3 h-3 text-red-300 shrink-0" />
                           <span>{t(`${camp.donorsCount} জন দাতা`, `${camp.donorsCount} Donors`)}</span>
                         </span>
                       </div>
@@ -162,7 +162,7 @@ export default function CampaignsPage() {
                       {/* Progress bar */}
                       <div className="space-y-2 pt-2">
                         <div className="flex justify-between items-center text-xs">
-                          <span className="font-bold text-[#0D5C35]">
+                          <span className="font-bold text-[#D62828]">
                             ৳{camp.raisedAmount.toLocaleString()} {t('উত্তোলিত', 'raised')}
                           </span>
                           <span className="font-bold text-stone-500 font-mono">
@@ -171,7 +171,7 @@ export default function CampaignsPage() {
                         </div>
                         <div className="w-full h-2.5 bg-stone-100 rounded-full overflow-hidden border border-stone-200">
                           <motion.div
-                            className="h-full bg-gradient-to-r from-[#0D5C35] to-emerald-500 rounded-full"
+                            className="h-full bg-gradient-to-r from-[#D62828] to-red-500 rounded-full"
                             initial={{ width: 0 }}
                             whileInView={{ width: `${percentage}%` }}
                             viewport={{ once: true }}
@@ -188,9 +188,9 @@ export default function CampaignsPage() {
                   <div className="p-5 sm:p-6 pt-0">
                     <button
                       onClick={() => setAssistanceModalOpen(true)}
-                      className="w-full py-3 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-md active:scale-98"
+                      className="w-full py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-md active:scale-98"
                     >
-                      <Heart className="w-4 h-4 text-emerald-300" />
+                      <Heart className="w-4 h-4 text-red-300" />
                       <span>{t('সহায়তার আবেদন করুন', 'Apply for Assistance')}</span>
                     </button>
                   </div>

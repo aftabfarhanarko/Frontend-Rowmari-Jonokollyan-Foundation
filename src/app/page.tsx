@@ -5,21 +5,27 @@ import { Language, ApplicationTrackingStatus } from '@/types';
 import { MOCK_APPLICATIONS } from '@/data/mockData';
 import { useLazyTrackApplicationQuery } from '@/store/api/applicationsApi';
 
-// Modular Page Sections
-import Navbar from '@/components/Navbar';
-import Hero from '@/components/Hero';
-import QuickActions from '@/components/QuickActions';
-import ImpactStats from '@/components/ImpactStats';
-import HowItWorks from '@/components/HowItWorks';
-import RecentActivities from '@/components/RecentActivities';
-import TrackAndSupport from '@/components/TrackAndSupport';
-import OngoingCampaigns from '@/components/OngoingCampaigns';
-import Testimonials from '@/components/Testimonials';
-import AboutUs from '@/components/AboutUs';
-import JoinCTA from '@/components/JoinCTA';
-import Footer from '@/components/Footer';
-import MobileBottomBar from '@/components/MobileBottomBar';
-import BackToTop from '@/components/BackToTop';
+// Modular Home Page Sections
+import {
+  Hero,
+  QuickActions,
+  ImpactStats,
+  HowItWorks,
+  RecentActivities,
+  TrackAndSupport,
+  OngoingCampaigns,
+  Testimonials,
+  AboutUs,
+  JoinCTA,
+} from '@/components/home';
+
+// Global Layout Components
+import {
+  Navbar,
+  Footer,
+  MobileBottomBar,
+  BackToTop,
+} from '@/components/layout';
 
 // Interactive Modals
 import AssistanceModal from '@/components/modals/AssistanceModal';

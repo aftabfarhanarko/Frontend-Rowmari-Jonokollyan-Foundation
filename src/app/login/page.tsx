@@ -113,7 +113,7 @@ function LoginForm() {
   const isWorking = isLoading || isRedirecting;
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-white text-stone-900 selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="min-h-screen flex flex-col justify-between bg-white text-stone-900 selection:bg-red-100 selection:text-red-900">
       <Navbar
         lang={lang}
         onToggleLang={toggleLang}
@@ -128,12 +128,12 @@ function LoginForm() {
           className="w-full max-w-md bg-white rounded-3xl p-6 sm:p-9 shadow-xl border border-stone-200/90 relative overflow-hidden"
         >
           {/* Subtle Corner Gradient Glow */}
-          <div className="absolute -top-12 -right-12 w-32 h-32 bg-emerald-100/60 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -top-12 -right-12 w-32 h-32 bg-red-100/60 rounded-full blur-2xl pointer-events-none" />
           <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-red-100/40 rounded-full blur-2xl pointer-events-none" />
 
           <div className="text-center space-y-2 mb-6 relative z-10">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[#0D5C35] text-xs font-bold border border-emerald-200 shadow-2xs">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#0D5C35]" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-[#D62828] text-xs font-bold border border-red-200 shadow-2xs">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#D62828]" />
               <span>{t('সুরক্ষিত লগইন পোর্টাল', 'Secure Login Portal')}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
@@ -170,8 +170,8 @@ function LoginForm() {
 
           {/* Visible Inline Success/Redirecting Alert */}
           {isRedirecting && (
-            <div className="mb-4 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-[#0D5C35] text-xs flex items-center gap-2.5 relative z-10 shadow-2xs">
-              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 animate-bounce" />
+            <div className="mb-4 p-3.5 rounded-2xl bg-red-50 border border-red-200 text-[#D62828] text-xs flex items-center gap-2.5 relative z-10 shadow-2xs">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-red-600 animate-bounce" />
               <span className="font-semibold">{t('লগইন সফল! ড্যাশবোর্ডে নিয়ে যাওয়া হচ্ছে...', 'Login successful! Redirecting...')}</span>
             </div>
           )}
@@ -191,7 +191,7 @@ function LoginForm() {
                   autoComplete="email"
                   required
                   disabled={isWorking}
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] focus:border-transparent transition bg-white disabled:bg-stone-50"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828] focus:border-transparent transition bg-white disabled:bg-stone-50"
                 />
               </div>
             </div>
@@ -215,7 +215,7 @@ function LoginForm() {
                   autoComplete="current-password"
                   required
                   disabled={isWorking}
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] focus:border-transparent transition bg-white disabled:bg-stone-50"
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828] focus:border-transparent transition bg-white disabled:bg-stone-50"
                 />
                 <button
                   type="button"
@@ -231,7 +231,7 @@ function LoginForm() {
             <button
               type="submit"
               disabled={isWorking}
-              className="w-full mt-2 py-3 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-sm transition shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+              className="w-full mt-2 py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-sm transition shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
             >
               {isWorking ? (
                 <>
@@ -298,7 +298,7 @@ export default function LoginPage() {
     <Suspense
       fallback={
         <div className="min-h-screen flex items-center justify-center bg-white">
-          <Loader2 className="w-8 h-8 animate-spin text-[#0D5C35]" />
+          <Loader2 className="w-8 h-8 animate-spin text-[#D62828]" />
         </div>
       }
     >

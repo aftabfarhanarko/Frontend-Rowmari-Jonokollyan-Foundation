@@ -73,9 +73,9 @@ export default function ContactPage() {
 
       <main className="flex-1 pb-20 sm:pb-24">
         {/* Header Hero Banner */}
-        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-emerald-50/50 via-white to-white">
+        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-red-50/50 via-white to-white">
           <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl" />
+            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-red-400/20 blur-3xl" />
             <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
           </div>
 
@@ -86,8 +86,8 @@ export default function ContactPage() {
               transition={{ duration: 0.5 }}
               className="max-w-3xl"
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0D5C35] text-xs font-bold mb-3 shadow-2xs">
-                <MapPin className="w-3.5 h-3.5 text-[#0D5C35]" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
+                <MapPin className="w-3.5 h-3.5 text-[#D62828]" />
                 <span>{t('রৌমারী প্রধান কার্যালয় ও সার্বক্ষণিক হেল্পডেস্ক', 'Rowmari Main Headquarters & 24/7 Desk')}</span>
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
@@ -110,7 +110,7 @@ export default function ContactPage() {
             <div className="lg:col-span-5 space-y-4">
               <div className={`${glassCard} p-6 sm:p-7 space-y-5 shadow-lg`}>
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-[#0D5C35] flex items-center justify-center shrink-0 shadow-xs">
+                  <div className="w-12 h-12 rounded-2xl bg-red-100 text-[#D62828] flex items-center justify-center shrink-0 shadow-xs">
                     <MapPin className="w-6 h-6" />
                   </div>
                   <div>
@@ -118,14 +118,14 @@ export default function ContactPage() {
                     <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
                       {FOUNDATION_INFO.addressBn}
                     </p>
-                    <span className="text-[11px] text-[#0D5C35] font-semibold block mt-1">
+                    <span className="text-[11px] text-[#D62828] font-semibold block mt-1">
                       {t('কুড়িগ্রাম জেলা, রংপুর বিভাগ', 'Kurigram District, Bangladesh')}
                     </span>
                     <a
                       href={`https://wa.me/${FOUNDATION_INFO.phonePrimary.replace(/[^0-9]/g, '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 mt-2.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#0D5C35] text-xs font-bold border border-emerald-200 transition"
+                      className="inline-flex items-center gap-1.5 mt-2.5 px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-[#D62828] text-xs font-bold border border-red-200 transition"
                     >
                       <MessageSquare className="w-3.5 h-3.5" />
                       <span>{t('Message রৌমারী জনকল্যাণ ফাউন্ডেশন', 'WhatsApp Us')}</span>
@@ -141,7 +141,7 @@ export default function ContactPage() {
                     <h2 className="text-base font-bold text-stone-900 mb-1">{t('জরুরি হটলাইন', 'Emergency Hotlines')}</h2>
                     <div className="space-y-0.5 text-xs sm:text-sm font-mono font-bold text-stone-800">
                       <div>{FOUNDATION_INFO.phonePrimary} ({t('সাধারণ তথ্য', 'General')})</div>
-                      <div className="text-[#0D5C35]">{FOUNDATION_INFO.emergencyHotline} ({t('জরুরি ত্রাণ ও সেবা', 'Emergency Relief Desk')})</div>
+                      <div className="text-[#D62828]">{FOUNDATION_INFO.emergencyHotline} ({t('জরুরি ত্রাণ ও সেবা', 'Emergency Relief Desk')})</div>
                     </div>
                   </div>
                 </div>
@@ -168,7 +168,7 @@ export default function ContactPage() {
                     <p className="text-xs sm:text-sm text-stone-600">
                       {t('শনিবার - বৃহস্পতিবার: সকাল ৯টা - বিকাল ৫টা', 'Sat - Thu: 9:00 AM - 5:00 PM')}
                     </p>
-                    <span className="text-[11px] text-[#0D5C35] font-bold block mt-0.5">
+                    <span className="text-[11px] text-[#D62828] font-bold block mt-0.5">
                       {t('জরুরি ত্রাণ ও সহায়তা ডেস্ক ২৪/৭ খোলা', 'Emergency relief & assistance desk is open 24/7')}
                     </span>
                   </div>
@@ -180,7 +180,7 @@ export default function ContactPage() {
             <div className={`${glassCard} lg:col-span-7 p-6 sm:p-8 shadow-xl flex flex-col justify-between`}>
               <div>
                 <div className="mb-6">
-                  <span className="text-xs font-bold text-[#0D5C35] uppercase tracking-wider bg-emerald-50 px-2.5 py-1 rounded inline-block mb-1.5">
+                  <span className="text-xs font-bold text-[#D62828] uppercase tracking-wider bg-red-50 px-2.5 py-1 rounded inline-block mb-1.5">
                     {t('অনলাইন বার্তা প্রেরণ', 'Send Direct Message')}
                   </span>
                   <h2 className="text-xl sm:text-2xl font-black text-stone-900 leading-tight">
@@ -189,8 +189,8 @@ export default function ContactPage() {
                 </div>
 
                 {submitted ? (
-                  <div className="p-8 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-3 my-6">
-                    <div className="w-14 h-14 rounded-full bg-[#0D5C35] text-white flex items-center justify-center mx-auto shadow-md">
+                  <div className="p-8 rounded-2xl bg-red-50 border border-red-200 text-center space-y-3 my-6">
+                    <div className="w-14 h-14 rounded-full bg-[#D62828] text-white flex items-center justify-center mx-auto shadow-md">
                       <CheckCircle2 className="w-8 h-8" />
                     </div>
                     <h2 className="text-lg font-bold text-stone-900">{t('বার্তা সফলভাবে পাঠানো হয়েছে!', 'Message Sent Successfully!')}</h2>
@@ -199,7 +199,7 @@ export default function ContactPage() {
                     </p>
                     <button
                       onClick={() => setSubmitted(false)}
-                      className="px-5 py-2 rounded-xl bg-[#0D5C35] text-white font-bold text-xs cursor-pointer"
+                      className="px-5 py-2 rounded-xl bg-[#D62828] text-white font-bold text-xs cursor-pointer"
                     >
                       {t('আরেকটি বার্তা পাঠান', 'Send Another Message')}
                     </button>
@@ -214,7 +214,7 @@ export default function ContactPage() {
                         type="text"
                         {...register('name')}
                         placeholder={t('উদাঃ মোঃ আব্দুল্লাহ', 'e.g. Md. Abdullah')}
-                        className="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0D5C35]"
+                        className="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#D62828]"
                       />
                       {errors.name && <p className="text-red-600 text-xs mt-1">{errors.name.message}</p>}
                     </div>
@@ -227,7 +227,7 @@ export default function ContactPage() {
                         type="text"
                         {...register('contactInfo')}
                         placeholder={t('উদাঃ 01712-345678 / user@email.com', 'e.g. 01712-345678 or user@email.com')}
-                        className="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0D5C35]"
+                        className="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#D62828]"
                       />
                       {errors.contactInfo && <p className="text-red-600 text-xs mt-1">{errors.contactInfo.message}</p>}
                     </div>
@@ -240,7 +240,7 @@ export default function ContactPage() {
                         rows={4}
                         {...register('message')}
                         placeholder={t('আপনার কথা বিস্তারিত লিখুন...', 'Write your message details...')}
-                        className="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0D5C35]"
+                        className="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#D62828]"
                       />
                       {errors.message && <p className="text-red-600 text-xs mt-1">{errors.message.message}</p>}
                     </div>
@@ -248,7 +248,7 @@ export default function ContactPage() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full py-3.5 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/20 disabled:opacity-50"
+                      className="w-full py-3.5 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-red-950/20 disabled:opacity-50"
                     >
                       <Send className="w-4 h-4" />
                       <span>{isSubmitting ? t('বার্তা পাঠানো হচ্ছে...', 'Sending Message...') : t('বার্তা পাঠান', 'Submit Message')}</span>

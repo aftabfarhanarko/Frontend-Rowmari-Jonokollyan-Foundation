@@ -70,9 +70,9 @@ export default function GalleryPage() {
 
       <main className="flex-1 pb-20 sm:pb-24">
         {/* Header Hero Banner */}
-        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-emerald-50/50 via-white to-white">
+        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-red-50/50 via-white to-white">
           <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl" />
+            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-red-400/20 blur-3xl" />
             <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
           </div>
 
@@ -83,8 +83,8 @@ export default function GalleryPage() {
               transition={{ duration: 0.5 }}
               className="max-w-3xl"
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0D5C35] text-xs font-bold mb-3 shadow-2xs">
-                <Sparkles className="w-3.5 h-3.5 text-[#0D5C35]" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-[#D62828]" />
                 <span>{t('মাঠপর্যায়ের মানবিক কার্যক্রমের বাস্তব ফটো আর্কাইভ', 'Verified Real Fieldwork Photographic Archive')}</span>
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
@@ -106,7 +106,7 @@ export default function GalleryPage() {
                   onClick={() => setSelectedTag(tag.key)}
                   className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                     selectedTag === tag.key
-                      ? 'bg-[#0D5C35] text-white shadow-md'
+                      ? 'bg-[#D62828] text-white shadow-md'
                       : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
                   }`}
                 >
@@ -121,7 +121,7 @@ export default function GalleryPage() {
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
           <div className="flex items-center justify-between text-xs sm:text-sm text-stone-500 mb-6 font-medium">
             <span>{t(`${filteredItems.length} টি স্থিরচিত্র সংরক্ষিত`, `${filteredItems.length} photos in archive`)}</span>
-            <div className="flex items-center gap-1.5 text-[#0D5C35] font-bold">
+            <div className="flex items-center gap-1.5 text-[#D62828] font-bold">
               <ShieldCheck className="w-4 h-4" />
               <span>{t('শতভাগ প্রকৃত মাঠপর্যায়ের ছবি', 'Authentic On-site Documentation')}</span>
             </div>
@@ -150,7 +150,7 @@ export default function GalleryPage() {
                   
                   {/* Category chip */}
                   <div className="absolute top-3 left-3 z-10">
-                    <span className="px-2.5 py-1 rounded-md text-[11px] font-bold text-white bg-[#0D5C35] shadow-md backdrop-blur-md">
+                    <span className="px-2.5 py-1 rounded-md text-[11px] font-bold text-white bg-[#D62828] shadow-md backdrop-blur-md">
                       {item.category === 'winter' ? t('শীতবস্ত্র', 'Winter') :
                        item.category === 'medical' ? t('চিকিৎসা', 'Medical') :
                        item.category === 'education' ? t('শিক্ষা', 'Education') :
@@ -169,7 +169,7 @@ export default function GalleryPage() {
                   <div className="absolute bottom-4 left-4 right-4 text-white z-10 space-y-1">
                     <div className="flex items-center justify-between text-xs text-stone-200">
                       <span className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/20">
-                        <MapPin className="w-3 h-3 text-emerald-400 shrink-0" />
+                        <MapPin className="w-3 h-3 text-red-400 shrink-0" />
                         <span className="truncate max-w-[140px]">{t(item.locationBn || 'রৌমারী, কুড়িগ্রাম', item.locationEn || 'Rowmari, Kurigram')}</span>
                       </span>
                       <span className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/20">
@@ -217,7 +217,7 @@ export default function GalleryPage() {
 
               <div className="p-6 bg-stone-900 space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-stone-400">
-                  <span className="px-2.5 py-1 rounded bg-[#0D5C35] text-white font-bold">
+                  <span className="px-2.5 py-1 rounded bg-[#D62828] text-white font-bold">
                     {t(previewItem.locationBn || 'রৌমারী, কুড়িগ্রাম', previewItem.locationEn || 'Rowmari, Kurigram')}
                   </span>
                   <span>{t(previewItem.dateBn, previewItem.dateEn)}</span>
@@ -233,7 +233,7 @@ export default function GalleryPage() {
                       setPreviewItem(null);
                       setAssistanceModalOpen(true);
                     }}
-                    className="w-full py-3 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center shadow-md"
+                    className="w-full py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center shadow-md"
                   >
                     {t('সহায়তার আবেদন করুন', 'Request Help in this Area')}
                   </button>

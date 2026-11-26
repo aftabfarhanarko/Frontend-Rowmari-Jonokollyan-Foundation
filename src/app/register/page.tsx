@@ -137,7 +137,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-white text-stone-900 selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="min-h-screen flex flex-col justify-between bg-white text-stone-900 selection:bg-red-100 selection:text-red-900">
       <Navbar
         lang={lang}
         onToggleLang={toggleLang}
@@ -153,12 +153,12 @@ export default function RegisterPage() {
           className="w-full max-w-xl bg-white rounded-3xl p-6 sm:p-9 shadow-xl border border-stone-200/90 relative overflow-hidden"
         >
           {/* Subtle Corner Gradient Glow */}
-          <div className="absolute -top-12 -right-12 w-36 h-36 bg-emerald-100/60 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -top-12 -right-12 w-36 h-36 bg-red-100/60 rounded-full blur-2xl pointer-events-none" />
           <div className="absolute -bottom-12 -left-12 w-36 h-36 bg-red-100/40 rounded-full blur-2xl pointer-events-none" />
 
           <div className="text-center space-y-2 mb-7 relative z-10">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[#0D5C35] text-xs font-bold border border-emerald-200">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#0D5C35]" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-[#D62828] text-xs font-bold border border-red-200">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#D62828]" />
               <span>{t('কমিউনিটি মেম্বারশিপ', 'Community Membership')}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
@@ -182,8 +182,8 @@ export default function RegisterPage() {
 
           {/* Visible Inline Success/Redirecting Alert */}
           {isRedirecting && (
-            <div className="mb-4 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-[#0D5C35] text-xs flex items-center gap-2.5 relative z-10 shadow-2xs">
-              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 animate-bounce" />
+            <div className="mb-4 p-3.5 rounded-2xl bg-red-50 border border-red-200 text-[#D62828] text-xs flex items-center gap-2.5 relative z-10 shadow-2xs">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-red-600 animate-bounce" />
               <span className="font-semibold">{t('নিবন্ধন সফল! অ্যাকাউন্টে প্রবেশ করানো হচ্ছে...', 'Registration successful! Redirecting...')}</span>
             </div>
           )}
@@ -202,7 +202,7 @@ export default function RegisterPage() {
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="মো: আব্দুল করিম"
                   required
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] focus:border-transparent transition bg-white"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828] focus:border-transparent transition bg-white"
                 />
               </div>
             </div>
@@ -222,7 +222,7 @@ export default function RegisterPage() {
                     placeholder="name@example.com"
                     autoComplete="email"
                     required
-                    className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] focus:border-transparent transition bg-white"
+                    className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828] focus:border-transparent transition bg-white"
                   />
                 </div>
               </div>
@@ -240,7 +240,7 @@ export default function RegisterPage() {
                     placeholder="01712-345678"
                     autoComplete="tel"
                     required
-                    className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] focus:border-transparent transition bg-white"
+                    className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828] focus:border-transparent transition bg-white"
                   />
                 </div>
               </div>
@@ -265,7 +265,7 @@ export default function RegisterPage() {
                   placeholder="••••••••"
                   autoComplete="new-password"
                   required
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] focus:border-transparent transition bg-white"
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828] focus:border-transparent transition bg-white"
                 />
                 <button
                   type="button"
@@ -289,7 +289,7 @@ export default function RegisterPage() {
                   <select
                     value={upazila}
                     onChange={(e) => setUpazila(e.target.value)}
-                    className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] focus:border-transparent transition bg-white"
+                    className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828] focus:border-transparent transition bg-white"
                   >
                     <option value="Roumari">রৌমারী (Roumari)</option>
                     <option value="Rajibpur">রাজিবপুর (Rajibpur)</option>
@@ -312,7 +312,7 @@ export default function RegisterPage() {
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="যাদুরচর, দাঁতভাঙ্গা বা গ্রাম"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] focus:border-transparent transition bg-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828] focus:border-transparent transition bg-white"
                 />
               </div>
             </div>
@@ -320,7 +320,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full mt-3 py-3 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-sm transition shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+              className="w-full mt-3 py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-sm transition shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
             >
               {isLoading ? (
                 <>
@@ -352,7 +352,7 @@ export default function RegisterPage() {
               {t('ইতিমধ্যে আপনার একটি অ্যাকাউন্ট আছে?', 'Already have an account?')}{' '}
               <Link
                 href="/login"
-                className="font-bold text-[#0D5C35] hover:underline"
+                className="font-bold text-[#D62828] hover:underline"
               >
                 {t('এখানে লগইন করুন', 'Sign In Here')}
               </Link>

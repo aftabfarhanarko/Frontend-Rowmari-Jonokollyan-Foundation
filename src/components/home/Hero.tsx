@@ -1,0 +1,506 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  FileText,
+  Search,
+  CheckCircle2,
+  MapPin,
+  Sparkles,
+  Users,
+  HeartPulse,
+  HeartHandshake,
+  GraduationCap,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  ShieldCheck,
+} from 'lucide-react';
+import { Language } from '@/types';
+
+interface HeroProps {
+  lang: Language;
+  onOpenAssistance: () => void;
+  onOpenActivities: () => void;
+  onOpenDonation?: (campaignId?: string) => void;
+}
+
+export default function Hero({
+  lang,
+  onOpenAssistance,
+  onOpenActivities,
+  onOpenDonation,
+}: HeroProps) {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // 4 Full-Width Panoramic Hero Banner Slides
+  const heroSlides = [
+    {
+      id: 'slide-1',
+      badgeBn: 'স্থাপিত ২০১৮ • রৌমারী, কুড়িগ্রাম • ৯ম বছরে পদার্পণ',
+      badgeEn: 'Est. 2018 • Rowmari, Kurigram • 8+ Years of Service',
+      categoryBn: 'মানবিক সহায়তা মিশন',
+      categoryEn: 'Humanitarian Mission',
+      titleBn: 'মানুষের পাশে, মানুষের জন্য',
+      titleEn: 'Standing by People, For Humanity',
+      subtitleBn:
+        'রৌমারী ও ব্রহ্মপুত্রের দুর্গম চরাঞ্চলের অসহায় শীতার্ত মানুষের পাশে দাঁড়ানোই আমাদের কাজ। শীতবস্ত্র, খাদ্য, শিক্ষা ও জরুরি চিকিৎসাসেবায় আমরা সার্বক্ষণিক নিবেদিত।',
+      subtitleEn:
+        'Dedicated to serving the underprivileged in Rowmari and remote river island chars through winter relief, food aid, education, and healthcare support.',
+      btnPrimaryBn: 'সহায়তার আবেদন',
+      btnPrimaryEn: 'Request Assistance',
+      btnPrimaryAction: 'assistance',
+      btnPrimaryIcon: FileText,
+      btnSecondaryBn: 'কার্যক্রম দেখুন',
+      btnSecondaryEn: 'Explore Activities',
+      btnSecondaryAction: 'activities',
+      btnSecondaryIcon: Search,
+      imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1800&q=85',
+      overlayGradient: 'from-[#073B22]/90 via-[#073B22]/65 to-black/30',
+    },
+    {
+      id: 'slide-2',
+      badgeBn: 'শীতবস্ত্র ও জরুরি খাদ্য সহায়তা তহবিল',
+      badgeEn: 'Winter Warmth & Food Aid Relief',
+      categoryBn: 'ত্রাণ ও পুনর্বাসন উইং',
+      categoryEn: 'Relief & Rehabilitation Wing',
+      titleBn: 'চরাঞ্চলের শীতার্ত মানুষের মুখে ফুটুক উষ্ণতার হাসি',
+      titleEn: 'Spreading Warmth & Nutrition to Char Families',
+      subtitleBn:
+        'তীব্র শীতে রৌমারীর ব্রহ্মপুত্র নদের প্রত্যন্ত চরাঞ্চলের অসহায় পরিবার, বৃদ্ধ ও শিশুদের মাঝে কম্বল, খাদ্যসামগ্রী ও জরুরি মানবিক সহায়তা প্রদান।',
+      subtitleEn:
+        'Distributing warm blankets, food supplies, and urgent humanitarian relief to vulnerable families across river-island char unions.',
+      btnPrimaryBn: 'সহায়তার আবেদন',
+      btnPrimaryEn: 'Request Assistance',
+      btnPrimaryAction: 'assistance',
+      btnPrimaryIcon: FileText,
+      btnSecondaryBn: 'কার্যক্রম দেখুন',
+      btnSecondaryEn: 'Explore Activities',
+      btnSecondaryAction: 'activities',
+      btnSecondaryIcon: Search,
+      imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1800&q=85',
+      overlayGradient: 'from-[#7f1d1d]/90 via-[#991b1b]/65 to-black/30',
+    },
+    {
+      id: 'slide-3',
+      badgeBn: 'দরিদ্র ও অসহায় রোগীর চিকিৎসা তহবিল',
+      badgeEn: 'Medical Aid & Healthcare Fund',
+      categoryBn: 'চিকিৎসা সহায়তা ও ফ্রি ওষুধ',
+      categoryEn: 'Healthcare & Medicine Aid',
+      titleBn: 'অসহায় রোগীর সুচিকিৎসায় আমাদের নিরলস অঙ্গীকার',
+      titleEn: 'Quality Healthcare for Every Underprivileged Life',
+      subtitleBn:
+        'বিনা চিকিৎসায় যেন কোনো প্রাণ না হারায়—অসহায় রোগীদের বড় ধরনের অপারেশন, জটিল হৃদরোগ, থ্যালাসেমিয়া ও ওষুধে জরুরি স্বাস্থ্যসেবা ও সহায়তা প্রদান।',
+      subtitleEn:
+        'No life should be lost for lack of medicine. Providing vital medical grants, complex surgery support, and free physician camps in remote river island unions.',
+      btnPrimaryBn: 'চিকিৎসা সহায়তা আবেদন',
+      btnPrimaryEn: 'Apply Medical Aid',
+      btnPrimaryAction: 'assistance',
+      btnPrimaryIcon: HeartPulse,
+      btnSecondaryBn: 'কার্যক্রম দেখুন',
+      btnSecondaryEn: 'View Healthcare Work',
+      btnSecondaryAction: 'activities',
+      btnSecondaryIcon: HeartHandshake,
+      imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1800&q=85',
+      overlayGradient: 'from-[#991B1B]/90 via-[#B91C1C]/65 to-black/30',
+    },
+    {
+      id: 'slide-4',
+      badgeBn: 'চরাঞ্চলের সুবিধাবঞ্চিত শিশুদের মেধা বিকাশ',
+      badgeEn: 'Char Education & Child Empowerment',
+      categoryBn: 'শিক্ষা উপবৃত্তি ও বইপত্র',
+      categoryEn: 'Education & Scholarships',
+      titleBn: 'শিক্ষার আলোয় আলোকিত হোক প্রতিটি শিশুর ভবিষ্যৎ',
+      titleEn: 'Lighting the Lamp of Education for Every Child',
+      subtitleBn:
+        'অর্থের অভাবে যেন কোনো দরিদ্র মেধাবী শিশুর পড়াশোনা বন্ধ না হয়—রৌমারীর চরাঞ্চলে প্রাথমিক ও মাধ্যমিক শিক্ষার্থীদের স্কুল ব্যাগ, বইপত্র ও মাসিক বৃত্তি প্রদান।',
+      subtitleEn:
+        'Poverty must not stop education. Distributing school supplies, notebooks, bags, and monthly scholarships to prevent student dropouts in remote chars.',
+      btnPrimaryBn: 'শিক্ষা উপবৃত্তি আবেদন',
+      btnPrimaryEn: 'Scholarship Aid',
+      btnPrimaryAction: 'assistance',
+      btnPrimaryIcon: GraduationCap,
+      btnSecondaryBn: 'কার্যক্রম দেখুন',
+      btnSecondaryEn: 'View Education Work',
+      btnSecondaryAction: 'activities',
+      btnSecondaryIcon: Sparkles,
+      imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1800&q=85',
+      overlayGradient: 'from-[#1e1b4b]/90 via-[#312e81]/65 to-black/30',
+    },
+  ];
+
+  // Continuous automatic slideshow rotation every 4 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [currentSlide, heroSlides.length]);
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  };
+
+  const activeSlide = heroSlides[currentSlide];
+
+  const handleAction = (actionType: string) => {
+    switch (actionType) {
+      case 'assistance':
+        onOpenAssistance();
+        break;
+      case 'activities':
+        onOpenActivities();
+        break;
+      case 'donation':
+        onOpenActivities();
+        break;
+      default:
+        onOpenActivities();
+    }
+  };
+
+  const PrimaryIcon = activeSlide.btnPrimaryIcon;
+  const SecondaryIcon = activeSlide.btnSecondaryIcon;
+
+  // 4 Curated Field Photography Highlights
+  const fieldHighlights = [
+    {
+      id: 'field-1',
+      titleBn: 'শীতবস্ত্র ও কম্বল বিতরণ ২০২৪',
+      titleEn: 'Winter Warmth & Blanket Relief',
+      tagBn: 'শীতবস্ত্র ত্রাণ',
+      tagEn: 'Winter Relief',
+      badgeColor: 'bg-[#E53935]',
+      statBn: '৫,০০০+ কম্বল বিতরণ',
+      statEn: '5,000+ Blankets',
+      locationBn: 'যাদুরচর ও দাঁতভাঙ্গা চর',
+      locationEn: 'Yadurchar & Datbhanga Char',
+      descBn: 'কনকনে শীতে ব্রহ্মপুত্রের প্রত্যন্ত চরাঞ্চলের অসহায় পরিবারের মুখে উষ্ণতার হাসি।',
+      descEn: 'Delivering warmth to vulnerable families across remote Brahmaputra river island chars.',
+      imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80',
+    },
+    {
+      id: 'field-2',
+      titleBn: 'জরুরি খাদ্য ও পুষ্টি সহায়তা বিতরণ',
+      titleEn: 'Emergency Food & Relief Assistance',
+      tagBn: 'খাদ্য সহায়তা',
+      tagEn: 'Food Support',
+      badgeColor: 'bg-red-600',
+      statBn: '৩,২০০+ পরিবার উপকৃত',
+      statEn: '3,200+ Families',
+      locationBn: 'চর শৌলমারী ও কর্তিমারী',
+      locationEn: 'Char Shoulmari & Kartimari',
+      descBn: 'চরাঞ্চলের বন্যাপীড়িত ও দিনমজুর পরিবারের মাঝে চাল, ডাল, তেলসহ নিত্যপ্রয়োজনীয় খাদ্য বিতরণ।',
+      descEn: 'Distributing food packages containing rice, lentils, and essentials to impoverished char families.',
+      imageUrl: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=800&q=80',
+    },
+    {
+      id: 'field-3',
+      titleBn: 'বিনামূল্যে চিকিৎসা ও বিশেষজ্ঞ ক্যাম্প',
+      titleEn: 'Free Medical Camps & Medicines',
+      tagBn: 'চিকিৎসা সহায়তা',
+      tagEn: 'Healthcare Aid',
+      badgeColor: 'bg-teal-700',
+      statBn: '৮৫০+ রোগী চিকিৎসাপ্রাপ্ত',
+      statEn: '850+ Patients Treated',
+      locationBn: 'চর শৌলমারী ইউনিয়ন',
+      locationEn: 'Char Shoulmari Union',
+      descBn: 'অভিজ্ঞ চিকিৎসকদের মাধ্যমে সুবিধাবঞ্চিত চরাঞ্চলবাসীর বিনামূল্যে স্বাস্থ্য পরীক্ষা ও ওষুধ।',
+      descEn: 'Free physician consultations, diagnosis, and essential life-saving medicine distribution.',
+      imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
+    },
+    {
+      id: 'field-4',
+      titleBn: 'দরিদ্র শিক্ষার্থীদের শিক্ষা ও মেধা বৃত্তি',
+      titleEn: 'Education Support & Scholarships',
+      tagBn: 'শিক্ষা উইং',
+      tagEn: 'Education Aid',
+      badgeColor: 'bg-red-700',
+      statBn: '৩৫০+ শিক্ষার্থী উপবৃত্তি',
+      statEn: '350+ Students Aided',
+      locationBn: 'বন্দবেড় ও যাদুরচর চর',
+      locationEn: 'Bondober & Yadurchar',
+      descBn: 'ঝরে পড়া রোধে চরাঞ্চলের দরিদ্র শিক্ষার্থীদের স্কুল ব্যাগ, বইপত্র ও মাসিক উপবৃত্তি প্রদান।',
+      descEn: 'Providing bags, stationery, and monthly stipends to keep children in classrooms.',
+      imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80',
+    },
+  ];
+
+  return (
+    <section
+      id="home"
+      className="relative pt-0 sm:pt-4 pb-8 sm:pb-12 overflow-hidden bg-white"
+    >
+      <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
+        {/* Full-Width Panoramic Hero Slider Card */}
+        <div className="relative w-full rounded-none sm:rounded-xl md:rounded-2xl overflow-hidden min-h-[300px] sm:min-h-[360px] md:min-h-[420px] lg:min-h-[460px] shadow-xl sm:border sm:border-stone-200/80 flex flex-col justify-between bg-stone-950">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSlide.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: 'easeInOut' }}
+              className="absolute inset-0 z-0"
+            >
+              {/* Full Background Photography */}
+              <Image
+                src={activeSlide.imageUrl}
+                alt={lang === 'bn' ? activeSlide.titleBn : activeSlide.titleEn}
+                fill
+                priority
+                sizes="(max-width: 1280px) 100vw, 1280px"
+                className="object-cover object-center scale-102 transition-transform duration-1000 ease-out"
+              />
+
+              {/* Multi-layered Deep Branded Gradient Overlay for 100% Crisp Typography */}
+              <div className={`absolute inset-0 z-10 bg-gradient-to-r ${activeSlide.overlayGradient}`} />
+              <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Left & Right Chevron Arrows (Desktop/Tablet Only) */}
+          <button
+            onClick={prevSlide}
+            className="hidden sm:flex absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-full bg-black/40 hover:bg-black/70 text-white border border-white/20 backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95 cursor-pointer"
+            aria-label="Previous Slide"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="hidden sm:flex absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-full bg-black/40 hover:bg-black/70 text-white border border-white/20 backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95 cursor-pointer"
+            aria-label="Next Slide"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+
+          {/* Slide Content Overlay (Inside the Banner) */}
+          <div className="relative z-20 flex-1 flex flex-col justify-between p-4 sm:p-7 md:p-10 lg:p-12 max-w-3xl">
+            {/* Top Tagline Badge */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`badge-${activeSlide.id}`}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.4 }}
+              >
+                <div className="inline-flex items-center gap-2 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-black/45 backdrop-blur-md border border-white/20 text-white text-[11px] sm:text-xs font-semibold shadow-md">
+                  <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-red-400 animate-pulse" />
+                  <span>{lang === 'bn' ? activeSlide.badgeBn : activeSlide.badgeEn}</span>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Middle Main Text & CTAs */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`text-${activeSlide.id}`}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+                className="my-auto py-2.5 sm:py-4 md:py-6 space-y-2.5 sm:space-y-3.5 md:space-y-4"
+              >
+                <div className="inline-block">
+                  <span className="text-[10px] sm:text-xs font-bold tracking-wider uppercase px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-md bg-[#E53935] text-white shadow-md">
+                    {lang === 'bn' ? activeSlide.categoryBn : activeSlide.categoryEn}
+                  </span>
+                </div>
+
+                <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-[46px] font-black text-white leading-[1.2] tracking-tight drop-shadow-md">
+                  {lang === 'bn' ? activeSlide.titleBn : activeSlide.titleEn}
+                </h1>
+
+                <p className="text-xs sm:text-sm md:text-base text-stone-100/95 leading-relaxed font-normal max-w-xl drop-shadow-sm line-clamp-2 sm:line-clamp-none">
+                  {lang === 'bn' ? activeSlide.subtitleBn : activeSlide.subtitleEn}
+                </p>
+
+                {/* Primary & Secondary Buttons Inside the Banner */}
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3.5 pt-1 sm:pt-2">
+                  <button
+                    onClick={() => handleAction(activeSlide.btnPrimaryAction)}
+                    className="px-4 sm:px-6 md:px-7 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs sm:text-sm md:text-base transition-all duration-200 shadow-lg shadow-red-950/40 hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
+                  >
+                    <PrimaryIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white shrink-0" />
+                    <span>{lang === 'bn' ? activeSlide.btnPrimaryBn : activeSlide.btnPrimaryEn}</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleAction(activeSlide.btnSecondaryAction)}
+                    className="px-4 sm:px-6 md:px-7 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs sm:text-sm md:text-base border border-white/30 backdrop-blur-md transition-all duration-200 shadow-md hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
+                  >
+                    <SecondaryIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white shrink-0" />
+                    <span>{lang === 'bn' ? activeSlide.btnSecondaryBn : activeSlide.btnSecondaryEn}</span>
+                  </button>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Bottom Spacer */}
+            <div className="h-3 sm:h-4" />
+          </div>
+
+          {/* Bottom Center Capsule Dot Pagination (Sleek Frosted Capsule) */}
+          <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-30 bg-white/85 dark:bg-black/60 backdrop-blur-md px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full border border-white/40 shadow-lg flex items-center gap-1.5 sm:gap-2">
+            {heroSlides.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentSlide(idx)}
+                className={`transition-all duration-300 rounded-full cursor-pointer ${
+                  currentSlide === idx
+                    ? 'w-6 sm:w-7 h-2 bg-[#E53935] shadow-xs'
+                    : 'w-2 h-2 bg-stone-400/80 hover:bg-stone-600'
+                }`}
+                aria-label={`Slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Bottom Right Brand Seal & Logo Watermark (Desktop/Tablet Only) */}
+          <div className="hidden sm:flex absolute bottom-3 sm:bottom-4 right-4 sm:right-6 z-30 items-center gap-2 bg-black/40 backdrop-blur-md px-2.5 sm:px-3.5 py-1 rounded-full border border-white/20 text-white shadow-xl pointer-events-none">
+            <Image
+              src="/logo.png"
+              alt="RJF Seal"
+              width={26}
+              height={26}
+              className="rounded-full object-contain"
+            />
+            <div className="text-left">
+              <div className="text-[9px] uppercase tracking-wider text-red-300 font-bold leading-tight">
+                RJF OFFICIAL
+              </div>
+              <div className="text-[11px] font-black text-white leading-tight">
+                রৌমারী জনকল্যাণ ফাউন্ডেশন
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Trust Credential Strip Underneath Panoramic Banner */}
+        <div className="mt-3 sm:mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-stone-500 px-4 sm:px-2">
+          <div className="flex items-center gap-1.5 text-stone-600">
+            <ShieldCheck className="w-4 h-4 text-[#D62828] shrink-0" />
+            <span>
+              {lang === 'bn' ? 'অধিভুক্তি ও অনুমোদন:' : 'Affiliation & Status:'}{' '}
+              <a
+                href="/about"
+                className="underline text-[#D62828] font-bold hover:text-[#E53935] transition"
+              >
+                {lang === 'bn'
+                  ? 'সরকারি সমাজসেবা ট্রাস্ট ও অনুমোদিত ছাড়পত্র'
+                  : 'Verified trust certificates & registration'}
+              </a>
+            </span>
+          </div>
+
+          <div className="hidden md:flex items-center gap-2 text-stone-600 font-medium">
+            <span>১২,৫০০+ মানুষ সহায়তাপ্রাপ্ত</span>
+            <span>•</span>
+            <span>৪৫০+ সক্রিয় স্বেচ্ছাসেবক</span>
+            <span>•</span>
+            <span>৮+ বছরের নিবেদিত মানবিক সেবা</span>
+          </div>
+
+          <a
+            href="#track"
+            className="text-[#E53935] font-bold hover:underline inline-flex items-center gap-1"
+          >
+            <span>{lang === 'bn' ? 'আবেদনের অবস্থা দেখুন' : 'Track Application'}</span>
+            <span>→</span>
+          </a>
+        </div>
+
+        {/* --- Premium Field Photography Showcase Underneath Hero --- */}
+        <div className="mt-10 sm:mt-14 pt-8 sm:pt-10 border-t border-red-950/10 px-4 sm:px-0">
+          {/* Header Row */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-8">
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100/80 text-red-900 text-xs font-bold mb-2 shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-[#D62828]" />
+                <span>{lang === 'bn' ? 'মাঠপর্যায়ের বাস্তব চিত্র' : 'Live Fieldwork Gallery'}</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-stone-900 tracking-tight">
+                {lang === 'bn' ? 'রৌমারী ও চরাঞ্চলে আমাদের মানবিক কার্যক্রম' : 'Humanitarian Initiatives in Remote Chars'}
+              </h2>
+              <p className="text-xs sm:text-sm text-stone-600 mt-1 max-w-2xl">
+                {lang === 'bn'
+                  ? 'শীতবস্ত্র বিতরণ, বিনামূল্যে চিকিৎসা ক্যাম্প, জরুরি খাদ্য সহায়তা এবং সুবিধাবঞ্চিত শিশুদের শিক্ষার আলোকচ্ছটা।'
+                  : 'Delivering winter warmth, emergency medical relief, food packages, and underprivileged child education.'}
+              </p>
+            </div>
+
+            <button
+              onClick={onOpenActivities}
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#D62828] hover:text-[#E53935] transition-colors group cursor-pointer self-start md:self-auto shrink-0 bg-white px-4 py-2 rounded-full border border-stone-200 shadow-2xs hover:shadow-xs"
+            >
+              <span>{lang === 'bn' ? 'সকল কার্যক্রমের ছবি দেখুন' : 'Explore All Gallery Photos'}</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+
+          {/* 4 Premium Visual Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {fieldHighlights.map((item) => {
+              return (
+                <div
+                  key={item.id}
+                  onClick={onOpenActivities}
+                  className="group relative h-72 sm:h-80 rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl border border-stone-200/90 transition-all duration-500 cursor-pointer flex flex-col justify-between p-4 sm:p-5"
+                >
+                  {/* High Quality Authentic Image */}
+                  <Image
+                    src={item.imageUrl}
+                    alt={lang === 'bn' ? item.titleBn : item.titleEn}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                  />
+
+                  {/* Deep Contrast Multi-Stop Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/95 via-stone-950/45 to-stone-950/25 z-10 group-hover:via-stone-950/35 transition-colors duration-500" />
+
+                  {/* Top Overlay: Category Badge & Location Chip */}
+                  <div className="relative z-20 flex items-center justify-between gap-2">
+                    <span
+                      className={`text-[11px] font-bold text-white px-2.5 py-1 rounded-full shadow-md backdrop-blur-md ${item.badgeColor}`}
+                    >
+                      {lang === 'bn' ? item.tagBn : item.tagEn}
+                    </span>
+
+                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-white/90 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/20 shadow-xs">
+                      <MapPin className="w-3 h-3 text-red-400 shrink-0" />
+                      <span className="truncate max-w-[110px]">{lang === 'bn' ? item.locationBn : item.locationEn}</span>
+                    </span>
+                  </div>
+
+                  {/* Bottom Overlay: Title, Description & Impact Metric */}
+                  <div className="relative z-20 space-y-2">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-white/20 backdrop-blur-md text-[11px] font-bold text-red-300 border border-white/20 shadow-xs">
+                      <span>✓ {lang === 'bn' ? item.statBn : item.statEn}</span>
+                    </div>
+
+                    <h3 className="text-base sm:text-lg font-bold text-white leading-snug group-hover:text-red-300 transition-colors duration-300 drop-shadow-md">
+                      {lang === 'bn' ? item.titleBn : item.titleEn}
+                    </h3>
+
+                    <p className="text-xs text-stone-200 line-clamp-2 leading-relaxed drop-shadow-xs">
+                      {lang === 'bn' ? item.descBn : item.descEn}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

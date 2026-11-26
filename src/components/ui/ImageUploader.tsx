@@ -100,7 +100,7 @@ export function ImageUploader({
           <button
             type="button"
             onClick={() => setManualMode(!manualMode)}
-            className="text-[11px] text-[#0D5C35] hover:underline flex items-center gap-1 cursor-pointer font-medium"
+            className="text-[11px] text-[#D62828] hover:underline flex items-center gap-1 cursor-pointer font-medium"
           >
             <LinkIcon className="size-3" />
             <span>{manualMode ? "ফাইল আপলোড মোড" : "সরাসরি লিঙ্ক পেস্ট"}</span>
@@ -128,7 +128,7 @@ export function ImageUploader({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder="https://i.ibb.co/... অথবা ছবির সরাসরি URL পেস্ট করুন"
-            className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 font-mono focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+            className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 font-mono focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
           />
           {value && (
             <div className="relative w-28 h-20 rounded-lg overflow-hidden border border-stone-200 bg-stone-100">
@@ -138,9 +138,9 @@ export function ImageUploader({
         </div>
       ) : currentDisplayUrl ? (
         /* Image Preview with Replace / Remove controls */
-        <div className="relative rounded-xl border border-emerald-300 bg-emerald-50/40 p-3 flex flex-col sm:flex-row items-center gap-3">
+        <div className="relative rounded-xl border border-red-300 bg-red-50/40 p-3 flex flex-col sm:flex-row items-center gap-3">
           <div
-            className={`relative rounded-lg overflow-hidden border border-emerald-400 bg-white shadow-xs shrink-0 ${
+            className={`relative rounded-lg overflow-hidden border border-red-400 bg-white shadow-xs shrink-0 ${
               aspectRatio === "square"
                 ? "w-20 h-20"
                 : aspectRatio === "video"
@@ -163,8 +163,8 @@ export function ImageUploader({
           </div>
 
           <div className="flex-1 space-y-1 text-center sm:text-left">
-            <div className="flex items-center justify-center sm:justify-start gap-1.5 text-xs font-bold text-emerald-800">
-              <CheckCircle2 className="size-3.5 text-emerald-600" />
+            <div className="flex items-center justify-center sm:justify-start gap-1.5 text-xs font-bold text-red-800">
+              <CheckCircle2 className="size-3.5 text-red-600" />
               <span>{isUploading ? "আপলোড হচ্ছে..." : "ImgBB ক্লাউডে হোস্ট করা হয়েছে"}</span>
             </div>
             {value && (
@@ -214,19 +214,19 @@ export function ImageUploader({
           }}
           className={`cursor-pointer border-2 border-dashed rounded-xl p-5 text-center transition-all ${
             isUploading
-              ? "border-[#0D5C35] bg-emerald-50/50"
-              : "border-stone-300 hover:border-[#0D5C35] bg-stone-50/60 hover:bg-emerald-50/30"
+              ? "border-[#D62828] bg-red-50/50"
+              : "border-stone-300 hover:border-[#D62828] bg-stone-50/60 hover:bg-red-50/30"
           }`}
         >
           {isUploading ? (
             <div className="flex flex-col items-center justify-center py-2">
-              <Loader2 className="size-6 text-[#0D5C35] animate-spin mb-1.5" />
+              <Loader2 className="size-6 text-[#D62828] animate-spin mb-1.5" />
               <p className="text-xs font-bold text-stone-800">ImgBB ক্লাউডে আপলোড হচ্ছে...</p>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center">
               <div className="size-9 rounded-full bg-stone-200/80 text-stone-600 flex items-center justify-center mb-1.5">
-                <Upload className="size-4 text-[#0D5C35]" />
+                <Upload className="size-4 text-[#D62828]" />
               </div>
               <p className="text-xs font-bold text-stone-800">
                 ছবি নির্বাচন করতে ক্লিক করুন বা এখানে টেনে আনুন

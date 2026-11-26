@@ -54,7 +54,7 @@ export default function OfflinePage() {
             priority
           />
           <div className="text-left">
-            <span className="text-xs sm:text-sm font-extrabold text-[#0D5C35] block leading-tight">
+            <span className="text-xs sm:text-sm font-extrabold text-[#D62828] block leading-tight">
               রৌমারী জনকল্যাণ ফাউন্ডেশন
             </span>
             <span className="text-[10px] text-stone-500 font-mono tracking-tight block">
@@ -65,13 +65,13 @@ export default function OfflinePage() {
         <span
           className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold flex items-center gap-1.5 transition-colors ${
             isOnline
-              ? 'bg-emerald-100 text-emerald-800'
+              ? 'bg-red-100 text-red-800'
               : 'bg-stone-100 text-stone-600'
           }`}
         >
           <span
             className={`w-2 h-2 rounded-full ${
-              isOnline ? 'bg-emerald-600 animate-pulse' : 'bg-stone-400'
+              isOnline ? 'bg-red-600 animate-pulse' : 'bg-stone-400'
             }`}
           />
           {isOnline ? 'অনলাইন' : 'অফলাইন'}
@@ -85,7 +85,7 @@ export default function OfflinePage() {
             <WifiOff className="w-12 h-12 sm:w-14 sm:h-14 stroke-[1.5]" />
           </div>
           {isOnline && (
-            <span className="absolute -top-1 -right-1 px-2 py-0.5 bg-emerald-600 text-white text-[10px] font-bold rounded-full shadow-md animate-bounce">
+            <span className="absolute -top-1 -right-1 px-2 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded-full shadow-md animate-bounce">
               সংযুক্ত!
             </span>
           )}
@@ -131,7 +131,7 @@ export default function OfflinePage() {
                 window.location.href = '/';
               }
             }}
-            className="w-full py-2.5 px-4 text-xs font-semibold text-stone-600 hover:text-[#0D5C35] flex items-center justify-center gap-1.5 transition"
+            className="w-full py-2.5 px-4 text-xs font-semibold text-stone-600 hover:text-[#D62828] flex items-center justify-center gap-1.5 transition"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>পূর্ববর্তী পেজে ফিরে যান</span>

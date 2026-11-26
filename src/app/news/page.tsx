@@ -65,7 +65,7 @@ export default function NewsPage() {
         <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-red-50/50 via-white to-white">
           <div aria-hidden className="pointer-events-none absolute inset-0">
             <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-red-400/20 blur-3xl" />
-            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-emerald-300/20 blur-3xl" />
+            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
           </div>
 
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -146,7 +146,7 @@ export default function NewsPage() {
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-stone-200/70 flex items-center justify-between text-xs font-bold text-[#0D5C35]">
+                <div className="pt-4 border-t border-stone-200/70 flex items-center justify-between text-xs font-bold text-[#D62828]">
                   <span>{t('বিস্তারিত পড়ুন', 'Read Full Release')}</span>
                   <ArrowRight className="w-4 h-4" />
                 </div>
@@ -155,16 +155,16 @@ export default function NewsPage() {
           </div>
 
           {/* Newsletter Box */}
-          <div className="mt-12 sm:mt-16 rounded-3xl bg-gradient-to-br from-[#0D5C35] to-[#08351f] p-6 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="mt-12 sm:mt-16 rounded-3xl bg-gradient-to-br from-[#D62828] to-[#08351f] p-6 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2 max-w-xl text-center md:text-left">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-emerald-200 text-xs font-bold">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-red-200 text-xs font-bold">
                 <Mail className="w-3.5 h-3.5" />
                 <span>{t('সরাসরি ইমেইলে রিপোর্ট গ্রহণ করুন', 'Email Newsletter')}</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-black">
                 {t('আমাদের মানবিক কার্যক্রমের মাসিক বুলেটিন পেতে যুক্ত থাকুন', 'Subscribe to Monthly Humanitarian Activity Bulletin')}
               </h2>
-              <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed">
+              <p className="text-xs sm:text-sm text-red-100/90 leading-relaxed">
                 {t('প্রতি মাসের ত্রাণ বিতরণ, আর্থিক অডিট ও ভবিষ্যৎ কর্মসূচির বিবরণ সরাসরি আপনার ইনবক্সে পৌঁছাবে।', 'Receive verified relief reports, audited financial breakdowns, and upcoming volunteer dates directly.')}
               </p>
             </div>
@@ -172,7 +172,7 @@ export default function NewsPage() {
             <form onSubmit={handleSubscribe} className="w-full md:w-auto shrink-0">
               {subscribed ? (
                 <div className="px-6 py-3 rounded-xl bg-white/20 text-white text-xs sm:text-sm font-bold flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-300" />
+                  <ShieldCheck className="w-4 h-4 text-red-300" />
                   <span>{t('ধন্যবাদ! আপনার ইমেইল যুক্ত হয়েছে।', 'Subscribed successfully!')}</span>
                 </div>
               ) : (
@@ -183,7 +183,7 @@ export default function NewsPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={t('আপনার ইমেইল এড্রেস...', 'Enter your email...')}
-                    className="px-4 py-3 rounded-xl bg-white text-stone-900 placeholder:text-stone-400 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-emerald-300 w-full sm:w-64"
+                    className="px-4 py-3 rounded-xl bg-white text-stone-900 placeholder:text-stone-400 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-red-300 w-full sm:w-64"
                   />
                   <button
                     type="submit"

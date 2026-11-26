@@ -22,7 +22,7 @@ export default function PwaInstallBanner() {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 40, scale: 0.96 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
-        className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-40 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl border-2 border-[#0D5C35]/25"
+        className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-40 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl border-2 border-[#D62828]/25"
       >
         <div className="flex items-start gap-3.5">
           <Image
@@ -45,7 +45,7 @@ export default function PwaInstallBanner() {
               <button
                 type="button"
                 onClick={promptInstall}
-                className="py-1.5 px-3.5 rounded-xl bg-[#0D5C35] hover:bg-[#0A4729] text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition active:scale-95 cursor-pointer"
+                className="py-1.5 px-3.5 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition active:scale-95 cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>এখনই ইনস্টল করুন</span>

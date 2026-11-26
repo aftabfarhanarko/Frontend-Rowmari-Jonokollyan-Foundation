@@ -54,7 +54,7 @@ export default function AnnouncementModal({
 
         <div className="p-6">
           <div className="mb-4">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-red-700 bg-red-50 border border-red-200 px-2.5 py-1 rounded-full">
               {lang === 'bn' ? 'শীতবস্ত্র ও জরুরি মানবিক ত্রাণ ঘোষণা' : 'Winter Relief & Humanitarian Notice'}
             </span>
             <h3 className="text-lg md:text-xl font-bold text-stone-900 mt-2">
@@ -69,10 +69,10 @@ export default function AnnouncementModal({
             </p>
           </div>
 
-          <div className="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-950 mb-5 flex items-center justify-between">
+          <div className="p-3.5 bg-red-50 rounded-xl border border-red-200 text-xs text-red-950 mb-5 flex items-center justify-between">
             <div>
               <span className="font-bold block">২৪/৭ কেন্দ্রীয় জরুরি হটলাইন ও ঠিকানা:</span>
-              <span className="font-mono font-bold text-sm text-emerald-800">+880 1712-345678</span>
+              <span className="font-mono font-bold text-sm text-red-800">+880 1712-345678</span>
               <span className="text-[11px] text-stone-600 block mt-0.5">ভোলামোড়, রৌমারী উপজেলা, রংপুর, বাংলাদেশ (৫৬৪০)</span>
             </div>
             <button
@@ -80,7 +80,7 @@ export default function AnnouncementModal({
                 onClose();
                 onOpenAssistance();
               }}
-              className="px-3 py-1.5 bg-[#0D5C35] text-white rounded-lg text-xs font-semibold hover:bg-[#094527] transition cursor-pointer"
+              className="px-3 py-1.5 bg-[#D62828] text-white rounded-lg text-xs font-semibold hover:bg-[#B91C1C] transition cursor-pointer"
             >
               {lang === 'bn' ? 'সহায়তা চান' : 'Get Help'}
             </button>
@@ -92,7 +92,7 @@ export default function AnnouncementModal({
                 onClose();
                 onOpenAssistance();
               }}
-              className="py-2.5 px-3 rounded-xl border border-emerald-700 text-emerald-800 hover:bg-emerald-50 text-xs font-semibold transition text-center"
+              className="py-2.5 px-3 rounded-xl border border-red-700 text-red-800 hover:bg-red-50 text-xs font-semibold transition text-center"
             >
               {lang === 'bn' ? 'সহায়তার আবেদন করুন' : 'Request Assistance'}
             </button>

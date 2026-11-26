@@ -90,7 +90,7 @@ export default function AssistanceModal({
         if (e.target === e.currentTarget) handleResetAndClose();
       }}
     >
-      <div className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto bg-white rounded-2xl shadow-2xl border border-emerald-100 p-6 md:p-8 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto bg-white rounded-2xl shadow-2xl border border-red-100 p-6 md:p-8 animate-in fade-in zoom-in-95 duration-200">
         <button
           onClick={handleResetAndClose}
           aria-label="Close"
@@ -101,8 +101,8 @@ export default function AssistanceModal({
 
         {generatedId ? (
           <div className="text-center py-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-[#0D5C35] rounded-full flex items-center justify-center">
-              <CheckCircle2 className="w-10 h-10 text-[#0D5C35]" />
+            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 text-[#D62828] rounded-full flex items-center justify-center">
+              <CheckCircle2 className="w-10 h-10 text-[#D62828]" />
             </div>
             <h3 className="text-2xl font-bold text-stone-900 mb-2">
               {lang === 'bn' ? 'আবেদন সফলভাবে গৃহীত হয়েছে!' : 'Application Submitted Successfully!'}
@@ -112,11 +112,11 @@ export default function AssistanceModal({
                 ? 'আপনার আবেদনটি রৌমারী জনকল্যাণ ফাউন্ডেশনের রিভিউ কমিটিতে পাঠানো হয়েছে। আপনার অনন্য ট্র্যাকিং আইডি:'
                 : 'Your assistance request has been queued for verification. Your unique tracking ID:'}
             </p>
-            <div className="p-4 bg-emerald-50 border-2 border-dashed border-[#0D5C35] rounded-xl max-w-xs mx-auto mb-6">
-              <span className="text-xs uppercase tracking-wider text-[#0D5C35] font-semibold block">
+            <div className="p-4 bg-red-50 border-2 border-dashed border-[#D62828] rounded-xl max-w-xs mx-auto mb-6">
+              <span className="text-xs uppercase tracking-wider text-[#D62828] font-semibold block">
                 {lang === 'bn' ? 'আবেদন রেফারেন্স আইডি' : 'Application Tracking ID'}
               </span>
-              <span className="text-2xl font-mono font-bold text-[#0D5C35] tracking-wider">
+              <span className="text-2xl font-mono font-bold text-[#D62828] tracking-wider">
                 {generatedId}
               </span>
             </div>
@@ -127,7 +127,7 @@ export default function AssistanceModal({
             </p>
             <button
               onClick={handleResetAndClose}
-              className="px-6 py-2.5 bg-[#0D5C35] hover:bg-[#094527] text-white rounded-xl font-medium transition shadow-md cursor-pointer"
+              className="px-6 py-2.5 bg-[#D62828] hover:bg-[#B91C1C] text-white rounded-xl font-medium transition shadow-md cursor-pointer"
             >
               {lang === 'bn' ? 'ঠিক আছে' : 'Done'}
             </button>
@@ -135,8 +135,8 @@ export default function AssistanceModal({
         ) : (
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-emerald-100 text-[#0D5C35] flex items-center justify-center">
-                <HeartHandshake className="w-6 h-6 text-[#0D5C35]" />
+              <div className="w-11 h-11 rounded-xl bg-red-100 text-[#D62828] flex items-center justify-center">
+                <HeartHandshake className="w-6 h-6 text-[#D62828]" />
               </div>
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-stone-900">
@@ -166,7 +166,7 @@ export default function AssistanceModal({
                 </label>
                 <select
                   {...register('category')}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] text-sm bg-white"
+                  className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#D62828] text-sm bg-white"
                 >
                   <option value="medical">জরুরি চিকিৎসা ও ওষুধ সহায়তা</option>
                   <option value="education">মেধাবী শিক্ষার্থীর বই বা ভর্তি ফি</option>
@@ -189,7 +189,7 @@ export default function AssistanceModal({
                     type="text"
                     {...register('fullName')}
                     placeholder={lang === 'bn' ? 'যেমন: মোহাম্মদ রহিম উদ্দিন' : 'Full Name'}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] text-sm"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#D62828] text-sm"
                   />
                   {errors.fullName && (
                     <p className="text-red-600 text-xs mt-1">{errors.fullName.message}</p>
@@ -204,7 +204,7 @@ export default function AssistanceModal({
                     type="tel"
                     {...register('phone')}
                     placeholder="01XXXXXXXXX"
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] text-sm"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#D62828] text-sm"
                   />
                   {errors.phone && (
                     <p className="text-red-600 text-xs mt-1">{errors.phone.message}</p>
@@ -219,7 +219,7 @@ export default function AssistanceModal({
                   </label>
                   <select
                     {...register('unionName')}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] text-sm bg-white"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#D62828] text-sm bg-white"
                   >
                     <option value="রৌমারী সদর">রৌমারী সদর ইউনিয়ন</option>
                     <option value="যাদুরচর">যাদুরচর ইউনিয়ন</option>
@@ -238,7 +238,7 @@ export default function AssistanceModal({
                     type="text"
                     {...register('village')}
                     placeholder={lang === 'bn' ? 'যেমন: চুলিয়ার চর, ৩ নং ওয়ার্ড' : 'e.g., Chuliar Char'}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] text-sm"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#D62828] text-sm"
                   />
                   {errors.village && (
                     <p className="text-red-600 text-xs mt-1">{errors.village.message}</p>
@@ -260,7 +260,7 @@ export default function AssistanceModal({
                       ? 'যেমন: ওষুধ ক্রয়ের জন্য ৫,০০০ টাকা অথবা ২টি কম্বল'
                       : 'e.g. 5,000 BDT for medicine or 2 blankets'
                   }
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] text-sm"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#D62828] text-sm"
                 />
               </div>
 
@@ -278,7 +278,7 @@ export default function AssistanceModal({
                       ? 'পরিবারের সদস্য সংখ্যা, আর্থিক সংকট এবং সহায়তার প্রয়োজনীয়তা সংক্ষেপে লিখুন...'
                       : 'Briefly explain your family condition, crisis and why this aid is urgent...'
                   }
-                  className="w-full px-3.5 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] text-sm"
+                  className="w-full px-3.5 py-2 rounded-xl border border-stone-300 focus:outline-hidden focus:ring-2 focus:ring-[#D62828] text-sm"
                 />
                 {errors.description && (
                   <p className="text-red-600 text-xs mt-1">{errors.description.message}</p>
@@ -307,7 +307,7 @@ export default function AssistanceModal({
                   type="checkbox"
                   id="consent"
                   {...register('agreeConsent')}
-                  className="mt-0.5 rounded text-[#0D5C35] focus:ring-[#0D5C35]"
+                  className="mt-0.5 rounded text-[#D62828] focus:ring-[#D62828]"
                 />
                 <label htmlFor="consent" className="text-xs text-stone-600">
                   {lang === 'bn'
@@ -330,7 +330,7 @@ export default function AssistanceModal({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-6 py-2.5 rounded-xl bg-[#0D5C35] hover:bg-[#094527] disabled:opacity-50 text-white font-medium text-sm transition shadow-md flex items-center gap-2 cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] disabled:opacity-50 text-white font-medium text-sm transition shadow-md flex items-center gap-2 cursor-pointer"
                 >
                   {isSubmitting ? (
                     <span>{lang === 'bn' ? 'প্রক্রিয়াধীন...' : 'Submitting...'}</span>

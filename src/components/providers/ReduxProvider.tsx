@@ -29,7 +29,7 @@ export default function ReduxProvider({
         theme="light"
         icons={{
           success: (
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"

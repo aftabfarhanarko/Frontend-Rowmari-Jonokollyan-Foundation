@@ -77,9 +77,9 @@ export default function PrivacyPolicyPage() {
 
       <main className="flex-1 pb-20 sm:pb-24">
         {/* Header Hero Banner */}
-        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-emerald-50/50 via-white to-white">
+        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-red-50/50 via-white to-white">
           <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl" />
+            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-red-400/20 blur-3xl" />
             <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
           </div>
 
@@ -90,8 +90,8 @@ export default function PrivacyPolicyPage() {
               transition={{ duration: 0.5 }}
               className="max-w-3xl"
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0D5C35] text-xs font-bold mb-3 shadow-2xs">
-                <Lock className="w-3.5 h-3.5 text-[#0D5C35]" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
+                <Lock className="w-3.5 h-3.5 text-[#D62828]" />
                 <span>{t('আইনগত কমপ্লায়েন্স ও ডেটা সুরক্ষা নীতিমালা', 'Legal Compliance & Data Protection Policy')}</span>
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
@@ -120,7 +120,7 @@ export default function PrivacyPolicyPage() {
                 className={`${glassCard} p-6 sm:p-7 space-y-2`}
               >
                 <div className="flex items-center gap-3">
-                  <span className="w-7 h-7 rounded-full bg-[#0D5C35] text-white flex items-center justify-center font-bold text-xs shrink-0">
+                  <span className="w-7 h-7 rounded-full bg-[#D62828] text-white flex items-center justify-center font-bold text-xs shrink-0">
                     {s.num}
                   </span>
                   <h2 className="text-base sm:text-lg font-bold text-stone-900 leading-snug">
@@ -137,7 +137,7 @@ export default function PrivacyPolicyPage() {
           {/* Contact Privacy Desk */}
           <div className="mt-10 p-6 sm:p-8 rounded-3xl bg-white border border-stone-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-5">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-[#0D5C35] flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-2xl bg-red-50 text-[#D62828] flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-7 h-7" />
               </div>
               <div>
@@ -147,7 +147,7 @@ export default function PrivacyPolicyPage() {
             </div>
             <Link
               href="/contact"
-              className="px-6 py-2.5 rounded-full bg-[#0D5C35] hover:bg-[#094527] text-white text-xs sm:text-sm font-bold transition shrink-0"
+              className="px-6 py-2.5 rounded-full bg-[#D62828] hover:bg-[#B91C1C] text-white text-xs sm:text-sm font-bold transition shrink-0"
             >
               {t('যোগাযোগ করুন', 'Contact Privacy Desk')}
             </Link>

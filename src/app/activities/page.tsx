@@ -63,9 +63,9 @@ export default function ActivitiesPage() {
 
       <main className="flex-1 pb-20 sm:pb-24">
         {/* Header Hero Banner */}
-        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-emerald-50/50 via-white to-white">
+        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-red-50/50 via-white to-white">
           <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-emerald-300/30 blur-3xl" />
+            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-red-300/30 blur-3xl" />
             <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
           </div>
 
@@ -76,8 +76,8 @@ export default function ActivitiesPage() {
               transition={{ duration: 0.5 }}
               className="max-w-3xl"
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0D5C35] text-xs font-bold mb-3 shadow-2xs">
-                <Sparkles className="w-3.5 h-3.5 text-[#0D5C35]" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-[#D62828]" />
                 <span>{t('মাঠপর্যায়ের মানবিক কার্যক্রম ও ফটো আর্কাইভ', 'Live Fieldwork Archive & Impact')}</span>
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
@@ -101,7 +101,7 @@ export default function ActivitiesPage() {
                     onClick={() => setActiveCategory(c.key)}
                     className={`px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                       activeCategory === c.key
-                        ? 'bg-[#0D5C35] text-white shadow-md'
+                        ? 'bg-[#D62828] text-white shadow-md'
                         : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
                     }`}
                   >
@@ -118,7 +118,7 @@ export default function ActivitiesPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t('কার্যক্রম বা চরের নাম খুঁজুন...', 'Search activity or location...')}
-                  className="w-full pl-10 pr-4 py-2 rounded-xl bg-white border border-stone-200 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 shadow-2xs"
+                  className="w-full pl-10 pr-4 py-2 rounded-xl bg-white border border-stone-200 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 shadow-2xs"
                 />
               </div>
             </div>
@@ -130,7 +130,7 @@ export default function ActivitiesPage() {
           <div className="flex items-center justify-between text-xs sm:text-sm text-stone-500 mb-6 font-medium">
             <span>{isLoading ? t('লোড হচ্ছে…', 'Loading…') : t(`${filteredActivities.length} টি কার্যক্রম প্রদর্শিত হচ্ছে`, `Showing ${filteredActivities.length} activities`)}</span>
             {isError ? <span role="alert" className="text-red-700">{t('কার্যক্রম লোড করা যায়নি।', 'Activities could not be loaded.')}</span> : null}
-            <div className="flex items-center gap-1.5 text-[#0D5C35] font-bold">
+            <div className="flex items-center gap-1.5 text-[#D62828] font-bold">
               <ShieldCheck className="w-4 h-4" />
               <span>{t('১০০% যাচাইকৃত মাঠপর্যায়ের কাজ', '100% On-ground Verified')}</span>
             </div>
@@ -160,7 +160,7 @@ export default function ActivitiesPage() {
                     
                     {/* Category Tag */}
                     <div className="absolute top-3 left-3 z-10">
-                      <span className="px-2.5 py-1 rounded-md text-[11px] font-bold text-white bg-[#0D5C35] shadow-md backdrop-blur-md">
+                      <span className="px-2.5 py-1 rounded-md text-[11px] font-bold text-white bg-[#D62828] shadow-md backdrop-blur-md">
                         {act.category === 'winter' ? t('শীতবস্ত্র', 'Winter') :
                          act.category === 'medical' ? t('চিকিৎসা', 'Medical') :
                          act.category === 'education' ? t('শিক্ষা', 'Education') :
@@ -170,7 +170,7 @@ export default function ActivitiesPage() {
 
                     <div className="absolute bottom-3 left-3 right-3 text-white text-xs flex items-center justify-between">
                       <span className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/20">
-                        <MapPin className="w-3 h-3 text-emerald-400 shrink-0" />
+                        <MapPin className="w-3 h-3 text-red-400 shrink-0" />
                         <span className="truncate max-w-[150px]">{t(act.locationBn, act.locationEn)}</span>
                       </span>
                       <span className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/20">
@@ -181,7 +181,7 @@ export default function ActivitiesPage() {
                   </div>
 
                   <div className="p-5 sm:p-6">
-                    <h2 className="text-base sm:text-lg font-bold text-stone-900 group-hover:text-[#0D5C35] transition-colors line-clamp-2 leading-snug mb-2">
+                    <h2 className="text-base sm:text-lg font-bold text-stone-900 group-hover:text-[#D62828] transition-colors line-clamp-2 leading-snug mb-2">
                       {t(act.titleBn, act.titleEn)}
                     </h2>
                     <p className="text-xs sm:text-sm text-stone-600 line-clamp-3 leading-relaxed mb-4">
@@ -190,7 +190,7 @@ export default function ActivitiesPage() {
                   </div>
                 </div>
 
-                <div className="px-5 sm:px-6 pb-5 pt-3 border-t border-stone-200/70 flex items-center justify-between text-xs font-bold text-[#0D5C35]">
+                <div className="px-5 sm:px-6 pb-5 pt-3 border-t border-stone-200/70 flex items-center justify-between text-xs font-bold text-[#D62828]">
                   <span>{t('বিস্তারিত ছবি ও তথ্য দেখুন', 'View Details & Gallery')}</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -204,7 +204,7 @@ export default function ActivitiesPage() {
               <p className="text-xs text-stone-500 mb-4">{t('অন্য ক্যাটাগরি নির্বাচন করুন অথবা নতুন শব্দ দিয়ে খুঁজুন।', 'Try selecting another category or clear the search input.')}</p>
               <button
                 onClick={() => { setActiveCategory('all'); setSearchQuery(''); }}
-                className="px-4 py-2 rounded-full bg-[#0D5C35] text-white text-xs font-bold cursor-pointer"
+                className="px-4 py-2 rounded-full bg-[#D62828] text-white text-xs font-bold cursor-pointer"
               >
                 {t('সকল কার্যক্রম দেখুন', 'Reset Filter')}
               </button>
@@ -239,7 +239,7 @@ export default function ActivitiesPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <span className="text-xs font-bold bg-[#0D5C35] px-2.5 py-1 rounded-md inline-block mb-1.5">
+                  <span className="text-xs font-bold bg-[#D62828] px-2.5 py-1 rounded-md inline-block mb-1.5">
                     {t(selectedActivity.locationBn, selectedActivity.locationEn)}
                   </span>
                   <h2 className="text-lg sm:text-2xl font-black leading-tight drop-shadow-md">
@@ -251,7 +251,7 @@ export default function ActivitiesPage() {
               <div className="p-6 overflow-y-auto space-y-4">
                 <div className="flex items-center gap-4 text-xs text-stone-500 font-medium">
                   <span className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4 text-emerald-700" />
+                    <Calendar className="w-4 h-4 text-red-700" />
                     <span>{t(selectedActivity.dateBn, selectedActivity.dateEn)}</span>
                   </span>
                   <span className="flex items-center gap-1">
@@ -264,7 +264,7 @@ export default function ActivitiesPage() {
                   {t(selectedActivity.descriptionBn, selectedActivity.descriptionEn)}
                 </p>
 
-                <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200/70 text-xs text-[#0D5C35] font-medium leading-relaxed">
+                <div className="p-4 rounded-2xl bg-red-50 border border-red-200/70 text-xs text-[#D62828] font-medium leading-relaxed">
                   {t(
                     'এই কার্যক্রমটি রৌমারী জনকল্যাণ ফাউন্ডেশনের স্বেচ্ছাসেবকদের সরাসরি অংশগ্রহণে শতভাগ স্বচ্ছতার সাথে সম্পন্ন হয়েছে।',
                     'This field initiative was directly executed with zero overhead by registered RJF humanitarian volunteers.'
@@ -277,7 +277,7 @@ export default function ActivitiesPage() {
                       setSelectedActivity(null);
                       setAssistanceModalOpen(true);
                     }}
-                    className="w-full py-3 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center shadow-md"
+                    className="w-full py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center shadow-md"
                   >
                     {t('সহায়তার আবেদন করুন', 'Request Help in Area')}
                   </button>

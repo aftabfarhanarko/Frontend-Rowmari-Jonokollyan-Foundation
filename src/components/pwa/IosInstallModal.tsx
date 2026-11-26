@@ -88,12 +88,12 @@ export default function IosInstallModal() {
             </div>
 
             <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-stone-50 border border-stone-200/80">
-              <div className="w-8 h-8 rounded-xl bg-emerald-100 text-[#0D5C35] flex items-center justify-center shrink-0 font-bold text-xs">
+              <div className="w-8 h-8 rounded-xl bg-red-100 text-[#D62828] flex items-center justify-center shrink-0 font-bold text-xs">
                 ৩
               </div>
               <div className="text-xs sm:text-sm text-stone-700 leading-relaxed">
                 ওপরের ডান কোণে{' '}
-                <span className="font-bold text-[#0D5C35] bg-emerald-50 px-1.5 py-0.5 rounded-md">
+                <span className="font-bold text-[#D62828] bg-red-50 px-1.5 py-0.5 rounded-md">
                   Add (যোগ করুন)
                 </span>{' '}
                 ট্যাপ করলেই RJF অ্যাপ আপনার হোম স্ক্রিনে যুক্ত হয়ে যাবে।
@@ -106,7 +106,7 @@ export default function IosInstallModal() {
             <button
               type="button"
               onClick={() => setIosModalOpen(false)}
-              className="w-full py-3 rounded-xl bg-[#0D5C35] hover:bg-[#0A4729] text-white font-bold text-sm transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-sm transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
             >
               <CheckCircle2 className="w-4 h-4" />
               <span>বুঝেছি, ধন্যবাদ</span>

@@ -48,7 +48,7 @@ export default function VolunteerPage() {
       titleEn: 'Field Relief & Logistics Team',
       descBn: 'দুর্গম চরাঞ্চলে বাড়ি বাড়ি গিয়ে প্রকৃত দুস্থ পরিবার যাচাই, শীতবস্ত্র প্যাকিং ও সরাসরি বিতরণ পরিচালনা।',
       descEn: 'Surveying remote char households, packing winter clothes/relief kits, and executing direct distributions.',
-      color: 'bg-emerald-100 text-[#0D5C35]',
+      color: 'bg-red-100 text-[#D62828]',
     },
     {
       icon: FileText,
@@ -99,9 +99,9 @@ export default function VolunteerPage() {
 
       <main className="flex-1 pb-20 sm:pb-24">
         {/* Header Hero Banner */}
-        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-emerald-50/50 via-white to-white">
+        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-red-50/50 via-white to-white">
           <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl" />
+            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-red-400/20 blur-3xl" />
             <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
           </div>
 
@@ -112,8 +112,8 @@ export default function VolunteerPage() {
               transition={{ duration: 0.5 }}
               className="max-w-3xl"
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0D5C35] text-xs font-bold mb-3 shadow-2xs">
-                <Users className="w-3.5 h-3.5 text-[#0D5C35]" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
+                <Users className="w-3.5 h-3.5 text-[#D62828]" />
                 <span>{t('স্বেচ্ছাসেবী নেটওয়ার্ক • মানবতার কল্যাণে তারুণ্য', 'Volunteer Network • Youth for Humanity')}</span>
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
@@ -130,7 +130,7 @@ export default function VolunteerPage() {
             <div className="mt-6 flex flex-wrap gap-3">
               <button
                 onClick={() => setModalOpen(true)}
-                className="px-8 py-3.5 rounded-full bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs sm:text-sm shadow-xl shadow-emerald-950/20 transition cursor-pointer flex items-center gap-2"
+                className="px-8 py-3.5 rounded-full bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm shadow-xl shadow-red-950/20 transition cursor-pointer flex items-center gap-2"
               >
                 <span>{t('স্বেচ্ছাসেবক হিসেবে নিবন্ধন করুন', 'Apply as Volunteer Now')}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -185,7 +185,7 @@ export default function VolunteerPage() {
 
                   <button
                     onClick={() => setModalOpen(true)}
-                    className="text-xs font-bold text-[#0D5C35] hover:text-[#E53935] transition inline-flex items-center gap-1.5 cursor-pointer self-start"
+                    className="text-xs font-bold text-[#D62828] hover:text-[#E53935] transition inline-flex items-center gap-1.5 cursor-pointer self-start"
                   >
                     <span>{t('এই উইংয়ে যোগ দিন', 'Join this Wing')}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -206,7 +206,7 @@ export default function VolunteerPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
             {benefits.map((b, idx) => (
               <div key={idx} className={`${glassCardHover} p-6 sm:p-7 space-y-3`}>
-                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-[#0D5C35] flex items-center justify-center font-bold">
+                <div className="w-10 h-10 rounded-xl bg-red-100 text-[#D62828] flex items-center justify-center font-bold">
                   <CheckCircle2 className="w-5 h-5" />
                 </div>
                 <h2 className="text-base sm:text-lg font-bold text-stone-900">{t(b.titleBn, b.titleEn)}</h2>
@@ -218,18 +218,18 @@ export default function VolunteerPage() {
 
         {/* Callout */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl bg-gradient-to-br from-[#0D5C35] via-[#094828] to-stone-950 p-6 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="rounded-3xl bg-gradient-to-br from-[#D62828] via-[#B91C1C] to-stone-950 p-6 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2 max-w-xl text-center md:text-left">
               <h2 className="text-xl sm:text-2xl font-black">
                 {t('আজই রৌমারী জনকল্যাণ ফাউন্ডেশনের পরিবারে যুক্ত হোন', 'Ready to Make a Real Difference in River Chars?')}
               </h2>
-              <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed">
+              <p className="text-xs sm:text-sm text-red-100/90 leading-relaxed">
                 {t('একটি সহজ অনলাইন ফরম পূরণের মাধ্যমে আপনার আগ্রহ প্রকাশ করুন। আমাদের সমন্বয়ক আপনার সাথে যোগাযোগ করবেন।', 'Complete a quick online registration. Our volunteer desk will connect with you.')}
               </p>
             </div>
             <button
               onClick={() => setModalOpen(true)}
-              className="px-8 py-3.5 rounded-full bg-white text-[#0D5C35] font-bold text-xs sm:text-sm hover:bg-emerald-50 transition shadow-lg cursor-pointer shrink-0"
+              className="px-8 py-3.5 rounded-full bg-white text-[#D62828] font-bold text-xs sm:text-sm hover:bg-red-50 transition shadow-lg cursor-pointer shrink-0"
             >
               {t('অনলাইন ফরম পূরণ করুন', 'Open Application Form')}
             </button>

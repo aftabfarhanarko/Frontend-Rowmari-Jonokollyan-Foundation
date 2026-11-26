@@ -32,10 +32,10 @@ export default function PwaInstallButton({
       <button
         type="button"
         onClick={promptInstall}
-        className={`px-3 py-1.5 rounded-full border border-emerald-600/30 bg-emerald-50 hover:bg-emerald-100 text-[#0D5C35] text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95 ${className}`}
+        className={`px-3 py-1.5 rounded-full border border-red-600/30 bg-red-50 hover:bg-red-100 text-[#D62828] text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95 ${className}`}
         title={lang === 'bn' ? 'অ্যাপ ইনস্টল করুন' : 'Install App'}
       >
-        <Download className="w-3.5 h-3.5 text-[#0D5C35]" />
+        <Download className="w-3.5 h-3.5 text-[#D62828]" />
         <span>{lang === 'bn' ? 'অ্যাপ ইনস্টল' : 'Install App'}</span>
       </button>
     );
@@ -46,9 +46,9 @@ export default function PwaInstallButton({
       <button
         type="button"
         onClick={promptInstall}
-        className={`w-full py-3 px-4 rounded-xl border border-emerald-600/30 bg-emerald-50 hover:bg-emerald-100 text-[#0D5C35] font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-xs transition active:scale-[0.99] text-center cursor-pointer ${className}`}
+        className={`w-full py-3 px-4 rounded-xl border border-red-600/30 bg-red-50 hover:bg-red-100 text-[#D62828] font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-xs transition active:scale-[0.99] text-center cursor-pointer ${className}`}
       >
-        <Smartphone className="w-5 h-5 text-[#0D5C35]" />
+        <Smartphone className="w-5 h-5 text-[#D62828]" />
         <span>{lang === 'bn' ? 'RJF অ্যাপ ইনস্টল করুন' : 'Install RJF App'}</span>
       </button>
     );
@@ -58,7 +58,7 @@ export default function PwaInstallButton({
     <button
       type="button"
       onClick={promptInstall}
-      className={`py-2 px-4 rounded-xl bg-[#0D5C35] hover:bg-[#0A4729] text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md transition cursor-pointer active:scale-95 ${className}`}
+      className={`py-2 px-4 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md transition cursor-pointer active:scale-95 ${className}`}
     >
       <Download className="w-4 h-4 text-white" />
       <span>{lang === 'bn' ? 'অ্যাপ ইনস্টল করুন' : 'Install App'}</span>

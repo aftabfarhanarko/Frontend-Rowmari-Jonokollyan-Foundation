@@ -79,8 +79,8 @@ export default function VolunteerModal({
 
         {isSuccess ? (
           <div className="text-center py-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-[#0D5C35] rounded-full flex items-center justify-center">
-              <CheckCircle2 className="w-10 h-10 text-[#0D5C35]" />
+            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 text-[#D62828] rounded-full flex items-center justify-center">
+              <CheckCircle2 className="w-10 h-10 text-[#D62828]" />
             </div>
             <h3 className="text-2xl font-bold text-stone-900 mb-2">
               {lang === 'bn' ? 'স্বেচ্ছাসেবক আবেদন সফল!' : 'Volunteer Application Received!'}
@@ -92,7 +92,7 @@ export default function VolunteerModal({
             </p>
             <button
               onClick={handleClose}
-              className="px-6 py-2.5 bg-[#0D5C35] hover:bg-[#094527] text-white rounded-xl font-bold transition shadow-md cursor-pointer"
+              className="px-6 py-2.5 bg-[#D62828] hover:bg-[#B91C1C] text-white rounded-xl font-bold transition shadow-md cursor-pointer"
             >
               {lang === 'bn' ? 'ঠিক আছে' : 'Done'}
             </button>
@@ -100,8 +100,8 @@ export default function VolunteerModal({
         ) : (
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-emerald-100 text-[#0D5C35] flex items-center justify-center">
-                <Users className="w-6 h-6 text-[#0D5C35]" />
+              <div className="w-11 h-11 rounded-xl bg-red-100 text-[#D62828] flex items-center justify-center">
+                <Users className="w-6 h-6 text-[#D62828]" />
               </div>
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-stone-900">
@@ -124,7 +124,7 @@ export default function VolunteerModal({
                   type="text"
                   {...register('name')}
                   placeholder={lang === 'bn' ? 'পুরো নাম' : 'Name'}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35]"
+                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828]"
                 />
                 {errors.name && (
                   <p className="text-red-600 text-xs mt-1">{errors.name.message}</p>
@@ -140,7 +140,7 @@ export default function VolunteerModal({
                     type="tel"
                     {...register('phone')}
                     placeholder="01XXXXXXXXX"
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35]"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828]"
                   />
                   {errors.phone && (
                     <p className="text-red-600 text-xs mt-1">{errors.phone.message}</p>
@@ -156,7 +156,7 @@ export default function VolunteerModal({
                     min="16"
                     max="70"
                     {...register('age', { valueAsNumber: true })}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35]"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828]"
                   />
                   {errors.age && (
                     <p className="text-red-600 text-xs mt-1">{errors.age.message}</p>
@@ -173,7 +173,7 @@ export default function VolunteerModal({
                     type="text"
                     {...register('profession')}
                     placeholder={lang === 'bn' ? 'যেমন: শিক্ষার্থী / শিক্ষক' : 'e.g. Student'}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35]"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828]"
                   />
                 </div>
 
@@ -183,7 +183,7 @@ export default function VolunteerModal({
                   </label>
                   <select
                     {...register('preferredWing')}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] bg-white"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828] bg-white"
                   >
                     <option value="relief">ত্রাণ ও শীতবস্ত্র বিতরণ</option>
                     <option value="medical">মেডিকেল ক্যাম্প সহায়তা</option>
@@ -201,7 +201,7 @@ export default function VolunteerModal({
                 </label>
                 <select
                   {...register('availability')}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35] bg-white"
+                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828] bg-white"
                 >
                   <option value="weekends">শুধু ছুটির দিনে (শুক্রবার/শনিবার)</option>
                   <option value="weekdays">সপ্তাহের কাজের দিনে</option>
@@ -218,7 +218,7 @@ export default function VolunteerModal({
                   rows={2}
                   {...register('motivation')}
                   placeholder={lang === 'bn' ? 'সংক্ষেপে লিখুন...' : 'Brief note...'}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0D5C35]"
+                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828]"
                 />
               </div>
 
@@ -233,7 +233,7 @@ export default function VolunteerModal({
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-6 py-2.5 rounded-xl bg-[#0D5C35] hover:bg-[#094527] disabled:opacity-50 text-white font-semibold text-sm transition shadow-md cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] disabled:opacity-50 text-white font-semibold text-sm transition shadow-md cursor-pointer"
                 >
                   {submitting
                     ? (lang === 'bn' ? 'জমা হচ্ছে...' : 'Submitting...')

@@ -43,7 +43,7 @@ export default function GetHelpPage() {
       descBn: 'অপারেশন, জটিল হৃদরোগ, থ্যালাসেমিয়া ও নিয়মিত ওষুধ ক্রয়ে আর্থিক সহায়তা।',
       descEn: 'Surgery grants, thalassemia treatment, and regular critical medicine supplies.',
       icon: HeartHandshake,
-      color: 'bg-emerald-100 text-[#0D5C35]'
+      color: 'bg-red-100 text-[#D62828]'
     },
     { 
       key: 'winter', 
@@ -92,9 +92,9 @@ export default function GetHelpPage() {
 
       <main className="flex-1 pb-20 sm:pb-24">
         {/* Header Hero Banner */}
-        <section className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16 bg-gradient-to-b from-emerald-50/50 via-white to-white">
+        <section className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16 bg-gradient-to-b from-red-50/50 via-white to-white">
           <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-24 -left-24 h-80 w-80 rounded-full bg-emerald-400/20 blur-3xl" />
+            <div className="absolute -top-24 -left-24 h-80 w-80 rounded-full bg-red-400/20 blur-3xl" />
             <div className="absolute top-1/2 -right-24 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
           </div>
 
@@ -105,8 +105,8 @@ export default function GetHelpPage() {
               transition={{ duration: 0.5 }}
               className="max-w-3xl"
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0D5C35] text-xs font-bold mb-3 shadow-2xs">
-                <FileCheck className="w-3.5 h-3.5 text-[#0D5C35]" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
+                <FileCheck className="w-3.5 h-3.5 text-[#D62828]" />
                 <span>{t('সহায়তা আবেদন ও লাইভ স্ট্যাটাস ট্র্যাকিং পোর্টাল', 'Assistance Application & Tracking Portal')}</span>
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
@@ -135,12 +135,12 @@ export default function GetHelpPage() {
                     value={trackingInput}
                     onChange={(e) => setTrackingInput(e.target.value)}
                     placeholder={t('আপনার ট্র্যাকিং আইডি লিখুন (উদাঃ RJF-2026-MED-101)...', 'Enter your tracking ID (e.g. RJF-2026-MED-101)...')}
-                    className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 text-xs sm:text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-[#0D5C35]"
+                    className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 text-xs sm:text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-[#D62828]"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="px-7 py-3.5 rounded-2xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs sm:text-sm shadow-md transition cursor-pointer flex items-center justify-center gap-2"
+                  className="px-7 py-3.5 rounded-2xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm shadow-md transition cursor-pointer flex items-center justify-center gap-2"
                 >
                   <span>{t('অবস্থা দেখুন', 'Track Status')}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -174,7 +174,7 @@ export default function GetHelpPage() {
 
                   <button
                     onClick={() => setAssistanceModalOpen(true)}
-                    className="w-full py-3 rounded-xl bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-xs"
+                    className="w-full py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-xs"
                   >
                     <span>{t('এই সহায়তার জন্য আবেদন করুন', 'Apply for this Assistance')}</span>
                     <ArrowRight className="w-4 h-4" />
@@ -188,8 +188,8 @@ export default function GetHelpPage() {
         {/* Eligibility & Verification Criteria */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
           <div className="rounded-3xl bg-white border border-stone-200 p-6 sm:p-10 shadow-lg">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0D5C35] mb-2">
-              <ShieldCheck className="w-4 h-4 text-[#0D5C35]" />
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#D62828] mb-2">
+              <ShieldCheck className="w-4 h-4 text-[#D62828]" />
               <span>{t('আবেদনের যোগ্যতা ও যাচাই নীতি', 'Eligibility & Verification Policy')}</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-stone-900 mb-6">
@@ -199,7 +199,7 @@ export default function GetHelpPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs sm:text-sm text-stone-600">
               <div className="space-y-2">
                 <div className="font-bold text-stone-900 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#0D5C35]" />
+                  <CheckCircle2 className="w-4 h-4 text-[#D62828]" />
                   <span>{t('কারা আবেদন করবেন?', 'Who is Eligible?')}</span>
                 </div>
                 <p className="leading-relaxed">
@@ -209,7 +209,7 @@ export default function GetHelpPage() {
 
               <div className="space-y-2">
                 <div className="font-bold text-stone-900 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#0D5C35]" />
+                  <CheckCircle2 className="w-4 h-4 text-[#D62828]" />
                   <span>{t('প্রয়োজনীয় কাগজপত্র', 'Required Documents')}</span>
                 </div>
                 <p className="leading-relaxed">
@@ -219,7 +219,7 @@ export default function GetHelpPage() {
 
               <div className="space-y-2">
                 <div className="font-bold text-stone-900 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#0D5C35]" />
+                  <CheckCircle2 className="w-4 h-4 text-[#D62828]" />
                   <span>{t('যাচাই ও সিদ্ধান্ত', 'Verification Timeline')}</span>
                 </div>
                 <p className="leading-relaxed">
