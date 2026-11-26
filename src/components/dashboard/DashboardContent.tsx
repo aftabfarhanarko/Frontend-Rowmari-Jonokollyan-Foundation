@@ -47,6 +47,7 @@ import {
   Mail,
   Camera,
   Upload,
+  Bell,
 } from "lucide-react"
 import {
   useGetExecutiveDashboardQuery,
@@ -181,14 +182,19 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
   const [selectedStatus, setSelectedStatus] = useState<string>("ACTIVE")
 
   const { data: myAppsRes } = useGetMyApplicationsQuery(undefined, {
-    skip: currentRole === "COMMUNITY_MEMBER",
+    skip: !currentUser,
   })
   const myAppItems = Array.isArray(myAppsRes) ? myAppsRes : (myAppsRes as any)?.items || []
 
   const { data: myDonationsRes } = useGetMyDonationsQuery(undefined, {
-    skip: currentRole === "COMMUNITY_MEMBER",
+    skip: !currentUser,
   })
   const myDonationItems = Array.isArray(myDonationsRes) ? myDonationsRes : (myDonationsRes as any)?.items || []
+
+  const { data: adminNotificationsRes } = useGetAdminNotificationsQuery(undefined, {
+    skip: !isStaff,
+  })
+  const notificationItems = Array.isArray(adminNotificationsRes) ? adminNotificationsRes : (adminNotificationsRes as any)?.items || []
 
   // Mutations
   const [approveVolunteerMutation] = useApproveVolunteerMutation()
@@ -227,431 +233,124 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
     }
   }
 
-  // --- 2. Medical Aid Applications (API: /api/assistance) ---
-  const [medicalData] = useState([
-    {
-      id: "RJF-2026-8492",
-      applicant: "আব্দুল কুদ্দুস",
-      condition: "হৃদরোগ চিকিৎসা ও বাইপাস সহায়তা",
-      amountNeeded: 25000,
-      approvedAmount: 15000,
-      assignedOfficer: "তানভীর আহমেদ",
-      status: "যাচাই সম্পন্ন",
-      union: "রৌমারী সদর",
-      date: "২২ নভেম্বর ২০২৪",
-    },
-    {
-      id: "RJF-2026-8493",
-      applicant: "মরিয়ম আক্তার",
-      condition: "থ্যালাসেমিয়া রোগীর নিয়মিত রক্ত ও ইনজেকশন",
-      amountNeeded: 10000,
-      approvedAmount: 10000,
-      assignedOfficer: "ডাঃ সুমাইয়া",
-      status: "অনুমোদিত",
-      union: "যাদুরচর",
-      date: "২১ নভেম্বর ২০২৪",
-    },
-    {
-      id: "RJF-2026-8494",
-      applicant: "জহিরুল ইসলাম",
-      condition: "বন্যাজনিত দুর্ঘটনায় ভাঙা পায়ের অস্ত্রোপচার",
-      amountNeeded: 18000,
-      approvedAmount: 0,
-      assignedOfficer: "অপেক্ষমাণ",
-      status: "তদন্তাধীন",
-      union: "দাঁতভাঙ্গা",
-      date: "২০ নভেম্বর ২০২৪",
-    },
-  ])
-
-  // --- 3. Education Scholarships (API: /api/assistance - category: education) ---
-  const [educationData] = useState([
-    {
-      id: "RJF-2026-301",
-      studentName: "ফাতিমা তুজ জোহরা",
-      institute: "রৌমারী মহিলা কলেজ",
-      grade: "এইচএসসি ১ম বর্ষ",
-      supportType: "মাসিক উপবৃত্তি ও বইপত্র",
-      amount: 1500,
-      status: "অনুমোদিত",
-      union: "রৌমারী সদর",
-    },
-    {
-      id: "RJF-2026-302",
-      studentName: "মো: মেহেদী হাসান",
-      institute: "যাদুরচর উচ্চ বিদ্যালয়",
-      grade: "১০ম শ্রেণি",
-      supportType: "পরীক্ষার ফি ও গাইড বই",
-      amount: 2000,
-      status: "অনুমোদিত",
-      union: "যাদুরচর",
-    },
-    {
-      id: "RJF-2026-303",
-      studentName: "নূরে জান্নাত",
-      institute: "শৌলমারী মাদ্রাসা",
-      grade: "৮ম শ্রেণি",
-      supportType: "পোশাক ও শিক্ষাসামগ্রী",
-      amount: 1200,
-      status: "অপেক্ষমাণ",
-      union: "শৌলমারী",
-    },
-  ])
-
-  // --- 4. Volunteers Data (API: /api/volunteer) ---
-  const [volunteersData] = useState([
-    {
-      id: "VOL-101",
-      name: "নাজমুল হক",
-      wing: "ব্লাড ডোনেশন উইং",
-      union: "রৌমারী সদর",
-      phone: "01723-998877",
-      joinDate: "জানুয়ারি ২০২৪",
-      status: "সক্রিয়",
-    },
-    {
-      id: "VOL-102",
-      name: "তানিয়া সুলতানা",
-      wing: "শিক্ষা ও প্রশিক্ষণ উইং",
-      union: "যাদুরচর",
-      phone: "01834-887766",
-      joinDate: "মার্চ ২০২৪",
-      status: "সক্রিয়",
-    },
-    {
-      id: "VOL-103",
-      name: "শামীম রেজা",
-      wing: "দুর্যোগ ও ত্রাণ উইং",
-      union: "দাঁতভাঙ্গা",
-      phone: "01945-776655",
-      joinDate: "আগস্ট ২০২৪",
-      status: "অন ডিউটি",
-    },
-  ])
-
-  // --- 5. Field Cases Data (API: /api/assistance & /api/track/[id]) ---
-  const [casesData] = useState([
-    {
-      caseId: "CASE-081",
-      applicationId: "RJF-2026-8494",
-      applicant: "জহিরুল ইসলাম",
-      union: "দাঁতভাঙ্গা",
-      village: "চর গয়াপাড়া",
-      category: "চিকিৎসা সহায়তা",
-      caseWorker: "মো: সাইদুর রহমান",
-      visitStatus: "মাঠ পরিদর্শন সম্পন্ন",
-      recommendation: "অনুমোদনের সুপারিশ (৳১৫,০০০)",
-      priority: "উচ্চ",
-    },
-    {
-      caseId: "CASE-082",
-      applicationId: "RJF-2026-8495",
-      applicant: "আনোয়ারা বেগম",
-      union: "বন্দবেড়",
-      village: "কুটিরচর",
-      category: "খাদ্য ও পুনর্বাসন",
-      caseWorker: "হাসিবুল ইসলাম",
-      visitStatus: "তদন্তাধীন",
-      recommendation: "পরিবার যাচাই অপেক্ষমাণ",
-      priority: "জরুরি",
-    },
-    {
-      caseId: "CASE-083",
-      applicationId: "RJF-2026-8492",
-      applicant: "আব্দুল কুদ্দুস",
-      union: "রৌমারী সদর",
-      village: "মির্জাপাড়া",
-      category: "চিকিৎসা সহায়তা",
-      caseWorker: "তানভীর আহমেদ",
-      visitStatus: "অনুমোদিত ও বিতরণযোগ্য",
-      recommendation: "যাচাই সত্য, জরুরি চিকিৎসা প্রয়োজন",
-      priority: "উচ্চ",
-    },
-  ])
-
-  // --- 6. Finance Transactions (API: /api/donate) ---
-  const [financeData] = useState([
-    {
-      id: "TRX-5501",
-      receiptNo: "RJF-REC-78219",
-      donor: "ইকবাল মাহমুদ",
-      campaign: "শীতবস্ত্র বিতরণ ২০২৪",
-      amount: 5000,
-      channel: "bKash",
-      date: "২৪ নভেম্বর ২০২৪",
-      status: "সফল",
-    },
-    {
-      id: "TRX-5502",
-      receiptNo: "RJF-REC-78220",
-      donor: "ড. শরিফুল হক (প্রবাসী)",
-      campaign: "সাধারণ তহবিল",
-      amount: 25000,
-      channel: "Bank Transfer",
-      date: "২৩ নভেম্বর ২০২৪",
-      status: "সফল",
-    },
-    {
-      id: "TRX-5503",
-      receiptNo: "RJF-REC-78221",
-      donor: "বেনামী শুভাকাঙ্ক্ষী",
-      campaign: "জরুরি চিকিৎসা সহায়তা",
-      amount: 2000,
-      channel: "Nagad",
-      date: "২২ নভেম্বর ২০২৪",
-      status: "সফল",
-    },
-  ])
-
-  // --- 7. Campaigns & Content (API: /api/campaigns & /api/news) ---
-  const [campaignsList] = useState([
-    {
-      id: "cmp-winter-2024",
-      titleBn: "শীতবস্ত্র বিতরণ ও কম্বল সহায়তা ২০২৪",
-      target: 100000,
-      raised: 75000,
-      donors: 85,
-      deadlineBn: "৩১ ডিসেম্বর ২০২৪",
-      status: "চলমান",
-    },
-    {
-      id: "cmp-medical-emergency",
-      titleBn: "অসহায় রোগীর জরুরি চিকিৎসা তহবিল",
-      target: 200000,
-      raised: 145000,
-      donors: 120,
-      deadlineBn: "চলমান তহবিল",
-      status: "চলমান",
-    },
-    {
-      id: "cmp-education-aid",
-      titleBn: "মেধাবী শিক্ষার্থী শিক্ষা উপকরণ ও উপবৃত্তি",
-      target: 80000,
-      raised: 80000,
-      donors: 64,
-      deadlineBn: "১৫ নভেম্বর ২০২৪",
-      status: "সম্পন্ন",
-    },
-  ])
-
-  // --- 8. Community Member's Personal Submissions ---
-  const [myApplications] = useState([
-    {
-      id: "RJF-2026-8492",
-      categoryBn: "জরুরি চিকিৎসা সহায়তা",
-      submittedDate: "২২ নভেম্বর ২০২৪",
-      status: "approved",
-      statusTitle: "অনুমোদিত",
-      note: "আপনার আবেদনটি অনুমোদিত হয়েছে। আগামী ২৪ ঘণ্টার মধ্যে সহায়তা প্রদান করা হবে।",
-      officer: "তানভীর আহমেদ (মাঠ কর্মকর্তা)",
-      approvedAmount: "৳১৫,০০০",
-    },
-    {
-      id: "RJF-2026-9104",
-      categoryBn: "শীতবস্ত্র ও জরুরি ত্রাণ",
-      submittedDate: "১০ নভেম্বর ২০২৪",
-      status: "completed",
-      statusTitle: "সম্পন্ন",
-      note: "সহায়তা সামগ্রী সফলভাবে হস্তান্তর করা হয়েছে।",
-      officer: "মো: শফিকুল ইসলাম",
-      approvedAmount: "২টি কম্বল ও শুকনো খাবার",
-    },
-  ])
-
-  const [myDonations] = useState([
-    {
-      receiptNo: "RJF-REC-78219",
-      campaign: "শীতবস্ত্র বিতরণ ২০২৪",
-      amount: 5000,
-      paymentMethod: "bKash",
-      date: "২৪ নভেম্বর ২০২৪",
-      transactionId: "BK9X8921KL",
-    },
-  ])
-
-  // --- 9. Notifications Data ---
-  const [notifications, setNotifications] = useState([
-    {
-      id: "1",
-      titleBn: "নতুন রক্তের অনুরোধ",
-      descBn: "ও-পজিটিভ (O+) ২ ব্যাগ • রৌমারী উপজেলা স্বাস্থ্য কমপ্লেক্স",
-      timeBn: "১০ মিনিট আগে",
-      type: "urgent",
-      isUnread: true,
-    },
-    {
-      id: "2",
-      titleBn: "আবেদন RJF-2026-8492 হালনাগাদ",
-      descBn: "চিকিৎসা সহায়তা • যাচাইকারী কর্মকর্তা পরিদর্শন সম্পন্ন করেছেন",
-      timeBn: "২৫ মিনিট আগে",
-      type: "info",
-      isUnread: true,
-    },
-    {
-      id: "3",
-      titleBn: "ক্যাম্পেইনের লক্ষ্যমাত্রা পূর্ণ",
-      descBn: "শীতবস্ত্র বিতরণ ২০২৪ • ৫০,০০০ টাকা সফলভাবে সংগৃহীত হয়েছে",
-      timeBn: "২ ঘণ্টা আগে",
-      type: "success",
-      isUnread: false,
-    },
-    {
-      id: "4",
-      titleBn: "SMS পাঠানো হয়েছে",
-      descBn: "জরুরি রক্তের প্রয়োজনের প্রেক্ষিতে ১৫ জন রক্তদাতাকে বার্তা প্রেরিত",
-      timeBn: "৫ ঘণ্টা আগে",
-      type: "info",
-      isUnread: false,
-    },
-  ])
   const [notifFilter, setNotifFilter] = useState<"all" | "unread" | "urgent">("all")
 
   // --- Dynamic Live Mappings from API ---
-  const displayMedicalData = appItems.filter((a: any) => a.category === "MEDICAL").length > 0
-    ? appItems
-        .filter((a: any) => a.category === "MEDICAL")
-        .map((r: any) => ({
-          id: r.referenceCode || r.id?.slice(0, 8),
-          applicant: r.applicantName,
-          condition: r.description || "জরুরি চিকিৎসা সহায়তা",
-          amountNeeded: Number(r.requestedAmount || 0),
-          approvedAmount: Number(r.approvedAmount || 0),
-          assignedOfficer: r.assignedTo?.fullName || "অপেক্ষমাণ",
-          status: r.status === "APPROVED" ? "অনুমোদিত" : r.status === "REJECTED" ? "বাতিল" : "যাচাই সম্পন্ন",
-          union: r.upazila || "রৌমারী সদর",
-          date: new Date(r.createdAt || Date.now()).toLocaleDateString("bn-BD"),
-          rawId: r.id,
-        }))
-    : medicalData
+  const displayMedicalData = appItems
+    .filter((a: any) => a.category === "MEDICAL")
+    .map((r: any) => ({
+      id: r.referenceCode || r.id?.slice(0, 8),
+      applicant: r.applicantName,
+      condition: r.description || "জরুরি চিকিৎসা সহায়তা",
+      amountNeeded: Number(r.requestedAmount || 0),
+      approvedAmount: Number(r.approvedAmount || 0),
+      assignedOfficer: r.assignedTo?.fullName || "অপেক্ষমাণ",
+      status: r.status === "APPROVED" ? "অনুমোদিত" : r.status === "REJECTED" ? "বাতিল" : "যাচাই সম্পন্ন",
+      union: r.upazila || "রৌমারী সদর",
+      date: new Date(r.createdAt || Date.now()).toLocaleDateString("bn-BD"),
+      rawId: r.id,
+    }))
 
-  const displayEducationData = appItems.filter((a: any) => a.category === "EDUCATION").length > 0
-    ? appItems
-        .filter((a: any) => a.category === "EDUCATION")
-        .map((r: any) => ({
-          id: r.referenceCode || r.id?.slice(0, 8),
-          studentName: r.applicantName,
-          institute: r.address || "রৌমারী উচ্চ বিদ্যালয়",
-          grade: "শ্রেণি সহায়তা",
-          supportType: r.description || "উপবৃত্তি",
-          amount: Number(r.requestedAmount || 0),
-          status: r.status === "APPROVED" ? "অনুমোদিত" : "অপেক্ষমাণ",
-          union: r.upazila || "রৌমারী",
-          rawId: r.id,
-        }))
-    : educationData
+  const displayEducationData = appItems
+    .filter((a: any) => a.category === "EDUCATION")
+    .map((r: any) => ({
+      id: r.referenceCode || r.id?.slice(0, 8),
+      studentName: r.applicantName,
+      institute: r.address || "শিক্ষা প্রতিষ্ঠান",
+      grade: "শ্রেণি সহায়তা",
+      supportType: r.description || "উপবৃত্তি",
+      amount: Number(r.requestedAmount || 0),
+      status: r.status === "APPROVED" ? "অনুমোদিত" : "অপেক্ষমাণ",
+      union: r.upazila || "রৌমারী",
+      rawId: r.id,
+    }))
 
-  const displayVolunteersData = volunteerItems.length > 0
-    ? volunteerItems.map((v: any) => ({
-        id: v.id?.slice(0, 8) || "VOL",
-        name: v.fullName,
-        wing: v.skills || "সাধারণ সহায়তা উইং",
-        union: v.upazila || "রৌমারী",
-        phone: v.phone,
-        joinDate: new Date(v.createdAt || Date.now()).toLocaleDateString("bn-BD"),
-        status: v.isApproved ? "সক্রিয়" : "অপেক্ষমাণ",
-        rawId: v.id,
-        isApproved: v.isApproved,
-      }))
-    : volunteersData
+  const displayVolunteersData = volunteerItems.map((v: any) => ({
+    id: v.id?.slice(0, 8) || "VOL",
+    name: v.fullName,
+    wing: v.skills || "সাধারণ সহায়তা উইং",
+    union: v.upazila || "রৌমারী",
+    phone: v.phone,
+    joinDate: new Date(v.createdAt || Date.now()).toLocaleDateString("bn-BD"),
+    status: v.isApproved ? "সক্রিয়" : "অপেক্ষমাণ",
+    rawId: v.id,
+    isApproved: v.isApproved,
+  }))
 
-  const displayCasesData = appItems.length > 0
-    ? appItems.map((r: any) => ({
-        caseId: r.referenceCode || r.id?.slice(0, 8),
-        applicationId: r.referenceCode || r.id?.slice(0, 8),
-        applicant: r.applicantName,
-        union: r.upazila || "রৌমারী সদর",
-        village: r.address || "গ্রাম",
-        category: r.category === "MEDICAL" ? "চিকিৎসা সহায়তা" : r.category === "EDUCATION" ? "শিক্ষা সহায়তা" : "সাধারণ সহায়তা",
-        caseWorker: r.assignedTo?.fullName || "অপেক্ষমাণ",
-        visitStatus: r.status === "APPROVED" ? "অনুমোদিত ও বিতরণযোগ্য" : r.status === "UNDER_REVIEW" ? "তদন্তাধীন" : "মাঠ পরিদর্শন সম্পন্ন",
-        recommendation: r.approvedAmount ? `অনুমোদনের সুপারিশ (৳${r.approvedAmount.toLocaleString("bn-BD")})` : "যাচাই সম্পন্ন",
-        priority: "উচ্চ",
-        rawId: r.id,
-      }))
-    : casesData
+  const displayCasesData = appItems.map((r: any) => ({
+    caseId: r.referenceCode || r.id?.slice(0, 8),
+    applicationId: r.referenceCode || r.id?.slice(0, 8),
+    applicant: r.applicantName,
+    union: r.upazila || "রৌমারী সদর",
+    village: r.address || "গ্রাম",
+    category: r.category === "MEDICAL" ? "চিকিৎসা সহায়তা" : r.category === "EDUCATION" ? "শিক্ষা সহায়তা" : "সাধারণ সহায়তা",
+    caseWorker: r.assignedTo?.fullName || "অপেক্ষমাণ",
+    visitStatus: r.status === "APPROVED" ? "অনুমোদিত ও বিতরণযোগ্য" : r.status === "UNDER_REVIEW" ? "তদন্তাধীন" : "মাঠ পরিদর্শন সম্পন্ন",
+    recommendation: r.approvedAmount ? `অনুমোদনের সুপারিশ (৳${r.approvedAmount.toLocaleString("bn-BD")})` : "যাচাই সম্পন্ন",
+    priority: "উচ্চ",
+    rawId: r.id,
+  }))
 
-  const displayFinanceData = donationItems.length > 0
-    ? donationItems.map((d: any) => ({
-        id: d.id?.slice(0, 8),
-        receiptNo: d.receipt?.receiptNumber || `RJF-REC-${d.id?.slice(0, 6)}`,
-        donor: d.isAnonymous ? "বেনামী শুভাকাঙ্ক্ষী" : (d.donorName || "শুভাকাঙ্ক্ষী"),
-        campaign: d.campaign?.title || "সাধারণ তহবিল",
-        amount: Number(d.amount),
-        channel: d.paymentMethod,
-        date: new Date(d.createdAt || Date.now()).toLocaleDateString("bn-BD"),
-        status: "সফল",
-      }))
-    : financeData
+  const displayFinanceData = donationItems.map((d: any) => ({
+    id: d.id?.slice(0, 8),
+    receiptNo: d.receipt?.receiptNumber || `RJF-REC-${d.id?.slice(0, 6)}`,
+    donor: d.isAnonymous ? "বেনামী শুভাকাঙ্ক্ষী" : (d.donorName || "শুভাকাঙ্ক্ষী"),
+    campaign: d.campaign?.title || "সাধারণ তহবিল",
+    amount: Number(d.amount),
+    channel: d.paymentMethod,
+    date: new Date(d.createdAt || Date.now()).toLocaleDateString("bn-BD"),
+    status: "সফল",
+  }))
 
-  const displayCampaignsList = liveCampaigns.length > 0
-    ? liveCampaigns.map((c: any) => ({
-        id: c.id,
-        titleBn: c.titleBn || c.titleEn,
-        target: c.targetAmount,
-        raised: c.raisedAmount,
-        donors: c.donorsCount || 0,
-        deadlineBn: c.deadlineBn || "চলমান",
-        status: c.status === "ongoing" ? "চলমান" : "সম্পন্ন",
-      }))
-    : campaignsList
+  const displayCampaignsList = liveCampaigns.map((c: any) => ({
+    id: c.id,
+    titleBn: c.titleBn || c.titleEn,
+    target: Number(c.targetAmount || 0),
+    raised: Number(c.raisedAmount || 0),
+    donors: c.donorsCount || 0,
+    deadlineBn: c.deadlineBn || "চলমান",
+    status: c.status === "ongoing" ? "চলমান" : "সম্পন্ন",
+  }))
 
-  const displayUsersData = userItems.length > 0
-    ? userItems.map((u: any) => ({
-        id: u.id?.slice(0, 8),
-        name: u.fullName,
-        contact: u.email || u.phone,
-        status: u.status || (u.isActive ? "ACTIVE" : "SUSPENDED"),
-        roles: u.roles?.map((r: any) => (typeof r === "object" ? r.name : r)) || [],
-        role: ((u.roles?.[0] && typeof u.roles[0] === "object" ? u.roles[0].name : u.roles?.[0]) || "COMMUNITY_MEMBER") as UserRole,
-        rawId: u.id,
-        createdAt: u.createdAt,
-      }))
-    : [
-        {
-          id: "USR-01",
-          name: "প্রকৌশলী মো: রফিকুল ইসলাম",
-          contact: "admin@rjf.org",
-          status: "ACTIVE",
-          roles: ["SUPER_ADMIN"],
-          role: "SUPER_ADMIN" as UserRole,
-          rawId: "usr-01",
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: "USR-02",
-          name: "মো: শফিকুল ইসলাম সাজু",
-          contact: "01713-223344",
-          status: "ACTIVE",
-          roles: ["ADMIN"],
-          role: "ADMIN" as UserRole,
-          rawId: "usr-02",
-          createdAt: new Date().toISOString(),
-        },
-      ]
+  const displayUsersData = userItems.map((u: any) => ({
+    id: u.id?.slice(0, 8),
+    name: u.fullName,
+    contact: u.email || u.phone,
+    status: u.status || (u.isActive ? "ACTIVE" : "SUSPENDED"),
+    roles: u.roles?.map((r: any) => (typeof r === "object" ? r.name : r)) || [],
+    role: ((u.roles?.[0] && typeof u.roles[0] === "object" ? u.roles[0].name : u.roles?.[0]) || "COMMUNITY_MEMBER") as UserRole,
+    rawId: u.id,
+    createdAt: u.createdAt,
+  }))
 
-  const displayMyApps = myAppItems.length > 0
-    ? myAppItems.map((a: any) => ({
-        id: a.referenceCode || a.id?.slice(0, 8),
-        categoryBn: a.category === "MEDICAL" ? "জরুরি চিকিৎসা সহায়তা" : "মানবিক সহায়তা",
-        submittedDate: new Date(a.createdAt || Date.now()).toLocaleDateString("bn-BD"),
-        status: a.status.toLowerCase(),
-        statusTitle: a.status === "APPROVED" ? "অনুমোদিত" : a.status === "REJECTED" ? "বাতিল" : "তদন্তাধীন",
-        note: a.statusHistory?.at(-1)?.remarks || "আপনার আবেদনটি প্রক্রিয়াকরণ চলছে।",
-        officer: a.assignedTo?.fullName || "মাঠ কর্মকর্তা",
-        approvedAmount: a.approvedAmount ? `৳${a.approvedAmount.toLocaleString("bn-BD")}` : "অপেক্ষমাণ",
-      }))
-    : myApplications
+  const displayMyApps = myAppItems.map((a: any) => ({
+    id: a.referenceCode || a.id?.slice(0, 8),
+    categoryBn: a.category === "MEDICAL" ? "জরুরি চিকিৎসা সহায়তা" : a.category === "EDUCATION" ? "শিক্ষা সহায়তা" : "মানবিক সহায়তা",
+    submittedDate: new Date(a.createdAt || Date.now()).toLocaleDateString("bn-BD"),
+    status: (a.status || "PENDING").toLowerCase(),
+    statusTitle: a.status === "APPROVED" ? "অনুমোদিত" : a.status === "REJECTED" ? "বাতিল" : "তদন্তাধীন",
+    note: a.statusHistory?.at(-1)?.remarks || "আপনার আবেদনটি প্রক্রিয়াকরণ চলছে।",
+    officer: a.assignedTo?.fullName || "মাঠ কর্মকর্তা",
+    approvedAmount: a.approvedAmount ? `৳${a.approvedAmount.toLocaleString("bn-BD")}` : "অপেক্ষমাণ",
+  }))
 
-  const displayMyDonations = myDonationItems.length > 0
-    ? myDonationItems.map((d: any) => ({
-        receiptNo: d.receipt?.receiptNumber || `RJF-REC-${d.id?.slice(0, 6)}`,
-        campaign: d.campaign?.title || "সাধারণ তহবিল",
-        amount: Number(d.amount),
-        paymentMethod: d.paymentMethod,
-        date: new Date(d.createdAt || Date.now()).toLocaleDateString("bn-BD"),
-        transactionId: d.transactionReference || "TRX-N/A",
-      }))
-    : myDonations
+  const displayMyDonations = myDonationItems.map((d: any) => ({
+    receiptNo: d.receipt?.receiptNumber || `RJF-REC-${d.id?.slice(0, 6)}`,
+    campaign: d.campaign?.title || "সাধারণ তহবিল",
+    amount: Number(d.amount),
+    paymentMethod: d.paymentMethod,
+    date: new Date(d.createdAt || Date.now()).toLocaleDateString("bn-BD"),
+    transactionId: d.transactionReference || "TRX-N/A",
+  }))
+
+  const displayNotifications = notificationItems.map((n: any) => ({
+    id: n.id,
+    titleBn: n.title,
+    descBn: n.message,
+    timeBn: new Date(n.createdAt || Date.now()).toLocaleDateString("bn-BD"),
+    type: n.type?.toLowerCase() || "info",
+    isUnread: !n.isRead,
+  }))
 
   // --- Table Column Definitions ---
   const medicalColumns: TableColumn<any>[] = [
@@ -885,7 +584,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                 </div>
               </div>
               <div className="text-2xl font-black text-stone-900">
-                {campaignsList?.length || 3} টি
+                {liveCampaigns.length} টি
               </div>
               <div className="text-[11px] text-emerald-700 font-semibold mt-1">
                 মাঠপর্যায়ে সক্রিয়
@@ -1016,7 +715,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
               <div className="text-2xl font-black text-stone-900">
                 {adminDashboard?.users?.total !== undefined
                   ? `${adminDashboard.users.total} জন`
-                  : `${userItems.length || 24} জন`}
+                  : `${userItems.length} জন`}
               </div>
               <div className="text-[11px] text-purple-700 font-semibold mt-1">
                 {adminDashboard?.users?.active !== undefined
@@ -1033,7 +732,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                 </div>
               </div>
               <div className="text-2xl font-black text-stone-900">
-                {volunteerItems.length ? `${volunteerItems.length} জন` : "১৩০+ জন"}
+                {volunteerItems.length} জন
               </div>
               <div className="text-[11px] text-amber-700 font-semibold mt-1">
                 মাঠপর্যায়ে সক্রিয় টিম
@@ -1050,7 +749,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
               <div className="text-2xl font-black text-stone-900">
                 {adminDashboard?.operations?.totalCampaigns !== undefined
                   ? `${adminDashboard.operations.totalCampaigns} টি`
-                  : `${campaignsList.length || 3} টি`}
+                  : `${liveCampaigns.length} টি`}
               </div>
               <div className="text-[11px] text-emerald-700 font-semibold mt-1">
                 মাঠপর্যায়ে সক্রিয়
@@ -1067,7 +766,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
               <div className="text-2xl font-black text-stone-900">
                 {adminDashboard?.operations?.totalApplications !== undefined
                   ? `${adminDashboard.operations.totalApplications} টি`
-                  : `${appItems.length || 12} টি`}
+                  : `${appItems.length} টি`}
               </div>
               <div className="text-[11px] text-emerald-700 font-semibold mt-1">
                 চিকিৎসা ও শিক্ষা সহায়তা
@@ -1462,26 +1161,34 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
           </div>
 
           <div className="space-y-3">
-            {displayMyApps.map((app: any) => (
-              <div key={app.id} className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-2">
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold bg-white px-2 py-0.5 rounded border border-stone-200 text-stone-800">
-                      {app.id}
-                    </span>
-                    <span className="font-bold text-stone-900 text-sm">{app.categoryBn}</span>
-                  </div>
-                  <Badge className="bg-emerald-600 text-white">{app.statusTitle}</Badge>
-                </div>
-                <p className="text-xs text-stone-600 bg-white p-2.5 rounded-lg border border-stone-100">
-                  <strong className="text-stone-800">সর্বশেষ আপডেট:</strong> {app.note}
-                </p>
-                <div className="flex items-center justify-between text-xs text-stone-500 pt-1">
-                  <span>কর্মকর্তা: {app.officer}</span>
-                  <span className="font-semibold text-emerald-700">বরাদ্দ: {app.approvedAmount}</span>
-                </div>
+            {displayMyApps.length === 0 ? (
+              <div className="text-center py-12 bg-stone-50 rounded-xl border border-dashed border-stone-200">
+                <FileText className="size-8 mx-auto text-stone-300 mb-2" />
+                <p className="text-sm font-semibold text-stone-600">কোনো আবেদন পাওয়া যায়নি</p>
+                <p className="text-xs text-stone-400 mt-1">নতুন সহায়তার জন্য উপরের 'নতুন আবেদন করুন' বাটনে ক্লিক করুন</p>
               </div>
-            ))}
+            ) : (
+              displayMyApps.map((app: any) => (
+                <div key={app.id} className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-2">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs font-bold bg-white px-2 py-0.5 rounded border border-stone-200 text-stone-800">
+                        {app.id}
+                      </span>
+                      <span className="font-bold text-stone-900 text-sm">{app.categoryBn}</span>
+                    </div>
+                    <Badge className="bg-emerald-600 text-white">{app.statusTitle}</Badge>
+                  </div>
+                  <p className="text-xs text-stone-600 bg-white p-2.5 rounded-lg border border-stone-100">
+                    <strong className="text-stone-800">সর্বশেষ আপডেট:</strong> {app.note}
+                  </p>
+                  <div className="flex items-center justify-between text-xs text-stone-500 pt-1">
+                    <span>কর্মকর্তা: {app.officer}</span>
+                    <span className="font-semibold text-emerald-700">বরাদ্দ: {app.approvedAmount}</span>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       )}
@@ -1673,36 +1380,41 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
           </div>
 
           <div className="divide-y divide-stone-100">
-            {notifications
-              .filter((n) => {
-                if (notifFilter === "unread") return n.isUnread
-                if (notifFilter === "urgent") return n.type === "urgent"
-                return true
-              })
-              .map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => {
-                    setNotifications((prev) =>
-                      prev.map((n) =>
-                        n.id === item.id ? { ...n, isUnread: !n.isUnread } : n
-                      )
-                    )
-                  }}
-                  className="py-3 flex items-start gap-3 cursor-pointer hover:bg-stone-50/80 px-2 rounded-xl transition-colors"
-                >
-                  <div className="pt-1.5 shrink-0 w-3">
-                    {item.isUnread && (
-                      <div className="w-2.5 h-2.5 rounded-full bg-[#E53935] animate-pulse" />
-                    )}
+            {displayNotifications.filter((n: any) => {
+              if (notifFilter === "unread") return n.isUnread
+              if (notifFilter === "urgent") return n.type === "urgent"
+              return true
+            }).length === 0 ? (
+              <div className="text-center py-12 text-stone-400 text-xs">
+                <Bell className="size-8 mx-auto text-stone-300 mb-2" />
+                <p className="font-semibold text-stone-600">কোনো নোটিফিকেশন নেই</p>
+                <p className="mt-1">এই মুহূর্তে আপনার কোনো নোটিফিকেশন নেই</p>
+              </div>
+            ) : (
+              displayNotifications
+                .filter((n: any) => {
+                  if (notifFilter === "unread") return n.isUnread
+                  if (notifFilter === "urgent") return n.type === "urgent"
+                  return true
+                })
+                .map((item: any) => (
+                  <div
+                    key={item.id}
+                    className="py-3 flex items-start gap-3 hover:bg-stone-50/80 px-2 rounded-xl transition-colors"
+                  >
+                    <div className="pt-1.5 shrink-0 w-3">
+                      {item.isUnread && (
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#E53935] animate-pulse" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-sm font-bold text-stone-900">{item.titleBn}</h3>
+                      <p className="text-xs text-stone-500 mt-0.5">{item.descBn}</p>
+                      <span className="text-[11px] text-stone-400 mt-1 inline-block">{item.timeBn}</span>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-sm font-bold text-stone-900">{item.titleBn}</h3>
-                    <p className="text-xs text-stone-500 mt-0.5">{item.descBn}</p>
-                    <span className="text-[11px] text-stone-400 mt-1 inline-block">{item.timeBn}</span>
-                  </div>
-                </div>
-              ))}
+                ))
+            )}
           </div>
         </div>
       )}
