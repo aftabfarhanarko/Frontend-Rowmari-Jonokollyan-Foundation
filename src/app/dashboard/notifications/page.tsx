@@ -1,16 +1,26 @@
-import { Suspense } from "react"
-import { Metadata } from "next"
-import DashboardShell from "@/components/dashboard/DashboardShell"
+"use client"
 
-export const metadata: Metadata = {
-  title: "নোটিফিকেশন সেন্টার | রৌমারী জনকল্যাণ ফাউন্ডেশন",
-  description: "সিস্টেম নোটিফিকেশন ও জরুরি বার্তা কেন্দ্র",
-}
+import React from "react"
+import { PageHeader } from "@/components/dashboard/PageHeader"
+import { NotificationsTab } from "@/components/dashboard/tabs/NotificationsTab"
+import { useGetAdminNotificationsQuery } from "@/store/api/dashboardApi"
+import { useAppStore } from "@/store/useAppStore"
 
 export default function NotificationsPage() {
+  const { currentRole } = useAppStore()
+  const isStaff = currentRole !== "COMMUNITY_MEMBER"
+  const { data: adminNotificationsRes } = useGetAdminNotificationsQuery(undefined, { skip: !isStaff })
+  const notificationItems = Array.isArray(adminNotificationsRes) ? adminNotificationsRes : (adminNotificationsRes as any)?.items || []
+
   return (
-    <Suspense fallback={<div className="p-8 text-center text-stone-500">লোড হচ্ছে...</div>}>
-      <DashboardShell defaultTab="notifications" />
-    </Suspense>
+    <div className="space-y-6">
+      <PageHeader
+        title="নোটিফিকেশন সেন্টার"
+        description="সিস্টেম নোটিফিকেশন, আবেদন সংক্রান্ত আপডেট ও জরুরি বার্তা কেন্দ্র"
+        badge="নোটিফিকেশন"
+        badgeVariant="default"
+      />
+      <NotificationsTab notifications={notificationItems} />
+    </div>
   )
 }

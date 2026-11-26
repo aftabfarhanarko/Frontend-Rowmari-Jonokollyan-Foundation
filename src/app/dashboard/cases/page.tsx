@@ -1,16 +1,36 @@
-import { Suspense } from "react"
-import { Metadata } from "next"
-import DashboardShell from "@/components/dashboard/DashboardShell"
+"use client"
 
-export const metadata: Metadata = {
-  title: "মাঠপর্যায় তদন্ত ও কেস রিপোর্ট | রৌমারী জনকল্যাণ ফাউন্ডেশন",
-  description: "সরেজমিনে আবেদনকারী পরিবার যাচাই ও সাহায্য বিতরণ রিপোর্ট",
-}
+import React from "react"
+import { PageHeader } from "@/components/dashboard/PageHeader"
+import { CasesTab } from "@/components/dashboard/tabs/CasesTab"
+import { useGetAdminApplicationsQuery } from "@/store/api/dashboardApi"
+import { useAppStore } from "@/store/useAppStore"
 
 export default function CasesDashboardPage() {
+  const { currentRole } = useAppStore()
+  const isStaff = currentRole !== "COMMUNITY_MEMBER"
+  const { data: adminAppsRes } = useGetAdminApplicationsQuery(undefined, { skip: !isStaff })
+  const appItems = Array.isArray(adminAppsRes) ? adminAppsRes : (adminAppsRes as any)?.items || []
+
+  const displayCasesData = appItems.map((r: any) => ({
+    id: r.referenceCode || r.id?.slice(0, 8),
+    applicant: r.applicantName,
+    category: r.category === "MEDICAL" ? "চিকিৎসা" : "শিক্ষা",
+    village: r.applicantAddress || "রৌমারী",
+    officer: "তদন্ত টিম-১",
+    visitStatus: r.status === "APPROVED" ? "সম্পন্ন" : "প্রক্রিয়াধীন",
+    recommendation: r.adminRemarks || "জরুরি সহায়তা প্রযোজ্য",
+  }))
+
   return (
-    <Suspense fallback={<div className="p-8 text-center text-stone-500">লোড হচ্ছে...</div>}>
-      <DashboardShell defaultTab="cases" />
-    </Suspense>
+    <div className="space-y-6">
+      <PageHeader
+        title="সহায়তার আবেদন ও ফিল্ড তদন্ত"
+        description="সরেজমিনে আবেদনকারী পরিবার যাচাই, তদন্ত রিপোর্ট ও সাহায্য অনুমোদন"
+        badge="তদন্ত চলমান"
+        badgeVariant="urgent"
+      />
+      <CasesTab casesData={displayCasesData} />
+    </div>
   )
 }

@@ -1,10 +1,10 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { useSearchParams, useRouter } from "next/navigation"
+import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import { useAppStore } from "@/store/useAppStore"
-import { DashboardNavbar } from "@/components/dashboard/DashboardNavbar"
-import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar"
+import { Navbar } from "@/components/dashboard/Navbar"
+import { Sidebar } from "@/components/dashboard/Sidebar"
 import { DashboardContent } from "@/components/dashboard/DashboardContent"
 import { canAccessNavItem, DASHBOARD_NAV_ITEMS } from "@/config/dashboard-navigation"
 import { ShieldAlert } from "lucide-react"
@@ -15,13 +15,19 @@ import VolunteerModal from "@/components/modals/VolunteerModal"
 import AnnouncementModal from "@/components/modals/AnnouncementModal"
 
 interface DashboardShellProps {
+  children?: React.ReactNode
   defaultTab?: string
 }
 
-export function DashboardShell({ defaultTab }: DashboardShellProps) {
+export function DashboardShell({ children, defaultTab }: DashboardShellProps) {
   const router = useRouter()
+  const pathname = usePathname() || "/dashboard"
   const searchParams = useSearchParams()
-  const initialTab = defaultTab || searchParams.get("tab") || "overview"
+
+  const segments = pathname.split("/").filter(Boolean)
+  const lastSegment = segments[segments.length - 1]
+  const currentTabFromRoute = lastSegment === "dashboard" ? "overview" : lastSegment
+  const initialTab = defaultTab || searchParams.get("tab") || currentTabFromRoute || "overview"
 
   const {
     currentRole,
@@ -29,9 +35,6 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
     lang,
     assistanceModalOpen,
     setAssistanceModalOpen,
-    donationModalOpen,
-    setDonationModalOpen,
-    preselectedCampaign,
     volunteerModalOpen,
     setVolunteerModalOpen,
     announcementModalOpen,
@@ -40,46 +43,42 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
 
   const [activeTab, setActiveTab] = useState(initialTab)
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
-  // Client-side authentication verification:
-  // If user is unauthenticated (no session cookie and store is unauthenticated), redirect to login
+  // Auth verification: redirect to login if unauthenticated
   useEffect(() => {
     if (typeof document !== "undefined") {
       const hasSessionCookie = document.cookie.includes("rjf_session=1")
       if (!hasSessionCookie && !isAuthenticated) {
         toast.error("ড্যাশবোর্ডে প্রবেশ করতে অনুগ্রহ করে প্রথমে লগইন করুন।")
-        const currentPath = typeof window !== 'undefined' ? (window.location.pathname + window.location.search) : '/dashboard';
+        const currentPath = typeof window !== "undefined" ? (window.location.pathname + window.location.search) : "/dashboard"
         router.push(`/login?redirect=${encodeURIComponent(currentPath)}`)
       }
     }
   }, [isAuthenticated, router])
 
-  // Sync with searchParams or defaultTab if changes
+  // Sync activeTab with pathname or query
   useEffect(() => {
     const tabFromUrl = searchParams.get("tab")
     if (tabFromUrl) {
       setActiveTab(tabFromUrl)
     } else if (defaultTab) {
       setActiveTab(defaultTab)
+    } else {
+      const segs = pathname.split("/").filter(Boolean)
+      const last = segs[segs.length - 1]
+      setActiveTab(last === "dashboard" ? "overview" : (last || "overview"))
     }
+  }, [searchParams, defaultTab, pathname])
 
-    const denied = searchParams.get("denied")
-    if (denied) {
-      toast.error(`আপনার বর্তমান রোলে '${denied}' সেকশনে প্রবেশের অনুমতি নেই।`)
-    }
-  }, [searchParams, defaultTab])
-
-  // If user switches role and currently selected tab is not permitted for the new role,
-  // gracefully fall back to 'overview'
+  // Role access check
   useEffect(() => {
     if (!canAccessNavItem(currentRole, activeTab)) {
       setActiveTab("overview")
     }
   }, [currentRole, activeTab])
 
-  const activeNavItem =
-    DASHBOARD_NAV_ITEMS.find((it) => it.id === activeTab && it.roles.includes(currentRole)) ||
-    DASHBOARD_NAV_ITEMS.find((it) => it.id === activeTab)
+  const activeNavItem = DASHBOARD_NAV_ITEMS.find((it) => it.id === activeTab)
   const isPermitted = canAccessNavItem(currentRole, activeTab)
 
   return (
@@ -92,30 +91,30 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
       </div>
 
       {/* 1. Global Top Navbar */}
-      <DashboardNavbar
+      <Navbar
         onToggleSidebar={() => setIsMobileSidebarOpen(true)}
         activeTabTitle={activeNavItem?.titleBn}
       />
 
       {/* 2. Body: Sidebar + Main Content */}
       <div className="flex w-full flex-1">
-        {/* Dynamic Role-Based Sidebar */}
-        <DashboardSidebar
+        <Sidebar
           activeTab={activeTab}
           onSelectTab={(tabId) => setActiveTab(tabId)}
           isOpenMobile={isMobileSidebarOpen}
           onCloseMobile={() => setIsMobileSidebarOpen(false)}
+          isCollapsed={isCollapsed}
+          onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
         />
 
-        {/* Dynamic Tab Content Area */}
+        {/* Dynamic Page Content Area */}
         <main className="min-w-0 flex-1 p-3 sm:p-6 lg:p-8">
           <div className="min-h-[calc(100vh-6.5rem)] rounded-3xl border border-stone-200/70 bg-white/70 p-4 shadow-[0_1px_0_0_rgba(255,255,255,0.8)_inset,0_20px_50px_-24px_rgba(214,40,40,0.08)] ring-1 ring-black/2 backdrop-blur-sm sm:p-6 lg:p-8">
             {isPermitted ? (
-              <div
-                key={activeTab}
-                className="animate-in fade-in slide-in-from-bottom-2 duration-300"
-              >
-                <DashboardContent activeTab={activeTab} onSelectTab={(tabId) => setActiveTab(tabId)} />
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                {children ? children : (
+                  <DashboardContent activeTab={activeTab} onSelectTab={(tabId) => setActiveTab(tabId)} />
+                )}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center p-8 text-center min-h-[50vh]">
@@ -127,7 +126,8 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
                   আপনার বর্তমান এক্সেস রোল ({currentRole}) এর জন্য এই সেকশনটিতে প্রবেশের অনুমতি নেই।
                 </p>
                 <button
-                  onClick={() => setActiveTab("overview")}
+                  type="button"
+                  onClick={() => router.push("/dashboard")}
                   className="mt-5 px-5 py-2.5 rounded-xl bg-[#D62828] text-white font-bold text-xs hover:bg-[#B91C1C] transition-colors cursor-pointer"
                 >
                   ড্যাশবোর্ড ওভারভিউতে ফিরে যান
@@ -138,21 +138,17 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
         </main>
       </div>
 
-      {/* Modals integrated with Dashboard quick actions */}
+      {/* Global Quick Action Modals */}
       <AssistanceModal
         isOpen={assistanceModalOpen}
         onClose={() => setAssistanceModalOpen(false)}
         lang={lang}
       />
-
-
-
       <VolunteerModal
         isOpen={volunteerModalOpen}
         onClose={() => setVolunteerModalOpen(false)}
         lang={lang}
       />
-
       <AnnouncementModal
         isOpen={announcementModalOpen}
         onClose={() => setAnnouncementModalOpen(false)}

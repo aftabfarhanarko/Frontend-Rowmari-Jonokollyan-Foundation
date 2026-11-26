@@ -1,16 +1,33 @@
-import { Suspense } from "react"
-import { Metadata } from "next"
-import DashboardShell from "@/components/dashboard/DashboardShell"
+"use client"
 
-export const metadata: Metadata = {
-  title: "ক্যাম্পেইন ও কন্টেন্ট প্রকাশনা | রৌমারী জনকল্যাণ ফাউন্ডেশন",
-  description: "ক্যাম্পেইন প্রকাশ, ছবি ও খবর আপডেট ব্যবস্থাপনা",
-}
+import React from "react"
+import { PageHeader } from "@/components/dashboard/PageHeader"
+import { CampaignsTab } from "@/components/dashboard/tabs/CampaignsTab"
+import { useGetCampaignsQuery } from "@/store/api/campaignsApi"
 
 export default function ContentDashboardPage() {
+  const { data: liveCampaignsRes } = useGetCampaignsQuery()
+  const liveCampaigns = liveCampaignsRes || []
+
+  const displayCampaignsList = liveCampaigns.map((c: any) => ({
+    id: c.slug || c.id?.slice(0, 8),
+    titleBn: c.title,
+    target: Number(c.targetAmount) || 0,
+    raised: Number(c.currentAmount) || 0,
+    donors: c.donorCount || 0,
+    deadlineBn: c.deadline ? new Date(c.deadline).toLocaleDateString("bn-BD") : "চলমান",
+    status: c.status === "ACTIVE" ? "চলমান" : "সমাপ্ত",
+  }))
+
   return (
-    <Suspense fallback={<div className="p-8 text-center text-stone-500">লোড হচ্ছে...</div>}>
-      <DashboardShell defaultTab="content" />
-    </Suspense>
+    <div className="space-y-6">
+      <PageHeader
+        title="ক্যাম্পেইন ও কন্টেন্ট প্রকাশনা"
+        description="ক্যাম্পেইন প্রকাশ, ছবি ও খবর আপডেট ব্যবস্থাপনা"
+        badge="কন্টেন্ট"
+        badgeVariant="default"
+      />
+      <CampaignsTab campaignsList={displayCampaignsList} />
+    </div>
   )
 }

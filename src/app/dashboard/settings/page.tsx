@@ -1,16 +1,19 @@
-import { Suspense } from "react"
-import { Metadata } from "next"
-import DashboardShell from "@/components/dashboard/DashboardShell"
+"use client"
 
-export const metadata: Metadata = {
-  title: "সিস্টেম সেটিংস ও অডিট ট্রেইল | রৌমারী জনকল্যাণ ফাউন্ডেশন",
-  description: "সুপার অ্যাডমিন সিকিউরিটি কনফিগারেশন ও সিস্টেম অডিট ট্রেইল",
-}
+import React from "react"
+import { PageHeader } from "@/components/dashboard/PageHeader"
+import { CmsSettingsTab } from "@/components/dashboard/cms/CmsSettingsTab"
 
 export default function SettingsDashboardPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-stone-500">লোড হচ্ছে...</div>}>
-      <DashboardShell defaultTab="settings" />
-    </Suspense>
+    <div className="space-y-6">
+      <PageHeader
+        title="ওয়েবসাইট সেটিংস ও এসইও"
+        description="ফাউন্ডেশনের সাধারণ সেটিংস, যোগাযোগের তথ্য, সামাজিক মাধ্যম ও গ্লোবাল এসইও কনফিগারেশন"
+        badge="গ্লোবাল কনফিগ"
+        badgeVariant="default"
+      />
+      <CmsSettingsTab />
+    </div>
   )
 }

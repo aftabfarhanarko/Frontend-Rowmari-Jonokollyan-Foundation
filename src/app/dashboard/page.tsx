@@ -1,25 +1,29 @@
-import { Suspense } from "react"
-import { Metadata } from "next"
-import DashboardShell from "@/components/dashboard/DashboardShell"
+"use client"
 
-export const metadata: Metadata = {
-  title: "ড্যাশবোর্ড | রৌমারী জনকল্যাণ ফাউন্ডেশন",
-  description: "রৌমারী জনকল্যাণ ফাউন্ডেশনের রোল-ভিত্তিক ড্যাশবোর্ড ও প্রশাসনিক ব্যবস্থাপনা পোর্টাল",
+import React, { Suspense } from "react"
+import { useSearchParams } from "next/navigation"
+import { DashboardContent } from "@/components/dashboard/DashboardContent"
+
+function DashboardOverview() {
+  const searchParams = useSearchParams()
+  const activeTab = searchParams.get("tab") || "overview"
+
+  return <DashboardContent activeTab={activeTab} />
 }
 
 export default function DashboardPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-white flex items-center justify-center">
-          <div className="flex flex-col items-center gap-3">
-            <div className="size-8 border-3 border-[#D62828] border-t-transparent rounded-full animate-spin" />
-            <p className="text-sm text-stone-600 font-medium">ড্যাশবোর্ড লোড হচ্ছে...</p>
+        <div className="flex min-h-[40vh] items-center justify-center">
+          <div className="flex flex-col items-center gap-2">
+            <div className="size-6 rounded-full border-2 border-[#D62828] border-t-transparent animate-spin" />
+            <p className="text-xs text-stone-500 font-medium">লোড হচ্ছে...</p>
           </div>
         </div>
       }
     >
-      <DashboardShell />
+      <DashboardOverview />
     </Suspense>
   )
 }
