@@ -98,6 +98,18 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
     roles: ["SUPER_ADMIN"],
     descriptionBn: "রৌমারী ডিরেক্টরি, হটলাইন, দর্শনীয় স্থান ও স্থানীয় সংবাদ পরিচালনা",
   },
+  {
+    id: "committees",
+    titleBn: "কমিটি ও সদস্য ব্যবস্থাপনা",
+    titleEn: "Committees & Members",
+    href: "/dashboard/committees",
+    iconName: "Users",
+    badge: "কমিটি",
+    badgeVariant: "urgent",
+    category: "cms",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "কার্যনির্বাহী ও উপদেষ্টা কমিটি, পদবী ও মেম্বার আইডি তৈরি",
+  },
 
   // 3. Projects & Campaigns
   {

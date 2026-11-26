@@ -127,4 +127,18 @@ export const API_ENDPOINTS = {
     adminNews: '/roumari/admin/news',
     adminNewsById: (id: string) => `/roumari/admin/news/${id}`,
   },
+  committees: {
+    publicList: '/committees/public/list',
+    publicDesignations: '/committees/public/designations',
+    verifyMember: (memberId: string) => `/committees/public/verify/${memberId}`,
+    adminAll: '/committees/admin/all',
+    adminCommittee: '/committees/admin/committee',
+    adminCommitteeById: (id: string) => `/committees/admin/committee/${id}`,
+    adminDesignation: '/committees/admin/designation',
+    adminDesignationById: (id: string) => `/committees/admin/designation/${id}`,
+    adminMembers: '/committees/admin/members',
+    adminMember: '/committees/admin/member',
+    adminMembership: '/committees/admin/membership',
+    adminMembershipById: (id: string) => `/committees/admin/membership/${id}`,
+  },
 };

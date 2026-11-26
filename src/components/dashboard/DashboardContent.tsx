@@ -38,6 +38,7 @@ import { NotificationsTab } from "@/components/dashboard/tabs/NotificationsTab"
 import { MedicalEducationTab } from "@/components/dashboard/tabs/MedicalEducationTab"
 import { DonationsTab } from "@/components/dashboard/tabs/DonationsTab"
 import { RoumariTab } from "@/components/dashboard/tabs/RoumariTab"
+import { CommitteesTab } from "@/components/dashboard/tabs/CommitteesTab"
 
 interface DashboardContentProps {
   activeTab: string
@@ -149,6 +150,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
       )}
       {(activeTab === "donations" || activeTab === "finance") && <DonationsTab />}
       {activeTab === "roumari" && <RoumariTab />}
+      {activeTab === "committees" && <CommitteesTab />}
       {activeTab === "medical" && <MedicalEducationTab type="medical" data={displayMedicalData} />}
       {activeTab === "education" && <MedicalEducationTab type="education" data={displayEducationData} />}
       {activeTab === "volunteers" && <VolunteersTab volunteersData={displayVolunteersData} />}

@@ -9,4 +9,5 @@ export * from './contentApi';
 export * from './adminApi';
 export * from './donationsApi';
 export * from './roumariApi';
+export * from './committeesApi';
 
