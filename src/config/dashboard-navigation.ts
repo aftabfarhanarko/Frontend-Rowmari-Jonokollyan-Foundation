@@ -20,9 +20,9 @@ export const ROLE_METAS: Record<string, RoleMeta> = {
     titleEn: "Super Admin",
     descriptionBn: "ফাউন্ডেশনের সমগ্র ওয়েবসাইট, কন্টেন্ট CMS, ইউজার ও অপারেশনের একচ্ছত্র নিয়ন্ত্রক",
     colorScheme: {
-      bg: "bg-purple-100 text-purple-800",
-      text: "text-purple-700",
-      border: "border-purple-300",
+      bg: "bg-red-50 text-red-800",
+      text: "text-red-700",
+      border: "border-red-200",
     },
   },
   COMMUNITY_MEMBER: {

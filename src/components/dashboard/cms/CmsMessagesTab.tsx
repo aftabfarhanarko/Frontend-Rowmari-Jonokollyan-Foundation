@@ -45,7 +45,7 @@ export function CmsMessagesTab() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold text-[#0D5C35] uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#D62828] uppercase tracking-wider mb-1">
             <Mail className="size-4" />
             <span>ওয়েবসাইট যোগাযোগ অনুসন্ধান (Contact Inquiries)</span>
           </div>
@@ -64,7 +64,7 @@ export function CmsMessagesTab() {
       <div className="bg-white rounded-2xl border border-stone-200/90 shadow-2xs overflow-hidden">
         {isLoading ? (
           <div className="p-12 flex flex-col items-center justify-center gap-2 text-stone-500">
-            <Loader2 className="size-6 animate-spin text-[#0D5C35]" />
+            <Loader2 className="size-6 animate-spin text-[#D62828]" />
             <span className="text-xs">বার্তা লোড হচ্ছে...</span>
           </div>
         ) : messages.length === 0 ? (
@@ -86,7 +86,7 @@ export function CmsMessagesTab() {
                       {new Date(msg.createdAt).toLocaleString("bn-BD")}
                     </span>
                   </div>
-                  <div className="text-xs text-emerald-800 font-medium font-mono">
+                  <div className="text-xs text-red-800 font-medium font-mono">
                     যোগাযোগ: {msg.contactInfo}
                   </div>
                   <p className="text-xs text-stone-600 leading-relaxed pt-1 whitespace-pre-wrap">
@@ -142,7 +142,7 @@ export function CmsMessagesTab() {
               </div>
               <div>
                 <span className="font-bold text-stone-500">ফোন / ইমেইল:</span>{" "}
-                <span className="font-mono text-emerald-800 font-semibold">{selectedMessage.contactInfo}</span>
+                <span className="font-mono text-red-800 font-semibold">{selectedMessage.contactInfo}</span>
               </div>
               <div>
                 <span className="font-bold text-stone-500">তারিখ:</span>{" "}

@@ -13,7 +13,7 @@ export default function DashboardPage() {
       fallback={
         <div className="min-h-screen bg-white flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
-            <div className="size-8 border-3 border-[#0D5C35] border-t-transparent rounded-full animate-spin" />
+            <div className="size-8 border-3 border-[#D62828] border-t-transparent rounded-full animate-spin" />
             <p className="text-sm text-stone-600 font-medium">ড্যাশবোর্ড লোড হচ্ছে...</p>
           </div>
         </div>

@@ -83,12 +83,12 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
   const isPermitted = canAccessNavItem(currentRole, activeTab)
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-x-clip bg-white font-sans text-[#1E293B] antialiased selection:bg-emerald-200/60 selection:text-emerald-950">
+    <div className="relative flex min-h-screen flex-col overflow-x-clip bg-white font-sans text-[#1E293B] antialiased selection:bg-red-200/60 selection:text-red-950">
       {/* Decorative ambient background */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-40 -left-32 size-120 rounded-full bg-emerald-200/30 blur-3xl" />
-        <div className="absolute top-1/3 -right-40 size-130 rounded-full bg-amber-100/40 blur-3xl" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(13,92,53,0.05)_1px,transparent_0)] bg-size-[28px_28px] mask-[linear-gradient(to_bottom,black,transparent_60%)]" />
+        <div className="absolute -top-40 -left-32 size-120 rounded-full bg-red-200/20 blur-3xl" />
+        <div className="absolute top-1/3 -right-40 size-130 rounded-full bg-stone-100/40 blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(214,40,40,0.04)_1px,transparent_0)] bg-size-[28px_28px] mask-[linear-gradient(to_bottom,black,transparent_60%)]" />
       </div>
 
       {/* 1. Global Top Navbar */}
@@ -109,7 +109,7 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
 
         {/* Dynamic Tab Content Area */}
         <main className="min-w-0 flex-1 p-3 sm:p-6 lg:p-8">
-          <div className="min-h-[calc(100vh-6.5rem)] rounded-3xl border border-stone-200/70 bg-white/70 p-4 shadow-[0_1px_0_0_rgba(255,255,255,0.8)_inset,0_20px_50px_-24px_rgba(13,92,53,0.18)] ring-1 ring-black/2 backdrop-blur-sm sm:p-6 lg:p-8">
+          <div className="min-h-[calc(100vh-6.5rem)] rounded-3xl border border-stone-200/70 bg-white/70 p-4 shadow-[0_1px_0_0_rgba(255,255,255,0.8)_inset,0_20px_50px_-24px_rgba(214,40,40,0.08)] ring-1 ring-black/2 backdrop-blur-sm sm:p-6 lg:p-8">
             {isPermitted ? (
               <div
                 key={activeTab}
@@ -128,7 +128,7 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
                 </p>
                 <button
                   onClick={() => setActiveTab("overview")}
-                  className="mt-5 px-5 py-2.5 rounded-xl bg-[#0D5C35] text-white font-bold text-xs hover:bg-[#094226] transition-colors"
+                  className="mt-5 px-5 py-2.5 rounded-xl bg-[#D62828] text-white font-bold text-xs hover:bg-[#B91C1C] transition-colors cursor-pointer"
                 >
                   ড্যাশবোর্ড ওভারভিউতে ফিরে যান
                 </button>

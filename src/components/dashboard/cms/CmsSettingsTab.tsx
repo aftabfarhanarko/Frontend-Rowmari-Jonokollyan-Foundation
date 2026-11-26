@@ -103,7 +103,7 @@ export function CmsSettingsTab() {
       {/* Top Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold text-[#0D5C35] uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#D62828] uppercase tracking-wider mb-1">
             <Settings className="size-4" />
             <span>সিস্টেম কনফিগারেশন ও এসইও (Global CMS Settings)</span>
           </div>
@@ -116,7 +116,7 @@ export function CmsSettingsTab() {
         <Button
           type="submit"
           disabled={isSaving || isLoading}
-          className="gap-2 bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs shadow-xs cursor-pointer"
+          className="gap-2 bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs shadow-xs cursor-pointer"
         >
           {isSaving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
           <span>সেটিংস সংরক্ষণ করুন</span>
@@ -127,7 +127,7 @@ export function CmsSettingsTab() {
         {/* 1. Brand & General Info */}
         <div className="bg-white p-5 sm:p-6 rounded-2xl border border-stone-200/90 shadow-2xs space-y-4">
           <div className="flex items-center gap-2 text-xs font-bold text-stone-900 border-b border-stone-100 pb-2">
-            <Globe className="size-4 text-[#0D5C35]" />
+            <Globe className="size-4 text-[#D62828]" />
             <span>ব্র্যান্ড ও শিরোনাম (Branding & Identity)</span>
           </div>
 
@@ -138,7 +138,7 @@ export function CmsSettingsTab() {
               required
               value={siteTitle}
               onChange={(e) => setSiteTitle(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+              className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
             />
           </div>
 
@@ -148,7 +148,7 @@ export function CmsSettingsTab() {
               type="text"
               value={siteSlogan}
               onChange={(e) => setSiteSlogan(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+              className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
             />
           </div>
 
@@ -162,7 +162,7 @@ export function CmsSettingsTab() {
 
           <div className="pt-2">
             <div className="flex items-center gap-2 text-xs font-bold text-stone-900 border-b border-stone-100 pb-2 mb-3">
-              <Share2 className="size-4 text-emerald-700" />
+              <Share2 className="size-4 text-red-700" />
               <span>সোশ্যাল মিডিয়া লিংক (Social Media)</span>
             </div>
 
@@ -195,7 +195,7 @@ export function CmsSettingsTab() {
         {/* 2. Contact Information */}
         <div className="bg-white p-5 sm:p-6 rounded-2xl border border-stone-200/90 shadow-2xs space-y-4">
           <div className="flex items-center gap-2 text-xs font-bold text-stone-900 border-b border-stone-100 pb-2">
-            <Phone className="size-4 text-emerald-700" />
+            <Phone className="size-4 text-red-700" />
             <span>অফিসিয়াল যোগাযোগ ও ঠিকানা (Contact Details)</span>
           </div>
 
@@ -282,7 +282,7 @@ export function CmsSettingsTab() {
         {/* Global SEO */}
         <div className="bg-white p-5 sm:p-6 rounded-2xl border border-stone-200/90 shadow-2xs space-y-4">
           <div className="flex items-center gap-2 text-xs font-bold text-stone-900 border-b border-stone-100 pb-2">
-            <Sparkles className="size-4 text-purple-600" />
+            <Sparkles className="size-4 text-red-600" />
             <span>গুগল সার্চ ও সোশ্যাল এসইও (Global SEO Metadata)</span>
           </div>
 

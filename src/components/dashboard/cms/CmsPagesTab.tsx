@@ -144,7 +144,7 @@ export function CmsPagesTab() {
       {/* Top Banner & KPI Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold text-[#0D5C35] uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#D62828] uppercase tracking-wider mb-1">
             <Globe className="size-4" />
             <span>সেন্ট্রাল কন্টেন্ট ম্যানেজমেন্ট সিস্টেম (CMS)</span>
           </div>
@@ -157,7 +157,7 @@ export function CmsPagesTab() {
         <div className="flex items-center gap-2.5">
           <Button
             onClick={openCreateModal}
-            className="gap-1.5 bg-[#0D5C35] hover:bg-[#094527] text-white shadow-xs cursor-pointer font-bold text-xs"
+            className="gap-1.5 bg-[#D62828] hover:bg-[#B91C1C] text-white shadow-xs cursor-pointer font-bold text-xs"
           >
             <Plus className="size-4" />
             <span>নতুন পেজ তৈরি করুন</span>
@@ -174,14 +174,14 @@ export function CmsPagesTab() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="পেজের নাম বা স্ল্যাগ দিয়ে খুঁজুন..."
-            className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+            className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
           />
         </div>
 
         <div className="flex items-center gap-2 text-xs font-medium text-stone-500">
           <span>মোট পেজ: <strong className="text-stone-900">{pages.length}</strong> টি</span>
           <span>•</span>
-          <span className="text-emerald-700">প্রকাশিত: <strong>{pages.filter((p) => p.status === "PUBLISHED").length}</strong> টি</span>
+          <span className="text-red-700">প্রকাশিত: <strong>{pages.filter((p) => p.status === "PUBLISHED").length}</strong> টি</span>
           <span>•</span>
           <span className="text-amber-700">ড্রাফট: <strong>{pages.filter((p) => p.status === "DRAFT").length}</strong> টি</span>
         </div>
@@ -191,7 +191,7 @@ export function CmsPagesTab() {
       <div className="bg-white rounded-2xl border border-stone-200/90 shadow-2xs overflow-hidden">
         {isLoading ? (
           <div className="p-12 flex flex-col items-center justify-center gap-2 text-stone-500">
-            <Loader2 className="size-6 animate-spin text-[#0D5C35]" />
+            <Loader2 className="size-6 animate-spin text-[#D62828]" />
             <span className="text-xs">সিএমএস পেজ লোড হচ্ছে...</span>
           </div>
         ) : filteredPages.length === 0 ? (
@@ -224,7 +224,7 @@ export function CmsPagesTab() {
                       <div className="font-bold text-stone-900 text-sm">{page.title}</div>
                       {page.seoTitle && <div className="text-[11px] text-stone-400 truncate max-w-xs">{page.seoTitle}</div>}
                     </td>
-                    <td className="py-3.5 px-4 font-mono text-xs text-emerald-800">
+                    <td className="py-3.5 px-4 font-mono text-xs text-red-800">
                       /{page.slug}
                     </td>
                     <td className="py-3.5 px-4 text-stone-500 truncate max-w-xs">
@@ -235,7 +235,7 @@ export function CmsPagesTab() {
                         variant="outline"
                         className={
                           page.status === "PUBLISHED"
-                            ? "border-emerald-300 bg-emerald-50 text-emerald-800 font-bold text-[10px]"
+                            ? "border-red-300 bg-red-50 text-red-800 font-bold text-[10px]"
                             : "border-amber-300 bg-amber-50 text-amber-800 font-bold text-[10px]"
                         }
                       >
@@ -256,7 +256,7 @@ export function CmsPagesTab() {
                           type="button"
                           onClick={() => openEditModal(page)}
                           title="সম্পাদনা করুন"
-                          className="p-1.5 rounded-lg text-emerald-700 hover:bg-emerald-50 transition cursor-pointer"
+                          className="p-1.5 rounded-lg text-red-700 hover:bg-red-50 transition cursor-pointer"
                         >
                           <Edit2 className="size-3.5" />
                         </button>
@@ -312,7 +312,7 @@ export function CmsPagesTab() {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="যেমন: আমাদের সম্পর্কে (About Us)"
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
                   />
                 </div>
 
@@ -325,7 +325,7 @@ export function CmsPagesTab() {
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
                     placeholder="about-us"
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 font-mono focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 font-mono focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
                   />
                 </div>
               </div>
@@ -338,7 +338,7 @@ export function CmsPagesTab() {
                     value={subtitle}
                     onChange={(e) => setSubtitle(e.target.value)}
                     placeholder="মানবিক সেবায় একটি অঙ্গীকার"
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
                   />
                 </div>
 
@@ -358,7 +358,7 @@ export function CmsPagesTab() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="পেজের সংক্ষিপ্ত সারসংক্ষেপ..."
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
                 />
               </div>
 
@@ -372,13 +372,13 @@ export function CmsPagesTab() {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="সম্পূর্ণ পেজের বিবরণ ও তথ্য এখানে লিখুন (HTML বা প্লেইন টেক্সট সমর্থিত)..."
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 font-sans leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 font-sans leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
                 />
               </div>
 
               {/* SEO & Status Fields */}
               <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-3">
-                <div className="text-[11px] font-bold text-[#0D5C35] uppercase tracking-wider flex items-center gap-1.5">
+                <div className="text-[11px] font-bold text-[#D62828] uppercase tracking-wider flex items-center gap-1.5">
                   <Sparkles className="size-3.5" />
                   <span>গুগল সার্চ ও এসইও অপ্টিমাইজেশন (SEO Metadata)</span>
                 </div>
@@ -442,7 +442,7 @@ export function CmsPagesTab() {
                 <Button
                   type="submit"
                   disabled={isCreating || isUpdating}
-                  className="bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs gap-1.5 cursor-pointer shadow-xs"
+                  className="bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs gap-1.5 cursor-pointer shadow-xs"
                 >
                   {(isCreating || isUpdating) && <Loader2 className="size-3.5 animate-spin" />}
                   <span>{editingPageId ? "পরিবর্তন সংরক্ষণ করুন" : "পেজ প্রকাশ করুন"}</span>

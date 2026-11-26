@@ -67,7 +67,7 @@ export function CmsNewsTab() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold text-[#0D5C35] uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#D62828] uppercase tracking-wider mb-1">
             <Newspaper className="size-4" />
             <span>নিউজ ও প্রেস রিলিজ (News & Events CMS)</span>
           </div>
@@ -79,7 +79,7 @@ export function CmsNewsTab() {
 
         <Button
           onClick={() => setModalOpen(true)}
-          className="gap-1.5 bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs shadow-xs cursor-pointer"
+          className="gap-1.5 bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs shadow-xs cursor-pointer"
         >
           <Plus className="size-4" />
           <span>নতুন পোস্ট লিখুন</span>
@@ -94,7 +94,7 @@ export function CmsNewsTab() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="খবরের শিরোনাম দিয়ে খুঁজুন..."
-          className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+          className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
         />
       </div>
 
@@ -102,7 +102,7 @@ export function CmsNewsTab() {
       <div className="bg-white rounded-2xl border border-stone-200/90 shadow-2xs overflow-hidden">
         {isLoading ? (
           <div className="p-12 flex flex-col items-center justify-center gap-2 text-stone-500">
-            <Loader2 className="size-6 animate-spin text-[#0D5C35]" />
+            <Loader2 className="size-6 animate-spin text-[#D62828]" />
             <span className="text-xs">সংবাদ লোড হচ্ছে...</span>
           </div>
         ) : filteredItems.length === 0 ? (
@@ -130,8 +130,8 @@ export function CmsNewsTab() {
                         variant="outline"
                         className={
                           item.type === "EVENT"
-                            ? "border-purple-300 bg-purple-50 text-purple-800 text-[10px]"
-                            : "border-emerald-300 bg-emerald-50 text-emerald-800 text-[10px]"
+                            ? "border-purple-300 bg-red-50 text-red-800 text-[10px]"
+                            : "border-red-300 bg-red-50 text-red-800 text-[10px]"
                         }
                       >
                         {item.type === "EVENT" ? "ইভেন্ট" : "সংবাদ"}
@@ -208,7 +208,7 @@ export function CmsNewsTab() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="খবরের আকর্ষণীয় শিরোনাম লিখুন..."
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
                 />
               </div>
 
@@ -252,7 +252,7 @@ export function CmsNewsTab() {
                 <Button
                   type="submit"
                   disabled={isCreating}
-                  className="bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs gap-1.5 cursor-pointer"
+                  className="bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs gap-1.5 cursor-pointer"
                 >
                   {isCreating && <Loader2 className="size-3.5 animate-spin" />}
                   <span>প্রকাশ করুন</span>

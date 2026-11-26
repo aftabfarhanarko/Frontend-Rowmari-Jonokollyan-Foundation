@@ -15,7 +15,7 @@ export function CmsActivityLogsTab() {
       {/* Top Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold text-[#0D5C35] uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#D62828] uppercase tracking-wider mb-1">
             <ShieldCheck className="size-4" />
             <span>সুপার অ্যাডমিন অডিট ট্রেইল (Immutable Audit Logs)</span>
           </div>
@@ -38,7 +38,7 @@ export function CmsActivityLogsTab() {
       <div className="bg-white rounded-2xl border border-stone-200/90 shadow-2xs overflow-hidden">
         {isLoading ? (
           <div className="p-12 flex flex-col items-center justify-center gap-2 text-stone-500">
-            <Loader2 className="size-6 animate-spin text-[#0D5C35]" />
+            <Loader2 className="size-6 animate-spin text-[#D62828]" />
             <span className="text-xs">অডিট লগ লোড হচ্ছে...</span>
           </div>
         ) : logs.length === 0 ? (
@@ -70,7 +70,7 @@ export function CmsActivityLogsTab() {
                             ? "border-red-300 bg-red-50 text-red-800 text-[10px]"
                             : log.action?.includes("UPDATE") || log.action?.includes("PUT") || log.action?.includes("PATCH")
                             ? "border-amber-300 bg-amber-50 text-amber-800 text-[10px]"
-                            : "border-emerald-300 bg-emerald-50 text-emerald-800 text-[10px]"
+                            : "border-red-300 bg-red-50 text-red-800 text-[10px]"
                         }
                       >
                         {log.action}

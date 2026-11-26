@@ -41,7 +41,7 @@ const SYSTEM_ROLES = [
   { key: "VOLUNTEER_MANAGER", label: "স্বেচ্ছাসেবক সমন্বয়ক (Volunteer Manager)", color: "amber", desc: "মাঠপর্যায়ের স্বেচ্ছাসেবক ও টিম পরিচালনা" },
   { key: "MEDICAL_COORDINATOR", label: "চিকিৎসা সমন্বয়ক (Medical Coordinator)", color: "rose", desc: "চিকিৎসা সহায়তা ও ফ্রি ক্যাম্পের তদারকি" },
   { key: "EDUCATION_COORDINATOR", label: "শিক্ষা সমন্বয়ক (Education Coordinator)", color: "indigo", desc: "উপবৃত্তি ও শিক্ষা সহায়তা কার্যক্রম" },
-  { key: "FINANCE_MANAGER", label: "অর্থ ও তহবিল ব্যবস্থাপক (Finance Manager)", color: "emerald", desc: "অনুদানের হিসাব ও রসিদ ব্যবস্থাপনা" },
+  { key: "FINANCE_MANAGER", label: "অর্থ ও তহবিল ব্যবস্থাপক (Finance Manager)", color: "red", desc: "অনুদানের হিসাব ও রসিদ ব্যবস্থাপনা" },
   { key: "CONTENT_MANAGER", label: "কনটেন্ট ব্যবস্থাপক (Content Manager)", color: "cyan", desc: "খবর, ইভেন্ট ও নোটিশ প্রকাশনা" },
   { key: "BLOOD_COORDINATOR", label: "রক্তদান সমন্বয়ক (Blood Coordinator)", color: "red", desc: "রক্তের অনুরোধ ও ডোনার নেটওয়ার্ক" },
   { key: "COMMUNITY_MEMBER", label: "সাধারণ সদস্য (Community Member)", color: "stone", desc: "সাধারণ নাগরিক / আবেদনকারী সদস্য" },
@@ -235,7 +235,7 @@ export function CmsUsersTab() {
       {/* Top Banner & KPI Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold text-[#0D5C35] uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#D62828] uppercase tracking-wider mb-1">
             <ShieldAlert className="size-4" />
             <span>সুপার অ্যাডমিন ইউজার গভর্নেন্স (User Management)</span>
           </div>
@@ -249,7 +249,7 @@ export function CmsUsersTab() {
           <Button
             onClick={() => setIsCreateModalOpen(true)}
             size="sm"
-            className="bg-[#0D5C35] hover:bg-[#094527] text-white text-xs font-bold gap-1.5 cursor-pointer shadow-xs"
+            className="bg-[#D62828] hover:bg-[#B91C1C] text-white text-xs font-bold gap-1.5 cursor-pointer shadow-xs"
           >
             <Plus className="size-4" />
             <span>নতুন ইউজার / সুপার অ্যাডমিন তৈরি</span>
@@ -271,12 +271,12 @@ export function CmsUsersTab() {
         <div className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs">
           <span className="text-xs font-medium text-stone-500">মোট নিবন্ধিত ইউজার</span>
           <div className="text-xl sm:text-2xl font-black text-stone-900 mt-1">{totalUsers} জন</div>
-          <span className="text-[10px] text-emerald-700 font-bold mt-1 inline-block">সম্পূর্ণ ডেটাবেজ রেকর্ড</span>
+          <span className="text-[10px] text-red-700 font-bold mt-1 inline-block">সম্পূর্ণ ডেটাবেজ রেকর্ড</span>
         </div>
 
         <div className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs">
           <span className="text-xs font-medium text-stone-500">সক্রিয় সদস্য</span>
-          <div className="text-xl sm:text-2xl font-black text-emerald-700 mt-1">{activeCount} জন</div>
+          <div className="text-xl sm:text-2xl font-black text-red-700 mt-1">{activeCount} জন</div>
           <span className="text-[10px] text-stone-400 font-medium mt-1 inline-block">লগইন ও সেবা সচল</span>
         </div>
 
@@ -288,8 +288,8 @@ export function CmsUsersTab() {
 
         <div className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs">
           <span className="text-xs font-medium text-stone-500">সুপার অ্যাডমিন</span>
-          <div className="text-xl sm:text-2xl font-black text-purple-700 mt-1">{superAdminCount} জন</div>
-          <span className="text-[10px] text-purple-600 font-bold mt-1 inline-block">একচ্ছত্র প্রশাসক</span>
+          <div className="text-xl sm:text-2xl font-black text-red-700 mt-1">{superAdminCount} জন</div>
+          <span className="text-[10px] text-red-600 font-bold mt-1 inline-block">একচ্ছত্র প্রশাসক</span>
         </div>
       </div>
 
@@ -302,7 +302,7 @@ export function CmsUsersTab() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="নাম, ফোন বা ইমেইল দিয়ে খুঁজুন..."
-            className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+            className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
           />
         </div>
 
@@ -323,7 +323,7 @@ export function CmsUsersTab() {
       <div className="bg-white rounded-2xl border border-stone-200/90 shadow-2xs overflow-hidden">
         {isLoading ? (
           <div className="p-12 flex flex-col items-center justify-center gap-2 text-stone-500">
-            <Loader2 className="size-6 animate-spin text-[#0D5C35]" />
+            <Loader2 className="size-6 animate-spin text-[#D62828]" />
             <span className="text-xs">ইউজার ডেটা লোড হচ্ছে...</span>
           </div>
         ) : usersList.length === 0 ? (
@@ -361,8 +361,8 @@ export function CmsUsersTab() {
                           <div
                             className={`size-8 rounded-full font-bold flex items-center justify-center text-xs shrink-0 ${
                               isSuperAdmin
-                                ? "bg-purple-100 text-purple-800"
-                                : "bg-emerald-100 text-emerald-800"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-red-100 text-red-800"
                             }`}
                           >
                             {user.fullName?.slice(0, 1) || "U"}
@@ -399,7 +399,7 @@ export function CmsUsersTab() {
                           variant="outline"
                           className={
                             user.status === "ACTIVE"
-                              ? "border-emerald-300 bg-emerald-50 text-emerald-800 font-bold text-[10px]"
+                              ? "border-red-300 bg-red-50 text-red-800 font-bold text-[10px]"
                               : "border-red-300 bg-red-50 text-red-800 font-bold text-[10px]"
                           }
                         >
@@ -412,15 +412,15 @@ export function CmsUsersTab() {
                           variant="outline"
                           className={
                             primaryRole === "SUPER_ADMIN"
-                              ? "border-purple-300 bg-purple-50 text-purple-800 font-black text-[10px]"
+                              ? "border-purple-300 bg-red-50 text-red-800 font-black text-[10px]"
                               : primaryRole === "ADMIN"
-                              ? "border-blue-300 bg-blue-50 text-blue-800 font-bold text-[10px]"
+                              ? "border-blue-300 bg-red-50 text-red-800 font-bold text-[10px]"
                               : primaryRole === "VOLUNTEER_MANAGER"
                               ? "border-amber-300 bg-amber-50 text-amber-800 font-bold text-[10px]"
                               : primaryRole === "MEDICAL_COORDINATOR"
                               ? "border-rose-300 bg-rose-50 text-rose-800 font-bold text-[10px]"
                               : primaryRole === "FINANCE_MANAGER"
-                              ? "border-emerald-300 bg-emerald-50 text-emerald-800 font-bold text-[10px]"
+                              ? "border-red-300 bg-red-50 text-red-800 font-bold text-[10px]"
                               : "border-stone-200 bg-stone-50 text-stone-700 font-medium text-[10px]"
                           }
                         >
@@ -453,7 +453,7 @@ export function CmsUsersTab() {
                             className={
                               user.status === "ACTIVE"
                                 ? "text-amber-700 hover:bg-amber-50 border-amber-200 cursor-pointer text-[10px]"
-                                : "bg-emerald-700 hover:bg-emerald-800 text-white cursor-pointer text-[10px]"
+                                : "bg-red-700 hover:bg-red-800 text-white cursor-pointer text-[10px]"
                             }
                             title={user.status === "ACTIVE" ? "অ্যাকাউন্ট স্থগিত করুন" : "সক্রিয় করুন"}
                           >
@@ -489,7 +489,7 @@ export function CmsUsersTab() {
           <div className="bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-stone-200 overflow-hidden space-y-4">
             <div className="flex items-center justify-between p-5 border-b border-stone-100 bg-stone-50/70">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-emerald-100 text-[#0D5C35]">
+                <div className="p-2 rounded-xl bg-red-100 text-[#D62828]">
                   <Users className="size-5" />
                 </div>
                 <div>
@@ -517,7 +517,7 @@ export function CmsUsersTab() {
                     value={createForm.fullName}
                     onChange={(e) => setCreateForm({ ...createForm, fullName: e.target.value })}
                     placeholder="উদাঃ মোহাম্মদ রফিকুল ইসলাম"
-                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
                   />
                 </div>
 
@@ -531,7 +531,7 @@ export function CmsUsersTab() {
                     value={createForm.email}
                     onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
                     placeholder="user@rjf.org"
-                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
                   />
                 </div>
 
@@ -545,7 +545,7 @@ export function CmsUsersTab() {
                     value={createForm.phone}
                     onChange={(e) => setCreateForm({ ...createForm, phone: e.target.value })}
                     placeholder="01712345678 বা +8801712345678"
-                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
                   />
                 </div>
 
@@ -560,7 +560,7 @@ export function CmsUsersTab() {
                     value={createForm.password}
                     onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
                     placeholder="কমপক্ষে ৮ অক্ষর (যেমনঃ Admin@2026!)"
-                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
                   />
                 </div>
 
@@ -571,7 +571,7 @@ export function CmsUsersTab() {
                     value={createForm.district}
                     onChange={(e) => setCreateForm({ ...createForm, district: e.target.value })}
                     placeholder="Kurigram"
-                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
                   />
                 </div>
 
@@ -582,7 +582,7 @@ export function CmsUsersTab() {
                     value={createForm.upazila}
                     onChange={(e) => setCreateForm({ ...createForm, upazila: e.target.value })}
                     placeholder="Roumari"
-                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
                   />
                 </div>
               </div>
@@ -594,7 +594,7 @@ export function CmsUsersTab() {
                   value={createForm.address}
                   onChange={(e) => setCreateForm({ ...createForm, address: e.target.value })}
                   placeholder="গ্রাম বা এলাকা"
-                  className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                  className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 focus:border-[#D62828]"
                 />
               </div>
 
@@ -612,7 +612,7 @@ export function CmsUsersTab() {
                         onClick={() => setCreateForm({ ...createForm, role: r.key })}
                         className={`flex items-center gap-2.5 p-2.5 rounded-xl cursor-pointer transition-all text-xs font-medium border ${
                           isSelected
-                            ? "bg-white shadow-2xs border-[#0D5C35] text-[#0D5C35] font-bold ring-1 ring-[#0D5C35]/20"
+                            ? "bg-white shadow-2xs border-[#D62828] text-[#D62828] font-bold ring-1 ring-[#D62828]/20"
                             : "bg-white/60 border-stone-200 text-stone-700 hover:bg-white"
                         }`}
                       >
@@ -622,7 +622,7 @@ export function CmsUsersTab() {
                           value={r.key}
                           checked={isSelected}
                           onChange={() => setCreateForm({ ...createForm, role: r.key })}
-                          className="size-3.5 text-[#0D5C35] focus:ring-[#0D5C35]"
+                          className="size-3.5 text-[#D62828] focus:ring-[#D62828]"
                         />
                         <span className="truncate">{r.label}</span>
                       </label>
@@ -643,7 +643,7 @@ export function CmsUsersTab() {
                 <Button
                   type="submit"
                   disabled={isCreatingUser}
-                  className="bg-[#0D5C35] hover:bg-[#094527] text-white text-xs font-bold gap-1.5 cursor-pointer"
+                  className="bg-[#D62828] hover:bg-[#B91C1C] text-white text-xs font-bold gap-1.5 cursor-pointer"
                 >
                   {isCreatingUser ? (
                     <>
@@ -666,7 +666,7 @@ export function CmsUsersTab() {
           <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-stone-200 overflow-hidden space-y-4">
             <div className="flex items-center justify-between p-5 border-b border-stone-100 bg-stone-50/70">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-purple-100 text-purple-800">
+                <div className="p-2 rounded-xl bg-red-100 text-red-800">
                   <Shield className="size-5" />
                 </div>
                 <div>
@@ -700,7 +700,7 @@ export function CmsUsersTab() {
                       onClick={() => setSelectedRoleForEdit(r.key)}
                       className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
                         isSelected
-                          ? "bg-purple-50/90 border-purple-300 ring-2 ring-purple-500/20 shadow-xs"
+                          ? "bg-red-50/90 border-purple-300 ring-2 ring-red-500/20 shadow-xs"
                           : "bg-white border-stone-200 hover:bg-stone-50"
                       }`}
                     >
@@ -711,7 +711,7 @@ export function CmsUsersTab() {
                           value={r.key}
                           checked={isSelected}
                           onChange={() => setSelectedRoleForEdit(r.key)}
-                          className="size-4 text-purple-600 focus:ring-purple-600"
+                          className="size-4 text-red-600 focus:ring-red-600"
                         />
                         <div>
                           <div className={`text-xs font-bold ${isSelected ? "text-purple-900" : "text-stone-800"}`}>
@@ -723,7 +723,7 @@ export function CmsUsersTab() {
                         </div>
                       </div>
                       {isSelected && (
-                        <span className="text-purple-700 font-bold text-xs shrink-0 ml-2">✓ নির্বাচিত</span>
+                        <span className="text-red-700 font-bold text-xs shrink-0 ml-2">✓ নির্বাচিত</span>
                       )}
                     </label>
                   )
@@ -743,7 +743,7 @@ export function CmsUsersTab() {
                   type="button"
                   disabled={isUpdatingRoles}
                   onClick={handleSaveRoles}
-                  className="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold gap-1.5 cursor-pointer"
+                  className="bg-red-700 hover:bg-red-800 text-white text-xs font-bold gap-1.5 cursor-pointer"
                 >
                   {isUpdatingRoles ? (
                     <>

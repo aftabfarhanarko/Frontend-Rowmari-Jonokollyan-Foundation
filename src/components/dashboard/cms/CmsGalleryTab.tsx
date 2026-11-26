@@ -66,7 +66,7 @@ export function CmsGalleryTab() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold text-[#0D5C35] uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#D62828] uppercase tracking-wider mb-1">
             <ImageIcon className="size-4" />
             <span>মিডিয়া ও ফটো লাইব্রেরি (Media Library)</span>
           </div>
@@ -78,7 +78,7 @@ export function CmsGalleryTab() {
 
         <Button
           onClick={() => setModalOpen(true)}
-          className="gap-1.5 bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs shadow-xs cursor-pointer"
+          className="gap-1.5 bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs shadow-xs cursor-pointer"
         >
           <Plus className="size-4" />
           <span>নতুন ছবি যোগ করুন</span>
@@ -88,7 +88,7 @@ export function CmsGalleryTab() {
       {/* Grid */}
       {isLoading ? (
         <div className="p-12 flex flex-col items-center justify-center gap-2 text-stone-500 bg-white rounded-2xl border border-stone-200">
-          <Loader2 className="size-6 animate-spin text-[#0D5C35]" />
+          <Loader2 className="size-6 animate-spin text-[#D62828]" />
           <span className="text-xs">গ্যালারি লোড হচ্ছে...</span>
         </div>
       ) : items.length === 0 ? (
@@ -123,9 +123,9 @@ export function CmsGalleryTab() {
                   <button
                     type="button"
                     onClick={() => handleCopyUrl(item.imageUrl, item.id)}
-                    className="flex items-center gap-1 text-[11px] font-bold text-emerald-800 hover:text-emerald-950 transition cursor-pointer"
+                    className="flex items-center gap-1 text-[11px] font-bold text-red-800 hover:text-red-950 transition cursor-pointer"
                   >
-                    {copiedId === item.id ? <Check className="size-3 text-emerald-600" /> : <Copy className="size-3" />}
+                    {copiedId === item.id ? <Check className="size-3 text-red-600" /> : <Copy className="size-3" />}
                     <span>{copiedId === item.id ? "কপি হয়েছে!" : "URL কপি করুন"}</span>
                   </button>
 
@@ -218,7 +218,7 @@ export function CmsGalleryTab() {
                 <Button
                   type="submit"
                   disabled={isCreating}
-                  className="bg-[#0D5C35] hover:bg-[#094527] text-white font-bold text-xs gap-1.5 cursor-pointer"
+                  className="bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs gap-1.5 cursor-pointer"
                 >
                   {isCreating && <Loader2 className="size-3.5 animate-spin" />}
                   <span>ছবি সংরক্ষণ করুন</span>
