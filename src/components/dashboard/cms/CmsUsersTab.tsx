@@ -36,15 +36,15 @@ import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 
 const SYSTEM_ROLES = [
-  { key: "SUPER_ADMIN", label: "সুপার অ্যাডমিন (Super Admin)", color: "purple" },
-  { key: "ADMIN", label: "সিস্টেম অ্যাডমিন (Admin)", color: "blue" },
-  { key: "VOLUNTEER_MANAGER", label: "স্বেচ্ছাসেবক সমন্বয়ক (Volunteer Manager)", color: "amber" },
-  { key: "MEDICAL_COORDINATOR", label: "চিকিৎসা সমন্বয়ক (Medical Coordinator)", color: "rose" },
-  { key: "EDUCATION_COORDINATOR", label: "শিক্ষা সমন্বয়ক (Education Coordinator)", color: "indigo" },
-  { key: "FINANCE_MANAGER", label: "অর্থ ও তহবিল ব্যবস্থাপক (Finance Manager)", color: "emerald" },
-  { key: "CONTENT_MANAGER", label: "কনটেন্ট ব্যবস্থাপক (Content Manager)", color: "cyan" },
-  { key: "BLOOD_COORDINATOR", label: "রক্তদান সমন্বয়ক (Blood Coordinator)", color: "red" },
-  { key: "COMMUNITY_MEMBER", label: "সাধারণ সদস্য (Community Member)", color: "stone" },
+  { key: "SUPER_ADMIN", label: "সুপার অ্যাডমিন (Super Admin)", color: "purple", desc: "সিস্টেমের পূর্ণ প্রশাসনিক ও ইউজার নিয়ন্ত্রণ ক্ষমতা" },
+  { key: "ADMIN", label: "সিস্টেম অ্যাডমিন (Admin)", color: "blue", desc: "দৈনন্দিন কার্যক্রম ও সাইট পরিচালনা ক্ষমতা" },
+  { key: "VOLUNTEER_MANAGER", label: "স্বেচ্ছাসেবক সমন্বয়ক (Volunteer Manager)", color: "amber", desc: "মাঠপর্যায়ের স্বেচ্ছাসেবক ও টিম পরিচালনা" },
+  { key: "MEDICAL_COORDINATOR", label: "চিকিৎসা সমন্বয়ক (Medical Coordinator)", color: "rose", desc: "চিকিৎসা সহায়তা ও ফ্রি ক্যাম্পের তদারকি" },
+  { key: "EDUCATION_COORDINATOR", label: "শিক্ষা সমন্বয়ক (Education Coordinator)", color: "indigo", desc: "উপবৃত্তি ও শিক্ষা সহায়তা কার্যক্রম" },
+  { key: "FINANCE_MANAGER", label: "অর্থ ও তহবিল ব্যবস্থাপক (Finance Manager)", color: "emerald", desc: "অনুদানের হিসাব ও রসিদ ব্যবস্থাপনা" },
+  { key: "CONTENT_MANAGER", label: "কনটেন্ট ব্যবস্থাপক (Content Manager)", color: "cyan", desc: "খবর, ইভেন্ট ও নোটিশ প্রকাশনা" },
+  { key: "BLOOD_COORDINATOR", label: "রক্তদান সমন্বয়ক (Blood Coordinator)", color: "red", desc: "রক্তের অনুরোধ ও ডোনার নেটওয়ার্ক" },
+  { key: "COMMUNITY_MEMBER", label: "সাধারণ সদস্য (Community Member)", color: "stone", desc: "সাধারণ নাগরিক / আবেদনকারী সদস্য" },
 ]
 
 export function CmsUsersTab() {
@@ -55,15 +55,15 @@ export function CmsUsersTab() {
   // Modals state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [userForRoleEdit, setUserForRoleEdit] = useState<AdminUserItem | null>(null)
-  const [selectedRolesForEdit, setSelectedRolesForEdit] = useState<string[]>([])
+  const [selectedRoleForEdit, setSelectedRoleForEdit] = useState<string>("COMMUNITY_MEMBER")
 
-  // Create User Form State
+  // Create User Form State (Single selected role)
   const [createForm, setCreateForm] = useState({
     fullName: "",
     email: "",
     phone: "",
     password: "",
-    roles: ["COMMUNITY_MEMBER"],
+    role: "COMMUNITY_MEMBER",
     district: "Kurigram",
     upazila: "Roumari",
     address: "",
@@ -124,7 +124,7 @@ export function CmsUsersTab() {
     }
   }
 
-  // 2. Create User / Super Admin
+  // 2. Create User / Super Admin with Selected Single Role
   const handleCreateUserSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -151,20 +151,21 @@ export function CmsUsersTab() {
         email: createForm.email.trim(),
         phone: createForm.phone.trim(),
         password: createForm.password,
-        roles: createForm.roles.length > 0 ? createForm.roles : ["COMMUNITY_MEMBER"],
+        roles: [createForm.role || "COMMUNITY_MEMBER"],
         district: createForm.district.trim() || "Kurigram",
         upazila: createForm.upazila.trim() || "Roumari",
         address: createForm.address.trim() || undefined,
       }).unwrap()
 
-      toast.success(`সফলভাবে '${createForm.fullName}' এর অ্যাকাউন্ট তৈরি করা হয়েছে!`)
+      const roleObj = SYSTEM_ROLES.find(r => r.key === createForm.role)
+      toast.success(`সফলভাবে '${createForm.fullName}' (${roleObj?.label || createForm.role}) অ্যাকাউন্ট তৈরি করা হয়েছে!`)
       setIsCreateModalOpen(false)
       setCreateForm({
         fullName: "",
         email: "",
         phone: "",
         password: "",
-        roles: ["COMMUNITY_MEMBER"],
+        role: "COMMUNITY_MEMBER",
         district: "Kurigram",
         upazila: "Roumari",
         address: "",
@@ -175,25 +176,28 @@ export function CmsUsersTab() {
     }
   }
 
-  // 3. Open Role Edit Modal
+  // 3. Open Role Edit Modal (Pre-selects single role)
   const handleOpenRoleEdit = (user: AdminUserItem) => {
     setUserForRoleEdit(user)
     const existingRoles = (user.roles || []).map((r) =>
       typeof r === "string" ? r : (r as any).name
     )
-    setSelectedRolesForEdit(existingRoles.length > 0 ? existingRoles : ["COMMUNITY_MEMBER"])
+    setSelectedRoleForEdit(existingRoles[0] || "COMMUNITY_MEMBER")
   }
 
-  // 4. Save Edited Roles
+  // 4. Save Edited Single Role
   const handleSaveRoles = async () => {
     if (!userForRoleEdit) return
     try {
       await updateRoles({
         id: userForRoleEdit.id,
-        roles: selectedRolesForEdit.length > 0 ? selectedRolesForEdit : ["COMMUNITY_MEMBER"],
+        roles: [selectedRoleForEdit],
       }).unwrap()
 
-      toast.success(`'${userForRoleEdit.fullName}' এর রোল সফলভাবে আপডেট করা হয়েছে।`)
+      const roleObj = SYSTEM_ROLES.find((r) => r.key === selectedRoleForEdit)
+      toast.success(
+        `'${userForRoleEdit.fullName}' এর রোল সফলভাবে '${roleObj?.label || selectedRoleForEdit}' এ পরিবর্তন করা হয়েছে।`
+      )
       setUserForRoleEdit(null)
       refetch()
     } catch (err: any) {
@@ -237,7 +241,7 @@ export function CmsUsersTab() {
           </div>
           <h2 className="text-xl font-black text-stone-900">নিবন্ধিত ইউজার ও প্রশাসক ব্যবস্থাপনা</h2>
           <p className="text-xs text-stone-500 mt-0.5">
-            নতুন সুপার অ্যাডমিন ও ইউজার তৈরি করুন, রোল অ্যাসাইন করুন এবং অ্যাকাউন্ট সক্রিয়, স্থগিত বা মুছে ফেলুন
+            সুপার অ্যাডমিন ও কর্মকর্তা তৈরি করুন, যেকোনো একটি নির্দিষ্ট রোল নির্ধারণ করুন এবং অ্যাকাউন্ট সক্রিয়, স্থগিত বা মুছে ফেলুন
           </p>
         </div>
 
@@ -337,7 +341,7 @@ export function CmsUsersTab() {
                   <th className="py-3 px-4">ঠিকানা</th>
                   <th className="py-3 px-4">নিবন্ধন তারিখ</th>
                   <th className="py-3 px-4 text-center">স্ট্যাটাস</th>
-                  <th className="py-3 px-4 text-center">রোলসমূহ</th>
+                  <th className="py-3 px-4 text-center">নির্ধারিত রোল</th>
                   <th className="py-3 px-4 text-right">অ্যাকশন</th>
                 </tr>
               </thead>
@@ -346,7 +350,8 @@ export function CmsUsersTab() {
                   const roleNames = (user.roles || []).map((r) =>
                     typeof r === "string" ? r : (r as any).name
                   )
-                  const isSuperAdmin = roleNames.includes("SUPER_ADMIN")
+                  const primaryRole = roleNames[0] || "COMMUNITY_MEMBER"
+                  const isSuperAdmin = primaryRole === "SUPER_ADMIN"
                   const isSelf = currentUser?.id === user.id
 
                   return (
@@ -403,43 +408,24 @@ export function CmsUsersTab() {
                       </td>
 
                       <td className="py-3.5 px-4 text-center">
-                        <div className="flex flex-wrap items-center justify-center gap-1 max-w-xs mx-auto">
-                          {roleNames.length === 0 ? (
-                            <Badge variant="outline" className="text-[10px] text-stone-400">
-                              সাধারণ সদস্য
-                            </Badge>
-                          ) : (
-                            roleNames.map((rName) => (
-                              <Badge
-                                key={rName}
-                                variant="outline"
-                                className={
-                                  rName === "SUPER_ADMIN"
-                                    ? "border-purple-300 bg-purple-50 text-purple-800 font-black text-[10px]"
-                                    : rName === "ADMIN"
-                                    ? "border-blue-300 bg-blue-50 text-blue-800 font-bold text-[10px]"
-                                    : "border-stone-200 bg-stone-50 text-stone-700 font-medium text-[10px]"
-                                }
-                              >
-                                {rName === "SUPER_ADMIN"
-                                  ? "সুপার অ্যাডমিন"
-                                  : rName === "ADMIN"
-                                  ? "অ্যাডমিন"
-                                  : rName === "VOLUNTEER_MANAGER"
-                                  ? "স্বেচ্ছাসেবক প্রধান"
-                                  : rName === "FINANCE_MANAGER"
-                                  ? "অর্থ কর্মকর্তা"
-                                  : rName === "MEDICAL_COORDINATOR"
-                                  ? "চিকিৎসা সমন্বয়ক"
-                                  : rName === "EDUCATION_COORDINATOR"
-                                  ? "শিক্ষা সমন্বয়ক"
-                                  : rName === "BLOOD_COORDINATOR"
-                                  ? "রক্ত সমন্বয়ক"
-                                  : rName}
-                              </Badge>
-                            ))
-                          )}
-                        </div>
+                        <Badge
+                          variant="outline"
+                          className={
+                            primaryRole === "SUPER_ADMIN"
+                              ? "border-purple-300 bg-purple-50 text-purple-800 font-black text-[10px]"
+                              : primaryRole === "ADMIN"
+                              ? "border-blue-300 bg-blue-50 text-blue-800 font-bold text-[10px]"
+                              : primaryRole === "VOLUNTEER_MANAGER"
+                              ? "border-amber-300 bg-amber-50 text-amber-800 font-bold text-[10px]"
+                              : primaryRole === "MEDICAL_COORDINATOR"
+                              ? "border-rose-300 bg-rose-50 text-rose-800 font-bold text-[10px]"
+                              : primaryRole === "FINANCE_MANAGER"
+                              ? "border-emerald-300 bg-emerald-50 text-emerald-800 font-bold text-[10px]"
+                              : "border-stone-200 bg-stone-50 text-stone-700 font-medium text-[10px]"
+                          }
+                        >
+                          {SYSTEM_ROLES.find((r) => r.key === primaryRole)?.label || primaryRole}
+                        </Badge>
                       </td>
 
                       <td className="py-3.5 px-4 text-right">
@@ -454,7 +440,7 @@ export function CmsUsersTab() {
                             title="রোল পরিবর্তন"
                           >
                             <Edit3 className="size-3 text-stone-500" />
-                            <span>রোল</span>
+                            <span>রোল পরিবর্তন</span>
                           </Button>
 
                           {/* Toggle Active / Suspended */}
@@ -497,7 +483,7 @@ export function CmsUsersTab() {
         )}
       </div>
 
-      {/* MODAL 1: Create New User / Super Admin */}
+      {/* MODAL 1: Create New User / Super Admin (Single Role Selection) */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">
           <div className="bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-stone-200 overflow-hidden space-y-4">
@@ -612,40 +598,33 @@ export function CmsUsersTab() {
                 />
               </div>
 
-              {/* Role Selection Checkboxes */}
+              {/* Single Role Selection Radio */}
               <div className="pt-2 border-t border-stone-100">
                 <label className="block text-xs font-bold text-stone-800 mb-2">
-                  ইউজারের ভূমিকা / রোল নির্ধারণ করুন:
+                  ইউজারের ভূমিকা / রোল নির্ধারণ করুন (যেকোনো একটি নির্বাচন করুন):
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-stone-50 p-3 rounded-xl border border-stone-200/80">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-stone-50 p-3 rounded-xl border border-stone-200/80 max-h-56 overflow-y-auto">
                   {SYSTEM_ROLES.map((r) => {
-                    const isChecked = createForm.roles.includes(r.key)
+                    const isSelected = createForm.role === r.key
                     return (
                       <label
                         key={r.key}
-                        className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-colors text-xs font-medium ${
-                          isChecked ? "bg-white shadow-2xs text-[#0D5C35] font-bold" : "text-stone-700 hover:bg-stone-100"
+                        onClick={() => setCreateForm({ ...createForm, role: r.key })}
+                        className={`flex items-center gap-2.5 p-2.5 rounded-xl cursor-pointer transition-all text-xs font-medium border ${
+                          isSelected
+                            ? "bg-white shadow-2xs border-[#0D5C35] text-[#0D5C35] font-bold ring-1 ring-[#0D5C35]/20"
+                            : "bg-white/60 border-stone-200 text-stone-700 hover:bg-white"
                         }`}
                       >
                         <input
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setCreateForm({
-                                ...createForm,
-                                roles: [...createForm.roles, r.key],
-                              })
-                            } else {
-                              setCreateForm({
-                                ...createForm,
-                                roles: createForm.roles.filter((role) => role !== r.key),
-                              })
-                            }
-                          }}
-                          className="rounded text-[#0D5C35] focus:ring-[#0D5C35]"
+                          type="radio"
+                          name="create_user_role"
+                          value={r.key}
+                          checked={isSelected}
+                          onChange={() => setCreateForm({ ...createForm, role: r.key })}
+                          className="size-3.5 text-[#0D5C35] focus:ring-[#0D5C35]"
                         />
-                        <span>{r.label}</span>
+                        <span className="truncate">{r.label}</span>
                       </label>
                     )
                   })}
@@ -681,7 +660,7 @@ export function CmsUsersTab() {
         </div>
       )}
 
-      {/* MODAL 2: Edit User Roles */}
+      {/* MODAL 2: Edit User Role (Single Role Selection) */}
       {userForRoleEdit && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">
           <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-stone-200 overflow-hidden space-y-4">
@@ -709,32 +688,43 @@ export function CmsUsersTab() {
 
             <div className="p-5 space-y-4">
               <p className="text-xs text-stone-600">
-                ইউজারকে যে যে দায়িত্ব বা অ্যাক্সেস দিতে চান, সেগুলো টিক মার্ক দিয়ে সংরক্ষণ করুন:
+                ইউজারের জন্য যেকোনো একটি দায়িত্ব বা রোল নির্বাচন করুন:
               </p>
 
-              <div className="space-y-2 bg-stone-50 p-3.5 rounded-xl border border-stone-200/80 max-h-72 overflow-y-auto">
+              <div className="space-y-2 bg-stone-50 p-3 rounded-xl border border-stone-200/80 max-h-72 overflow-y-auto">
                 {SYSTEM_ROLES.map((r) => {
-                  const isChecked = selectedRolesForEdit.includes(r.key)
+                  const isSelected = selectedRoleForEdit === r.key
                   return (
                     <label
                       key={r.key}
-                      className={`flex items-center gap-2.5 p-2 rounded-lg cursor-pointer transition-colors text-xs font-medium ${
-                        isChecked ? "bg-white shadow-2xs text-purple-900 font-bold" : "text-stone-700 hover:bg-stone-100"
+                      onClick={() => setSelectedRoleForEdit(r.key)}
+                      className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
+                        isSelected
+                          ? "bg-purple-50/90 border-purple-300 ring-2 ring-purple-500/20 shadow-xs"
+                          : "bg-white border-stone-200 hover:bg-stone-50"
                       }`}
                     >
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedRolesForEdit([...selectedRolesForEdit, r.key])
-                          } else {
-                            setSelectedRolesForEdit(selectedRolesForEdit.filter((x) => x !== r.key))
-                          }
-                        }}
-                        className="rounded text-purple-600 focus:ring-purple-600"
-                      />
-                      <span>{r.label}</span>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="radio"
+                          name="edit_user_role"
+                          value={r.key}
+                          checked={isSelected}
+                          onChange={() => setSelectedRoleForEdit(r.key)}
+                          className="size-4 text-purple-600 focus:ring-purple-600"
+                        />
+                        <div>
+                          <div className={`text-xs font-bold ${isSelected ? "text-purple-900" : "text-stone-800"}`}>
+                            {r.label}
+                          </div>
+                          <div className="text-[10px] text-stone-500 mt-0.5">
+                            {r.desc}
+                          </div>
+                        </div>
+                      </div>
+                      {isSelected && (
+                        <span className="text-purple-700 font-bold text-xs shrink-0 ml-2">✓ নির্বাচিত</span>
+                      )}
                     </label>
                   )
                 })}
