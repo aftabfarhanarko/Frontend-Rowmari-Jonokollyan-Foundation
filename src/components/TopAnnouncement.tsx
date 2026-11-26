@@ -30,10 +30,10 @@ export default function TopAnnouncement({
   };
 
   const alertContentBn =
-    'রৌমারী জনকল্যাণ ফাউন্ডেশন, ভোলামোড়, রৌমারী উপজেলা, কুড়িগ্রাম জেলা, বাংলাদেশ, ৫৬৪০ • জরুরি মানবিক সহায়তা ও শীতবস্ত্র বিতরণ কার্যক্রম চলমান • হটলাইন: +880 1712-345678 • মানুষের পাশে, মানুষের জন্য';
+    'জরুরি ঘোষণা: রৌমারী ও দুর্গম চরাঞ্চলে শীতবস্ত্র ও কম্বল বিতরণ কার্যক্রম চলমান • অসহায় রোগীর চিকিৎসায় জরুরি সহায়তা প্রদান • হটলাইন: +880 1712-345678 • রৌমারী জনকল্যাণ ফাউন্ডেশন মানুষের পাশে, মানুষের জন্য';
 
   const alertContentEn =
-    'Rowmari Jonokolyan Foundation, Volamor, Rowmari Upazila, Kurigram, Bangladesh, 5640 • Emergency Relief & Humanitarian Aid Ongoing • Hotline: +880 1712-345678 • Standing beside humanity, for humanity';
+    'Urgent Notice: Winter clothing & blanket distribution ongoing across Rowmari & riverine chars • Emergency medical assistance for underprivileged patients • Hotline: +880 1712-345678 • Rowmari Jonokolyan Foundation beside humanity, for humanity';
 
   const { data: announcements = [] } = useGetAnnouncementsQuery();
   const activeAnnouncement = announcements[0];
