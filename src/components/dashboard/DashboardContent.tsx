@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { RoleBadge } from "@/components/dashboard/RoleBadge"
 import { ROLE_METAS } from "@/config/dashboard-navigation"
+import { cn } from "@/lib/utils"
 import {
   Users,
   Target,
@@ -27,6 +28,7 @@ import {
   Camera,
   Upload,
   CheckCircle2,
+  Save,
 } from "lucide-react"
 import {
   useGetExecutiveDashboardQuery,
@@ -103,6 +105,54 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
       toast.error(err?.message || "ছবি আপলোড ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।")
     } finally {
       setIsUploadingAvatar(false)
+    }
+  }
+
+  // Profile Edit States
+  const [isEditingProfile, setIsEditingProfile] = useState(false)
+  const [isSavingProfile, setIsSavingProfile] = useState(false)
+  const [profileFullName, setProfileFullName] = useState("")
+  const [profilePhone, setProfilePhone] = useState("")
+  const [profileDistrict, setProfileDistrict] = useState("")
+  const [profileUpazila, setProfileUpazila] = useState("")
+  const [profileAddress, setProfileAddress] = useState("")
+
+  React.useEffect(() => {
+    if (currentUser) {
+      setProfileFullName(currentUser.fullName || "")
+      setProfilePhone(currentUser.phone || "")
+      setProfileDistrict(currentUser.district || "Kurigram")
+      setProfileUpazila(currentUser.upazila || "Roumari")
+      setProfileAddress(currentUser.address || "")
+    }
+  }, [currentUser])
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!profileFullName.trim()) {
+      toast.error("অনুগ্রহ করে আপনার পুরো নাম প্রদান করুন")
+      return
+    }
+    if (!profilePhone.trim()) {
+      toast.error("অনুগ্রহ করে মোবাইল নম্বর প্রদান করুন")
+      return
+    }
+    setIsSavingProfile(true)
+    try {
+      await updateProfileMutation({
+        fullName: profileFullName.trim(),
+        phone: profilePhone.trim(),
+        district: profileDistrict.trim(),
+        upazila: profileUpazila.trim(),
+        address: profileAddress.trim(),
+      }).unwrap()
+      toast.success("প্রোফাইল তথ্য সফলভাবে সংরক্ষণ করা হয়েছে!")
+      setIsEditingProfile(false)
+      refetchCurrentUser?.()
+    } catch (err: any) {
+      toast.error(err?.data?.message || err?.message || "প্রোফাইল সংরক্ষণ ব্যর্থ হয়েছে")
+    } finally {
+      setIsSavingProfile(false)
     }
   }
 
@@ -1312,14 +1362,35 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
         </div>
       )}
 
-      {/* Community Member: Profile & Settings */}
-      {activeTab === "my-profile" && (
+      {/* User / Super Admin Profile & Settings */}
+      {(activeTab === "my-profile" || activeTab === "profile" || activeTab === "admin-profile") && (
         <div className="bg-white p-5 sm:p-6 rounded-2xl border border-stone-200/90 shadow-2xs space-y-5">
-          <div className="pb-4 border-b border-stone-100">
-            <h2 className="text-lg font-bold text-stone-900">আমার প্রোফাইল ও অ্যাকাউন্ট তথ্য</h2>
-            <p className="text-xs text-stone-500">
-              আপনার সংরক্ষিত যোগাযোগের তথ্য ও অ্যাকাউন্ট বিবরণী
-            </p>
+          <div className="pb-4 border-b border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-bold text-[#0D5C35] uppercase tracking-wider mb-1">
+                <UserCheck className="size-4" />
+                <span>{currentRole === "SUPER_ADMIN" ? "সুপার অ্যাডমিন প্রোফাইল" : "ব্যবহারকারী প্রোফাইল"}</span>
+              </div>
+              <h2 className="text-xl font-black text-stone-900">
+                {currentRole === "SUPER_ADMIN" ? "সুপার অ্যাডমিন প্রোফাইল ও নিরাপত্তা" : "আমার প্রোফাইল ও অ্যাকাউন্ট তথ্য"}
+              </h2>
+              <p className="text-xs text-stone-500 mt-0.5">
+                {currentRole === "SUPER_ADMIN"
+                  ? "আপনার অ্যাডমিন প্রোফাইল, ছবি ও যোগাযোগের তথ্য সরাসরি নিয়ন্ত্রণ করুন"
+                  : "আপনার সংরক্ষিত যোগাযোগের তথ্য ও অ্যাকাউন্ট বিবরণী"}
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant={isEditingProfile ? "outline" : "default"}
+              onClick={() => setIsEditingProfile(!isEditingProfile)}
+              className={cn(
+                "text-xs font-bold gap-1.5 cursor-pointer self-start sm:self-auto",
+                !isEditingProfile && "bg-[#0D5C35] hover:bg-[#094527] text-white"
+              )}
+            >
+              {isEditingProfile ? "বাতিল করুন" : "তথ্য এডিট করুন"}
+            </Button>
           </div>
 
           {/* Profile Picture Card */}
@@ -1359,10 +1430,13 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
             <div className="space-y-1.5 text-center sm:text-left flex-1">
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                 <h3 className="text-base font-bold text-stone-900">
-                  {currentUser?.fullName || "সম্মানিত সদস্য"}
+                  {currentUser?.fullName || (currentRole === "SUPER_ADMIN" ? "সুপার অ্যাডমিন" : "সম্মানিত সদস্য")}
                 </h3>
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0D5C35] font-bold text-[11px]">
-                  {currentRole === "SUPER_ADMIN" ? "সুপার অ্যাডমিন" : "কমিউনিটি মেম্বার"}
+                  {ROLE_METAS[currentRole]?.titleBn || "সুপার অ্যাডমিন"}
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 font-bold text-[11px]">
+                  সক্রিয় অ্যাকাউন্ট
                 </span>
               </div>
               <p className="text-xs text-stone-500">
@@ -1382,7 +1456,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                   type="button"
                   onClick={() => avatarInputRef.current?.click()}
                   disabled={isUploadingAvatar}
-                  className="text-xs h-8 border-stone-300 gap-1.5"
+                  className="text-xs h-8 border-stone-300 gap-1.5 cursor-pointer"
                 >
                   {isUploadingAvatar ? (
                     <>
@@ -1406,39 +1480,128 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
-              <span className="text-xs text-stone-400 font-medium">পুরো নাম</span>
-              <div className="font-bold text-stone-900 text-sm">
-                {currentUser?.fullName || "তথ্য সংরক্ষিত"}
+          {/* Details / Edit Form */}
+          {isEditingProfile ? (
+            <form onSubmit={handleSaveProfile} className="space-y-4 p-5 rounded-2xl border border-emerald-200 bg-emerald-50/20">
+              <h3 className="text-sm font-bold text-stone-900 border-b border-stone-200 pb-2">
+                প্রোফাইল তথ্য সম্পাদন করুন
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 mb-1">পুরো নাম (Full Name) *</label>
+                  <input
+                    type="text"
+                    required
+                    value={profileFullName}
+                    onChange={(e) => setProfileFullName(e.target.value)}
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 bg-white focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 mb-1">মোবাইল নম্বর (Phone) *</label>
+                  <input
+                    type="text"
+                    required
+                    value={profilePhone}
+                    onChange={(e) => setProfilePhone(e.target.value)}
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 bg-white focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 mb-1">জেলা (District)</label>
+                  <input
+                    type="text"
+                    value={profileDistrict}
+                    onChange={(e) => setProfileDistrict(e.target.value)}
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 bg-white focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 mb-1">উপজেলা (Upazila)</label>
+                  <input
+                    type="text"
+                    value={profileUpazila}
+                    onChange={(e) => setProfileUpazila(e.target.value)}
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 bg-white focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-bold text-stone-700 mb-1">ঠিকানা (Address)</label>
+                  <input
+                    type="text"
+                    value={profileAddress}
+                    onChange={(e) => setProfileAddress(e.target.value)}
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 bg-white focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                    placeholder="গ্রাম/রোড, এলাকা"
+                  />
+                </div>
               </div>
-            </div>
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsEditingProfile(false)}
+                  className="text-xs h-9 cursor-pointer"
+                >
+                  বাতিল
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isSavingProfile}
+                  className="text-xs h-9 bg-[#0D5C35] hover:bg-[#094527] text-white font-bold gap-1.5 cursor-pointer"
+                >
+                  {isSavingProfile ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
+                  <span>পরিবর্তন সংরক্ষণ করুন</span>
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
+                <span className="text-xs text-stone-400 font-medium">পুরো নাম</span>
+                <div className="font-bold text-stone-900 text-sm">
+                  {currentUser?.fullName || "তথ্য সংরক্ষিত"}
+                </div>
+              </div>
 
-            <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
-              <span className="text-xs text-stone-400 font-medium">ইমেইল ঠিকানা</span>
-              <div className="font-bold text-stone-900 text-sm">
-                {currentUser?.email || "তথ্য সংরক্ষিত"}
+              <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
+                <span className="text-xs text-stone-400 font-medium">ইমেইল ঠিকানা</span>
+                <div className="font-bold text-stone-900 text-sm">
+                  {currentUser?.email || "তথ্য সংরক্ষিত"}
+                </div>
               </div>
-            </div>
 
-            <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
-              <span className="text-xs text-stone-400 font-medium">মোবাইল নম্বর</span>
-              <div className="font-bold text-stone-900 text-sm">
-                {currentUser?.phone || "তথ্য সংরক্ষিত"}
+              <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
+                <span className="text-xs text-stone-400 font-medium">মোবাইল নম্বর</span>
+                <div className="font-bold text-stone-900 text-sm">
+                  {currentUser?.phone || "তথ্য সংরক্ষিত"}
+                </div>
               </div>
-            </div>
 
-            <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
-              <span className="text-xs text-stone-400 font-medium">বর্তমান পদমর্যাদা (Role)</span>
-              <div>
-                <span className="inline-block px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0D5C35] font-bold text-xs">
-                  {currentRole === "SUPER_ADMIN"
-                    ? "সুপার অ্যাডমিন"
-                    : "কমিউনিটি মেম্বার / সাধারণ নাগরিক"}
-                </span>
+              <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
+                <span className="text-xs text-stone-400 font-medium">জেলা ও উপজেলা</span>
+                <div className="font-bold text-stone-900 text-sm">
+                  {currentUser?.district || "কুড়িগ্রাম"}, {currentUser?.upazila || "রৌমারী"}
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
+                <span className="text-xs text-stone-400 font-medium">ঠিকানা</span>
+                <div className="font-bold text-stone-900 text-sm">
+                  {currentUser?.address || "রৌমারী, কুড়িগ্রাম"}
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
+                <span className="text-xs text-stone-400 font-medium">বর্তমান পদমর্যাদা (Role)</span>
+                <div>
+                  <span className="inline-block px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0D5C35] font-bold text-xs">
+                    {ROLE_METAS[currentRole]?.titleBn || "সুপার অ্যাডমিন"}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 

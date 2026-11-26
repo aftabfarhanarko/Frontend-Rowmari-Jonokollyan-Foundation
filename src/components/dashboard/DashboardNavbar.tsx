@@ -186,17 +186,29 @@ export function DashboardNavbar({
             <div className="h-9 w-20 rounded-xl bg-stone-100/50" />
           ) : isUserLoggedIn ? (
             <div className="flex items-center gap-2.5 border-l border-stone-200 pl-3">
-              <div className="flex size-9 select-none items-center justify-center rounded-full bg-linear-to-br from-[#0D5C35] to-emerald-600 text-sm font-bold text-white shadow-md ring-2 ring-white outline outline-emerald-100">
-                {currentUser?.fullName ? currentUser.fullName[0] : (currentRole === "COMMUNITY_MEMBER" ? "স" : "ক")}
-              </div>
-              <div className="hidden xl:block text-left">
-                <div className="text-xs font-bold leading-tight text-stone-800">
-                  {currentUser?.fullName || (currentRole === "COMMUNITY_MEMBER" ? "সদস্য" : "কর্মকর্তা")}
+              <Link
+                href="/dashboard?tab=my-profile"
+                className="flex items-center gap-2.5 group cursor-pointer hover:opacity-85 transition-opacity"
+                title="আমার প্রোফাইল দেখুন"
+              >
+                <div className="flex size-9 select-none items-center justify-center rounded-full bg-linear-to-br from-[#0D5C35] to-emerald-600 text-sm font-bold text-white shadow-md ring-2 ring-white outline outline-emerald-100 group-hover:scale-105 transition-transform overflow-hidden">
+                  {currentUser?.avatarUrl ? (
+                    <img src={currentUser.avatarUrl} alt="" className="size-full rounded-full object-cover" />
+                  ) : currentUser?.fullName ? (
+                    currentUser.fullName[0]
+                  ) : (
+                    currentRole === "COMMUNITY_MEMBER" ? "স" : "ক"
+                  )}
                 </div>
-                <div className="mt-0.5 text-[10px] font-medium leading-tight text-stone-500">
-                  {ROLE_METAS[currentRole]?.titleBn}
+                <div className="hidden xl:block text-left">
+                  <div className="text-xs font-bold leading-tight text-stone-800 group-hover:text-[#0D5C35] transition-colors">
+                    {currentUser?.fullName || (currentRole === "COMMUNITY_MEMBER" ? "সদস্য" : "কর্মকর্তা")}
+                  </div>
+                  <div className="mt-0.5 text-[10px] font-medium leading-tight text-stone-500">
+                    {ROLE_METAS[currentRole]?.titleBn}
+                  </div>
                 </div>
-              </div>
+              </Link>
               <button
                 onClick={handleLogout}
                 disabled={isLoggingOut}

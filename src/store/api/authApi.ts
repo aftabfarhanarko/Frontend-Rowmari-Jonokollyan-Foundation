@@ -2,7 +2,19 @@ import { baseApi } from './baseApi';
 import { API_ENDPOINTS } from './endpoints';
 import { setAccessToken } from '@/lib/axios';
 
-export interface AuthUser { id: string; fullName: string; email: string; phone: string; avatarUrl?: string | null; roles: Array<{ name: string } | string> }
+export interface AuthUser {
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  avatarUrl?: string | null;
+  roles: Array<{ name: string } | string>;
+  district?: string | null;
+  upazila?: string | null;
+  address?: string | null;
+  status?: string;
+  createdAt?: string;
+}
 export interface AuthSession { accessToken: string; tokenType: 'Bearer'; expiresIn: number; user: AuthUser }
 
 export interface RegisterPayload {

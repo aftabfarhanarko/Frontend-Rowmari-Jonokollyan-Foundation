@@ -79,7 +79,7 @@ export function DashboardSidebar({
     { key: "core", title: "সার্বিক ড্যাশবোর্ড" },
     { key: "cms", title: "ওয়েবসাইট কন্টেন্ট (CMS)" },
     { key: "operations", title: "প্রজেক্ট ও ফিল্ড অপারেশন" },
-    { key: "system", title: "প্রশাসন ও অডিট লগ" },
+    { key: "system", title: "প্রশাসন ও প্রোফাইল" },
     { key: "community", title: "ব্যক্তিগত সেবা ও আবেদন" },
   ] as const
 

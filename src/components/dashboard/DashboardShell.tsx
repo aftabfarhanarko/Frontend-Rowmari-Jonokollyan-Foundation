@@ -77,7 +77,9 @@ export function DashboardShell({ defaultTab }: DashboardShellProps) {
     }
   }, [currentRole, activeTab])
 
-  const activeNavItem = DASHBOARD_NAV_ITEMS.find((it) => it.id === activeTab)
+  const activeNavItem =
+    DASHBOARD_NAV_ITEMS.find((it) => it.id === activeTab && it.roles.includes(currentRole)) ||
+    DASHBOARD_NAV_ITEMS.find((it) => it.id === activeTab)
   const isPermitted = canAccessNavItem(currentRole, activeTab)
 
   return (

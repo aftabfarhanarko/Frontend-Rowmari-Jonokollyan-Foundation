@@ -175,6 +175,16 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
     roles: ["SUPER_ADMIN"],
     descriptionBn: "সকল প্রশাসনিক ক্রিয়াকলাপের অপরিবর্তনীয় অডিট লগ",
   },
+  {
+    id: "my-profile",
+    titleBn: "আমার অ্যাডমিন প্রোফাইল",
+    titleEn: "Admin Profile",
+    href: "/dashboard?tab=my-profile",
+    iconName: "UserCheck",
+    category: "system",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "সুপার অ্যাডমিন ব্যক্তিগত তথ্য ও প্রোফাইল ছবি",
+  },
 
   // 6. Community Member Portal (Personal records)
   {
@@ -212,15 +222,15 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
 
 export function getNavItemsForRole(role: UserRole): NavItemConfig[] {
   if (role === "SUPER_ADMIN") {
-    // Super admin sees all administrative and CMS modules
-    return DASHBOARD_NAV_ITEMS.filter((item) => item.category !== "community")
+    // Super admin sees all administrative and CMS modules, plus their admin profile
+    return DASHBOARD_NAV_ITEMS.filter((item) => item.category !== "community" && item.roles.includes("SUPER_ADMIN"))
   }
   return DASHBOARD_NAV_ITEMS.filter((item) => item.roles.includes(role))
 }
 
 export function canAccessNavItem(role: UserRole, itemId: string): boolean {
   if (role === "SUPER_ADMIN") return true
-  const item = DASHBOARD_NAV_ITEMS.find((it) => it.id === itemId)
+  const item = DASHBOARD_NAV_ITEMS.find((it) => it.id === itemId && it.roles.includes(role))
   if (!item) return false
   return item.roles.includes(role)
 }
