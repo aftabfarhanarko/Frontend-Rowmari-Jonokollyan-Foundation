@@ -18,30 +18,30 @@ export default function QuickActions({
 }: QuickActionsProps) {
   const cards = [
     {
-      id: 'aid',
+      id: 'donate',
       icon: Heart,
-      tagBn: 'জরুরি সেবা',
-      tagEn: 'Emergency Aid',
-      titleBn: 'সহায়তার আবেদন',
-      titleEn: 'Request Help',
-      subtitleBn: 'চিকিৎসা, শিক্ষা, খাদ্য ও শীতবস্ত্র সহায়তা',
-      subtitleEn: 'Medical, Education, Food & Winter Relief',
-      action: onOpenAssistance,
+      tagBn: 'অনলাইন অনুদান',
+      tagEn: 'Donate Online',
+      titleBn: 'অনুদান দিন',
+      titleEn: 'Donate Now',
+      subtitleBn: 'বিকাশ, নগদ বা রকেটে অসহায়দের পাশে দাঁড়ান',
+      subtitleEn: 'Support vulnerable families with direct donations',
+      action: () => {
+        window.location.href = '/donate';
+      },
       theme: 'red',
     },
     {
-      id: 'track',
+      id: 'campaigns',
       icon: Search,
-      tagBn: 'স্বচ্ছ পর্যবেক্ষণ',
-      tagEn: 'Live Status',
-      titleBn: 'আবেদন ট্র্যাকিং',
-      titleEn: 'Track Application',
-      subtitleBn: 'জমা দেওয়া সহায়তার বর্তমান অবস্থা যাচাই করুন',
-      subtitleEn: 'Check real-time application processing status',
+      tagBn: 'জরুরি তহবিল',
+      tagEn: 'Active Causes',
+      titleBn: 'চলমান ক্যাম্পেইন',
+      titleEn: 'Ongoing Relief',
+      subtitleBn: 'শীতবস্ত্র ও জরুরি খাদ্য সহায়তা কর্মসূচি',
+      subtitleEn: 'Winter clothes and essential relief campaigns',
       action: () => {
-        const el = document.getElementById('track');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-        else window.location.href = '/#track';
+        window.location.href = '/campaigns';
       },
       theme: 'red',
     },

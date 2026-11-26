@@ -129,10 +129,13 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
             <RefreshCw className="size-3.5 text-stone-500" />
             <span>রিফ্রেশ</span>
           </Button>
-          <Button size="sm" onClick={() => setAssistanceModalOpen(true)} className="text-xs gap-1.5 h-8 bg-[#D62828] hover:bg-[#B91C1C] text-white shadow-xs font-bold cursor-pointer">
-            {currentRole === "COMMUNITY_MEMBER" ? <HeartHandshake className="size-3.5" /> : <Plus className="size-3.5" />}
-            <span>{currentRole === "COMMUNITY_MEMBER" ? "সাহায্যের আবেদন করুন" : "নতুন আবেদন"}</span>
-          </Button>
+          <a
+            href="/donate"
+            className="text-xs gap-1.5 h-8 px-3 inline-flex items-center rounded-md bg-[#D62828] hover:bg-[#B91C1C] text-white shadow-xs font-bold cursor-pointer"
+          >
+            <HeartHandshake className="size-3.5" />
+            <span>অনুদান দিন</span>
+          </a>
         </div>
       </div>
 

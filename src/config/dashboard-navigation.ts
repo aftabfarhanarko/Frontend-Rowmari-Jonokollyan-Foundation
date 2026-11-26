@@ -123,18 +123,6 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
 
   // 4. Community Aid & Operations
   {
-    id: "cases",
-    titleBn: "সহায়তার আবেদনসমূহ",
-    titleEn: "Help Applications",
-    href: "/dashboard/cases",
-    iconName: "ClipboardCheck",
-    badge: "যাচাই",
-    badgeVariant: "urgent",
-    category: "operations",
-    roles: ["SUPER_ADMIN"],
-    descriptionBn: "চিকিৎসা ও সামাজিক সাহায্য আবেদন নিষ্পত্তি",
-  },
-  {
     id: "volunteers",
     titleBn: "স্বেচ্ছাসেবক ব্যবস্থাপনা",
     titleEn: "Volunteers",
@@ -199,16 +187,6 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
   },
 
   // 6. Community Member Portal (Personal records)
-  {
-    id: "my-applications",
-    titleBn: "আমার সাহায্য আবেদন",
-    titleEn: "My Applications",
-    href: "/dashboard/my-applications",
-    iconName: "FileText",
-    category: "community",
-    roles: ["COMMUNITY_MEMBER"],
-    descriptionBn: "আপনার জমা দেওয়া আবেদন ও বর্তমান অবস্থা",
-  },
   {
     id: "my-volunteer",
     titleBn: "স্বেচ্ছাসেবক প্রোফাইল",

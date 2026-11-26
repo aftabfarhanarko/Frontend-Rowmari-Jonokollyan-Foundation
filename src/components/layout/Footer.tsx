@@ -252,16 +252,16 @@ export default function Footer({
             <ul className="space-y-2.5 text-sm">
               <li>
                 <Link
-                  href="/get-help"
+                  href="/volunteer"
                   className="group flex items-start gap-2 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition"
                 >
-                  <FileText className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
+                  <Users className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
                   <div>
                     <span className="block font-semibold text-white group-hover:text-red-300 transition text-xs sm:text-sm">
-                      {isBn ? 'সহায়তার আবেদন ও ট্র্যাকিং' : 'Aid Application & Tracker'}
+                      {isBn ? 'স্বেচ্ছাসেবক হিসেবে যুক্ত হোন' : 'Join as a Volunteer'}
                     </span>
                     <span className="text-[11px] text-stone-400 block">
-                      {isBn ? 'চিকিৎসা, শিক্ষা, খাদ্য ও শীতবস্ত্র' : 'Medical, education, winter relief'}
+                      {isBn ? 'তারুণ্যের শক্তিতে মানবতার সেবা' : 'Serve humanity together'}
                     </span>
                   </div>
                 </Link>

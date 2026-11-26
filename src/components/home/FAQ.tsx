@@ -24,10 +24,10 @@ const FAQS = [
     aEn: 'Use the tracking ID you received in the “Track Application” section on the home page to see the current status.',
   },
   {
-    qBn: 'কীভাবে সহায়তার জন্য আবেদন করব?',
-    qEn: 'How can I apply for humanitarian assistance?',
-    aBn: '“সহায়তার আবেদন” বাটনে ক্লিক করে ফর্মটি পূরণ করুন। আমাদের যাচাই কমিটি মাঠপর্যায়ে তথ্য যাচাই করে দ্রত সহায়তা নিশ্চিত করবে।',
-    aEn: 'Click the “Request Help” button and submit the form. Our verification committee will verify the details on the ground to provide aid.',
+    qBn: 'ফাউন্ডেশনে কীভাবে অনলাইন অনুদান দেওয়া যায়?',
+    qEn: 'How can I donate online to the foundation?',
+    aBn: '“অনুদান দিন” বাটনে ক্লিক করে বিকাশ, নগদ বা রকেটের মাধ্যমে সরাসরি তহবিলে অর্থ পাঠিয়ে ট্রানজ্যাকশন আইডি ও বিবরণ দিয়ে নিশ্চিত করুন।',
+    aEn: 'Click the “Donate” button and transfer funds via bKash, Nagad, or Rocket, then submit the transaction ID to confirm.',
   },
   {
     qBn: 'ফাউন্ডেশনের মানবিক সেবা কার্যক্রম কীভাবে পরিচালিত হয়?',

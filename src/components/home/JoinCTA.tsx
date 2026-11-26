@@ -47,11 +47,11 @@ export default function JoinCTA({ lang, onOpenDonation, onOpenVolunteer }: Props
                   {t('স্বেচ্ছাসেবক হোন', 'Join as Volunteer')}
                 </button>
                 <Link
-                  href="/get-help"
+                  href="/donate"
                   className="px-6 py-3 rounded-full bg-white/15 hover:bg-white/25 border border-white/30 backdrop-blur-md font-bold text-sm flex items-center gap-2 transition active:scale-[0.98] cursor-pointer text-white"
                 >
-                  <HandHeart className="w-4 h-4 text-red-300" />
-                  {t('সহায়তার আবেদন', 'Request Aid')}
+                  <Heart className="w-4 h-4 text-red-300 fill-current" />
+                  {t('অনুদান দিন', 'Donate Now')}
                 </Link>
               </div>
             </div>

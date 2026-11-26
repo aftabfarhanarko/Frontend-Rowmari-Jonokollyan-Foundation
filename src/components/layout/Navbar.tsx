@@ -53,7 +53,7 @@ const navLinks = [
   { href: '/team', labelBn: 'টিম ও কমিটি', labelEn: 'Our Team', icon: Users },
   { href: '/activities', labelBn: 'কার্যক্রম', labelEn: 'Activities', icon: Activity },
   { href: '/campaigns', labelBn: 'ক্যাম্পেইন', labelEn: 'Campaigns', icon: Target },
-  { href: '/get-help', labelBn: 'সহায়তার আবেদন', labelEn: 'Apply for Aid', icon: HandHeart },
+  { href: '/volunteer', labelBn: 'স্বেচ্ছাসেবক', labelEn: 'Volunteer', icon: Users },
   { href: '/gallery', labelBn: 'গ্যালারি', labelEn: 'Gallery', icon: ImageIcon },
   { href: '/news', labelBn: 'সংবাদ ও ইভেন্ট', labelEn: 'News', icon: Newspaper },
   { href: '/contact', labelBn: 'যোগাযোগ', labelEn: 'Contact', icon: Phone },
@@ -65,7 +65,7 @@ const primaryDesktopLinks = [
   { href: '/', labelBn: 'হোম', labelEn: 'Home', icon: Home },
   { href: '/campaigns', labelBn: 'ক্যাম্পেইন', labelEn: 'Campaigns', icon: Target },
   { href: '/activities', labelBn: 'কার্যক্রম', labelEn: 'Activities', icon: Activity },
-  { href: '/get-help', labelBn: 'সহায়তার আবেদন', labelEn: 'Apply for Aid', icon: HandHeart },
+  { href: '/volunteer', labelBn: 'স্বেচ্ছাসেবক', labelEn: 'Volunteer', icon: Users },
 ];
 
 // 2. Secondary links placed in "আরও" (More) dropdown on desktop
@@ -85,9 +85,8 @@ const mobileDrawerLinks = [
   { href: '/about', labelBn: 'আমাদের সম্পর্কে', labelEn: 'About Us' },
   { href: '/activities', labelBn: 'কার্যক্রমসমূহ', labelEn: 'Activities' },
   { href: '/campaigns', labelBn: 'ক্যাম্পেইন', labelEn: 'Campaigns' },
-  { href: '/get-help', labelBn: 'সহায়তা আবেদন', labelEn: 'Request Aid' },
+  { href: '/volunteer', labelBn: 'স্বেচ্ছাসেবক হিসেবে যুক্ত হোন', labelEn: 'Join as Volunteer' },
   { href: '/gallery', labelBn: 'গ্যালারি', labelEn: 'Gallery' },
-  { href: '/volunteer', labelBn: 'আমাদের সাথে যুক্ত হোন', labelEn: 'Join Us' },
   { href: '/news', labelBn: 'সংবাদ ও নোটিশ', labelEn: 'News & Notices' },
   { href: '/contact', labelBn: 'যোগাযোগ', labelEn: 'Contact' },
 ];

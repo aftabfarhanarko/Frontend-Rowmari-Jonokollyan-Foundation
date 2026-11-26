@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { FileText, ShieldCheck, HandHeart, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Language } from '@/types';
 
@@ -117,13 +118,13 @@ export default function HowItWorks({ lang, onOpenAssistance }: Props) {
 
         {/* Action Button */}
         <div className="mt-10 text-center">
-          <button
-            onClick={onOpenAssistance}
+          <Link
+            href="/donate"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-sm sm:text-base shadow-lg shadow-red-950/20 hover:shadow-xl transition-all duration-200 active:scale-98 cursor-pointer group"
           >
-            <span>{t('এখনই সহায়তার আবেদন করুন', 'Apply for Assistance Now')}</span>
+            <span>{t('মানবতার পাশে অনুদান দিন', 'Donate to Stand with Humanity')}</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Link>
         </div>
       </div>
     </section>

@@ -136,17 +136,10 @@ export default function OngoingCampaigns({ lang }: OngoingCampaignsProps) {
                   <div className="flex items-center gap-2">
                     <Link
                       href="/donate"
-                      className="px-4 py-2 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-semibold text-xs sm:text-sm transition shadow-sm flex items-center gap-1.5 cursor-pointer"
+                      className="px-5 py-2.5 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition shadow-sm flex items-center gap-1.5 cursor-pointer"
                     >
                       <Target className="w-4 h-4" />
                       <span>{lang === 'bn' ? 'অনুদান দিন' : 'Donate'}</span>
-                    </Link>
-                    <Link
-                      href="/get-help"
-                      className="px-3 py-2 rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-50 font-semibold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <HeartHandshake className="w-4 h-4 text-[#D62828]" />
-                      <span>{lang === 'bn' ? 'সহায়তার আবেদন' : 'Apply'}</span>
                     </Link>
                   </div>
                 </div>

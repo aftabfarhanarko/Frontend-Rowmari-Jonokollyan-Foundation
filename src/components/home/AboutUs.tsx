@@ -103,12 +103,12 @@ export default function AboutUs({
             </div>
 
             <div className="pt-2 flex flex-wrap items-center gap-4">
-              <button
-                onClick={onOpenAssistance}
+              <Link
+                href="/donate"
                 className="px-5 py-2.5 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-semibold text-xs sm:text-sm transition shadow-sm cursor-pointer"
               >
-                {lang === 'bn' ? 'সহায়তার আবেদন করুন' : 'Request Assistance'}
-              </button>
+                {lang === 'bn' ? 'অনুদান দিন' : 'Donate Now'}
+              </Link>
               <Link
                 href="/volunteer"
                 className="px-5 py-2.5 rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-semibold text-xs sm:text-sm transition shadow-sm cursor-pointer"

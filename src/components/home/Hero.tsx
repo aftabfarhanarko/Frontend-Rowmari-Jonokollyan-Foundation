@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -17,6 +18,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ShieldCheck,
+  Heart,
 } from 'lucide-react';
 import { Language } from '@/types';
 
@@ -33,6 +35,7 @@ export default function Hero({
   onOpenActivities,
   onOpenDonation,
 }: HeroProps) {
+  const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // 4 Full-Width Panoramic Hero Banner Slides
@@ -49,10 +52,10 @@ export default function Hero({
         'রৌমারী ও ব্রহ্মপুত্রের দুর্গম চরাঞ্চলের অসহায় শীতার্ত মানুষের পাশে দাঁড়ানোই আমাদের কাজ। শীতবস্ত্র, খাদ্য, শিক্ষা ও জরুরি চিকিৎসাসেবায় আমরা সার্বক্ষণিক নিবেদিত।',
       subtitleEn:
         'Dedicated to serving the underprivileged in Rowmari and remote river island chars through winter relief, food aid, education, and healthcare support.',
-      btnPrimaryBn: 'সহায়তার আবেদন',
-      btnPrimaryEn: 'Request Assistance',
-      btnPrimaryAction: 'assistance',
-      btnPrimaryIcon: FileText,
+      btnPrimaryBn: 'অনুদান দিন',
+      btnPrimaryEn: 'Donate Now',
+      btnPrimaryAction: 'donate',
+      btnPrimaryIcon: Heart,
       btnSecondaryBn: 'কার্যক্রম দেখুন',
       btnSecondaryEn: 'Explore Activities',
       btnSecondaryAction: 'activities',
@@ -72,10 +75,10 @@ export default function Hero({
         'তীব্র শীতে রৌমারীর ব্রহ্মপুত্র নদের প্রত্যন্ত চরাঞ্চলের অসহায় পরিবার, বৃদ্ধ ও শিশুদের মাঝে কম্বল, খাদ্যসামগ্রী ও জরুরি মানবিক সহায়তা প্রদান।',
       subtitleEn:
         'Distributing warm blankets, food supplies, and urgent humanitarian relief to vulnerable families across river-island char unions.',
-      btnPrimaryBn: 'সহায়তার আবেদন',
-      btnPrimaryEn: 'Request Assistance',
-      btnPrimaryAction: 'assistance',
-      btnPrimaryIcon: FileText,
+      btnPrimaryBn: 'অনুদান দিন',
+      btnPrimaryEn: 'Donate Now',
+      btnPrimaryAction: 'donate',
+      btnPrimaryIcon: Heart,
       btnSecondaryBn: 'কার্যক্রম দেখুন',
       btnSecondaryEn: 'Explore Activities',
       btnSecondaryAction: 'activities',
@@ -151,13 +154,10 @@ export default function Hero({
 
   const handleAction = (actionType: string) => {
     switch (actionType) {
-      case 'assistance':
-        onOpenAssistance();
+      case 'donate':
+        router.push('/donate');
         break;
       case 'activities':
-        onOpenActivities();
-        break;
-      case 'donation':
         onOpenActivities();
         break;
       default:
@@ -410,10 +410,10 @@ export default function Hero({
           </div>
 
           <a
-            href="#track"
+            href="/volunteer"
             className="text-[#E53935] font-bold hover:underline inline-flex items-center gap-1"
           >
-            <span>{lang === 'bn' ? 'আবেদনের অবস্থা দেখুন' : 'Track Application'}</span>
+            <span>{lang === 'bn' ? 'স্বেচ্ছাসেবক হিসেবে যোগ দিন' : 'Join as Volunteer'}</span>
             <span>→</span>
           </a>
         </div>
