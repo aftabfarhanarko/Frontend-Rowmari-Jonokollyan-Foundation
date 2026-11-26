@@ -24,7 +24,6 @@ export const baseApi = createApi({
     'Pages',
     'Settings',
     'Media',
-    'Images',
   ],
   endpoints: () => ({}),
 });

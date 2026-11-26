@@ -78,6 +78,10 @@ export const authApi = baseApi.injectEndpoints({
       query: () => ({ url: API_ENDPOINTS.auth.me }),
       providesTags: ['Users', 'MyRecords'],
     }),
+    updateProfile: builder.mutation<AuthUser, Partial<{ fullName: string; email: string; phone: string; district: string; upazila: string; address: string; avatarUrl: string }>>({
+      query: (data) => ({ url: API_ENDPOINTS.users.profile, method: 'PATCH', data }),
+      invalidatesTags: ['Users', 'MyRecords'],
+    }),
     logout: builder.mutation<unknown, void>({
       query: () => ({ url: API_ENDPOINTS.auth.logout, method: 'POST' }),
       async onQueryStarted(_arg, { queryFulfilled }) {
@@ -100,5 +104,6 @@ export const {
   useRegisterUserMutation,
   useRefreshSessionMutation,
   useGetCurrentUserQuery,
+  useUpdateProfileMutation,
   useLogoutMutation,
 } = authApi;

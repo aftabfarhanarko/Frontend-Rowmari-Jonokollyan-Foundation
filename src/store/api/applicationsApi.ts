@@ -59,10 +59,12 @@ export const applicationsApi = baseApi.injectEndpoints({
       },
     }),
     applyVolunteer: builder.mutation<unknown, VolunteerPayload>({
-      query: (form) => ({ url: API_ENDPOINTS.volunteers.register, method: 'POST', data: {
-        fullName: form.name, phone: phoneValue(form.phone), email: form.email, upazila: form.preferredWing,
-        skills: [form.profession, form.motivation].filter(Boolean).join(' — '), availabilityHoursPerWeek: Number(form.availability) || 1,
-      } }),
+      query: (form) => ({
+        url: API_ENDPOINTS.volunteers.register, method: 'POST', data: {
+          fullName: form.name, phone: phoneValue(form.phone), email: form.email, upazila: form.preferredWing,
+          skills: [form.profession, form.motivation].filter(Boolean).join(' — '), availabilityHoursPerWeek: Number(form.availability) || 1,
+        }
+      }),
     }),
     sendContactMessage: builder.mutation<{ id: string; createdAt: string }, ContactMessagePayload>({
       query: ({ name, contactInfo, message }) => ({ url: API_ENDPOINTS.contact, method: 'POST', data: { name, contactInfo, message } }),

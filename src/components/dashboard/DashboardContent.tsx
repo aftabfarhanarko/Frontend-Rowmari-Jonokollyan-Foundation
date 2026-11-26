@@ -77,7 +77,8 @@ import { CmsSettingsTab } from "@/components/dashboard/cms/CmsSettingsTab"
 import { CmsUsersTab } from "@/components/dashboard/cms/CmsUsersTab"
 import { CmsMessagesTab } from "@/components/dashboard/cms/CmsMessagesTab"
 import { CmsActivityLogsTab } from "@/components/dashboard/cms/CmsActivityLogsTab"
-import { useUploadAvatarMutation } from "@/store/api/imagesApi"
+import { uploadToImgbb, validateImageFile } from "@/lib/utils/imgbb"
+import { useUpdateProfileMutation } from "@/store/api/authApi"
 import { toast } from "sonner"
 
 interface DashboardContentProps {
@@ -94,7 +95,8 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
   } = useAppStore()
   const roleMeta = ROLE_METAS[currentRole] || ROLE_METAS.COMMUNITY_MEMBER
   const { data: currentUser, refetch: refetchCurrentUser } = useGetCurrentUserQuery()
-  const [uploadAvatarMutation, { isLoading: isUploadingAvatar }] = useUploadAvatarMutation()
+  const [updateProfileMutation] = useUpdateProfileMutation()
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
   const avatarInputRef = React.useRef<HTMLInputElement>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
 
@@ -102,29 +104,30 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
     const file = e.target.files?.[0]
     if (!file) return
 
-    const validTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"]
-    if (!validTypes.includes(file.type)) {
-      toast.error("শুধুমাত্র JPG, PNG, WEBP অথবা GIF ছবি সমর্থনযোগ্য।")
-      return
-    }
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("ছবির আকার সর্বোচ্চ ১০ মেগাবাইট হতে পারে।")
+    const validation = validateImageFile(file, 10)
+    if (!validation.valid) {
+      toast.error(validation.error || "অকার্যকর ছবি ফাইল")
       return
     }
 
     const objectUrl = URL.createObjectURL(file)
     setAvatarPreview(objectUrl)
+    setIsUploadingAvatar(true)
 
     try {
       toast.info("প্রোফাইল ছবি ImgBB ক্লাউডে আপলোড হচ্ছে...", { duration: 3000 })
-      const formData = new FormData()
-      formData.append("image", file)
-      await uploadAvatarMutation(formData).unwrap()
-      toast.success("প্রোফাইল ছবি সফলভাবে আপলোড এবং ডাটাবেসে সেভ হয়েছে!")
-      refetchCurrentUser?.()
+      const res = await uploadToImgbb(file)
+      if (res?.url) {
+        // Send only the image URL to backend API to update user profile in DB
+        await updateProfileMutation({ avatarUrl: res.url }).unwrap()
+        toast.success("প্রোফাইল ছবি সফলভাবে আপলোড এবং ডাটাবেসে সেভ হয়েছে!")
+        refetchCurrentUser?.()
+      }
     } catch (err: any) {
       setAvatarPreview(null)
-      toast.error(err?.data?.message || err?.message || "ছবি আপলোড ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।")
+      toast.error(err?.message || "ছবি আপলোড ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।")
+    } finally {
+      setIsUploadingAvatar(false)
     }
   }
 

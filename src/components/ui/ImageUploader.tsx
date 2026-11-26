@@ -2,13 +2,14 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { Upload, X, Loader2, CheckCircle2, Image as ImageIcon, RefreshCw, Link as LinkIcon } from "lucide-react";
-import { useUploadImageMutation } from "@/store/api/imagesApi";
+import { uploadToImgbb, validateImageFile } from "@/lib/utils/imgbb";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 interface ImageUploaderProps {
   value?: string;
   onChange: (url: string) => void;
+  onUploadingChange?: (isUploading: boolean) => void;
   label?: string;
   required?: boolean;
   description?: string;
@@ -19,6 +20,7 @@ interface ImageUploaderProps {
 export function ImageUploader({
   value = "",
   onChange,
+  onUploadingChange,
   label = "ছবি আপলোড করুন",
   required = false,
   description = "JPG, PNG, WEBP বা GIF (সর্বোচ্চ ১০ মেগাবাইট)",
@@ -28,7 +30,11 @@ export function ImageUploader({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [localPreview, setLocalPreview] = useState<string | null>(null);
   const [manualMode, setManualMode] = useState(false);
-  const [uploadImageMutation, { isLoading: isUploading }] = useUploadImageMutation();
+  const [isUploading, setIsUploading] = useState(false);
+
+  useEffect(() => {
+    onUploadingChange?.(isUploading);
+  }, [isUploading, onUploadingChange]);
 
   // Cleanup object URL
   useEffect(() => {
@@ -40,16 +46,10 @@ export function ImageUploader({
   }, [localPreview]);
 
   const handleFileSelect = async (file: File) => {
-    // Validate file type
-    const validTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!validTypes.includes(file.type)) {
-      toast.error("শুধুমাত্র JPG, PNG, WEBP অথবা GIF ছবি গ্রহণযোগ্য।");
-      return;
-    }
-
-    // Validate size (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("ছবির আকার সর্বোচ্চ ১০ মেগাবাইট হতে পারে।");
+    // Validate file
+    const validation = validateImageFile(file, 10);
+    if (!validation.valid) {
+      toast.error(validation.error || "অকার্যকর ছবি ফাইল");
       return;
     }
 
@@ -60,19 +60,19 @@ export function ImageUploader({
     const blobUrl = URL.createObjectURL(file);
     setLocalPreview(blobUrl);
 
+    setIsUploading(true);
     try {
       toast.info("ImgBB ক্লাউডে ছবি আপলোড হচ্ছে...", { duration: 2500 });
-      const formData = new FormData();
-      formData.append("image", file);
-
-      const res = await uploadImageMutation(formData).unwrap();
+      const res = await uploadToImgbb(file);
       if (res?.url) {
         onChange(res.url);
         toast.success("ছবি সফলভাবে আপলোড হয়েছে এবং লিঙ্ক যুক্ত হয়েছে!");
       }
     } catch (err: any) {
       setLocalPreview(null);
-      toast.error(err?.data?.message || err?.message || "ছবি আপলোড ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।");
+      toast.error(err?.message || "ছবি আপলোড ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -202,10 +202,13 @@ export function ImageUploader({
       ) : (
         /* Empty Upload Dropzone */
         <div
-          onClick={() => fileInputRef.current?.click()}
+          onClick={() => {
+            if (!isUploading) fileInputRef.current?.click();
+          }}
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => {
             e.preventDefault();
+            if (isUploading) return;
             const file = e.dataTransfer.files?.[0];
             if (file) handleFileSelect(file);
           }}
