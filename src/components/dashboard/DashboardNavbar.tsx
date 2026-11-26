@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -40,8 +40,14 @@ export function DashboardNavbar({
   const [login, { isLoading: isLoggingIn }] = useLoginMutation()
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation()
 
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const isUserAuthenticated =
-    isAuthenticated || (typeof document !== "undefined" && document.cookie.includes("rjf_session=1"))
+    isAuthenticated || (mounted && typeof document !== "undefined" && document.cookie.includes("rjf_session=1"))
 
   const { data: currentUser } = useGetCurrentUserQuery(undefined, {
     skip: !isUserAuthenticated,
@@ -84,7 +90,7 @@ export function DashboardNavbar({
     }
   }
 
-  const isUserLoggedIn = isUserAuthenticated
+  const isUserLoggedIn = mounted && isUserAuthenticated
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-stone-200/70 bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 shadow-[0_1px_0_0_rgba(13,92,53,0.04),0_8px_24px_-12px_rgba(0,0,0,0.08)]">
@@ -119,7 +125,7 @@ export function DashboardNavbar({
                 রৌমারী জনকল্যাণ ফাউন্ডেশন
               </div>
               <div className="mt-0.5 flex items-center gap-1.5 text-sm font-extrabold leading-tight text-[#0D5C35]">
-                <span>{currentRole === 'SUPER_ADMIN' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'সদস্য ড্যাশবোর্ড'}</span>
+                <span>{mounted && currentRole === 'SUPER_ADMIN' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'সদস্য ড্যাশবোর্ড'}</span>
                 {activeTabTitle && (
                   <>
                     <span className="text-stone-300 font-normal">/</span>
@@ -145,7 +151,7 @@ export function DashboardNavbar({
               সক্রিয় রোল:
             </span>
             <span className="text-xs font-bold text-emerald-800">
-              {ROLE_METAS[currentRole]?.titleBn || "সাধারণ ব্যবহারকারী"}
+              {mounted && ROLE_METAS[currentRole] ? ROLE_METAS[currentRole].titleBn : "সাধারণ ব্যবহারকারী"}
             </span>
           </div>
 
@@ -176,7 +182,9 @@ export function DashboardNavbar({
           </Link>
 
           {/* User Profile / Login Button */}
-          {isUserLoggedIn ? (
+          {!mounted ? (
+            <div className="h-9 w-20 rounded-xl bg-stone-100/50" />
+          ) : isUserLoggedIn ? (
             <div className="flex items-center gap-2.5 border-l border-stone-200 pl-3">
               <div className="flex size-9 select-none items-center justify-center rounded-full bg-linear-to-br from-[#0D5C35] to-emerald-600 text-sm font-bold text-white shadow-md ring-2 ring-white outline outline-emerald-100">
                 {currentUser?.fullName ? currentUser.fullName[0] : (currentRole === "COMMUNITY_MEMBER" ? "স" : "ক")}

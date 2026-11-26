@@ -61,11 +61,18 @@ export function DashboardSidebar({
   onCloseMobile,
 }: DashboardSidebarProps) {
   const { currentRole } = useAppStore()
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const effectiveRole = mounted ? currentRole : "COMMUNITY_MEMBER"
 
   // Get allowed routes for this specific role
   const allowedNavItems = React.useMemo(() => {
-    return getNavItemsForRole(currentRole)
-  }, [currentRole])
+    return getNavItemsForRole(effectiveRole)
+  }, [effectiveRole])
 
   // Group items by category for Single Super Admin CMS
   const categories = [
@@ -161,9 +168,9 @@ export function DashboardSidebar({
           <Shield className="size-3.5 text-[#0D5C35]" />
           <span className="text-[11px] font-bold text-stone-700">অ্যাডমিন সিস্টেম:</span>
         </div>
-        <RoleBadge role={currentRole} size="sm" />
+        <RoleBadge role={effectiveRole} size="sm" />
         <p className="text-[10px] text-stone-500 mt-1.5 leading-snug">
-          {ROLE_METAS[currentRole]?.descriptionBn || "সুপার অ্যাডমিন সেন্ট্রাল কন্ট্রোল প্যানেল"}
+          {ROLE_METAS[effectiveRole]?.descriptionBn || "সুপার অ্যাডমিন সেন্ট্রাল কন্ট্রোল প্যানেল"}
         </p>
       </div>
 
