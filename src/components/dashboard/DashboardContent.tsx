@@ -1499,7 +1499,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
       )}
 
       {/* User Management & Settings */}
-      {activeTab === "users" && <CmsUsersTab />}
+      {(activeTab === "users" || activeTab === "superadmin") && <CmsUsersTab />}
       {activeTab === "settings" && <CmsSettingsTab />}
     </div>
   )

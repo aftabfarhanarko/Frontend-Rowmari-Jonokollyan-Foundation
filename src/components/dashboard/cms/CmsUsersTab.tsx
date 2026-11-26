@@ -15,20 +15,61 @@ import {
   CheckCircle2,
   AlertCircle,
   ShieldAlert,
+  Plus,
+  Trash2,
+  Edit3,
+  X,
+  Key,
+  Lock,
 } from "lucide-react"
 import {
   useGetSuperAdminUsersQuery,
   useUpdateAdminUserStatusMutation,
+  useCreateAdminUserMutation,
+  useUpdateAdminUserRolesMutation,
+  useDeleteAdminUserMutation,
   AdminUserItem,
 } from "@/store/api/adminApi"
+import { useGetCurrentUserQuery } from "@/store/api/authApi"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+
+const SYSTEM_ROLES = [
+  { key: "SUPER_ADMIN", label: "সুপার অ্যাডমিন (Super Admin)", color: "purple" },
+  { key: "ADMIN", label: "সিস্টেম অ্যাডমিন (Admin)", color: "blue" },
+  { key: "VOLUNTEER_MANAGER", label: "স্বেচ্ছাসেবক সমন্বয়ক (Volunteer Manager)", color: "amber" },
+  { key: "MEDICAL_COORDINATOR", label: "চিকিৎসা সমন্বয়ক (Medical Coordinator)", color: "rose" },
+  { key: "EDUCATION_COORDINATOR", label: "শিক্ষা সমন্বয়ক (Education Coordinator)", color: "indigo" },
+  { key: "FINANCE_MANAGER", label: "অর্থ ও তহবিল ব্যবস্থাপক (Finance Manager)", color: "emerald" },
+  { key: "CONTENT_MANAGER", label: "কনটেন্ট ব্যবস্থাপক (Content Manager)", color: "cyan" },
+  { key: "BLOOD_COORDINATOR", label: "রক্তদান সমন্বয়ক (Blood Coordinator)", color: "red" },
+  { key: "COMMUNITY_MEMBER", label: "সাধারণ সদস্য (Community Member)", color: "stone" },
+]
 
 export function CmsUsersTab() {
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState<string>("ALL")
   const [page, setPage] = useState(1)
+
+  // Modals state
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [userForRoleEdit, setUserForRoleEdit] = useState<AdminUserItem | null>(null)
+  const [selectedRolesForEdit, setSelectedRolesForEdit] = useState<string[]>([])
+
+  // Create User Form State
+  const [createForm, setCreateForm] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    roles: ["COMMUNITY_MEMBER"],
+    district: "Kurigram",
+    upazila: "Roumari",
+    address: "",
+  })
+
+  const { data: currentUser } = useGetCurrentUserQuery()
 
   const { data: usersRes, isLoading, refetch } = useGetSuperAdminUsersQuery({
     page,
@@ -43,8 +84,17 @@ export function CmsUsersTab() {
   const totalUsers = (usersRes as any)?.total || usersList.length
 
   const [updateStatus, { isLoading: isUpdatingStatus }] = useUpdateAdminUserStatusMutation()
+  const [createUser, { isLoading: isCreatingUser }] = useCreateAdminUserMutation()
+  const [updateRoles, { isLoading: isUpdatingRoles }] = useUpdateAdminUserRolesMutation()
+  const [deleteUser, { isLoading: isDeletingUser }] = useDeleteAdminUserMutation()
 
+  // 1. Toggle Active / Suspended Status
   const handleToggleStatus = async (user: AdminUserItem) => {
+    if (currentUser?.id === user.id) {
+      toast.error("আপনি নিজের অ্যাকাউন্ট স্থগিত করতে পারবেন না!")
+      return
+    }
+
     const isSuperAdmin = (user.roles || []).some(
       (r) => (typeof r === "string" ? r : (r as any).name) === "SUPER_ADMIN"
     )
@@ -74,8 +124,107 @@ export function CmsUsersTab() {
     }
   }
 
+  // 2. Create User / Super Admin
+  const handleCreateUserSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!createForm.fullName.trim()) {
+      toast.error("অনুগ্রহ করে পূর্ণ নাম লিখুন")
+      return
+    }
+    if (!createForm.email.trim()) {
+      toast.error("অনুগ্রহ করে ইমেইল ঠিকানা লিখুন")
+      return
+    }
+    if (!createForm.phone.trim()) {
+      toast.error("অনুগ্রহ করে ফোন নম্বর লিখুন")
+      return
+    }
+    if (!createForm.password || createForm.password.length < 8) {
+      toast.error("পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে")
+      return
+    }
+
+    try {
+      await createUser({
+        fullName: createForm.fullName.trim(),
+        email: createForm.email.trim(),
+        phone: createForm.phone.trim(),
+        password: createForm.password,
+        roles: createForm.roles.length > 0 ? createForm.roles : ["COMMUNITY_MEMBER"],
+        district: createForm.district.trim() || "Kurigram",
+        upazila: createForm.upazila.trim() || "Roumari",
+        address: createForm.address.trim() || undefined,
+      }).unwrap()
+
+      toast.success(`সফলভাবে '${createForm.fullName}' এর অ্যাকাউন্ট তৈরি করা হয়েছে!`)
+      setIsCreateModalOpen(false)
+      setCreateForm({
+        fullName: "",
+        email: "",
+        phone: "",
+        password: "",
+        roles: ["COMMUNITY_MEMBER"],
+        district: "Kurigram",
+        upazila: "Roumari",
+        address: "",
+      })
+      refetch()
+    } catch (err: any) {
+      toast.error(err?.message || "ইউজার তৈরি করতে ব্যর্থ হয়েছে। ফোন বা ইমেইল ইতিমধ্যে ব্যবহৃত হতে পারে।")
+    }
+  }
+
+  // 3. Open Role Edit Modal
+  const handleOpenRoleEdit = (user: AdminUserItem) => {
+    setUserForRoleEdit(user)
+    const existingRoles = (user.roles || []).map((r) =>
+      typeof r === "string" ? r : (r as any).name
+    )
+    setSelectedRolesForEdit(existingRoles.length > 0 ? existingRoles : ["COMMUNITY_MEMBER"])
+  }
+
+  // 4. Save Edited Roles
+  const handleSaveRoles = async () => {
+    if (!userForRoleEdit) return
+    try {
+      await updateRoles({
+        id: userForRoleEdit.id,
+        roles: selectedRolesForEdit.length > 0 ? selectedRolesForEdit : ["COMMUNITY_MEMBER"],
+      }).unwrap()
+
+      toast.success(`'${userForRoleEdit.fullName}' এর রোল সফলভাবে আপডেট করা হয়েছে।`)
+      setUserForRoleEdit(null)
+      refetch()
+    } catch (err: any) {
+      toast.error(err?.message || "রোল আপডেট ব্যর্থ হয়েছে।")
+    }
+  }
+
+  // 5. Delete User
+  const handleDeleteUser = async (user: AdminUserItem) => {
+    if (currentUser?.id === user.id) {
+      toast.error("আপনি নিজের অ্যাকাউন্ট মুছে ফেলতে পারবেন না!")
+      return
+    }
+
+    const confirmMsg = `⚠️ সতর্কবার্তা:\nআপনি কি নিশ্চিতভাবে '${user.fullName}' (${user.email || user.phone}) অ্যাকাউন্টটি সম্পূর্ণরূপে মুছে ফেলতে চান?\nএই প্রক্রিয়াটি অপরিবর্তনীয়!`
+    if (!confirm(confirmMsg)) return
+
+    try {
+      await deleteUser(user.id).unwrap()
+      toast.success(`'${user.fullName}' অ্যাকাউন্ট সফলভাবে মুছে ফেলা হয়েছে।`)
+      refetch()
+    } catch (err: any) {
+      toast.error(err?.message || "অ্যাকাউন্ট মুছে ফেলা ব্যর্থ হয়েছে।")
+    }
+  }
+
   const activeCount = usersList.filter((u) => u.status === "ACTIVE").length
   const suspendedCount = usersList.filter((u) => u.status === "SUSPENDED").length
+  const superAdminCount = usersList.filter((u) =>
+    (u.roles || []).some((r) => (typeof r === "string" ? r : (r as any).name) === "SUPER_ADMIN")
+  ).length
 
   return (
     <div className="space-y-6">
@@ -86,13 +235,22 @@ export function CmsUsersTab() {
             <ShieldAlert className="size-4" />
             <span>সুপার অ্যাডমিন ইউজার গভর্নেন্স (User Management)</span>
           </div>
-          <h2 className="text-xl font-black text-stone-900">নিবন্ধিত ইউজার ও সদস্য তালিকা</h2>
+          <h2 className="text-xl font-black text-stone-900">নিবন্ধিত ইউজার ও প্রশাসক ব্যবস্থাপনা</h2>
           <p className="text-xs text-stone-500 mt-0.5">
-            ওয়েবসাইটে নিবন্ধিত সকল সাধারণ নাগরিক ও আবেদনকারীদের তথ্য এবং অ্যাকাউন্ট সক্রিয়/স্থগিত নিয়ন্ত্রণ
+            নতুন সুপার অ্যাডমিন ও ইউজার তৈরি করুন, রোল অ্যাসাইন করুন এবং অ্যাকাউন্ট সক্রিয়, স্থগিত বা মুছে ফেলুন
           </p>
         </div>
 
         <div className="flex items-center gap-2.5">
+          <Button
+            onClick={() => setIsCreateModalOpen(true)}
+            size="sm"
+            className="bg-[#0D5C35] hover:bg-[#094527] text-white text-xs font-bold gap-1.5 cursor-pointer shadow-xs"
+          >
+            <Plus className="size-4" />
+            <span>নতুন ইউজার / সুপার অ্যাডমিন তৈরি</span>
+          </Button>
+
           <Button
             onClick={() => refetch()}
             variant="outline"
@@ -125,9 +283,9 @@ export function CmsUsersTab() {
         </div>
 
         <div className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs">
-          <span className="text-xs font-medium text-stone-500">একচ্ছত্র প্রশাসক</span>
-          <div className="text-xl sm:text-2xl font-black text-purple-700 mt-1">১ জন</div>
-          <span className="text-[10px] text-purple-600 font-bold mt-1 inline-block">সুপার অ্যাডমিন</span>
+          <span className="text-xs font-medium text-stone-500">সুপার অ্যাডমিন</span>
+          <div className="text-xl sm:text-2xl font-black text-purple-700 mt-1">{superAdminCount} জন</div>
+          <span className="text-[10px] text-purple-600 font-bold mt-1 inline-block">একচ্ছত্র প্রশাসক</span>
         </div>
       </div>
 
@@ -179,25 +337,40 @@ export function CmsUsersTab() {
                   <th className="py-3 px-4">ঠিকানা</th>
                   <th className="py-3 px-4">নিবন্ধন তারিখ</th>
                   <th className="py-3 px-4 text-center">স্ট্যাটাস</th>
-                  <th className="py-3 px-4 text-center">রোল</th>
+                  <th className="py-3 px-4 text-center">রোলসমূহ</th>
                   <th className="py-3 px-4 text-right">অ্যাকশন</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100 text-stone-700">
                 {usersList.map((user) => {
-                  const isSuperAdmin = (user.roles || []).some(
-                    (r) => (typeof r === "string" ? r : (r as any).name) === "SUPER_ADMIN"
+                  const roleNames = (user.roles || []).map((r) =>
+                    typeof r === "string" ? r : (r as any).name
                   )
+                  const isSuperAdmin = roleNames.includes("SUPER_ADMIN")
+                  const isSelf = currentUser?.id === user.id
 
                   return (
                     <tr key={user.id} className="hover:bg-stone-50/70 transition-colors">
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2.5">
-                          <div className="size-8 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-xs shrink-0">
+                          <div
+                            className={`size-8 rounded-full font-bold flex items-center justify-center text-xs shrink-0 ${
+                              isSuperAdmin
+                                ? "bg-purple-100 text-purple-800"
+                                : "bg-emerald-100 text-emerald-800"
+                            }`}
+                          >
                             {user.fullName?.slice(0, 1) || "U"}
                           </div>
                           <div>
-                            <div className="font-bold text-stone-900">{user.fullName}</div>
+                            <div className="font-bold text-stone-900 flex items-center gap-1.5">
+                              <span>{user.fullName}</span>
+                              {isSelf && (
+                                <span className="text-[10px] bg-stone-100 text-stone-600 px-1.5 py-0.5 rounded font-mono font-normal">
+                                  (আপনি)
+                                </span>
+                              )}
+                            </div>
                             <div className="text-[10px] text-stone-400 font-mono">ID: {user.id.slice(0, 8)}...</div>
                           </div>
                         </div>
@@ -230,36 +403,90 @@ export function CmsUsersTab() {
                       </td>
 
                       <td className="py-3.5 px-4 text-center">
-                        <Badge
-                          variant="outline"
-                          className={
-                            isSuperAdmin
-                              ? "border-purple-300 bg-purple-50 text-purple-800 font-black text-[10px]"
-                              : "border-stone-200 bg-stone-50 text-stone-600 font-medium text-[10px]"
-                          }
-                        >
-                          {isSuperAdmin ? "সুপার অ্যাডমিন" : "সাধারণ সদস্য"}
-                        </Badge>
+                        <div className="flex flex-wrap items-center justify-center gap-1 max-w-xs mx-auto">
+                          {roleNames.length === 0 ? (
+                            <Badge variant="outline" className="text-[10px] text-stone-400">
+                              সাধারণ সদস্য
+                            </Badge>
+                          ) : (
+                            roleNames.map((rName) => (
+                              <Badge
+                                key={rName}
+                                variant="outline"
+                                className={
+                                  rName === "SUPER_ADMIN"
+                                    ? "border-purple-300 bg-purple-50 text-purple-800 font-black text-[10px]"
+                                    : rName === "ADMIN"
+                                    ? "border-blue-300 bg-blue-50 text-blue-800 font-bold text-[10px]"
+                                    : "border-stone-200 bg-stone-50 text-stone-700 font-medium text-[10px]"
+                                }
+                              >
+                                {rName === "SUPER_ADMIN"
+                                  ? "সুপার অ্যাডমিন"
+                                  : rName === "ADMIN"
+                                  ? "অ্যাডমিন"
+                                  : rName === "VOLUNTEER_MANAGER"
+                                  ? "স্বেচ্ছাসেবক প্রধান"
+                                  : rName === "FINANCE_MANAGER"
+                                  ? "অর্থ কর্মকর্তা"
+                                  : rName === "MEDICAL_COORDINATOR"
+                                  ? "চিকিৎসা সমন্বয়ক"
+                                  : rName === "EDUCATION_COORDINATOR"
+                                  ? "শিক্ষা সমন্বয়ক"
+                                  : rName === "BLOOD_COORDINATOR"
+                                  ? "রক্ত সমন্বয়ক"
+                                  : rName}
+                              </Badge>
+                            ))
+                          )}
+                        </div>
                       </td>
 
                       <td className="py-3.5 px-4 text-right">
-                        {isSuperAdmin ? (
-                          <span className="text-[11px] text-stone-400 italic">সুরক্ষিত</span>
-                        ) : (
+                        <div className="flex items-center justify-end gap-1.5">
+                          {/* Role Edit Button */}
                           <Button
                             type="button"
                             size="xs"
+                            variant="outline"
+                            onClick={() => handleOpenRoleEdit(user)}
+                            className="text-stone-700 hover:bg-stone-100 border-stone-200 cursor-pointer text-[10px] gap-1 px-2"
+                            title="রোল পরিবর্তন"
+                          >
+                            <Edit3 className="size-3 text-stone-500" />
+                            <span>রোল</span>
+                          </Button>
+
+                          {/* Toggle Active / Suspended */}
+                          <Button
+                            type="button"
+                            size="xs"
+                            disabled={isSelf || (isSuperAdmin && user.status === "ACTIVE")}
                             variant={user.status === "ACTIVE" ? "outline" : "default"}
                             onClick={() => handleToggleStatus(user)}
                             className={
                               user.status === "ACTIVE"
-                                ? "text-red-700 hover:bg-red-50 border-red-200 cursor-pointer text-[10px]"
+                                ? "text-amber-700 hover:bg-amber-50 border-amber-200 cursor-pointer text-[10px]"
                                 : "bg-emerald-700 hover:bg-emerald-800 text-white cursor-pointer text-[10px]"
                             }
+                            title={user.status === "ACTIVE" ? "অ্যাকাউন্ট স্থগিত করুন" : "সক্রিয় করুন"}
                           >
-                            {user.status === "ACTIVE" ? "স্থগিত করুন" : "সক্রিয় করুন"}
+                            {user.status === "ACTIVE" ? "স্থগিত" : "সক্রিয়"}
                           </Button>
-                        )}
+
+                          {/* Delete Button */}
+                          <Button
+                            type="button"
+                            size="xs"
+                            variant="outline"
+                            disabled={isSelf || isDeletingUser}
+                            onClick={() => handleDeleteUser(user)}
+                            className="text-red-700 hover:bg-red-50 border-red-200 cursor-pointer text-[10px] p-1.5"
+                            title="অ্যাকাউন্ট মুছে ফেলুন"
+                          >
+                            <Trash2 className="size-3 text-red-600" />
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   )
@@ -269,7 +496,281 @@ export function CmsUsersTab() {
           </div>
         )}
       </div>
+
+      {/* MODAL 1: Create New User / Super Admin */}
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-stone-200 overflow-hidden space-y-4">
+            <div className="flex items-center justify-between p-5 border-b border-stone-100 bg-stone-50/70">
+              <div className="flex items-center gap-2">
+                <div className="p-2 rounded-xl bg-emerald-100 text-[#0D5C35]">
+                  <Users className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-stone-900">নতুন ইউজার / সুপার অ্যাডমিন তৈরি করুন</h3>
+                  <p className="text-xs text-stone-500">সিস্টেমে নতুন অ্যাকাউন্ট তৈরি ও সরাসরি ভূমিকা নির্ধারণ</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsCreateModalOpen(false)}
+                className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-200 cursor-pointer transition-colors"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateUserSubmit} className="p-5 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 mb-1">
+                    পূর্ণ নাম <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={createForm.fullName}
+                    onChange={(e) => setCreateForm({ ...createForm, fullName: e.target.value })}
+                    placeholder="উদাঃ মোহাম্মদ রফিকুল ইসলাম"
+                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 mb-1">
+                    ইমেইল ঠিকানা <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={createForm.email}
+                    onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
+                    placeholder="user@rjf.org"
+                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 mb-1">
+                    ফোন নম্বর <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={createForm.phone}
+                    onChange={(e) => setCreateForm({ ...createForm, phone: e.target.value })}
+                    placeholder="01712345678 বা +8801712345678"
+                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 mb-1">
+                    পাসওয়ার্ড <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    required
+                    minLength={8}
+                    value={createForm.password}
+                    onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
+                    placeholder="কমপক্ষে ৮ অক্ষর (যেমনঃ Admin@2026!)"
+                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 mb-1">জেলা</label>
+                  <input
+                    type="text"
+                    value={createForm.district}
+                    onChange={(e) => setCreateForm({ ...createForm, district: e.target.value })}
+                    placeholder="Kurigram"
+                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 mb-1">উপজেলা</label>
+                  <input
+                    type="text"
+                    value={createForm.upazila}
+                    onChange={(e) => setCreateForm({ ...createForm, upazila: e.target.value })}
+                    placeholder="Roumari"
+                    className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-stone-700 mb-1">ঠিকানা / গ্রাম (ঐচ্ছিক)</label>
+                <input
+                  type="text"
+                  value={createForm.address}
+                  onChange={(e) => setCreateForm({ ...createForm, address: e.target.value })}
+                  placeholder="গ্রাম বা এলাকা"
+                  className="w-full text-xs p-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
+                />
+              </div>
+
+              {/* Role Selection Checkboxes */}
+              <div className="pt-2 border-t border-stone-100">
+                <label className="block text-xs font-bold text-stone-800 mb-2">
+                  ইউজারের ভূমিকা / রোল নির্ধারণ করুন:
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-stone-50 p-3 rounded-xl border border-stone-200/80">
+                  {SYSTEM_ROLES.map((r) => {
+                    const isChecked = createForm.roles.includes(r.key)
+                    return (
+                      <label
+                        key={r.key}
+                        className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-colors text-xs font-medium ${
+                          isChecked ? "bg-white shadow-2xs text-[#0D5C35] font-bold" : "text-stone-700 hover:bg-stone-100"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setCreateForm({
+                                ...createForm,
+                                roles: [...createForm.roles, r.key],
+                              })
+                            } else {
+                              setCreateForm({
+                                ...createForm,
+                                roles: createForm.roles.filter((role) => role !== r.key),
+                              })
+                            }
+                          }}
+                          className="rounded text-[#0D5C35] focus:ring-[#0D5C35]"
+                        />
+                        <span>{r.label}</span>
+                      </label>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-stone-100">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsCreateModalOpen(false)}
+                  className="text-xs cursor-pointer"
+                >
+                  বাতিল
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isCreatingUser}
+                  className="bg-[#0D5C35] hover:bg-[#094527] text-white text-xs font-bold gap-1.5 cursor-pointer"
+                >
+                  {isCreatingUser ? (
+                    <>
+                      <Loader2 className="size-3.5 animate-spin" />
+                      <span>তৈরি হচ্ছে...</span>
+                    </>
+                  ) : (
+                    <span>অ্যাকাউন্ট তৈরি করুন</span>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 2: Edit User Roles */}
+      {userForRoleEdit && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-stone-200 overflow-hidden space-y-4">
+            <div className="flex items-center justify-between p-5 border-b border-stone-100 bg-stone-50/70">
+              <div className="flex items-center gap-2">
+                <div className="p-2 rounded-xl bg-purple-100 text-purple-800">
+                  <Shield className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-stone-900">
+                    রোল পরিবর্তন: {userForRoleEdit.fullName}
+                  </h3>
+                  <p className="text-xs text-stone-500 font-mono">
+                    {userForRoleEdit.email} • {userForRoleEdit.phone}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setUserForRoleEdit(null)}
+                className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-200 cursor-pointer transition-colors"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+
+            <div className="p-5 space-y-4">
+              <p className="text-xs text-stone-600">
+                ইউজারকে যে যে দায়িত্ব বা অ্যাক্সেস দিতে চান, সেগুলো টিক মার্ক দিয়ে সংরক্ষণ করুন:
+              </p>
+
+              <div className="space-y-2 bg-stone-50 p-3.5 rounded-xl border border-stone-200/80 max-h-72 overflow-y-auto">
+                {SYSTEM_ROLES.map((r) => {
+                  const isChecked = selectedRolesForEdit.includes(r.key)
+                  return (
+                    <label
+                      key={r.key}
+                      className={`flex items-center gap-2.5 p-2 rounded-lg cursor-pointer transition-colors text-xs font-medium ${
+                        isChecked ? "bg-white shadow-2xs text-purple-900 font-bold" : "text-stone-700 hover:bg-stone-100"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedRolesForEdit([...selectedRolesForEdit, r.key])
+                          } else {
+                            setSelectedRolesForEdit(selectedRolesForEdit.filter((x) => x !== r.key))
+                          }
+                        }}
+                        className="rounded text-purple-600 focus:ring-purple-600"
+                      />
+                      <span>{r.label}</span>
+                    </label>
+                  )
+                })}
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-stone-100">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setUserForRoleEdit(null)}
+                  className="text-xs cursor-pointer"
+                >
+                  বাতিল
+                </Button>
+                <Button
+                  type="button"
+                  disabled={isUpdatingRoles}
+                  onClick={handleSaveRoles}
+                  className="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold gap-1.5 cursor-pointer"
+                >
+                  {isUpdatingRoles ? (
+                    <>
+                      <Loader2 className="size-3.5 animate-spin" />
+                      <span>সংরক্ষণ হচ্ছে...</span>
+                    </>
+                  ) : (
+                    <span>রোল সংরক্ষণ করুন</span>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
+
 export default CmsUsersTab

@@ -66,6 +66,17 @@ export interface AdminUserItem {
   roles: Array<{ name: string } | string>;
 }
 
+export interface CreateAdminUserPayload {
+  fullName: string;
+  email: string;
+  phone: string;
+  password: string;
+  roles?: string[];
+  district?: string;
+  upazila?: string;
+  address?: string;
+}
+
 export interface ContactMessageItem {
   id: string;
   name: string;
@@ -182,6 +193,32 @@ export const adminApi = baseApi.injectEndpoints({
       invalidatesTags: ['Users', 'Reports'],
     }),
 
+    createAdminUser: builder.mutation<AdminUserItem, CreateAdminUserPayload>({
+      query: (data) => ({
+        url: API_ENDPOINTS.admin.users,
+        method: 'POST',
+        data,
+      }),
+      invalidatesTags: ['Users', 'Reports'],
+    }),
+
+    updateAdminUserRoles: builder.mutation<AdminUserItem, { id: string; roles: string[] }>({
+      query: ({ id, roles }) => ({
+        url: API_ENDPOINTS.admin.userRoles(id),
+        method: 'PUT',
+        data: { roles },
+      }),
+      invalidatesTags: ['Users', 'Reports'],
+    }),
+
+    deleteAdminUser: builder.mutation<{ success: boolean; message: string }, string>({
+      query: (id) => ({
+        url: API_ENDPOINTS.admin.userById(id),
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Users', 'Reports'],
+    }),
+
     // 6. Contact Messages
     getAdminContactMessages: builder.query<{ items: ContactMessageItem[]; total: number }, { page?: number; limit?: number } | void>({
       query: (params) => ({
@@ -241,6 +278,9 @@ export const {
   useUpdateAdminSettingsMutation,
   useGetSuperAdminUsersQuery,
   useUpdateAdminUserStatusMutation,
+  useCreateAdminUserMutation,
+  useUpdateAdminUserRolesMutation,
+  useDeleteAdminUserMutation,
   useGetAdminContactMessagesQuery,
   useDeleteAdminContactMessageMutation,
   useGetAdminMediaQuery,

@@ -147,13 +147,13 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
   // 5. System Administration & Security
   {
     id: "users",
-    titleBn: "ইউজার ব্যবস্থাপনা",
-    titleEn: "User Management",
+    titleBn: "ইউজার ও সুপার অ্যাডমিন",
+    titleEn: "User & Admin Management",
     href: "/dashboard?tab=users",
     iconName: "UserCheck",
     category: "system",
     roles: ["SUPER_ADMIN"],
-    descriptionBn: "সকল নিবন্ধিত সদস্যের অ্যাকাউন্ট ও স্ট্যাটাস",
+    descriptionBn: "সুপার অ্যাডমিন ও ইউজার তৈরি, রোল ও স্ট্যাটাস নিয়ন্ত্রণ",
   },
   {
     id: "settings",
