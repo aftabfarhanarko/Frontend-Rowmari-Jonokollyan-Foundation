@@ -45,6 +45,11 @@ interface DashboardContentProps {
 export function DashboardContent({ activeTab, onSelectTab }: DashboardContentProps) {
   const { currentRole, setAssistanceModalOpen } = useAppStore()
   const roleMeta = ROLE_METAS[currentRole] || ROLE_METAS.COMMUNITY_MEMBER
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const { data: currentUser, refetch: refetchCurrentUser } = useGetCurrentUserQuery()
   const [updateProfileMutation] = useUpdateProfileMutation()

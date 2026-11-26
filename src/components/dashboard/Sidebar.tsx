@@ -35,7 +35,9 @@ export function Sidebar({
     setMounted(true)
   }, [])
 
-  const effectiveRole = mounted ? currentRole : "COMMUNITY_MEMBER"
+  // Sync role with stored cookie if state is still unhydrated
+  const roleFromCookie = typeof document !== "undefined" ? (document.cookie.match(/rjf_auth_role=([^;]+)/)?.[1] as any) : null
+  const effectiveRole = roleFromCookie || currentRole || "COMMUNITY_MEMBER"
   const allowedNavItems = useMemo(() => getNavItemsForRole(effectiveRole), [effectiveRole])
 
   const categories = [
