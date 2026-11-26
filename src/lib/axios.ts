@@ -2,7 +2,9 @@ import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 
 const configuredOrigin = process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/$/, '');
-export const API_BASE_URL = `${configuredOrigin || 'https://api-rowmari-jonokollyan-foundation.onrender.com'}/api/v1`;
+export const API_BASE_URL = configuredOrigin
+  ? (configuredOrigin.endsWith('/api/v1') ? configuredOrigin : `${configuredOrigin}/api/v1`)
+  : 'https://api-rowmari-jonokollyan-foundation.onrender.com/api/v1';
 
 let accessToken: string | null = null;
 export const setAccessToken = (token: string | null) => {

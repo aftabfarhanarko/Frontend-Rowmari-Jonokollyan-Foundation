@@ -7,62 +7,38 @@ import { DataTable, type TableColumn } from "@/components/ui/data-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { RoleBadge } from "@/components/dashboard/RoleBadge"
-import { ROLE_METAS, ALL_ROLES } from "@/config/dashboard-navigation"
+import { ROLE_METAS } from "@/config/dashboard-navigation"
 import {
   Users,
   Target,
   HeartPulse,
-  GraduationCap,
-  Coins,
-  ClipboardCheck,
-  CheckCircle2,
-  Clock,
-  AlertCircle,
   Plus,
-  Eye,
   FileSpreadsheet,
   RefreshCw,
-  Search,
-  Megaphone,
   FileText,
   HeartHandshake,
-  Receipt,
-  Download,
-  Calendar,
-  Building,
   UserCheck,
-  Send,
-  ExternalLink,
   Loader2,
-  ShieldAlert,
   ShieldCheck,
   Key,
-  Lock,
-  Activity,
-  UserCog,
-  Check,
-  X,
   Image as ImageIcon,
   Newspaper,
   Mail,
   Camera,
   Upload,
-  Bell,
+  CheckCircle2,
 } from "lucide-react"
 import {
   useGetExecutiveDashboardQuery,
   useGetAdminApplicationsQuery,
   useUpdateApplicationStatusMutation,
-  useAssignApplicationStaffMutation,
   useGetAdminDonationsQuery,
-  useGetAdminExpensesQuery,
   useGetAdminVolunteersQuery,
   useApproveVolunteerMutation,
   useGetAdminUsersQuery,
   useUpdateUserRoleMutation,
   useUpdateUserStatusMutation,
   useGetAccessControlRolesQuery,
-  useGetAccessControlPermissionsQuery,
   useGetAuditLogsQuery,
   useGetAdminNotificationsQuery,
   useGetMyApplicationsQuery,
@@ -70,7 +46,7 @@ import {
 } from "@/store/api/dashboardApi"
 import { useGetCampaignsQuery } from "@/store/api/campaignsApi"
 import { useGetAdminDashboardQuery } from "@/store/api/adminApi"
-import { useGetCurrentUserQuery } from "@/store/api/authApi"
+import { useGetCurrentUserQuery, useUpdateProfileMutation } from "@/store/api/authApi"
 import { CmsPagesTab } from "@/components/dashboard/cms/CmsPagesTab"
 import { CmsNewsTab } from "@/components/dashboard/cms/CmsNewsTab"
 import { CmsGalleryTab } from "@/components/dashboard/cms/CmsGalleryTab"
@@ -79,7 +55,6 @@ import { CmsUsersTab } from "@/components/dashboard/cms/CmsUsersTab"
 import { CmsMessagesTab } from "@/components/dashboard/cms/CmsMessagesTab"
 import { CmsActivityLogsTab } from "@/components/dashboard/cms/CmsActivityLogsTab"
 import { uploadToImgbb, validateImageFile } from "@/lib/utils/imgbb"
-import { useUpdateProfileMutation } from "@/store/api/authApi"
 import { toast } from "sonner"
 
 interface DashboardContentProps {
@@ -119,7 +94,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
       toast.info("প্রোফাইল ছবি ImgBB ক্লাউডে আপলোড হচ্ছে...", { duration: 3000 })
       const res = await uploadToImgbb(file)
       if (res?.url) {
-        // Send only the image URL to backend API to update user profile in DB
         await updateProfileMutation({ avatarUrl: res.url }).unwrap()
         toast.success("প্রোফাইল ছবি সফলভাবে আপলোড এবং ডাটাবেসে সেভ হয়েছে!")
         refetchCurrentUser?.()
@@ -132,32 +106,41 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
     }
   }
 
-  // --- Real Backend API Hooks ---
+  // --- Role helpers ---
   const isPrivileged = ["SUPER_ADMIN", "ADMIN", "FINANCE_MANAGER"].includes(currentRole)
-  const isStaff = isPrivileged || ["MEDICAL_COORDINATOR", "EDUCATION_COORDINATOR", "CASE_WORKER", "VOLUNTEER_MANAGER", "BLOOD_COORDINATOR"].includes(currentRole)
+  const isStaff =
+    isPrivileged ||
+    [
+      "MEDICAL_COORDINATOR",
+      "EDUCATION_COORDINATOR",
+      "CASE_WORKER",
+      "VOLUNTEER_MANAGER",
+      "BLOOD_COORDINATOR",
+    ].includes(currentRole)
 
-  const { data: execDashboard, isLoading: isDashboardLoading, refetch: refetchDashboard } = useGetExecutiveDashboardQuery(undefined, {
-    skip: !isPrivileged,
-  })
+  // --- Real Backend API Hooks (no mocks) ---
+  const { data: execDashboard, isLoading: isDashboardLoading, refetch: refetchDashboard } =
+    useGetExecutiveDashboardQuery(undefined, { skip: !isPrivileged })
 
-  const { data: adminDashboard, isLoading: isAdminDashboardLoading, refetch: refetchAdminDashboard } = useGetAdminDashboardQuery(undefined, {
-    skip: currentRole !== "SUPER_ADMIN",
-  })
+  const { data: adminDashboard, isLoading: isAdminDashboardLoading, refetch: refetchAdminDashboard } =
+    useGetAdminDashboardQuery(undefined, { skip: currentRole !== "SUPER_ADMIN" })
 
-  const { data: adminAppsRes, isLoading: isAppsLoading, refetch: refetchApps } = useGetAdminApplicationsQuery(undefined, {
-    skip: !isStaff,
-  })
+  const { data: adminAppsRes, isLoading: isAppsLoading, refetch: refetchApps } =
+    useGetAdminApplicationsQuery(undefined, { skip: !isStaff })
   const appItems = Array.isArray(adminAppsRes) ? adminAppsRes : (adminAppsRes as any)?.items || []
 
-  const { data: adminVolunteersRes, refetch: refetchVolunteers } = useGetAdminVolunteersQuery(undefined, {
-    skip: !isStaff,
-  })
-  const volunteerItems = Array.isArray(adminVolunteersRes) ? adminVolunteersRes : (adminVolunteersRes as any)?.items || []
+  const { data: adminVolunteersRes, refetch: refetchVolunteers } = useGetAdminVolunteersQuery(
+    undefined,
+    { skip: !isStaff }
+  )
+  const volunteerItems = Array.isArray(adminVolunteersRes)
+    ? adminVolunteersRes
+    : (adminVolunteersRes as any)?.items || []
 
-  const { data: adminDonationsRes } = useGetAdminDonationsQuery(undefined, {
-    skip: !isStaff,
-  })
-  const donationItems = Array.isArray(adminDonationsRes) ? adminDonationsRes : (adminDonationsRes as any)?.items || []
+  const { data: adminDonationsRes } = useGetAdminDonationsQuery(undefined, { skip: !isStaff })
+  const donationItems = Array.isArray(adminDonationsRes)
+    ? adminDonationsRes
+    : (adminDonationsRes as any)?.items || []
 
   const { data: liveCampaignsRes } = useGetCampaignsQuery()
   const liveCampaigns = liveCampaignsRes || []
@@ -177,30 +160,35 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
   })
   const auditLogs = Array.isArray(auditLogsRes) ? auditLogsRes : (auditLogsRes as any)?.items || []
 
-  const [selectedUserForEdit, setSelectedUserForEdit] = useState<any | null>(null)
-  const [selectedRoles, setSelectedRoles] = useState<string[]>([])
-  const [selectedStatus, setSelectedStatus] = useState<string>("ACTIVE")
+  const { data: adminNotificationsRes } = useGetAdminNotificationsQuery(undefined, {
+    skip: !isPrivileged,
+  })
+  const notificationItems = Array.isArray(adminNotificationsRes)
+    ? adminNotificationsRes
+    : (adminNotificationsRes as any)?.items || []
 
   const { data: myAppsRes } = useGetMyApplicationsQuery(undefined, {
-    skip: !currentUser,
+    skip: currentRole === "COMMUNITY_MEMBER" ? false : false, // always allow for members
   })
   const myAppItems = Array.isArray(myAppsRes) ? myAppsRes : (myAppsRes as any)?.items || []
 
   const { data: myDonationsRes } = useGetMyDonationsQuery(undefined, {
-    skip: !currentUser,
+    skip: false,
   })
-  const myDonationItems = Array.isArray(myDonationsRes) ? myDonationsRes : (myDonationsRes as any)?.items || []
-
-  const { data: adminNotificationsRes } = useGetAdminNotificationsQuery(undefined, {
-    skip: !isStaff,
-  })
-  const notificationItems = Array.isArray(adminNotificationsRes) ? adminNotificationsRes : (adminNotificationsRes as any)?.items || []
+  const myDonationItems = Array.isArray(myDonationsRes)
+    ? myDonationsRes
+    : (myDonationsRes as any)?.items || []
 
   // Mutations
   const [approveVolunteerMutation] = useApproveVolunteerMutation()
   const [updateApplicationStatusMutation] = useUpdateApplicationStatusMutation()
   const [updateUserRoleMutation, { isLoading: isUpdatingRole }] = useUpdateUserRoleMutation()
   const [updateUserStatusMutation, { isLoading: isUpdatingStatus }] = useUpdateUserStatusMutation()
+
+  const [selectedUserForEdit, setSelectedUserForEdit] = useState<any | null>(null)
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([])
+  const [selectedStatus, setSelectedStatus] = useState<string>("ACTIVE")
+  const [notifFilter, setNotifFilter] = useState<"all" | "unread" | "urgent">("all")
 
   const handleSaveUserRolesAndStatus = async () => {
     if (!selectedUserForEdit) return
@@ -226,16 +214,16 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
   const handleApproveVolunteer = async (id: string, currentStatus: boolean) => {
     try {
       await approveVolunteerMutation({ id, isApproved: !currentStatus }).unwrap()
-      toast.success(!currentStatus ? "স্বেচ্ছাসেবক সফলভাবে অনুমোদিত হয়েছে" : "স্বেচ্ছাসেবক স্ট্যাটাস পরিবর্তিত হয়েছে")
+      toast.success(
+        !currentStatus ? "স্বেচ্ছাসেবক সফলভাবে অনুমোদিত হয়েছে" : "স্বেচ্ছাসেবক স্ট্যাটাস পরিবর্তিত হয়েছে"
+      )
       refetchVolunteers()
     } catch (err: any) {
       toast.error(err?.message || "অনুমোদন ব্যর্থ হয়েছে")
     }
   }
 
-  const [notifFilter, setNotifFilter] = useState<"all" | "unread" | "urgent">("all")
-
-  // --- Dynamic Live Mappings from API ---
+  // --- Pure API-derived display data (no mocks) ---
   const displayMedicalData = appItems
     .filter((a: any) => a.category === "MEDICAL")
     .map((r: any) => ({
@@ -245,7 +233,12 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
       amountNeeded: Number(r.requestedAmount || 0),
       approvedAmount: Number(r.approvedAmount || 0),
       assignedOfficer: r.assignedTo?.fullName || "অপেক্ষমাণ",
-      status: r.status === "APPROVED" ? "অনুমোদিত" : r.status === "REJECTED" ? "বাতিল" : "যাচাই সম্পন্ন",
+      status:
+        r.status === "APPROVED"
+          ? "অনুমোদিত"
+          : r.status === "REJECTED"
+          ? "বাতিল"
+          : "যাচাই সম্পন্ন",
       union: r.upazila || "রৌমারী সদর",
       date: new Date(r.createdAt || Date.now()).toLocaleDateString("bn-BD"),
       rawId: r.id,
@@ -256,7 +249,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
     .map((r: any) => ({
       id: r.referenceCode || r.id?.slice(0, 8),
       studentName: r.applicantName,
-      institute: r.address || "শিক্ষা প্রতিষ্ঠান",
+      institute: r.address || "রৌমারী উচ্চ বিদ্যালয়",
       grade: "শ্রেণি সহায়তা",
       supportType: r.description || "উপবৃত্তি",
       amount: Number(r.requestedAmount || 0),
@@ -283,10 +276,22 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
     applicant: r.applicantName,
     union: r.upazila || "রৌমারী সদর",
     village: r.address || "গ্রাম",
-    category: r.category === "MEDICAL" ? "চিকিৎসা সহায়তা" : r.category === "EDUCATION" ? "শিক্ষা সহায়তা" : "সাধারণ সহায়তা",
+    category:
+      r.category === "MEDICAL"
+        ? "চিকিৎসা সহায়তা"
+        : r.category === "EDUCATION"
+        ? "শিক্ষা সহায়তা"
+        : "সাধারণ সহায়তা",
     caseWorker: r.assignedTo?.fullName || "অপেক্ষমাণ",
-    visitStatus: r.status === "APPROVED" ? "অনুমোদিত ও বিতরণযোগ্য" : r.status === "UNDER_REVIEW" ? "তদন্তাধীন" : "মাঠ পরিদর্শন সম্পন্ন",
-    recommendation: r.approvedAmount ? `অনুমোদনের সুপারিশ (৳${r.approvedAmount.toLocaleString("bn-BD")})` : "যাচাই সম্পন্ন",
+    visitStatus:
+      r.status === "APPROVED"
+        ? "অনুমোদিত ও বিতরণযোগ্য"
+        : r.status === "UNDER_REVIEW"
+        ? "তদন্তাধীন"
+        : "মাঠ পরিদর্শন সম্পন্ন",
+    recommendation: r.approvedAmount
+      ? `অনুমোদনের সুপারিশ (৳${Number(r.approvedAmount).toLocaleString("bn-BD")})`
+      : "যাচাই সম্পন্ন",
     priority: "উচ্চ",
     rawId: r.id,
   }))
@@ -294,7 +299,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
   const displayFinanceData = donationItems.map((d: any) => ({
     id: d.id?.slice(0, 8),
     receiptNo: d.receipt?.receiptNumber || `RJF-REC-${d.id?.slice(0, 6)}`,
-    donor: d.isAnonymous ? "বেনামী শুভাকাঙ্ক্ষী" : (d.donorName || "শুভাকাঙ্ক্ষী"),
+    donor: d.isAnonymous ? "বেনামী শুভাকাঙ্ক্ষী" : d.donorName || "শুভাকাঙ্ক্ষী",
     campaign: d.campaign?.title || "সাধারণ তহবিল",
     amount: Number(d.amount),
     channel: d.paymentMethod,
@@ -305,11 +310,11 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
   const displayCampaignsList = liveCampaigns.map((c: any) => ({
     id: c.id,
     titleBn: c.titleBn || c.titleEn,
-    target: Number(c.targetAmount || 0),
-    raised: Number(c.raisedAmount || 0),
+    target: c.targetAmount,
+    raised: c.raisedAmount,
     donors: c.donorsCount || 0,
     deadlineBn: c.deadlineBn || "চলমান",
-    status: c.status === "ongoing" ? "চলমান" : "সম্পন্ন",
+    status: c.status === "ongoing" || c.status === "ONGOING" ? "চলমান" : "সম্পন্ন",
   }))
 
   const displayUsersData = userItems.map((u: any) => ({
@@ -318,20 +323,28 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
     contact: u.email || u.phone,
     status: u.status || (u.isActive ? "ACTIVE" : "SUSPENDED"),
     roles: u.roles?.map((r: any) => (typeof r === "object" ? r.name : r)) || [],
-    role: ((u.roles?.[0] && typeof u.roles[0] === "object" ? u.roles[0].name : u.roles?.[0]) || "COMMUNITY_MEMBER") as UserRole,
+    role: ((u.roles?.[0] && typeof u.roles[0] === "object" ? u.roles[0].name : u.roles?.[0]) ||
+      "COMMUNITY_MEMBER") as UserRole,
     rawId: u.id,
     createdAt: u.createdAt,
   }))
 
   const displayMyApps = myAppItems.map((a: any) => ({
     id: a.referenceCode || a.id?.slice(0, 8),
-    categoryBn: a.category === "MEDICAL" ? "জরুরি চিকিৎসা সহায়তা" : a.category === "EDUCATION" ? "শিক্ষা সহায়তা" : "মানবিক সহায়তা",
+    categoryBn: a.category === "MEDICAL" ? "জরুরি চিকিৎসা সহায়তা" : "মানবিক সহায়তা",
     submittedDate: new Date(a.createdAt || Date.now()).toLocaleDateString("bn-BD"),
-    status: (a.status || "PENDING").toLowerCase(),
-    statusTitle: a.status === "APPROVED" ? "অনুমোদিত" : a.status === "REJECTED" ? "বাতিল" : "তদন্তাধীন",
+    status: (a.status || "").toLowerCase(),
+    statusTitle:
+      a.status === "APPROVED"
+        ? "অনুমোদিত"
+        : a.status === "REJECTED"
+        ? "বাতিল"
+        : "তদন্তাধীন",
     note: a.statusHistory?.at(-1)?.remarks || "আপনার আবেদনটি প্রক্রিয়াকরণ চলছে।",
     officer: a.assignedTo?.fullName || "মাঠ কর্মকর্তা",
-    approvedAmount: a.approvedAmount ? `৳${a.approvedAmount.toLocaleString("bn-BD")}` : "অপেক্ষমাণ",
+    approvedAmount: a.approvedAmount
+      ? `৳${Number(a.approvedAmount).toLocaleString("bn-BD")}`
+      : "অপেক্ষমাণ",
   }))
 
   const displayMyDonations = myDonationItems.map((d: any) => ({
@@ -343,13 +356,16 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
     transactionId: d.transactionReference || "TRX-N/A",
   }))
 
+  // Notifications from API
   const displayNotifications = notificationItems.map((n: any) => ({
     id: n.id,
-    titleBn: n.title,
-    descBn: n.message,
-    timeBn: new Date(n.createdAt || Date.now()).toLocaleDateString("bn-BD"),
-    type: n.type?.toLowerCase() || "info",
-    isUnread: !n.isRead,
+    titleBn: n.titleBn || n.title || "নোটিফিকেশন",
+    descBn: n.messageBn || n.message || n.body || "",
+    timeBn: n.createdAt
+      ? new Date(n.createdAt).toLocaleString("bn-BD")
+      : "সম্প্রতি",
+    type: n.type || n.priority || "info",
+    isUnread: n.isRead === false || n.isUnread === true,
   }))
 
   // --- Table Column Definitions ---
@@ -363,14 +379,20 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
       accessorKey: "amountNeeded",
       sortable: true,
       align: "right",
-      cell: (r) => <span className="font-semibold text-stone-800">৳{r.amountNeeded.toLocaleString("bn-BD")}</span>,
+      cell: (r) => (
+        <span className="font-semibold text-stone-800">
+          ৳{r.amountNeeded.toLocaleString("bn-BD")}
+        </span>
+      ),
     },
     {
       header: "অনুমোদিত",
       accessorKey: "approvedAmount",
       align: "right",
       cell: (r) => (
-        <span className="font-bold text-emerald-700">৳{r.approvedAmount.toLocaleString("bn-BD")}</span>
+        <span className="font-bold text-emerald-700">
+          ৳{r.approvedAmount.toLocaleString("bn-BD")}
+        </span>
       ),
     },
     { header: "দায়িত্বপ্রাপ্ত", accessorKey: "assignedOfficer" },
@@ -396,9 +418,23 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
   ]
 
   const casesColumns: TableColumn<any>[] = [
-    { header: "কেস নং", accessorKey: "caseId", sortable: true, className: "font-mono text-xs font-bold" },
-    { header: "আবেদন আইডি", accessorKey: "applicationId", className: "font-mono text-xs text-muted-foreground" },
-    { header: "আবেদনকারী", accessorKey: "applicant", sortable: true, className: "font-semibold" },
+    {
+      header: "কেস নং",
+      accessorKey: "caseId",
+      sortable: true,
+      className: "font-mono text-xs font-bold",
+    },
+    {
+      header: "আবেদন আইডি",
+      accessorKey: "applicationId",
+      className: "font-mono text-xs text-muted-foreground",
+    },
+    {
+      header: "আবেদনকারী",
+      accessorKey: "applicant",
+      sortable: true,
+      className: "font-semibold",
+    },
     { header: "ইউনিয়ন ও গ্রাম", cell: (r) => <span>{r.union}, {r.village}</span> },
     { header: "ধরণ", accessorKey: "category" },
     { header: "তদন্তকারী কর্মকর্তা", accessorKey: "caseWorker" },
@@ -432,7 +468,11 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
   ]
 
   const financeColumns: TableColumn<any>[] = [
-    { header: "রশিদ নং", accessorKey: "receiptNo", className: "font-mono text-xs font-bold text-[#0D5C35]" },
+    {
+      header: "রশিদ নং",
+      accessorKey: "receiptNo",
+      className: "font-mono text-xs font-bold text-[#0D5C35]",
+    },
     { header: "দাতার নাম", accessorKey: "donor", sortable: true, className: "font-semibold" },
     { header: "ক্যাম্পেইন", accessorKey: "campaign" },
     {
@@ -440,7 +480,11 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
       accessorKey: "amount",
       sortable: true,
       align: "right",
-      cell: (r) => <span className="font-bold text-emerald-700">৳{r.amount.toLocaleString("bn-BD")}</span>,
+      cell: (r) => (
+        <span className="font-bold text-emerald-700">
+          ৳{r.amount.toLocaleString("bn-BD")}
+        </span>
+      ),
     },
     { header: "পদ্ধতি", accessorKey: "channel", align: "center" },
     { header: "তারিখ", accessorKey: "date", className: "text-xs text-muted-foreground" },
@@ -457,9 +501,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
             </h1>
             <RoleBadge role={currentRole} size="sm" />
           </div>
-          <p className="text-xs sm:text-sm text-stone-500">
-            {roleMeta.descriptionBn}
-          </p>
+          <p className="text-xs sm:text-sm text-stone-500">{roleMeta.descriptionBn}</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -473,7 +515,9 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
             <span>রিফ্রেশ</span>
           </Button>
 
-          {["SUPER_ADMIN", "ADMIN", "MEDICAL_COORDINATOR", "EDUCATION_COORDINATOR"].includes(currentRole) && (
+          {["SUPER_ADMIN", "ADMIN", "MEDICAL_COORDINATOR", "EDUCATION_COORDINATOR"].includes(
+            currentRole
+          ) && (
             <Button
               size="sm"
               onClick={() => setAssistanceModalOpen(true)}
@@ -483,8 +527,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
               <span>নতুন আবেদন</span>
             </Button>
           )}
-
-
 
           {currentRole === "COMMUNITY_MEMBER" && (
             <Button
@@ -533,12 +575,12 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                     স্বাগতম, {currentUser?.fullName || "সম্মানিত সদস্য"}!
                   </h2>
                   <p className="text-xs sm:text-sm text-emerald-100/90 mt-0.5 max-w-2xl leading-relaxed">
-                    রৌমারী জনকল্যাণ ফাউন্ডেশনের মেম্বার পোর্টালে আপনার সকল ব্যক্তিগত সেবা ও মানবিক সহায়তা আবেদন এখান থেকেই এক ক্লিকে পর্যবেক্ষণ ও পরিচালনা করতে পারবেন।
+                    রৌমারী জনকল্যাণ ফাউন্ডেশনের মেম্বার পোর্টালে আপনার সকল ব্যক্তিগত সেবা ও মানবিক
+                    সহায়তা আবেদন এখান থেকেই এক ক্লিকে পর্যবেক্ষণ ও পরিচালনা করতে পারবেন।
                   </p>
                 </div>
               </div>
 
-              {/* Contact & District Chips */}
               <div className="pt-2 flex flex-wrap items-center gap-2.5 text-xs text-emerald-100">
                 <span className="bg-black/20 px-3 py-1 rounded-lg backdrop-blur-xs">
                   মোবাইল: <strong>{currentUser?.phone || "সংরক্ষিত"}</strong>
@@ -565,11 +607,14 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                   <FileText className="size-4" />
                 </div>
               </div>
-              <div className="text-2xl font-black text-stone-900">
-                {displayMyApps.length} টি
-              </div>
+              <div className="text-2xl font-black text-stone-900">{displayMyApps.length} টি</div>
               <div className="text-[11px] text-emerald-700 font-semibold mt-1">
-                {displayMyApps.filter((a: any) => a.status === "approved" || a.statusTitle === "অনুমোদিত").length} টি অনুমোদিত
+                {
+                  displayMyApps.filter(
+                    (a: any) => a.status === "approved" || a.statusTitle === "অনুমোদিত"
+                  ).length
+                }{" "}
+                টি অনুমোদিত
               </div>
             </div>
 
@@ -584,11 +629,9 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                 </div>
               </div>
               <div className="text-2xl font-black text-stone-900">
-                {liveCampaigns.length} টি
+                {displayCampaignsList.length} টি
               </div>
-              <div className="text-[11px] text-emerald-700 font-semibold mt-1">
-                মাঠপর্যায়ে সক্রিয়
-              </div>
+              <div className="text-[11px] text-emerald-700 font-semibold mt-1">মাঠপর্যায়ে সক্রিয়</div>
             </div>
 
             <div
@@ -601,9 +644,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                   <Mail className="size-4" />
                 </div>
               </div>
-              <div className="text-lg font-black text-stone-900">
-                সরাসরি বার্তা
-              </div>
+              <div className="text-lg font-black text-stone-900">সরাসরি বার্তা</div>
               <div className="text-[11px] text-blue-700 font-semibold mt-1 flex items-center gap-1">
                 <CheckCircle2 className="size-3" />
                 <span>হেল্পলাইন ২৪/৭</span>
@@ -620,9 +661,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                   <Users className="size-4" />
                 </div>
               </div>
-              <div className="text-lg font-black text-stone-900">
-                কমিউনিটি উইং
-              </div>
+              <div className="text-lg font-black text-stone-900">কমিউনিটি উইং</div>
               <div className="text-[11px] text-amber-700 font-semibold mt-1 flex items-center gap-1">
                 <Plus className="size-3" />
                 <span>অংশগ্রহণ করুন</span>
@@ -666,7 +705,6 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
 
           {/* Recent Activities Preview */}
           <div className="grid grid-cols-1 gap-5">
-            {/* Assistance Applications Preview */}
             <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs space-y-3">
               <div className="flex items-center justify-between pb-2 border-b border-stone-100">
                 <h4 className="text-sm font-bold text-stone-900 flex items-center gap-2">
@@ -685,10 +723,15 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                 <p className="text-xs text-stone-400 py-3 text-center">এখনো কোনো আবেদন করা হয়নি</p>
               ) : (
                 displayMyApps.slice(0, 5).map((app: any) => (
-                  <div key={app.id} className="p-3 rounded-xl bg-stone-50 border border-stone-200/70 text-xs space-y-1.5">
+                  <div
+                    key={app.id}
+                    className="p-3 rounded-xl bg-stone-50 border border-stone-200/70 text-xs space-y-1.5"
+                  >
                     <div className="flex items-center justify-between">
                       <span className="font-mono font-bold text-stone-800">{app.id}</span>
-                      <Badge className="bg-emerald-600 text-white text-[10px]">{app.statusTitle}</Badge>
+                      <Badge className="bg-emerald-600 text-white text-[10px]">
+                        {app.statusTitle}
+                      </Badge>
                     </div>
                     <div className="font-semibold text-stone-900">{app.categoryBn}</div>
                     <div className="text-stone-500 text-[11px]">{app.note}</div>
@@ -700,10 +743,9 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
         </div>
       )}
 
-      {/* 2. Overview Tab: Super Admin CMS Control Center */}
+      {/* 2. Overview Tab: Super Admin / Staff CMS Control Center */}
       {activeTab === "overview" && currentRole !== "COMMUNITY_MEMBER" && (
         <>
-          {/* Top Real-time Statistics */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs">
               <div className="flex items-center justify-between text-stone-500 text-xs font-medium mb-2">
@@ -749,7 +791,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
               <div className="text-2xl font-black text-stone-900">
                 {adminDashboard?.operations?.totalCampaigns !== undefined
                   ? `${adminDashboard.operations.totalCampaigns} টি`
-                  : `${liveCampaigns.length} টি`}
+                  : `${displayCampaignsList.length} টি`}
               </div>
               <div className="text-[11px] text-emerald-700 font-semibold mt-1">
                 মাঠপর্যায়ে সক্রিয়
@@ -806,7 +848,9 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                       পাবলিক পেজ ম্যানেজমেন্ট
                     </span>
                     <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-stone-200 text-stone-700">
-                      {adminDashboard?.cms?.totalPages !== undefined ? `${adminDashboard.cms.totalPages}টি` : "CMS"}
+                      {adminDashboard?.cms?.totalPages !== undefined
+                        ? `${adminDashboard.cms.totalPages}টি`
+                        : "CMS"}
                     </span>
                   </div>
                   <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
@@ -829,7 +873,9 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                       নিউজ ও নোটিশ বোর্ড
                     </span>
                     <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-100 text-blue-800">
-                      {adminDashboard?.cms?.totalNews !== undefined ? `${adminDashboard.cms.totalNews}টি` : "লাইভ"}
+                      {adminDashboard?.cms?.totalNews !== undefined
+                        ? `${adminDashboard.cms.totalNews}টি`
+                        : "লাইভ"}
                     </span>
                   </div>
                   <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
@@ -852,7 +898,9 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                       গ্যালারি ও মিডিয়া ফাইলস
                     </span>
                     <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-purple-100 text-purple-800">
-                      {adminDashboard?.cms?.totalGallery !== undefined ? `${adminDashboard.cms.totalGallery}টি` : "ছবি"}
+                      {adminDashboard?.cms?.totalGallery !== undefined
+                        ? `${adminDashboard.cms.totalGallery}টি`
+                        : "ছবি"}
                     </span>
                   </div>
                   <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
@@ -940,22 +988,14 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
         </>
       )}
 
-      {/* 2.1 Public Pages CMS Tab */}
+      {/* CMS Tabs */}
       {activeTab === "pages" && <CmsPagesTab />}
-
-      {/* 2.2 News & Notices Tab */}
       {activeTab === "news" && <CmsNewsTab />}
-
-      {/* 2.3 Gallery & Media Tab */}
       {activeTab === "gallery" && <CmsGalleryTab />}
-
-      {/* 2.4 Contact Messages Tab */}
       {activeTab === "messages" && <CmsMessagesTab />}
-
-      {/* 2.5 Activity & Audit Logs Tab */}
       {activeTab === "activity-logs" && <CmsActivityLogsTab />}
 
-      {/* 4. Medical Aid Tab (Role: MEDICAL_COORDINATOR, ADMIN, SUPER_ADMIN) */}
+      {/* Medical Aid Tab */}
       {activeTab === "medical" && (
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
           <DataTable
@@ -980,7 +1020,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
         </div>
       )}
 
-      {/* 5. Education Tab (Role: EDUCATION_COORDINATOR, ADMIN, SUPER_ADMIN) */}
+      {/* Education Tab */}
       {activeTab === "education" && (
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
           <DataTable
@@ -988,7 +1028,12 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
             description="দরিদ্র ও মেধাবী শিক্ষার্থীদের উপবৃত্তি ও শিক্ষা সামগ্রী (API: /api/assistance)"
             columns={[
               { header: "আইডি", accessorKey: "id", className: "font-mono text-xs" },
-              { header: "শিক্ষার্থীর নাম", accessorKey: "studentName", sortable: true, className: "font-semibold" },
+              {
+                header: "শিক্ষার্থীর নাম",
+                accessorKey: "studentName",
+                sortable: true,
+                className: "font-semibold",
+              },
               { header: "শিক্ষা প্রতিষ্ঠান", accessorKey: "institute" },
               { header: "শ্রেণি", accessorKey: "grade" },
               { header: "সহায়তার ধরণ", accessorKey: "supportType" },
@@ -996,14 +1041,19 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                 header: "বরাদ্দকৃত অর্থ",
                 accessorKey: "amount",
                 align: "right",
-                cell: (r) => <span className="font-bold text-indigo-700">৳{r.amount}</span>,
+                cell: (r) => (
+                  <span className="font-bold text-indigo-700">৳{r.amount}</span>
+                ),
               },
               {
                 header: "স্ট্যাটাস",
                 accessorKey: "status",
                 align: "center",
                 cell: (r) => (
-                  <Badge variant="outline" className="border-indigo-400 text-indigo-700 bg-indigo-50">
+                  <Badge
+                    variant="outline"
+                    className="border-indigo-400 text-indigo-700 bg-indigo-50"
+                  >
                     {r.status}
                   </Badge>
                 ),
@@ -1027,7 +1077,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
         </div>
       )}
 
-      {/* 6. Volunteers Tab (Role: VOLUNTEER_MANAGER, ADMIN, SUPER_ADMIN) */}
+      {/* Volunteers Tab */}
       {activeTab === "volunteers" && (
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
           <DataTable
@@ -1068,7 +1118,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
         </div>
       )}
 
-      {/* 7. Field Cases Tab (Role: CASE_WORKER, MEDICAL_COORDINATOR, ADMIN, SUPER_ADMIN) */}
+      {/* Field Cases Tab */}
       {activeTab === "cases" && (
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
           <DataTable
@@ -1089,9 +1139,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
         </div>
       )}
 
-
-
-      {/* 9. Campaigns & Content Tab */}
+      {/* Campaigns & Content Tab */}
       {(activeTab === "content" || activeTab === "campaigns" || activeTab === "activities") && (
         <div className="space-y-6">
           <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
@@ -1100,19 +1148,26 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
               description="ওয়েবসাইটে চলমান ও সমাপ্ত ক্যাম্পেইনসমূহ (API: /api/campaigns)"
               columns={[
                 { header: "আইডি", accessorKey: "id", className: "font-mono text-xs" },
-                { header: "ক্যাম্পেইনের নাম", accessorKey: "titleBn", sortable: true, className: "font-semibold" },
+                {
+                  header: "ক্যাম্পেইনের নাম",
+                  accessorKey: "titleBn",
+                  sortable: true,
+                  className: "font-semibold",
+                },
                 {
                   header: "লক্ষ্যমাত্রা",
                   accessorKey: "target",
                   align: "right",
-                  cell: (r) => <span>৳{r.target.toLocaleString("bn-BD")}</span>,
+                  cell: (r) => <span>৳{r.target?.toLocaleString("bn-BD")}</span>,
                 },
                 {
                   header: "সংগৃহীত অর্থ",
                   accessorKey: "raised",
                   align: "right",
                   cell: (r) => (
-                    <span className="font-bold text-emerald-700">৳{r.raised.toLocaleString("bn-BD")}</span>
+                    <span className="font-bold text-emerald-700">
+                      ৳{r.raised?.toLocaleString("bn-BD")}
+                    </span>
                   ),
                 },
                 { header: "দাতা", accessorKey: "donors", align: "center" },
@@ -1122,7 +1177,14 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                   accessorKey: "status",
                   align: "center",
                   cell: (r) => (
-                    <Badge variant="outline" className={r.status === "চলমান" ? "border-emerald-500 text-emerald-700 bg-emerald-50" : "border-stone-400 text-stone-600"}>
+                    <Badge
+                      variant="outline"
+                      className={
+                        r.status === "চলমান"
+                          ? "border-emerald-500 text-emerald-700 bg-emerald-50"
+                          : "border-stone-400 text-stone-600"
+                      }
+                    >
                       {r.status}
                     </Badge>
                   ),
@@ -1142,13 +1204,17 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
         </div>
       )}
 
-      {/* 10. Community Member: My Applications (Role: COMMUNITY_MEMBER) */}
+      {/* Community Member: My Applications */}
       {activeTab === "my-applications" && (
         <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-stone-900">আমার সাহায্য আবেদন ও বর্তমান অবস্থা</h2>
-              <p className="text-xs text-stone-500">আপনার জমা দেওয়া সকল মানবিক সহায়তা আবেদনের রিয়েলটাইম অগ্রগতি (API: /api/track/[id])</p>
+              <h2 className="text-lg font-bold text-stone-900">
+                আমার সাহায্য আবেদন ও বর্তমান অবস্থা
+              </h2>
+              <p className="text-xs text-stone-500">
+                আপনার জমা দেওয়া সকল মানবিক সহায়তা আবেদনের রিয়েলটাইম অগ্রগতি (API: /api/track/[id])
+              </p>
             </div>
             <Button
               size="sm"
@@ -1162,14 +1228,15 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
 
           <div className="space-y-3">
             {displayMyApps.length === 0 ? (
-              <div className="text-center py-12 bg-stone-50 rounded-xl border border-dashed border-stone-200">
-                <FileText className="size-8 mx-auto text-stone-300 mb-2" />
-                <p className="text-sm font-semibold text-stone-600">কোনো আবেদন পাওয়া যায়নি</p>
-                <p className="text-xs text-stone-400 mt-1">নতুন সহায়তার জন্য উপরের 'নতুন আবেদন করুন' বাটনে ক্লিক করুন</p>
-              </div>
+              <p className="text-sm text-stone-400 text-center py-8">
+                এখনো কোনো আবেদন জমা দেওয়া হয়নি।
+              </p>
             ) : (
               displayMyApps.map((app: any) => (
-                <div key={app.id} className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-2">
+                <div
+                  key={app.id}
+                  className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-2"
+                >
                   <div className="flex items-center justify-between flex-wrap gap-2">
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-xs font-bold bg-white px-2 py-0.5 rounded border border-stone-200 text-stone-800">
@@ -1184,7 +1251,9 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                   </p>
                   <div className="flex items-center justify-between text-xs text-stone-500 pt-1">
                     <span>কর্মকর্তা: {app.officer}</span>
-                    <span className="font-semibold text-emerald-700">বরাদ্দ: {app.approvedAmount}</span>
+                    <span className="font-semibold text-emerald-700">
+                      বরাদ্দ: {app.approvedAmount}
+                    </span>
                   </div>
                 </div>
               ))
@@ -1193,13 +1262,15 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
         </div>
       )}
 
-      {/* 12. Community Member: Volunteer Profile */}
+      {/* Community Member: Volunteer Profile */}
       {activeTab === "my-volunteer" && (
         <div className="bg-white p-5 sm:p-6 rounded-2xl border border-stone-200/90 shadow-2xs space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-100">
             <div>
               <h2 className="text-lg font-bold text-stone-900">স্বেচ্ছাসেবক প্রোফাইল ও কার্যক্রম</h2>
-              <p className="text-xs text-stone-500">রৌমারী জনকল্যাণ ফাউন্ডেশনের মানবিক সেবা কার্যক্রমে আপনার সক্রিয় অংশগ্রহণ</p>
+              <p className="text-xs text-stone-500">
+                রৌমারী জনকল্যাণ ফাউন্ডেশনের মানবিক সেবা কার্যক্রমে আপনার সক্রিয় অংশগ্রহণ
+              </p>
             </div>
             <Button
               size="sm"
@@ -1218,7 +1289,8 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                 <h3 className="font-bold text-emerald-950 text-sm">মাঠপর্যায়ের সেবায় অংশগ্রহণ</h3>
               </div>
               <p className="text-xs text-emerald-900/80 leading-relaxed font-normal">
-                বন্যা ত্রাণ, শীতবস্ত্র বিতরণ, চক্ষু ও মেডিকেল ক্যাম্প এবং রক্তের প্রয়োজনে জরুরি সমন্বয়ের জন্য তরুণ ও যুবসমাজের স্বেচ্ছাশ্রমই আমাদের ফাউন্ডেশনের মূল চালিকাশক্তি।
+                বন্যা ত্রাণ, শীতবস্ত্র বিতরণ, চক্ষু ও মেডিকেল ক্যাম্প এবং রক্তের প্রয়োজনে জরুরি
+                সমন্বয়ের জন্য তরুণ ও যুবসমাজের স্বেচ্ছাশ্রমই আমাদের ফাউন্ডেশনের মূল চালিকাশক্তি।
               </p>
             </div>
 
@@ -1228,22 +1300,29 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                 রৌমারী সদর, দাঁতভাঙ্গা, যাদুরচর, বন্দবেড়, শৌলমারী ও ব্রহ্মপুত্রের নদীবেষ্টিত চরাঞ্চল।
               </p>
               <div className="text-xs text-stone-500">
-                স্বেচ্ছাসেবক আইডি: <strong>{currentUser?.id ? `RJF-VOL-${currentUser.id.slice(0, 6).toUpperCase()}` : "RJF-VOL-PENDING"}</strong>
+                স্বেচ্ছাসেবক আইডি:{" "}
+                <strong>
+                  {currentUser?.id
+                    ? `RJF-VOL-${currentUser.id.slice(0, 6).toUpperCase()}`
+                    : "RJF-VOL-PENDING"}
+                </strong>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* 13. Community Member: Profile & Settings */}
+      {/* Community Member: Profile & Settings */}
       {activeTab === "my-profile" && (
         <div className="bg-white p-5 sm:p-6 rounded-2xl border border-stone-200/90 shadow-2xs space-y-5">
           <div className="pb-4 border-b border-stone-100">
             <h2 className="text-lg font-bold text-stone-900">আমার প্রোফাইল ও অ্যাকাউন্ট তথ্য</h2>
-            <p className="text-xs text-stone-500">আপনার সংরক্ষিত যোগাযোগের তথ্য ও অ্যাকাউন্ট বিবরণী</p>
+            <p className="text-xs text-stone-500">
+              আপনার সংরক্ষিত যোগাযোগের তথ্য ও অ্যাকাউন্ট বিবরণী
+            </p>
           </div>
 
-          {/* Profile Picture Card with ImgBB Upload & DB Save */}
+          {/* Profile Picture Card */}
           <div className="p-5 rounded-2xl border border-stone-200 bg-stone-50/70 flex flex-col sm:flex-row items-center gap-5">
             <div className="relative group">
               <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#0D5C35] bg-emerald-50 flex items-center justify-center shadow-sm">
@@ -1330,24 +1409,32 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
               <span className="text-xs text-stone-400 font-medium">পুরো নাম</span>
-              <div className="font-bold text-stone-900 text-sm">{currentUser?.fullName || "তথ্য সংরক্ষিত"}</div>
+              <div className="font-bold text-stone-900 text-sm">
+                {currentUser?.fullName || "তথ্য সংরক্ষিত"}
+              </div>
             </div>
 
             <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
               <span className="text-xs text-stone-400 font-medium">ইমেইল ঠিকানা</span>
-              <div className="font-bold text-stone-900 text-sm">{currentUser?.email || "তথ্য সংরক্ষিত"}</div>
+              <div className="font-bold text-stone-900 text-sm">
+                {currentUser?.email || "তথ্য সংরক্ষিত"}
+              </div>
             </div>
 
             <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
               <span className="text-xs text-stone-400 font-medium">মোবাইল নম্বর</span>
-              <div className="font-bold text-stone-900 text-sm">{currentUser?.phone || "তথ্য সংরক্ষিত"}</div>
+              <div className="font-bold text-stone-900 text-sm">
+                {currentUser?.phone || "তথ্য সংরক্ষিত"}
+              </div>
             </div>
 
             <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 space-y-1">
               <span className="text-xs text-stone-400 font-medium">বর্তমান পদমর্যাদা (Role)</span>
               <div>
                 <span className="inline-block px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0D5C35] font-bold text-xs">
-                  {currentRole === "SUPER_ADMIN" ? "সুপার অ্যাডমিন" : "কমিউনিটি মেম্বার / সাধারণ নাগরিক"}
+                  {currentRole === "SUPER_ADMIN"
+                    ? "সুপার অ্যাডমিন"
+                    : "কমিউনিটি মেম্বার / সাধারণ নাগরিক"}
                 </span>
               </div>
             </div>
@@ -1355,9 +1442,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
         </div>
       )}
 
-
-
-      {/* 13. Notifications Tab */}
+      {/* Notifications Tab */}
       {activeTab === "notifications" && (
         <div className="bg-white rounded-2xl border border-stone-200/90 p-5 shadow-2xs space-y-4">
           <div className="flex items-center justify-between">
@@ -1380,49 +1465,41 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
           </div>
 
           <div className="divide-y divide-stone-100">
-            {displayNotifications.filter((n: any) => {
-              if (notifFilter === "unread") return n.isUnread
-              if (notifFilter === "urgent") return n.type === "urgent"
-              return true
-            }).length === 0 ? (
-              <div className="text-center py-12 text-stone-400 text-xs">
-                <Bell className="size-8 mx-auto text-stone-300 mb-2" />
-                <p className="font-semibold text-stone-600">কোনো নোটিফিকেশন নেই</p>
-                <p className="mt-1">এই মুহূর্তে আপনার কোনো নোটিফিকেশন নেই</p>
-              </div>
-            ) : (
-              displayNotifications
-                .filter((n: any) => {
-                  if (notifFilter === "unread") return n.isUnread
-                  if (notifFilter === "urgent") return n.type === "urgent"
-                  return true
-                })
-                .map((item: any) => (
-                  <div
-                    key={item.id}
-                    className="py-3 flex items-start gap-3 hover:bg-stone-50/80 px-2 rounded-xl transition-colors"
-                  >
-                    <div className="pt-1.5 shrink-0 w-3">
-                      {item.isUnread && (
-                        <div className="w-2.5 h-2.5 rounded-full bg-[#E53935] animate-pulse" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-sm font-bold text-stone-900">{item.titleBn}</h3>
-                      <p className="text-xs text-stone-500 mt-0.5">{item.descBn}</p>
-                      <span className="text-[11px] text-stone-400 mt-1 inline-block">{item.timeBn}</span>
-                    </div>
+            {displayNotifications
+              .filter((n: any) => {
+                if (notifFilter === "unread") return n.isUnread
+                if (notifFilter === "urgent") return n.type === "urgent"
+                return true
+              })
+              .map((item: any) => (
+                <div
+                  key={item.id}
+                  className="py-3 flex items-start gap-3 cursor-pointer hover:bg-stone-50/80 px-2 rounded-xl transition-colors"
+                >
+                  <div className="pt-1.5 shrink-0 w-3">
+                    {item.isUnread && (
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#E53935] animate-pulse" />
+                    )}
                   </div>
-                ))
+                  <div className="flex-1">
+                    <h3 className="text-sm font-bold text-stone-900">{item.titleBn}</h3>
+                    <p className="text-xs text-stone-500 mt-0.5">{item.descBn}</p>
+                    <span className="text-[11px] text-stone-400 mt-1 inline-block">
+                      {item.timeBn}
+                    </span>
+                  </div>
+                </div>
+              ))}
+
+            {displayNotifications.length === 0 && (
+              <p className="text-sm text-stone-400 text-center py-8">কোনো নোটিফিকেশন নেই</p>
             )}
           </div>
         </div>
       )}
 
-      {/* 14. User Management Tab (Single Super Admin) */}
+      {/* User Management & Settings */}
       {activeTab === "users" && <CmsUsersTab />}
-
-      {/* 15. Website Settings & SEO Tab (Single Super Admin) */}
       {activeTab === "settings" && <CmsSettingsTab />}
     </div>
   )
