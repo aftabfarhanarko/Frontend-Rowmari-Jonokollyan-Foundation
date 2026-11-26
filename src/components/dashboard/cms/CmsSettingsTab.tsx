@@ -19,6 +19,7 @@ import {
   useUpdateAdminSettingsMutation,
 } from "@/store/api/adminApi"
 import { Button } from "@/components/ui/button"
+import { ImageUploader } from "@/components/ui/ImageUploader"
 import { toast } from "sonner"
 
 export function CmsSettingsTab() {
@@ -28,6 +29,7 @@ export function CmsSettingsTab() {
   // General & Contact Settings
   const [siteTitle, setSiteTitle] = useState("")
   const [siteSlogan, setSiteSlogan] = useState("")
+  const [siteLogoUrl, setSiteLogoUrl] = useState("")
   const [contactHotline, setContactHotline] = useState("")
   const [emergencyHotline, setEmergencyHotline] = useState("")
   const [contactEmail, setContactEmail] = useState("")
@@ -49,6 +51,7 @@ export function CmsSettingsTab() {
     if (settings) {
       setSiteTitle(settings.site_title || "রৌমারী জনকল্যাণ ফাউন্ডেশন")
       setSiteSlogan(settings.site_slogan || "স্থাপিত ২০১৮ • রৌমারী, কুড়িগ্রাম • মানুষের পাশে, মানুষের জন্য")
+      setSiteLogoUrl(settings.site_logo || "")
       setContactHotline(settings.contact_hotline || "+880 1712-345678")
       setEmergencyHotline(settings.emergency_hotline || "+880 1812-987654")
       setContactEmail(settings.contact_email || "contact@rowmarijanakalyan.org")
@@ -74,6 +77,7 @@ export function CmsSettingsTab() {
       const payload = [
         { key: "site_title", value: siteTitle.trim(), group: "general", description: "মূল ওয়েবসাইটের নাম" },
         { key: "site_slogan", value: siteSlogan.trim(), group: "general", description: "ওয়েবসাইট স্লোগান" },
+        { key: "site_logo", value: siteLogoUrl.trim(), group: "general", description: "ওয়েবসাইটের অফিসিয়াল লোগো" },
         { key: "contact_hotline", value: contactHotline.trim(), group: "contact", description: "সাধারণ অনুসন্ধান হটলাইন" },
         { key: "emergency_hotline", value: emergencyHotline.trim(), group: "contact", description: "জরুরি রক্তদান ও চিকিৎসা হটলাইন" },
         { key: "contact_email", value: contactEmail.trim(), group: "contact", description: "অফিসিয়াল ইমেইল" },
@@ -147,6 +151,14 @@ export function CmsSettingsTab() {
               className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
             />
           </div>
+
+          <ImageUploader
+            value={siteLogoUrl}
+            onChange={setSiteLogoUrl}
+            label="অফিসিয়াল লোগো (Foundation Logo)"
+            aspectRatio="square"
+            description="JPG, PNG, WEBP (ImgBB ক্লাউডে হোস্ট হবে)"
+          />
 
           <div className="pt-2">
             <div className="flex items-center gap-2 text-xs font-bold text-stone-900 border-b border-stone-100 pb-2 mb-3">

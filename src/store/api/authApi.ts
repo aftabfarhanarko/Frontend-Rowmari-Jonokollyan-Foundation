@@ -2,7 +2,7 @@ import { baseApi } from './baseApi';
 import { API_ENDPOINTS } from './endpoints';
 import { setAccessToken } from '@/lib/axios';
 
-export interface AuthUser { id: string; fullName: string; email: string; phone: string; roles: Array<{ name: string } | string> }
+export interface AuthUser { id: string; fullName: string; email: string; phone: string; avatarUrl?: string | null; roles: Array<{ name: string } | string> }
 export interface AuthSession { accessToken: string; tokenType: 'Bearer'; expiresIn: number; user: AuthUser }
 
 export interface RegisterPayload {
@@ -74,7 +74,10 @@ export const authApi = baseApi.injectEndpoints({
         }
       },
     }),
-    getCurrentUser: builder.query<AuthUser, void>({ query: () => ({ url: API_ENDPOINTS.auth.me }) }),
+    getCurrentUser: builder.query<AuthUser, void>({
+      query: () => ({ url: API_ENDPOINTS.auth.me }),
+      providesTags: ['Users', 'MyRecords'],
+    }),
     logout: builder.mutation<unknown, void>({
       query: () => ({ url: API_ENDPOINTS.auth.logout, method: 'POST' }),
       async onQueryStarted(_arg, { queryFulfilled }) {

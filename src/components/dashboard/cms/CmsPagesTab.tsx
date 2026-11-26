@@ -25,6 +25,7 @@ import {
 } from "@/store/api/adminApi"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { ImageUploader } from "@/components/ui/ImageUploader"
 import { toast } from "sonner"
 
 export function CmsPagesTab() {
@@ -341,16 +342,13 @@ export function CmsPagesTab() {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-stone-700 mb-1">ব্যানার ছবির লিংক (Image URL)</label>
-                  <input
-                    type="url"
-                    value={bannerImageUrl}
-                    onChange={(e) => setBannerImageUrl(e.target.value)}
-                    placeholder="https://..."
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#0D5C35]/30 focus:border-[#0D5C35]"
-                  />
-                </div>
+                <ImageUploader
+                  value={bannerImageUrl}
+                  onChange={setBannerImageUrl}
+                  label="ব্যানার বা কভার ছবি আপলোড"
+                  aspectRatio="banner"
+                  description="JPG, PNG, WEBP (ImgBB ক্লাউডে হোস্ট হবে)"
+                />
               </div>
 
               <div>

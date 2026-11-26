@@ -14,6 +14,7 @@ import { Language } from '@/types';
 import { assistanceSchema, AssistanceFormData } from '@/lib/validations/assistanceSchema';
 import { useSubmitAssistanceMutation } from '@/store/api/applicationsApi';
 import { useAppStore } from '@/store/useAppStore';
+import { ImageUploader } from '@/components/ui/ImageUploader';
 import { toast } from 'sonner';
 
 interface AssistanceModalProps {
@@ -32,6 +33,7 @@ export default function AssistanceModal({
   const addSavedApplicationId = useAppStore((state) => state.addSavedApplicationId);
   const [submitAssistance, { isLoading: isSubmitting }] = useSubmitAssistanceMutation();
   const [generatedId, setGeneratedId] = useState<string | null>(null);
+  const [documentUrl, setDocumentUrl] = useState<string>('');
 
   const {
     register,
@@ -57,7 +59,10 @@ export default function AssistanceModal({
 
   const onSubmit = async (data: AssistanceFormData) => {
     try {
-      const response = await submitAssistance(data).unwrap();
+      const finalDescription = documentUrl
+        ? `${data.description}\n\n[সংযুক্ত প্রেসক্রিপশন/প্রমাণপত্র]: ${documentUrl}`
+        : data.description;
+      const response = await submitAssistance({ ...data, description: finalDescription }).unwrap();
       const newId = response.referenceCode;
       setGeneratedId(newId);
       addSavedApplicationId(newId);
@@ -71,6 +76,7 @@ export default function AssistanceModal({
 
   const handleResetAndClose = () => {
     setGeneratedId(null);
+    setDocumentUrl('');
     reset();
     onClose();
   };
@@ -277,6 +283,23 @@ export default function AssistanceModal({
                 {errors.description && (
                   <p className="text-red-600 text-xs mt-1">{errors.description.message}</p>
                 )}
+              </div>
+
+              <div>
+                <ImageUploader
+                  value={documentUrl}
+                  onChange={setDocumentUrl}
+                  label={
+                    lang === 'bn'
+                      ? 'প্রেসক্রিপশন বা প্রমাণের ছবি সংযুক্ত করুন (ঐচ্ছিক)'
+                      : 'Prescription / Proof Document (Optional)'
+                  }
+                  description={
+                    lang === 'bn'
+                      ? 'চিকিৎসা ব্যবস্থাপত্র, হাসপাতালের বিল বা জাতীয় পরিচয়পত্রের ছবি'
+                      : 'Medical prescription, hospital bill, or NID photo'
+                  }
+                />
               </div>
 
               <div className="flex items-start gap-2 pt-1">

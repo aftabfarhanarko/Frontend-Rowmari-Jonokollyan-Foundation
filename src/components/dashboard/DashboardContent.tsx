@@ -45,6 +45,8 @@ import {
   Image as ImageIcon,
   Newspaper,
   Mail,
+  Camera,
+  Upload,
 } from "lucide-react"
 import {
   useGetExecutiveDashboardQuery,
@@ -75,6 +77,7 @@ import { CmsSettingsTab } from "@/components/dashboard/cms/CmsSettingsTab"
 import { CmsUsersTab } from "@/components/dashboard/cms/CmsUsersTab"
 import { CmsMessagesTab } from "@/components/dashboard/cms/CmsMessagesTab"
 import { CmsActivityLogsTab } from "@/components/dashboard/cms/CmsActivityLogsTab"
+import { useUploadAvatarMutation } from "@/store/api/imagesApi"
 import { toast } from "sonner"
 
 interface DashboardContentProps {
@@ -90,7 +93,40 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
     setVolunteerModalOpen,
   } = useAppStore()
   const roleMeta = ROLE_METAS[currentRole] || ROLE_METAS.COMMUNITY_MEMBER
-  const { data: currentUser } = useGetCurrentUserQuery()
+  const { data: currentUser, refetch: refetchCurrentUser } = useGetCurrentUserQuery()
+  const [uploadAvatarMutation, { isLoading: isUploadingAvatar }] = useUploadAvatarMutation()
+  const avatarInputRef = React.useRef<HTMLInputElement>(null)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+
+  const handleAvatarFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    const validTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"]
+    if (!validTypes.includes(file.type)) {
+      toast.error("শুধুমাত্র JPG, PNG, WEBP অথবা GIF ছবি সমর্থনযোগ্য।")
+      return
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("ছবির আকার সর্বোচ্চ ১০ মেগাবাইট হতে পারে।")
+      return
+    }
+
+    const objectUrl = URL.createObjectURL(file)
+    setAvatarPreview(objectUrl)
+
+    try {
+      toast.info("প্রোফাইল ছবি ImgBB ক্লাউডে আপলোড হচ্ছে...", { duration: 3000 })
+      const formData = new FormData()
+      formData.append("image", file)
+      await uploadAvatarMutation(formData).unwrap()
+      toast.success("প্রোফাইল ছবি সফলভাবে আপলোড এবং ডাটাবেসে সেভ হয়েছে!")
+      refetchCurrentUser?.()
+    } catch (err: any) {
+      setAvatarPreview(null)
+      toast.error(err?.data?.message || err?.message || "ছবি আপলোড ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।")
+    }
+  }
 
   // --- Real Backend API Hooks ---
   const isPrivileged = ["SUPER_ADMIN", "ADMIN", "FINANCE_MANAGER"].includes(currentRole)
@@ -778,13 +814,26 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
                 </span>
               </div>
 
-              <div>
-                <h2 className="text-xl sm:text-2xl font-black text-white">
-                  স্বাগতম, {currentUser?.fullName || "সম্মানিত সদস্য"}!
-                </h2>
-                <p className="text-xs sm:text-sm text-emerald-100/90 mt-1 max-w-2xl leading-relaxed">
-                  রৌমারী জনকল্যাণ ফাউন্ডেশনের মেম্বার পোর্টালে আপনার সকল ব্যক্তিগত সেবা, রক্তের অনুরোধ ও মানবিক সহায়তা আবেদন এখান থেকেই এক ক্লিকে পর্যবেক্ষণ ও পরিচালনা করতে পারবেন।
-                </p>
+              <div className="flex items-center gap-3.5">
+                {currentUser?.avatarUrl ? (
+                  <img
+                    src={currentUser.avatarUrl || undefined}
+                    alt={currentUser?.fullName || "ব্যবহারকারী"}
+                    className="w-14 h-14 rounded-full border-2 border-white/60 object-cover shadow-sm shrink-0"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-full border border-white/30 bg-white/10 flex items-center justify-center font-bold text-lg text-white shrink-0">
+                    {currentUser?.fullName?.charAt(0) || "U"}
+                  </div>
+                )}
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-black text-white">
+                    স্বাগতম, {currentUser?.fullName || "সম্মানিত সদস্য"}!
+                  </h2>
+                  <p className="text-xs sm:text-sm text-emerald-100/90 mt-0.5 max-w-2xl leading-relaxed">
+                    রৌমারী জনকল্যাণ ফাউন্ডেশনের মেম্বার পোর্টালে আপনার সকল ব্যক্তিগত সেবা ও মানবিক সহায়তা আবেদন এখান থেকেই এক ক্লিকে পর্যবেক্ষণ ও পরিচালনা করতে পারবেন।
+                  </p>
+                </div>
               </div>
 
               {/* Contact & District Chips */}
@@ -1482,6 +1531,90 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
           <div className="pb-4 border-b border-stone-100">
             <h2 className="text-lg font-bold text-stone-900">আমার প্রোফাইল ও অ্যাকাউন্ট তথ্য</h2>
             <p className="text-xs text-stone-500">আপনার সংরক্ষিত যোগাযোগের তথ্য ও অ্যাকাউন্ট বিবরণী</p>
+          </div>
+
+          {/* Profile Picture Card with ImgBB Upload & DB Save */}
+          <div className="p-5 rounded-2xl border border-stone-200 bg-stone-50/70 flex flex-col sm:flex-row items-center gap-5">
+            <div className="relative group">
+              <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#0D5C35] bg-emerald-50 flex items-center justify-center shadow-sm">
+                {avatarPreview || currentUser?.avatarUrl ? (
+                  <img
+                    src={avatarPreview || currentUser?.avatarUrl || undefined}
+                    alt={currentUser?.fullName || "ব্যবহারকারী"}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-3xl font-black text-[#0D5C35]">
+                    {currentUser?.fullName?.charAt(0) || "U"}
+                  </span>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => avatarInputRef.current?.click()}
+                disabled={isUploadingAvatar}
+                className="absolute inset-0 rounded-full bg-black/50 text-white flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer disabled:cursor-not-allowed"
+                title="প্রোফাইল ছবি পরিবর্তন করুন"
+              >
+                {isUploadingAvatar ? (
+                  <Loader2 className="size-5 animate-spin" />
+                ) : (
+                  <>
+                    <Camera className="size-5" />
+                    <span className="text-[10px] mt-0.5">ছবি পরিবর্তন</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="space-y-1.5 text-center sm:text-left flex-1">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                <h3 className="text-base font-bold text-stone-900">
+                  {currentUser?.fullName || "সম্মানিত সদস্য"}
+                </h3>
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0D5C35] font-bold text-[11px]">
+                  {currentRole === "SUPER_ADMIN" ? "সুপার অ্যাডমিন" : "কমিউনিটি মেম্বার"}
+                </span>
+              </div>
+              <p className="text-xs text-stone-500">
+                ইমেজ বিবি (ImgBB) ক্লাউডের মাধ্যমে প্রোফাইল ছবি আপলোড করুন ও ডাটাবেসে সেভ রাখুন।
+              </p>
+              <div className="pt-1 flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                <input
+                  type="file"
+                  ref={avatarInputRef}
+                  accept="image/png,image/jpeg,image/webp,image/gif"
+                  className="hidden"
+                  onChange={handleAvatarFileSelect}
+                />
+                <Button
+                  size="sm"
+                  variant="outline"
+                  type="button"
+                  onClick={() => avatarInputRef.current?.click()}
+                  disabled={isUploadingAvatar}
+                  className="text-xs h-8 border-stone-300 gap-1.5"
+                >
+                  {isUploadingAvatar ? (
+                    <>
+                      <Loader2 className="size-3.5 animate-spin" />
+                      <span>আপলোড ও সেভ হচ্ছে...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="size-3.5 text-[#0D5C35]" />
+                      <span>নতুন ছবি আপলোড</span>
+                    </>
+                  )}
+                </Button>
+                {currentUser?.avatarUrl && (
+                  <span className="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
+                    <CheckCircle2 className="size-3" />
+                    <span>ক্লাউডে সংরক্ষিত</span>
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

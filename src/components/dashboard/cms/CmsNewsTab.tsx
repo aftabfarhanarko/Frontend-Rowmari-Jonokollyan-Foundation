@@ -9,6 +9,7 @@ import {
 } from "@/store/api/contentApi"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { ImageUploader } from "@/components/ui/ImageUploader"
 import { toast } from "sonner"
 
 export function CmsNewsTab() {
@@ -211,16 +212,13 @@ export function CmsNewsTab() {
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-stone-700 mb-1">ছবি বা ব্যানারের লিংক (URL)</label>
-                <input
-                  type="url"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300"
-                />
-              </div>
+              <ImageUploader
+                value={imageUrl}
+                onChange={setImageUrl}
+                label="সংবাদ বা ইভেন্টের ব্যানার ছবি"
+                aspectRatio="video"
+                description="JPG, PNG, WEBP (ImgBB ক্লাউডে হোস্ট হবে)"
+              />
 
               <div>
                 <label className="block text-xs font-bold text-stone-700 mb-1">সংক্ষিপ্ত সারসংক্ষেপ</label>

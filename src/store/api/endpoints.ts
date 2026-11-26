@@ -72,6 +72,7 @@ export const API_ENDPOINTS = {
   users: {
     list: '/users',
     profile: '/users/profile',
+    avatar: '/users/profile/avatar',
     detail: (id: string) => `/users/${id}`,
     roles: (id: string) => `/users/${id}/roles`,
     status: (id: string) => `/users/${id}/status`,
@@ -105,5 +106,8 @@ export const API_ENDPOINTS = {
     roles: '/access-control/roles',
     permissions: '/access-control/permissions',
     createRole: '/access-control/roles',
+  },
+  images: {
+    upload: '/images/upload',
   },
 };

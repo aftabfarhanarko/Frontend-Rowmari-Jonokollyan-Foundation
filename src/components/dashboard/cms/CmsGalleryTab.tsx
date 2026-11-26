@@ -10,6 +10,7 @@ import {
 } from "@/store/api/contentApi"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { ImageUploader } from "@/components/ui/ImageUploader"
 import { toast } from "sonner"
 
 export function CmsGalleryTab() {
@@ -45,8 +46,9 @@ export function CmsGalleryTab() {
         title: title.trim(),
         category,
         imageUrl: imageUrl.trim(),
+        mediaUrl: imageUrl.trim(),
         caption: caption.trim() || undefined,
-      }).unwrap()
+      } as any).unwrap()
 
       toast.success("ছবি সফলভাবে গ্যালারিতে যুক্ত হয়েছে!")
       setModalOpen(false)
@@ -103,7 +105,7 @@ export function CmsGalleryTab() {
             >
               <div className="relative aspect-4/3 w-full bg-stone-100 overflow-hidden">
                 <Image
-                  src={item.imageUrl || "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80"}
+                  src={item.imageUrl || (item as any).mediaUrl || "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80"}
                   alt={item.title || "Gallery image"}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -189,19 +191,14 @@ export function CmsGalleryTab() {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-stone-700 mb-1">
-                  ছবির সরাসরি লিংক (Direct Image URL) <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="url"
-                  required
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300 font-mono"
-                />
-              </div>
+              <ImageUploader
+                value={imageUrl}
+                onChange={setImageUrl}
+                label="গ্যালারির ছবি নির্বাচন / আপলোড"
+                required
+                aspectRatio="video"
+                description="JPG, PNG, WEBP (ImgBB ক্লাউডে হোস্ট হবে)"
+              />
 
               <div>
                 <label className="block text-xs font-bold text-stone-700 mb-1">ক্যাপশন বা বিবরণ</label>

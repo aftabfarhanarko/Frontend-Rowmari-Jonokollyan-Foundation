@@ -138,13 +138,13 @@ apiClient.interceptors.response.use(
 
 export const axiosBaseQuery =
   ({ baseUrl = '' }: { baseUrl?: string } = {}): BaseQueryFn<
-    { url: string; method?: AxiosRequestConfig['method']; data?: AxiosRequestConfig['data']; params?: AxiosRequestConfig['params']; headers?: AxiosRequestConfig['headers']; signal?: AbortSignal },
+    { url: string; method?: AxiosRequestConfig['method']; data?: AxiosRequestConfig['data']; params?: AxiosRequestConfig['params']; headers?: AxiosRequestConfig['headers']; signal?: AbortSignal; timeout?: number },
     unknown,
     ApiError
   > =>
-  async ({ url, method = 'GET', data, params, headers, signal }) => {
+  async ({ url, method = 'GET', data, params, headers, signal, timeout }) => {
     try {
-      const response = await apiClient({ url: `${baseUrl}${url}`, method, data, params, headers, signal });
+      const response = await apiClient({ url: `${baseUrl}${url}`, method, data, params, headers, signal, timeout });
       return { data: unwrapApiResponse(response.data) };
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error && 'message' in error) {
