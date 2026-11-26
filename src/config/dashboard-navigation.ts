@@ -89,6 +89,18 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
 
   // 3. Projects & Campaigns
   {
+    id: "donations",
+    titleBn: "অনুদান ও তহবিল ব্যবস্থাপনা",
+    titleEn: "Donations & Finance",
+    href: "/dashboard/donations",
+    iconName: "HeartHandshake",
+    badge: "তহবিল",
+    badgeVariant: "urgent",
+    category: "operations",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "অনলাইন অনুদান যাচাইকরণ, অনুমোদন ও হিসাব",
+  },
+  {
     id: "campaigns",
     titleBn: "ক্যাম্পেইন ও ফান্ডরেইজিং",
     titleEn: "Campaigns",

@@ -83,6 +83,10 @@ export const API_ENDPOINTS = {
     my: '/donations/my',
     record: '/donations/record',
     detail: (id: string) => `/donations/${id}`,
+    publicStats: '/donations/public/stats',
+    publicShowcase: '/donations/public/showcase',
+    adminAll: '/donations/admin/all',
+    adminReview: (id: string) => `/donations/admin/${id}/review`,
   },
   expenses: {
     list: '/admin/expenses',

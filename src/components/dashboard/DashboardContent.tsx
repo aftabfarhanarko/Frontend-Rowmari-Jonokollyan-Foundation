@@ -36,6 +36,7 @@ import { MyVolunteerTab } from "@/components/dashboard/tabs/MyVolunteerTab"
 import { ProfileTab } from "@/components/dashboard/tabs/ProfileTab"
 import { NotificationsTab } from "@/components/dashboard/tabs/NotificationsTab"
 import { MedicalEducationTab } from "@/components/dashboard/tabs/MedicalEducationTab"
+import { DonationsTab } from "@/components/dashboard/tabs/DonationsTab"
 
 interface DashboardContentProps {
   activeTab: string
@@ -142,6 +143,7 @@ export function DashboardContent({ activeTab, onSelectTab }: DashboardContentPro
       {activeTab === "overview" && currentRole !== "COMMUNITY_MEMBER" && (
         <AdminOverviewTab adminDashboard={adminDashboard} userItems={userItems} volunteerItems={volunteerItems} campaignsCount={displayCampaignsList.length} appItems={appItems} onSelectTab={onSelectTab} />
       )}
+      {(activeTab === "donations" || activeTab === "finance") && <DonationsTab />}
       {activeTab === "medical" && <MedicalEducationTab type="medical" data={displayMedicalData} />}
       {activeTab === "education" && <MedicalEducationTab type="education" data={displayEducationData} />}
       {activeTab === "volunteers" && <VolunteersTab volunteersData={displayVolunteersData} />}

@@ -53,7 +53,7 @@ const navLinks = [
   { href: '/team', labelBn: 'টিম ও কমিটি', labelEn: 'Our Team', icon: Users },
   { href: '/activities', labelBn: 'কার্যক্রম', labelEn: 'Activities', icon: Activity },
   { href: '/campaigns', labelBn: 'ক্যাম্পেইন', labelEn: 'Campaigns', icon: Target },
-  { href: '/get-help', labelBn: 'সহায়তা চাই', labelEn: 'Get Help', icon: HandHeart },
+  { href: '/get-help', labelBn: 'সহায়তার আবেদন', labelEn: 'Apply for Aid', icon: HandHeart },
   { href: '/gallery', labelBn: 'গ্যালারি', labelEn: 'Gallery', icon: ImageIcon },
   { href: '/news', labelBn: 'সংবাদ ও ইভেন্ট', labelEn: 'News', icon: Newspaper },
   { href: '/contact', labelBn: 'যোগাযোগ', labelEn: 'Contact', icon: Phone },
@@ -65,7 +65,7 @@ const primaryDesktopLinks = [
   { href: '/', labelBn: 'হোম', labelEn: 'Home', icon: Home },
   { href: '/campaigns', labelBn: 'ক্যাম্পেইন', labelEn: 'Campaigns', icon: Target },
   { href: '/activities', labelBn: 'কার্যক্রম', labelEn: 'Activities', icon: Activity },
-  { href: '/get-help', labelBn: 'সহায়তা চাই', labelEn: 'Get Help', icon: HandHeart },
+  { href: '/get-help', labelBn: 'সহায়তার আবেদন', labelEn: 'Apply for Aid', icon: HandHeart },
 ];
 
 // 2. Secondary links placed in "আরও" (More) dropdown on desktop
@@ -350,6 +350,15 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
 
           {/* Actions */}
           <div className="hidden sm:flex items-center gap-2.5 shrink-0">
+            {/* Dedicated Primary Donation CTA */}
+            <Link
+              href="/donate"
+              className="px-4 py-2 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95"
+            >
+              <Heart className="w-3.5 h-3.5 fill-current" />
+              <span>{lang === 'bn' ? 'অনুদান দিন' : 'Donate Now'}</span>
+            </Link>
+
             {isUserLoggedIn ? (
               <div className="flex items-center gap-2">
                 {currentRole === 'SUPER_ADMIN' ? (

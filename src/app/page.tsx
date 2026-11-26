@@ -14,6 +14,7 @@ import {
   RecentActivities,
   TrackAndSupport,
   OngoingCampaigns,
+  DonorShowcaseSection,
   Testimonials,
   AboutUs,
   JoinCTA,
@@ -136,6 +137,9 @@ export default function HomePage() {
         <OngoingCampaigns
           lang={lang}
         />
+
+        {/* Verified Public Donor Showcase */}
+        <DonorShowcaseSection lang={lang} />
 
         <TrackAndSupport
           lang={lang}

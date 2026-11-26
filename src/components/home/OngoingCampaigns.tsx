@@ -109,14 +109,14 @@ export default function OngoingCampaigns({ lang }: OngoingCampaignsProps) {
                     {/* Styled Progress Line */}
                     <div className="w-full h-3 bg-stone-200/80 rounded-full overflow-hidden p-0.5">
                       <div
-                        className="h-full bg-gradient-to-r from-[#D62828] via-red-600 to-teal-500 rounded-full transition-all duration-700 shadow-xs"
+                        className="h-full bg-linear-to-r from-[#D62828] via-red-600 to-red-500 rounded-full transition-all duration-700 shadow-xs"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
 
                     <div className="flex items-center justify-between text-[11px] text-stone-500 pt-0.5">
                       <span className="flex items-center gap-1 text-red-800 font-semibold">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-red-700" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-red-600" />
                         <span>{lang === 'bn' ? 'মাঠপর্যায়ে সরাসরি বিতরণ' : 'Direct Ground Distribution'}</span>
                       </span>
                       <span>
@@ -135,11 +135,18 @@ export default function OngoingCampaigns({ lang }: OngoingCampaignsProps) {
                   </span>
                   <div className="flex items-center gap-2">
                     <Link
-                      href="/get-help"
+                      href="/donate"
                       className="px-4 py-2 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-semibold text-xs sm:text-sm transition shadow-sm flex items-center gap-1.5 cursor-pointer"
                     >
-                      <HeartHandshake className="w-4 h-4" />
-                      <span>{lang === 'bn' ? 'সহায়তার আবেদন' : 'Apply for Aid'}</span>
+                      <Target className="w-4 h-4" />
+                      <span>{lang === 'bn' ? 'অনুদান দিন' : 'Donate'}</span>
+                    </Link>
+                    <Link
+                      href="/get-help"
+                      className="px-3 py-2 rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-50 font-semibold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <HeartHandshake className="w-4 h-4 text-[#D62828]" />
+                      <span>{lang === 'bn' ? 'সহায়তার আবেদন' : 'Apply'}</span>
                     </Link>
                   </div>
                 </div>
