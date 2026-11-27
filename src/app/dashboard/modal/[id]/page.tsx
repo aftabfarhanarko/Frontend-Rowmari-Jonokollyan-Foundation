@@ -117,7 +117,7 @@ export default function NoticeModalDetailPage() {
           {/* Left Column (8 cols): Content & Visual Preview */}
           <div className="lg:col-span-8 space-y-6">
             {/* Banner Image Preview if present */}
-            {modal.imageUrl && (
+            {modal.imageUrl && (modal.imageUrl.startsWith("http://") || modal.imageUrl.startsWith("https://") || modal.imageUrl.startsWith("/")) && (
               <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs">
                 <div className="p-4 border-b border-stone-100 flex items-center justify-between text-xs font-bold text-stone-700">
                   <span>সংযুক্ত নোটিশ ব্যানার ছবি</span>
@@ -136,6 +136,7 @@ export default function NoticeModalDetailPage() {
                     src={modal.imageUrl}
                     alt={modal.title}
                     fill
+                    unoptimized
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 800px"
                   />

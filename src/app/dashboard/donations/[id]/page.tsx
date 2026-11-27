@@ -220,12 +220,13 @@ export default function DonationDetailPage() {
               )}
             </h3>
 
-            {donation?.paymentProofUrl ? (
+            {donation?.paymentProofUrl && (donation.paymentProofUrl.startsWith("http://") || donation.paymentProofUrl.startsWith("https://") || donation.paymentProofUrl.startsWith("/")) ? (
               <div className="relative h-72 w-full rounded-xl overflow-hidden border border-stone-200 bg-stone-100">
                 <Image
                   src={donation.paymentProofUrl}
                   alt="Payment Proof"
                   fill
+                  unoptimized
                   className="object-contain"
                 />
               </div>

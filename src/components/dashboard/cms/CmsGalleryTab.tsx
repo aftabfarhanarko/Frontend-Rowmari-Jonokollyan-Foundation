@@ -79,7 +79,7 @@ export function CmsGalleryTab() {
           {items.map((item) => (
             <div key={item.id} className="group bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
               <div className="relative aspect-4/3 w-full bg-stone-100 overflow-hidden">
-                <Image src={item.imageUrl || (item as any).mediaUrl || "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80"} alt={item.title || "Gallery image"} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
+                <Image src={item.imageUrl || (item as any).mediaUrl || "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80"} alt={item.title || "Gallery image"} fill unoptimized sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover group-hover:scale-105 transition-transform duration-300" />
                 <Badge className="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[10px] border-none font-bold">
                   {item.category || "General"}
                 </Badge>

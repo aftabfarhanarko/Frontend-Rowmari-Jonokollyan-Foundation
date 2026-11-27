@@ -76,13 +76,14 @@ export default function ActivityDetailPage() {
         {/* Main Details (8 cols) */}
         <div className="lg:col-span-8 space-y-6">
           {/* Cover Image */}
-          {cover && (
+          {cover && (cover.startsWith("http://") || cover.startsWith("https://") || cover.startsWith("/")) && (
             <div className="relative h-64 sm:h-80 w-full rounded-2xl overflow-hidden border border-stone-200 shadow-xs bg-stone-100">
               <Image
                 src={cover}
                 alt={activity.title || "Activity"}
                 fill
                 priority
+                unoptimized
                 className="object-cover"
               />
             </div>

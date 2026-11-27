@@ -229,11 +229,12 @@ export function CmsHeroTab() {
 
                     <td className="py-3.5 px-4 whitespace-nowrap">
                       <div className="relative w-20 h-14 rounded-lg overflow-hidden border border-stone-200 bg-stone-100 shrink-0">
-                        {item.imageUrl ? (
+                        {item.imageUrl && (item.imageUrl.startsWith("http://") || item.imageUrl.startsWith("https://") || item.imageUrl.startsWith("/")) ? (
                           <Image
                             src={item.imageUrl}
-                            alt={item.titleBn}
+                            alt={item.titleBn || "Hero slide"}
                             fill
+                            unoptimized
                             className="object-cover"
                             sizes="80px"
                           />
@@ -595,11 +596,12 @@ export function CmsHeroTab() {
 
               <div className="md:col-span-5">
                 <div className="relative w-full aspect-4/3 rounded-2xl overflow-hidden border border-stone-200 shadow-md bg-stone-100">
-                  {previewSlide.imageUrl ? (
+                  {previewSlide.imageUrl && (previewSlide.imageUrl.startsWith("http://") || previewSlide.imageUrl.startsWith("https://") || previewSlide.imageUrl.startsWith("/")) ? (
                     <Image
                       src={previewSlide.imageUrl}
-                      alt={previewSlide.titleBn}
+                      alt={previewSlide.titleBn || "Hero slide"}
                       fill
+                      unoptimized
                       className="object-cover"
                     />
                   ) : (

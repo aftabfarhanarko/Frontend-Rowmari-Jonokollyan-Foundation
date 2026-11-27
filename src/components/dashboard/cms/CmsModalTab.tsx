@@ -2,6 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import {
   Megaphone,
   Plus,
@@ -614,6 +615,20 @@ export function CmsModalTab() {
                 <X className="w-4 h-4" />
               </button>
             </div>
+
+            {/* Optional Modal Image Preview */}
+            {previewModal.imageUrl && (previewModal.imageUrl.startsWith("http://") || previewModal.imageUrl.startsWith("https://") || previewModal.imageUrl.startsWith("/")) && (
+              <div className="relative w-full h-36 sm:h-44 bg-stone-100 border-b border-stone-200 overflow-hidden">
+                <Image
+                  src={previewModal.imageUrl}
+                  alt={previewModal.title}
+                  fill
+                  unoptimized
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, 500px"
+                />
+              </div>
+            )}
 
             <div className="p-6">
               <div className="mb-4">

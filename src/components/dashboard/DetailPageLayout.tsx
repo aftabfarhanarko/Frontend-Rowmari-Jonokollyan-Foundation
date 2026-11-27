@@ -115,12 +115,13 @@ export function DetailPageLayout({
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div className="flex items-start sm:items-center gap-4 min-w-0">
             {/* Visual Icon / Avatar */}
-            {avatarUrl ? (
+            {avatarUrl && (avatarUrl.startsWith("http://") || avatarUrl.startsWith("https://") || avatarUrl.startsWith("/")) ? (
               <div className="relative size-14 sm:size-16 rounded-2xl overflow-hidden shrink-0 border border-stone-200 shadow-xs bg-stone-100">
                 <Image
                   src={avatarUrl}
                   alt={title}
                   fill
+                  unoptimized
                   className="object-cover"
                   sizes="64px"
                 />

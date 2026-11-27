@@ -116,12 +116,13 @@ export default function AnnouncementModal({
         </div>
 
         {/* Optional Modal Image */}
-        {modalData?.imageUrl && (
+        {modalData?.imageUrl && (modalData.imageUrl.startsWith("http://") || modalData.imageUrl.startsWith("https://") || modalData.imageUrl.startsWith("/")) && (
           <div className="relative w-full h-36 sm:h-44 bg-stone-100 border-b border-stone-200 overflow-hidden">
             <Image
               src={modalData.imageUrl}
               alt={title}
               fill
+              unoptimized
               className="object-cover"
               sizes="(max-width: 640px) 100vw, 500px"
             />

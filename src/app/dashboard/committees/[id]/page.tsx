@@ -247,11 +247,12 @@ export default function CommitteeMemberDetailPage() {
           {/* Photo & Member ID Card */}
           <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-xs text-center">
             <div className="relative size-32 rounded-2xl overflow-hidden border-2 border-stone-200 mx-auto shadow-sm bg-stone-100 flex items-center justify-center">
-              {member?.photoUrl ? (
+              {member?.photoUrl && (member.photoUrl.startsWith("http://") || member.photoUrl.startsWith("https://") || member.photoUrl.startsWith("/")) ? (
                 <Image
                   src={member.photoUrl}
                   alt={member.nameBn || "Member"}
                   fill
+                  unoptimized
                   sizes="128px"
                   className="object-cover"
                 />

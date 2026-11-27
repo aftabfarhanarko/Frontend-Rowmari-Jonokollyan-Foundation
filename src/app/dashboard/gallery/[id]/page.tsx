@@ -98,13 +98,16 @@ export default function GalleryItemDetailPage() {
           <div className="lg:col-span-8 space-y-6">
             <div className="bg-white rounded-2xl border border-stone-200 p-4 shadow-xs">
               <div className="relative w-full h-96 sm:h-[480px] rounded-xl overflow-hidden bg-stone-100 border border-stone-200">
-                <Image
-                  src={item.imageUrl}
-                  alt={item.title}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 1024px) 100vw, 800px"
-                />
+                {item.imageUrl && (item.imageUrl.startsWith("http://") || item.imageUrl.startsWith("https://") || item.imageUrl.startsWith("/")) ? (
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.title}
+                    fill
+                    unoptimized
+                    className="object-contain"
+                    sizes="(max-width: 1024px) 100vw, 800px"
+                  />
+                ) : null}
               </div>
 
               {item.caption && (

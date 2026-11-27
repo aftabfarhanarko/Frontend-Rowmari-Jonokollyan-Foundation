@@ -138,12 +138,13 @@ export default function CMSPageDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Column (8 cols): Content Body */}
           <div className="lg:col-span-8 space-y-6">
-            {page.bannerImageUrl && (
-              <div className="relative w-full h-64 rounded-2xl overflow-hidden border border-stone-200 shadow-xs">
+            {page.bannerImageUrl && (page.bannerImageUrl.startsWith("http://") || page.bannerImageUrl.startsWith("https://") || page.bannerImageUrl.startsWith("/")) && (
+              <div className="relative w-full h-64 rounded-2xl overflow-hidden border border-stone-200 shadow-xs bg-stone-100">
                 <Image
                   src={page.bannerImageUrl}
                   alt={page.title}
                   fill
+                  unoptimized
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 800px"
                 />

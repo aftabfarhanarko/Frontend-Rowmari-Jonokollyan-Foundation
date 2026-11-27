@@ -99,13 +99,14 @@ export default function CampaignDetailPage() {
         {/* Main Content (8 cols) */}
         <div className="lg:col-span-8 space-y-6">
           {/* Banner Image */}
-          {campaign?.bannerImageUrl && (
+          {campaign?.bannerImageUrl && (campaign.bannerImageUrl.startsWith("http://") || campaign.bannerImageUrl.startsWith("https://") || campaign.bannerImageUrl.startsWith("/")) && (
             <div className="relative h-64 sm:h-80 w-full rounded-2xl overflow-hidden border border-stone-200 shadow-xs bg-stone-100">
               <Image
                 src={campaign.bannerImageUrl}
                 alt={campaign.title}
                 fill
                 priority
+                unoptimized
                 className="object-cover"
               />
             </div>

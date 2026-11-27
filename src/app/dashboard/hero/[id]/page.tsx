@@ -119,14 +119,17 @@ export default function HeroSlideDetailPage() {
           {/* Left Column (8 cols): Panorama Banner & Content */}
           <div className="lg:col-span-8 space-y-6">
             {/* Live Panorama Hero Image with Overlaid Content */}
-            <div className="relative w-full h-80 sm:h-96 rounded-2xl overflow-hidden shadow-md border border-stone-200">
-              <Image
-                src={slide.imageUrl}
-                alt={slide.titleBn}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 800px"
-              />
+            <div className="relative w-full h-80 sm:h-96 rounded-2xl overflow-hidden shadow-md border border-stone-200 bg-stone-900">
+              {slide.imageUrl && (slide.imageUrl.startsWith("http://") || slide.imageUrl.startsWith("https://") || slide.imageUrl.startsWith("/")) ? (
+                <Image
+                  src={slide.imageUrl}
+                  alt={slide.titleBn}
+                  fill
+                  unoptimized
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 800px"
+                />
+              ) : null}
               <div className="absolute inset-0 bg-gradient-to-r from-[#7f1d1d]/90 via-[#991b1b]/70 to-black/40 p-6 sm:p-8 flex flex-col justify-end text-white space-y-3">
                 {slide.badgeBn && (
                   <span className="inline-block self-start text-[11px] font-bold uppercase tracking-wider bg-white/20 backdrop-blur-xs px-3 py-1 rounded-full text-white border border-white/30">

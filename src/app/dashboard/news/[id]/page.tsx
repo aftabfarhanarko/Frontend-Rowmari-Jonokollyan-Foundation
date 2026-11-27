@@ -68,12 +68,13 @@ export default function NewsEventDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Column (8 cols): Article Content & Image */}
           <div className="lg:col-span-8 space-y-6">
-            {news.imageUrl && (
-              <div className="relative w-full h-72 sm:h-96 rounded-2xl overflow-hidden border border-stone-200 shadow-xs">
+            {news.imageUrl && (news.imageUrl.startsWith("http://") || news.imageUrl.startsWith("https://") || news.imageUrl.startsWith("/")) && (
+              <div className="relative w-full h-72 sm:h-96 rounded-2xl overflow-hidden border border-stone-200 shadow-xs bg-stone-100">
                 <Image
                   src={news.imageUrl}
                   alt={news.title}
                   fill
+                  unoptimized
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 800px"
                 />
