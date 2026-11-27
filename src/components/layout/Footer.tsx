@@ -317,7 +317,7 @@ export default function Footer({
         <motion.div
           variants={container}
           {...viewProps}
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7 flex flex-col md:flex-row items-center justify-between gap-5"
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5 flex flex-col md:flex-row items-center justify-between gap-4"
         >
           <motion.div variants={item} className="text-center md:text-left">
             <p className="text-lg sm:text-xl font-extrabold text-stone-900 leading-snug">
@@ -366,11 +366,11 @@ export default function Footer({
       {/* ============ Main columns ============ */}
       <div className="relative">
         <PeopleBackdrop />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12 pb-16 sm:pb-28">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-7 sm:pt-9 pb-8 sm:pb-10">
           <motion.div
             variants={container}
             {...viewProps}
-            className="grid grid-cols-2 lg:grid-cols-12 gap-x-6 gap-y-10 lg:gap-12"
+            className="grid grid-cols-2 lg:grid-cols-12 gap-x-6 gap-y-7 lg:gap-8"
           >
             {/* Brand (full width on mobile) */}
             <motion.div variants={item} className="col-span-2 lg:col-span-5 space-y-5">
