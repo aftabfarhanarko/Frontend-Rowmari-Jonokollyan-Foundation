@@ -234,18 +234,19 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
           initial={reduceMotion ? false : { y: -80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.7, ease: EASE }}
-          className={`border-b transition-[background-color,box-shadow,border-color] duration-300 ${scrolled
-              ? 'bg-white/80 backdrop-blur-xl border-stone-200/80 shadow-[0_8px_30px_-12px_rgba(13,92,53,0.25)]'
+          className={`relative border-b transition-[background-color,box-shadow,border-color] duration-300 ${scrolled
+              ? 'bg-white/80 backdrop-blur-xl border-stone-200/80 shadow-[0_8px_30px_-12px_rgba(214,40,40,0.18)]'
               : 'bg-white/95 backdrop-blur-md border-stone-200 shadow-xs'
             }`}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Wider container on large screens so nothing gets squeezed */}
+          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
-              animate={{ height: scrolled ? 64 : 80 }}
+              animate={{ height: scrolled ? 64 : 76 }}
               transition={{ duration: 0.3, ease: EASE }}
-              className="flex items-center justify-between"
+              className="flex items-center justify-between gap-4"
             >
-              {/* Brand */}
+              {/* ============ Zone 1: Brand ============ */}
               <Link href="/" className="flex items-center gap-3 group shrink-0">
                 <motion.div
                   whileHover={reduceMotion ? undefined : { rotate: 8, scale: 1.06 }}
@@ -263,7 +264,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                   />
                 </motion.div>
                 <div>
-                  <span className="text-base sm:text-lg md:text-xl font-bold text-[#E53935] group-hover:text-[#D32F2F] transition-colors duration-300 leading-tight block">
+                  <span className="text-base sm:text-lg 2xl:text-xl font-bold text-[#E53935] group-hover:text-[#D32F2F] transition-colors duration-300 leading-tight block whitespace-nowrap">
                     {lang === 'bn' ? 'রৌমারী জনকল্যাণ ফাউন্ডেশন' : 'Rowmari Janakalyan Foundation'}
                   </span>
                   <AnimatePresence initial={false}>
@@ -273,7 +274,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="text-[11px] text-stone-500 block leading-tight overflow-hidden"
+                        className="text-[11px] text-stone-500 block leading-tight overflow-hidden whitespace-nowrap"
                       >
                         {lang === 'bn' ? 'স্থাপিত ২০১৮ • রৌমারী, কুড়িগ্রাম' : 'Est. 2018 • Rowmari, Kurigram'}
                       </motion.span>
@@ -282,8 +283,11 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                 </div>
               </Link>
 
-              {/* Desktop navigation - Primary important links + "More" dropdown */}
-              <nav className="hidden xl:flex items-center gap-1" aria-label="Main">
+              {/* ============ Zone 2: Navigation (centered, never wraps) ============ */}
+              <nav
+                className="hidden xl:flex flex-1 min-w-0 items-center justify-center gap-0.5 2xl:gap-1"
+                aria-label="Main"
+              >
                 {primaryDesktopLinks.map((link) => {
                   const Icon = link.icon;
                   const active = isActive(link.href);
@@ -292,7 +296,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                       key={link.href}
                       href={link.href}
                       aria-current={active ? 'page' : undefined}
-                      className={`relative text-xs font-semibold py-2 px-2.5 rounded-lg flex items-center gap-1.5 transition-colors duration-200 ${active ? 'text-[#D62828] font-bold' : 'text-stone-600 hover:text-[#D62828]'
+                      className={`relative whitespace-nowrap text-[13px] font-semibold py-2 px-3 rounded-lg flex items-center gap-1.5 transition-colors duration-200 ${active ? 'text-[#D62828] font-bold' : 'text-stone-600 hover:text-[#D62828] hover:bg-stone-50'
                         }`}
                     >
                       {/* Single pill that slides between the active links */}
@@ -303,7 +307,8 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                           transition={{ type: 'spring', stiffness: 420, damping: 34 }}
                         />
                       )}
-                      <Icon className="relative w-3.5 h-3.5 shrink-0" />
+                      {/* Icons only on very wide screens to save space on laptops */}
+                      <Icon className="relative w-3.5 h-3.5 shrink-0 hidden 2xl:block" />
                       <span className="relative">{lang === 'bn' ? link.labelBn : link.labelEn}</span>
                     </Link>
                   );
@@ -318,11 +323,12 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                   <button
                     type="button"
                     onClick={() => setMoreMenuOpen((o) => !o)}
-                    className={`relative text-xs font-semibold py-2 px-2.5 rounded-lg flex items-center gap-1 transition-colors duration-200 cursor-pointer ${isSecondaryActive
+                    className={`relative whitespace-nowrap text-[13px] font-semibold py-2 px-3 rounded-lg flex items-center gap-1 transition-colors duration-200 cursor-pointer ${isSecondaryActive
                         ? 'text-[#D62828] font-bold bg-red-50 border border-red-100'
-                        : 'text-stone-600 hover:text-[#D62828]'
+                        : 'text-stone-600 hover:text-[#D62828] hover:bg-stone-50'
                       }`}
                     aria-expanded={moreMenuOpen}
+                    aria-haspopup="menu"
                   >
                     <span>{lang === 'bn' ? 'আরও' : 'More'}</span>
                     <ChevronDown
@@ -338,72 +344,94 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 6, scale: 0.96 }}
                         transition={{ duration: 0.16, ease: 'easeOut' }}
-                        className="absolute top-full right-0 mt-1.5 w-48 bg-white rounded-xl shadow-xl border border-stone-200/90 py-1.5 z-50 overflow-hidden"
+                        className="absolute top-full right-0 pt-2 z-50"
+                        role="menu"
                       >
-                        {secondaryDesktopLinks.map((link) => {
-                          const Icon = link.icon;
-                          const active = isActive(link.href);
-                          return (
-                            <Link
-                              key={link.href}
-                              href={link.href}
-                              onClick={() => setMoreMenuOpen(false)}
-                              className={`px-3.5 py-2 text-xs font-medium flex items-center gap-2.5 transition-colors ${active
-                                  ? 'bg-red-50 text-red-900 font-bold'
-                                  : 'text-stone-700 hover:bg-stone-50 hover:text-[#D62828]'
-                                }`}
-                            >
-                              <Icon
-                                className={`w-3.5 h-3.5 shrink-0 ${active ? 'text-red-800' : 'text-stone-400'
+                        <div className="w-52 bg-white rounded-xl shadow-xl shadow-stone-900/10 border border-stone-200/90 py-1.5 overflow-hidden">
+                          {secondaryDesktopLinks.map((link) => {
+                            const Icon = link.icon;
+                            const active = isActive(link.href);
+                            return (
+                              <Link
+                                key={link.href}
+                                href={link.href}
+                                role="menuitem"
+                                onClick={() => setMoreMenuOpen(false)}
+                                className={`px-3.5 py-2.5 text-[13px] font-medium flex items-center gap-2.5 whitespace-nowrap transition-colors ${active
+                                    ? 'bg-red-50 text-red-900 font-bold'
+                                    : 'text-stone-700 hover:bg-stone-50 hover:text-[#D62828]'
                                   }`}
-                              />
-                              <span>{lang === 'bn' ? link.labelBn : link.labelEn}</span>
+                              >
+                                <Icon
+                                  className={`w-4 h-4 shrink-0 ${active ? 'text-red-800' : 'text-stone-400'
+                                    }`}
+                                />
+                                <span>{lang === 'bn' ? link.labelBn : link.labelEn}</span>
+                              </Link>
+                            );
+                          })}
+
+                          {/* Register moves here on laptops (shown as a button only on 2xl) */}
+                          {!isUserLoggedIn && pathname !== '/register' && (
+                            <Link
+                              href="/register"
+                              role="menuitem"
+                              onClick={() => setMoreMenuOpen(false)}
+                              className="2xl:hidden mt-1 pt-2.5 pb-2.5 px-3.5 border-t border-stone-100 text-[13px] font-bold text-[#D62828] hover:bg-red-50 flex items-center gap-2.5 whitespace-nowrap transition-colors"
+                            >
+                              <UserPlus className="w-4 h-4 shrink-0" />
+                              <span>{lang === 'bn' ? 'রেজিস্টার' : 'Register'}</span>
                             </Link>
-                          );
-                        })}
+                          )}
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
               </nav>
 
-              {/* Actions */}
-              <div className="hidden sm:flex items-center gap-2.5 shrink-0">
+              {/* ============ Zone 3: Actions ============ */}
+              <div className="hidden sm:flex items-center gap-2 shrink-0">
                 {/* Dedicated Primary Donation CTA */}
                 <Link
                   href="/donate"
-                  className="px-4 py-2 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95"
+                  className="whitespace-nowrap px-4 py-2 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white text-[13px] font-bold transition flex items-center gap-1.5 shadow-sm shadow-red-500/20 active:scale-95"
                 >
                   <Heart className="w-3.5 h-3.5 fill-current" />
                   <span>{lang === 'bn' ? 'অনুদান দিন' : 'Donate Now'}</span>
                 </Link>
 
+                {/* Thin divider between CTA and account area (laptop & up) */}
+                <span aria-hidden className="hidden xl:block w-px h-6 bg-stone-200 mx-0.5" />
+
                 {isUserLoggedIn ? (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
                     {currentRole === 'SUPER_ADMIN' ? (
                       <Link
                         href="/dashboard"
-                        className="px-3 py-1.5 rounded-full border border-[#D62828] bg-red-50 text-[#D62828] hover:bg-[#D62828] hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-2xs"
+                        className="whitespace-nowrap px-3 py-1.5 rounded-full border border-[#D62828] bg-red-50 text-[#D62828] hover:bg-[#D62828] hover:text-white text-[13px] font-bold transition flex items-center gap-1.5 shadow-2xs"
                         title={lang === 'bn' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard'}
                       >
-                        <LayoutDashboard className="w-3.5 h-3.5" />
-                        <span>{lang === 'bn' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard'}</span>
+                        <LayoutDashboard className="w-3.5 h-3.5 shrink-0" />
+                        <span className="hidden 2xl:inline">{lang === 'bn' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard'}</span>
+                        <span className="2xl:hidden">{lang === 'bn' ? 'ড্যাশবোর্ড' : 'Dashboard'}</span>
                       </Link>
                     ) : (
                       <Link
                         href="/dashboard"
-                        className="px-3 py-1.5 rounded-full border border-[#D62828] bg-red-50 text-[#D62828] hover:bg-[#D62828] hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-2xs"
+                        className="whitespace-nowrap px-3 py-1.5 rounded-full border border-[#D62828] bg-red-50 text-[#D62828] hover:bg-[#D62828] hover:text-white text-[13px] font-bold transition flex items-center gap-1.5 shadow-2xs max-w-[170px]"
                         title={lang === 'bn' ? 'আমার ড্যাশবোর্ড' : 'My Dashboard'}
                       >
-                        <LayoutDashboard className="w-3.5 h-3.5" />
-                        <span>{currentUser?.fullName || (lang === 'bn' ? 'আমার ড্যাশবোর্ড' : 'My Dashboard')}</span>
+                        <LayoutDashboard className="w-3.5 h-3.5 shrink-0" />
+                        <span className="truncate">{currentUser?.fullName || (lang === 'bn' ? 'আমার ড্যাশবোর্ড' : 'My Dashboard')}</span>
                       </Link>
                     )}
                     <button
                       type="button"
                       onClick={handleLogout}
                       title={lang === 'bn' ? 'লগআউট করুন' : 'Logout'}
-                      className="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
+                      aria-label={lang === 'bn' ? 'লগআউট করুন' : 'Logout'}
+                      className="p-2 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
                     >
                       <LogOut className="w-4 h-4" />
                     </button>
@@ -413,16 +441,17 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                     {pathname !== '/login' && (
                       <Link
                         href="/login"
-                        className="px-3 py-1.5 rounded-lg text-stone-700 hover:text-[#D62828] hover:bg-red-50 text-xs font-bold transition flex items-center gap-1"
+                        className="whitespace-nowrap px-3 py-2 rounded-lg text-stone-700 hover:text-[#D62828] hover:bg-red-50 text-[13px] font-bold transition flex items-center gap-1.5"
                       >
                         <LogIn className="w-3.5 h-3.5 text-[#D62828]" />
                         <span>{lang === 'bn' ? 'লগইন' : 'Login'}</span>
                       </Link>
                     )}
+                    {/* Register button: only on very wide screens, otherwise inside "More" */}
                     {pathname !== '/register' && (
                       <Link
                         href="/register"
-                        className="px-3 py-1.5 rounded-lg border border-[#D62828]/30 text-[#D62828] hover:bg-[#D62828] hover:text-white text-xs font-bold transition flex items-center gap-1"
+                        className="hidden 2xl:flex whitespace-nowrap px-3 py-2 rounded-lg border border-[#D62828]/30 text-[#D62828] hover:bg-[#D62828] hover:text-white text-[13px] font-bold transition items-center gap-1.5"
                       >
                         <UserPlus className="w-3.5 h-3.5" />
                         <span>{lang === 'bn' ? 'রেজিস্টার' : 'Register'}</span>
@@ -435,8 +464,9 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                   <motion.button
                     onClick={onToggleLang}
                     whileTap={{ scale: 0.95 }}
-                    className="hidden lg:flex px-2.5 py-1.5 rounded-lg border border-stone-200 text-stone-700 hover:bg-stone-50 text-xs font-semibold transition-colors items-center gap-1.5 cursor-pointer"
-                    title="Change Language"
+                    className="hidden lg:flex whitespace-nowrap px-2.5 py-2 rounded-lg border border-stone-200 text-stone-700 hover:bg-stone-50 text-[13px] font-semibold transition-colors items-center gap-1.5 cursor-pointer"
+                    title={lang === 'bn' ? 'Switch to English' : 'বাংলায় দেখুন'}
+                    aria-label="Change Language"
                   >
                     <Globe className="w-3.5 h-3.5 text-stone-600" />
                     <AnimatePresence mode="wait" initial={false}>
@@ -447,7 +477,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                         exit={{ opacity: 0, y: -6 }}
                         transition={{ duration: 0.15 }}
                       >
-                        {lang === 'bn' ? 'বাংলা | EN' : 'EN | বাংলা'}
+                        {lang === 'bn' ? 'EN' : 'বাংলা'}
                       </motion.span>
                     </AnimatePresence>
                   </motion.button>
@@ -521,7 +551,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                 className="relative z-10 w-[74vw] max-w-[272px] h-[100dvh] bg-gradient-to-b from-white via-white to-stone-50 rounded-r-[28px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.45)] flex flex-col overflow-hidden"
               >
                 {/* Brand accent strip */}
-                <div className="h-1 w-full shrink-0 bg-gradient-to-r from-[#D62828] via-[#E53935] to-[#0D5C35]" />
+                <div className="h-1 w-full shrink-0 bg-gradient-to-r from-[#D62828] via-[#E53935] to-[#B91C1C]" />
 
                 {/* Header: Logo + Organization Name + Close */}
                 <div className="px-4 pt-4 pb-3.5 flex items-start gap-2.5 shrink-0">
@@ -640,7 +670,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                         onClick={() => {
                           if (lang !== 'bn') onToggleLang();
                         }}
-                        className={`relative z-10 py-1.5 rounded-[10px] text-[13px] font-bold text-center cursor-pointer transition-colors ${lang === 'bn' ? 'text-[#0A4D2E]' : 'text-stone-500 hover:text-stone-800'
+                        className={`relative z-10 py-1.5 rounded-[10px] text-[13px] font-bold text-center cursor-pointer transition-colors ${lang === 'bn' ? 'text-[#D62828]' : 'text-stone-500 hover:text-stone-800'
                           }`}
                       >
                         বাংলা
@@ -650,7 +680,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                         onClick={() => {
                           if (lang !== 'en') onToggleLang();
                         }}
-                        className={`relative z-10 py-1.5 rounded-[10px] text-[13px] font-bold text-center cursor-pointer transition-colors ${lang === 'en' ? 'text-[#0A4D2E]' : 'text-stone-500 hover:text-stone-800'
+                        className={`relative z-10 py-1.5 rounded-[10px] text-[13px] font-bold text-center cursor-pointer transition-colors ${lang === 'en' ? 'text-[#D62828]' : 'text-stone-500 hover:text-stone-800'
                           }`}
                       >
                         EN

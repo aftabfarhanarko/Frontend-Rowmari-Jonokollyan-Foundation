@@ -9,7 +9,7 @@ const ROUTE_NAME_MAP: Record<string, string> = {
   dashboard: "ড্যাশবোর্ড",
   users: "ইউজার ও সুপার অ্যাডমিন",
   settings: "ওয়েবসাইট সেটিংস ও এসইও",
-  cases: "সহায়তার আবেদনসমূহ",
+  cases: "ত্রাণ ও পুনর্বাসন কেস",
   volunteers: "স্বেচ্ছাসেবক ব্যবস্থাপনা",
   campaigns: "ক্যাম্পেইন ও ফান্ডরেইজিং",
   content: "ক্যাম্পেইন ও কন্টেন্ট",

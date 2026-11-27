@@ -40,9 +40,9 @@ export function AdminOverviewTab({
       icon: Target,
     },
     {
-      title: "সহায়তার আবেদন",
+      title: "ত্রাণ ও সেবা বিতরণ",
       value: adminDashboard?.operations?.totalApplications !== undefined ? `${adminDashboard.operations.totalApplications} টি` : `${appItems.length} টি`,
-      subtitle: "চিকিৎসা ও শিক্ষা সহায়তা",
+      subtitle: "চিকিৎসা ও শিক্ষা কর্মসূচি",
       icon: HeartPulse,
     },
   ]
