@@ -354,19 +354,33 @@ export function CommitteesTab() {
     }
   }
 
+  // Robust extraction of member list regardless of envelope shape
+  const memberList: MemberItem[] = useMemo(() => {
+    if (!membersRes) return []
+    if (Array.isArray(membersRes)) return membersRes
+    if (Array.isArray((membersRes as any).items)) return (membersRes as any).items
+    if (Array.isArray((membersRes as any).data)) return (membersRes as any).data
+    return []
+  }, [membersRes])
+
+  const memberTotal: number = useMemo(() => {
+    if (!membersRes) return 0
+    if (typeof (membersRes as any).total === "number") return (membersRes as any).total
+    return memberList.length
+  }, [membersRes, memberList])
+
   // Filtered members by search keyword
   const filteredMembers = useMemo(() => {
-    const list = membersRes?.items || []
-    if (!memberSearch.trim()) return list
+    if (!memberSearch.trim()) return memberList
     const q = memberSearch.toLowerCase()
-    return list.filter(
+    return memberList.filter(
       (m) =>
         m.nameBn?.toLowerCase().includes(q) ||
         m.nameEn?.toLowerCase().includes(q) ||
         m.memberId?.toLowerCase().includes(q) ||
         m.phoneNumber?.includes(q)
     )
-  }, [membersRes, memberSearch])
+  }, [memberList, memberSearch])
 
   return (
     <div className="space-y-6">
@@ -388,7 +402,7 @@ export function CommitteesTab() {
           }`}
         >
           <Users className="size-4" />
-          <span>নিবন্ধিত সদস্য ({membersRes?.total || 0})</span>
+          <span>নিবন্ধিত সদস্য ({memberTotal})</span>
         </button>
         <button
           onClick={() => setActiveTab("designations")}
