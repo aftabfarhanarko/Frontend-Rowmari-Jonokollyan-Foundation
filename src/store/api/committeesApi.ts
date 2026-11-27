@@ -129,9 +129,25 @@ export const committeesApi = baseApi.injectEndpoints({
       query: (data) => ({ url: API_ENDPOINTS.committees.adminDesignation, method: 'POST', data }),
       invalidatesTags: ['Committees'],
     }),
+    updateDesignation: builder.mutation<DesignationItem, { id: string; data: Partial<DesignationItem> }>({
+      query: ({ id, data }) => ({ url: API_ENDPOINTS.committees.adminDesignationById(id), method: 'PUT', data }),
+      invalidatesTags: ['Committees'],
+    }),
+    deleteDesignation: builder.mutation<{ success: boolean }, string>({
+      query: (id) => ({ url: API_ENDPOINTS.committees.adminDesignationById(id), method: 'DELETE' }),
+      invalidatesTags: ['Committees'],
+    }),
 
     createMember: builder.mutation<MemberItem, any>({
       query: (data) => ({ url: API_ENDPOINTS.committees.adminMember, method: 'POST', data }),
+      invalidatesTags: ['Committees'],
+    }),
+    updateMember: builder.mutation<MemberItem, { id: string; data: any }>({
+      query: ({ id, data }) => ({ url: API_ENDPOINTS.committees.adminMemberById(id), method: 'PUT', data }),
+      invalidatesTags: ['Committees'],
+    }),
+    deleteMember: builder.mutation<{ success: boolean }, string>({
+      query: (id) => ({ url: API_ENDPOINTS.committees.adminMemberById(id), method: 'DELETE' }),
       invalidatesTags: ['Committees'],
     }),
 
@@ -158,7 +174,11 @@ export const {
   useUpdateCommitteeMutation,
   useDeleteCommitteeMutation,
   useCreateDesignationMutation,
+  useUpdateDesignationMutation,
+  useDeleteDesignationMutation,
   useCreateMemberMutation,
+  useUpdateMemberMutation,
+  useDeleteMemberMutation,
   useAssignMembershipMutation,
   useRemoveMembershipMutation,
 } = committeesApi;
