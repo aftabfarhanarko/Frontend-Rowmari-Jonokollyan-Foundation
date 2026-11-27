@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { CreateUserModal, SystemRoleItem } from "./users/CreateUserModal"
 import { EditRoleModal } from "./users/EditRoleModal"
+import { UserDetailsModal } from "./users/UserDetailsModal"
 import { UserTable } from "./users/UserTable"
 
 const SYSTEM_ROLES: SystemRoleItem[] = [
@@ -34,6 +35,7 @@ export function CmsUsersTab() {
   const [statusFilter, setStatusFilter] = useState<string>("ALL")
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [userForRoleEdit, setUserForRoleEdit] = useState<AdminUserItem | null>(null)
+  const [userForDetails, setUserForDetails] = useState<AdminUserItem | null>(null)
   const [selectedRoleForEdit, setSelectedRoleForEdit] = useState<string>("COMMUNITY_MEMBER")
 
   const [createForm, setCreateForm] = useState({
@@ -173,11 +175,22 @@ export function CmsUsersTab() {
       </div>
 
       <div className="bg-white rounded-2xl border border-stone-200/90 shadow-2xs overflow-hidden">
-        <UserTable users={usersList} isLoading={isLoading} currentUserId={currentUser?.id} roles={SYSTEM_ROLES} onOpenRoleEdit={handleOpenRoleEdit} onToggleStatus={handleToggleStatus} onDeleteUser={handleDeleteUser} isDeleting={isDeletingUser} />
+        <UserTable
+          users={usersList}
+          isLoading={isLoading}
+          currentUserId={currentUser?.id}
+          roles={SYSTEM_ROLES}
+          onOpenRoleEdit={handleOpenRoleEdit}
+          onToggleStatus={handleToggleStatus}
+          onDeleteUser={handleDeleteUser}
+          onViewDetails={(u) => setUserForDetails(u)}
+          isDeleting={isDeletingUser}
+        />
       </div>
 
       <CreateUserModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} form={createForm} setForm={setCreateForm} isCreating={isCreatingUser} onSubmit={handleCreateUserSubmit} roles={SYSTEM_ROLES} />
       <EditRoleModal user={userForRoleEdit} onClose={() => setUserForRoleEdit(null)} selectedRole={selectedRoleForEdit} setSelectedRole={setSelectedRoleForEdit} isUpdating={isUpdatingRoles} onSave={handleSaveRoles} roles={SYSTEM_ROLES} />
+      <UserDetailsModal user={userForDetails} onClose={() => setUserForDetails(null)} onOpenRoleEdit={handleOpenRoleEdit} roles={SYSTEM_ROLES} />
     </div>
   )
 }

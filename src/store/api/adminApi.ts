@@ -67,6 +67,50 @@ export interface AdminUserItem {
   roles: Array<{ name: string } | string>;
 }
 
+export interface AdminUserDetailItem {
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  district: string;
+  upazila: string;
+  address?: string | null;
+  status: 'ACTIVE' | 'PENDING' | 'SUSPENDED';
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
+  avatarUrl?: string | null;
+  registrationIp?: string | null;
+  lastLoginIp?: string | null;
+  lastLoginAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  roles: Array<{
+    id?: string;
+    name: string;
+    description?: string;
+    permissions?: Array<{ id: string; name: string; resource: string; action: string }>;
+  } | string>;
+  stats?: {
+    applicationCount?: number;
+  };
+  recentApplications?: Array<{
+    id: string;
+    referenceCode: string;
+    title: string;
+    category: string;
+    status: string;
+    requestedAmount?: number;
+    createdAt: string;
+  }>;
+  recentAuditLogs?: Array<{
+    id: string;
+    action: string;
+    entityType: string;
+    ipAddress?: string;
+    createdAt: string;
+  }>;
+}
+
 export interface CreateAdminUserPayload {
   fullName: string;
   email: string;
@@ -183,6 +227,11 @@ export const adminApi = baseApi.injectEndpoints({
         params: params || { page: 1, limit: 50 },
       }),
       providesTags: ['Users'],
+    }),
+
+    getAdminUserById: builder.query<AdminUserDetailItem, string>({
+      query: (id) => ({ url: API_ENDPOINTS.admin.userById(id) }),
+      providesTags: (_result, _error, id) => [{ type: 'Users', id }],
     }),
 
     updateAdminUserStatus: builder.mutation<AdminUserItem, { id: string; status: 'ACTIVE' | 'SUSPENDED' }>({
@@ -383,6 +432,7 @@ export const {
   useGetAdminSettingsQuery,
   useUpdateAdminSettingsMutation,
   useGetSuperAdminUsersQuery,
+  useGetAdminUserByIdQuery,
   useUpdateAdminUserStatusMutation,
   useCreateAdminUserMutation,
   useUpdateAdminUserRolesMutation,

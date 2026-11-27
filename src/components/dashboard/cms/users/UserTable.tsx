@@ -1,7 +1,8 @@
 "use client"
 
 import React from "react"
-import { Users, Loader2, Edit3, Trash2 } from "lucide-react"
+import Link from "next/link"
+import { Users, Loader2, Edit3, Trash2, Eye } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { SkeletonTable } from "@/components/ui/skeleton"
@@ -16,6 +17,7 @@ interface UserTableProps {
   onOpenRoleEdit: (user: AdminUserItem) => void
   onToggleStatus: (user: AdminUserItem) => void
   onDeleteUser: (user: AdminUserItem) => void
+  onViewDetails?: (user: AdminUserItem) => void
   isDeleting: boolean
 }
 
@@ -27,6 +29,7 @@ export function UserTable({
   onOpenRoleEdit,
   onToggleStatus,
   onDeleteUser,
+  onViewDetails,
   isDeleting,
 }: UserTableProps) {
   if (isLoading) {
@@ -73,12 +76,22 @@ export function UserTable({
               <tr key={user.id} className="hover:bg-stone-50/70 transition-colors">
                 <td className="py-3.5 px-4">
                   <div className="flex items-center gap-2.5">
-                    <div className="size-8 rounded-full font-bold flex items-center justify-center text-xs shrink-0 bg-red-100 text-red-800">
+                    <Link
+                      href={`/dashboard/users/${user.id}`}
+                      className="size-8 rounded-full font-bold flex items-center justify-center text-xs shrink-0 bg-red-100 text-[#D62828] hover:scale-105 transition-transform"
+                      title="ইউজার বিস্তারিত দেখুন"
+                    >
                       {user.fullName?.slice(0, 1) || "U"}
-                    </div>
+                    </Link>
                     <div>
                       <div className="font-bold text-stone-900 flex items-center gap-1.5">
-                        <span>{user.fullName}</span>
+                        <Link
+                          href={`/dashboard/users/${user.id}`}
+                          className="hover:text-[#D62828] transition-colors"
+                          title="ইউজার বিস্তারিত পেজে যান"
+                        >
+                          {user.fullName}
+                        </Link>
                         {isSelf && (
                           <span className="text-[10px] bg-stone-100 text-stone-600 px-1.5 py-0.5 rounded font-mono font-normal">
                             (আপনি)
@@ -123,6 +136,15 @@ export function UserTable({
 
                 <td className="py-3.5 px-4 text-right">
                   <div className="flex items-center justify-end gap-1.5">
+                    <Link
+                      href={`/dashboard/users/${user.id}`}
+                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-semibold text-stone-700 hover:text-[#D62828] hover:bg-red-50 border border-stone-200 transition-colors cursor-pointer"
+                      title="ইউজার বিস্তারিত দেখুন"
+                    >
+                      <Eye className="size-3 text-[#D62828]" />
+                      <span>বিস্তারিত</span>
+                    </Link>
+
                     <Button
                       type="button"
                       size="xs"
@@ -132,7 +154,7 @@ export function UserTable({
                       title="রোল পরিবর্তন"
                     >
                       <Edit3 className="size-3 text-stone-500" />
-                      <span>রোল পরিবর্তন</span>
+                      <span>রোল</span>
                     </Button>
 
                     <Button
