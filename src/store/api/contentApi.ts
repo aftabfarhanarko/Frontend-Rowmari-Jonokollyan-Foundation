@@ -152,11 +152,45 @@ export const contentApi = baseApi.injectEndpoints({
       invalidatesTags: ['News'],
     }),
 
+    updateNewsEvent: builder.mutation<NewsEventItem, { id: string; data: Partial<NewsEventItem> }>({
+      query: ({ id, data }) => ({
+        url: API_ENDPOINTS.admin.newsEventById(id),
+        method: 'PUT',
+        data,
+      }),
+      invalidatesTags: ['News'],
+    }),
+
+    deleteNewsEvent: builder.mutation<{ success: boolean }, string>({
+      query: (id) => ({
+        url: API_ENDPOINTS.admin.newsEventById(id),
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['News'],
+    }),
+
     createGalleryItem: builder.mutation<GalleryItem, Partial<GalleryItem>>({
       query: (data) => ({
         url: API_ENDPOINTS.content.adminGallery,
         method: 'POST',
         data,
+      }),
+      invalidatesTags: ['Gallery'],
+    }),
+
+    updateGalleryItem: builder.mutation<GalleryItem, { id: string; data: Partial<GalleryItem> }>({
+      query: ({ id, data }) => ({
+        url: API_ENDPOINTS.admin.galleryById(id),
+        method: 'PUT',
+        data,
+      }),
+      invalidatesTags: ['Gallery'],
+    }),
+
+    deleteGalleryItem: builder.mutation<{ success: boolean }, string>({
+      query: (id) => ({
+        url: API_ENDPOINTS.admin.galleryById(id),
+        method: 'DELETE',
       }),
       invalidatesTags: ['Gallery'],
     }),
@@ -180,6 +214,10 @@ export const {
   useGetAnnouncementsQuery,
   useGetNewsEventsQuery,
   useCreateNewsEventMutation,
+  useUpdateNewsEventMutation,
+  useDeleteNewsEventMutation,
   useCreateGalleryItemMutation,
+  useUpdateGalleryItemMutation,
+  useDeleteGalleryItemMutation,
   useCreateAnnouncementMutation,
 } = contentApi;

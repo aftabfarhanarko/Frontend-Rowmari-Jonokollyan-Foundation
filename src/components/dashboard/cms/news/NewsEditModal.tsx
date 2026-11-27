@@ -8,6 +8,7 @@ import { ImageUploader } from "@/components/ui/ImageUploader"
 interface NewsEditModalProps {
   isOpen: boolean
   onClose: () => void
+  isEdit?: boolean
   type: "NEWS" | "EVENT"
   setType: (v: "NEWS" | "EVENT") => void
   title: string
@@ -18,13 +19,14 @@ interface NewsEditModalProps {
   setSummary: (v: string) => void
   content: string
   setContent: (v: string) => void
-  isCreating: boolean
+  isSubmitting: boolean
   onSubmit: (e: React.FormEvent) => void
 }
 
 export function NewsEditModal({
   isOpen,
   onClose,
+  isEdit = false,
   type,
   setType,
   title,
@@ -35,7 +37,7 @@ export function NewsEditModal({
   setSummary,
   content,
   setContent,
-  isCreating,
+  isSubmitting,
   onSubmit,
 }: NewsEditModalProps) {
   if (!isOpen) return null
@@ -44,7 +46,9 @@ export function NewsEditModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
       <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-stone-200 space-y-4 animate-in fade-in-50 zoom-in-95 duration-150">
         <div className="flex items-center justify-between border-b border-stone-100 pb-3">
-          <h3 className="text-lg font-black text-stone-900">নতুন খবর বা নোটিশ প্রকাশ</h3>
+          <h3 className="text-lg font-black text-stone-900">
+            {isEdit ? "সংবাদ বা ইভেন্ট সম্পাদনা" : "নতুন খবর বা নোটিশ প্রকাশ"}
+          </h3>
           <button
             type="button"
             onClick={onClose}
@@ -122,11 +126,11 @@ export function NewsEditModal({
             </Button>
             <Button
               type="submit"
-              disabled={isCreating}
+              disabled={isSubmitting}
               className="bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs gap-1.5 cursor-pointer"
             >
-              {isCreating && <Loader2 className="size-3.5 animate-spin" />}
-              <span>প্রকাশ করুন</span>
+              {isSubmitting && <Loader2 className="size-3.5 animate-spin" />}
+              <span>{isEdit ? "আপডেট সংরক্ষণ করুন" : "প্রকাশ করুন"}</span>
             </Button>
           </div>
         </form>

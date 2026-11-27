@@ -2,8 +2,14 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { Newspaper, Plus, Loader2, Search, ExternalLink, Eye } from "lucide-react"
-import { useGetNewsEventsQuery, useCreateNewsEventMutation, NewsEventItem } from "@/store/api/contentApi"
+import { Newspaper, Plus, Loader2, Search, ExternalLink, Eye, Pencil, Trash2 } from "lucide-react"
+import {
+  useGetNewsEventsQuery,
+  useCreateNewsEventMutation,
+  useUpdateNewsEventMutation,
+  useDeleteNewsEventMutation,
+  NewsEventItem,
+} from "@/store/api/contentApi"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
@@ -15,7 +21,11 @@ export function CmsNewsTab() {
   const items: NewsEventItem[] = Array.isArray(newsRes) ? newsRes : (newsRes as any)?.items || []
 
   const [createNews, { isLoading: isCreating }] = useCreateNewsEventMutation()
+  const [updateNews, { isLoading: isUpdating }] = useUpdateNewsEventMutation()
+  const [deleteNews, { isLoading: isDeleting }] = useDeleteNewsEventMutation()
+
   const [modalOpen, setModalOpen] = useState(false)
+  const [editingItem, setEditingItem] = useState<NewsEventItem | null>(null)
   const [filterType, setFilterType] = useState<string>("ALL")
   const [search, setSearch] = useState("")
 
@@ -25,24 +35,84 @@ export function CmsNewsTab() {
   const [summary, setSummary] = useState("")
   const [content, setContent] = useState("")
 
-  const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!title.trim() || !content.trim()) { toast.error("শিরোনাম ও বিস্তারিত বিবরণ আবশ্যক"); return }
+  const handleOpenCreate = () => {
+    setEditingItem(null)
+    setTitle("")
+    setType("NEWS")
+    setImageUrl("")
+    setSummary("")
+    setContent("")
+    setModalOpen(true)
+  }
+
+  const handleOpenEdit = (item: NewsEventItem) => {
+    setEditingItem(item)
+    setTitle(item.title || "")
+    setType(item.type === "EVENT" ? "EVENT" : "NEWS")
+    setImageUrl(item.imageUrl || "")
+    setSummary(item.summary || "")
+    setContent(item.content || "")
+    setModalOpen(true)
+  }
+
+  const handleDelete = async (id: string, titleStr: string) => {
+    if (!window.confirm(`আপনি কি নিশ্চিতভাবে "${titleStr}" পোস্টটি মুছে ফেলতে চান?`)) {
+      return
+    }
 
     try {
-      await createNews({ title: title.trim(), type, imageUrl: imageUrl.trim() || undefined, summary: summary.trim() || undefined, content: content.trim() }).unwrap()
-      toast.success("সংবাদ সফলভাবে প্রকাশিত হয়েছে")
+      await deleteNews(id).unwrap()
+      toast.success("সংবাদ সফলভাবে মুছে ফেলা হয়েছে")
+      refetch()
+    } catch (err: any) {
+      toast.error(err?.message || "মুছে ফেলতে সমস্যা হয়েছে")
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!title.trim() || !content.trim()) {
+      toast.error("শিরোনাম ও বিস্তারিত বিবরণ আবশ্যক")
+      return
+    }
+
+    try {
+      if (editingItem) {
+        await updateNews({
+          id: editingItem.id,
+          data: {
+            title: title.trim(),
+            type,
+            imageUrl: imageUrl.trim() || undefined,
+            summary: summary.trim() || undefined,
+            content: content.trim(),
+          },
+        }).unwrap()
+        toast.success("সংবাদ সফলভাবে আপডেট করা হয়েছে")
+      } else {
+        await createNews({
+          title: title.trim(),
+          type,
+          imageUrl: imageUrl.trim() || undefined,
+          summary: summary.trim() || undefined,
+          content: content.trim(),
+        }).unwrap()
+        toast.success("সংবাদ সফলভাবে প্রকাশিত হয়েছে")
+      }
       setModalOpen(false)
+      setEditingItem(null)
       setTitle(""); setSummary(""); setContent(""); setImageUrl("")
       refetch()
     } catch (err: any) {
-      toast.error(err?.message || "সংবাদ প্রকাশ করতে সমস্যা হয়েছে")
+      toast.error(err?.message || "সংবাদ সংরক্ষণ করতে সমস্যা হয়েছে")
     }
   }
 
   const filteredItems = items.filter((item) => {
     const matchType = filterType === "ALL" || item.type === filterType
-    const matchSearch = item.title?.toLowerCase().includes(search.toLowerCase()) || item.summary?.toLowerCase().includes(search.toLowerCase())
+    const matchSearch =
+      item.title?.toLowerCase().includes(search.toLowerCase()) ||
+      item.summary?.toLowerCase().includes(search.toLowerCase())
     return matchType && matchSearch
   })
 
@@ -55,9 +125,9 @@ export function CmsNewsTab() {
             <span>সংবাদ, প্রেস ও নোটিশ বোর্ড (CMS)</span>
           </div>
           <h2 className="text-xl font-black text-stone-900">প্রেস বিজ্ঞপ্তি ও ইভেন্ট প্রকাশনা</h2>
-          <p className="text-xs text-stone-500 mt-0.5">ফাউন্ডেশনের অফিসিয়াল কার্যক্রমের খবর, ছবি ও নোটিশ যোগ করুন</p>
+          <p className="text-xs text-stone-500 mt-0.5">ফাউন্ডেশনের অফিসিয়াল কার্যক্রমের খবর, ছবি ও নোটিশ পরিচালনা করুন</p>
         </div>
-        <Button onClick={() => setModalOpen(true)} size="sm" className="bg-[#D62828] hover:bg-[#B91C1C] text-white text-xs font-bold gap-1.5 cursor-pointer shadow-xs">
+        <Button onClick={handleOpenCreate} size="sm" className="bg-[#D62828] hover:bg-[#B91C1C] text-white text-xs font-bold gap-1.5 cursor-pointer shadow-xs">
           <Plus className="size-4" />
           <span>নতুন পোস্ট লিখুন</span>
         </Button>
@@ -70,7 +140,7 @@ export function CmsNewsTab() {
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="text-xs px-3 py-2 rounded-xl border border-stone-200 bg-white font-semibold text-stone-700">
-            <option value="ALL">সকল পোস্ট</option>
+            <option value="ALL">সকল পোস্ট ({items.length})</option>
             <option value="NEWS">সংবাদ (News)</option>
             <option value="EVENT">ইভেন্ট (Events)</option>
           </select>
@@ -94,7 +164,7 @@ export function CmsNewsTab() {
                   <th className="py-3 px-4">শিরোনাম</th>
                   <th className="py-3 px-4">সারসংক্ষেপ</th>
                   <th className="py-3 px-4">তারিখ</th>
-                  <th className="py-3 px-4 text-right">লিংক</th>
+                  <th className="py-3 px-4 text-right">পদক্ষেপ</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100 text-stone-700">
@@ -111,11 +181,28 @@ export function CmsNewsTab() {
                     <td className="py-3.5 px-4 text-stone-500 max-w-sm truncate">{item.summary || item.content?.slice(0, 80) || "—"}</td>
                     <td className="py-3.5 px-4 text-stone-400 font-mono text-[11px]">{new Date(item.createdAt).toLocaleDateString("bn-BD")}</td>
                     <td className="py-3.5 px-4 text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <Link href={`/dashboard/news/${item.id}`} className="inline-flex p-1.5 rounded-lg text-stone-500 hover:text-[#D62828] hover:bg-stone-100" title="বিস্তারিত পেজ দেখুন">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Link href={`/dashboard/news/${item.id}`} className="inline-flex p-1.5 rounded-lg text-stone-500 hover:text-[#D62828] hover:bg-stone-100 transition" title="বিস্তারিত পেজ দেখুন">
                           <Eye className="size-3.5" />
                         </Link>
-                        <a href="/news" target="_blank" className="inline-flex p-1.5 rounded-lg text-stone-500 hover:text-stone-900 hover:bg-stone-100" title="পাবলিক পেজে দেখুন">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEdit(item)}
+                          className="inline-flex p-1.5 rounded-lg text-stone-500 hover:text-amber-700 hover:bg-amber-50 transition cursor-pointer"
+                          title="সম্পাদনা করুন"
+                        >
+                          <Pencil className="size-3.5 text-amber-600" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(item.id, item.title)}
+                          disabled={isDeleting}
+                          className="inline-flex p-1.5 rounded-lg text-stone-500 hover:text-red-700 hover:bg-red-50 transition cursor-pointer"
+                          title="মুছে ফেলুন"
+                        >
+                          <Trash2 className="size-3.5 text-red-600" />
+                        </button>
+                        <a href="/news" target="_blank" className="inline-flex p-1.5 rounded-lg text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition" title="পাবলিক পেজে দেখুন">
                           <ExternalLink className="size-3.5" />
                         </a>
                       </div>
@@ -128,7 +215,23 @@ export function CmsNewsTab() {
         )}
       </div>
 
-      <NewsEditModal isOpen={modalOpen} onClose={() => setModalOpen(false)} type={type} setType={setType} title={title} setTitle={setTitle} imageUrl={imageUrl} setImageUrl={setImageUrl} summary={summary} setSummary={setSummary} content={content} setContent={setContent} isCreating={isCreating} onSubmit={handleCreate} />
+      <NewsEditModal
+        isOpen={modalOpen}
+        onClose={() => { setModalOpen(false); setEditingItem(null) }}
+        isEdit={!!editingItem}
+        type={type}
+        setType={setType}
+        title={title}
+        setTitle={setTitle}
+        imageUrl={imageUrl}
+        setImageUrl={setImageUrl}
+        summary={summary}
+        setSummary={setSummary}
+        content={content}
+        setContent={setContent}
+        isSubmitting={isCreating || isUpdating}
+        onSubmit={handleSubmit}
+      />
     </div>
   )
 }

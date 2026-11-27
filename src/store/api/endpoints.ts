@@ -32,9 +32,9 @@ export const API_ENDPOINTS = {
     activeModal: '/content/modal/active',
     heroSlides: '/content/hero-slides',
     footer: '/content/footer',
-    adminNewsEvents: '/content/admin/news-events',
-    adminGallery: '/content/admin/gallery',
-    adminAnnouncements: '/content/admin/announcements',
+    adminNewsEvents: '/admin/news-events',
+    adminGallery: '/admin/gallery',
+    adminAnnouncements: '/admin/announcements',
   },
   admin: {
     dashboard: '/admin/dashboard',

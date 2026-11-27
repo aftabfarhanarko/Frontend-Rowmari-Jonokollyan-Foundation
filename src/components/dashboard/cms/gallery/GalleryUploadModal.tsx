@@ -8,6 +8,7 @@ import { ImageUploader } from "@/components/ui/ImageUploader"
 interface GalleryUploadModalProps {
   isOpen: boolean
   onClose: () => void
+  isEdit?: boolean
   title: string
   setTitle: (v: string) => void
   category: string
@@ -16,13 +17,15 @@ interface GalleryUploadModalProps {
   setImageUrl: (v: string) => void
   caption: string
   setCaption: (v: string) => void
-  isCreating: boolean
+  isSubmitting?: boolean
+  isCreating?: boolean
   onSubmit: (e: React.FormEvent) => void
 }
 
 export function GalleryUploadModal({
   isOpen,
   onClose,
+  isEdit = false,
   title,
   setTitle,
   category,
@@ -31,16 +34,21 @@ export function GalleryUploadModal({
   setImageUrl,
   caption,
   setCaption,
+  isSubmitting,
   isCreating,
   onSubmit,
 }: GalleryUploadModalProps) {
   if (!isOpen) return null
 
+  const loading = isSubmitting ?? isCreating ?? false
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
       <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200 space-y-4 animate-in fade-in-50 zoom-in-95 duration-150">
         <div className="flex items-center justify-between border-b border-stone-100 pb-3">
-          <h3 className="text-base font-black text-stone-900">গ্যালারিতে নতুন ছবি যোগ</h3>
+          <h3 className="text-base font-black text-stone-900">
+            {isEdit ? "গ্যালারি ছবি সম্পাদনা" : "গ্যালারিতে নতুন ছবি যোগ"}
+          </h3>
           <button
             type="button"
             onClick={onClose}
@@ -107,11 +115,11 @@ export function GalleryUploadModal({
             </Button>
             <Button
               type="submit"
-              disabled={isCreating}
+              disabled={loading}
               className="bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs gap-1.5 cursor-pointer"
             >
-              {isCreating && <Loader2 className="size-3.5 animate-spin" />}
-              <span>ছবি সংরক্ষণ করুন</span>
+              {loading && <Loader2 className="size-3.5 animate-spin" />}
+              <span>{isEdit ? "আপডেট সংরক্ষণ করুন" : "ছবি সংরক্ষণ করুন"}</span>
             </Button>
           </div>
         </form>
