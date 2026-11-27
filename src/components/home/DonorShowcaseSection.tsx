@@ -1,10 +1,13 @@
 'use client';
 
 import React from 'react';
-import { Heart, Users, Target, ShieldCheck, Sparkles, Award } from 'lucide-react';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { Heart, Target, Check, CheckCircle2, ArrowRight } from 'lucide-react';
 import { useGetPublicApprovedDonorsQuery, useGetPublicDonationStatsQuery } from '@/store/api/donationsApi';
 import { Language } from '@/types';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 
 interface DonorShowcaseSectionProps {
   lang: Language;
@@ -17,152 +20,146 @@ export default function DonorShowcaseSection({ lang }: DonorShowcaseSectionProps
   const toBn = (num: number | string) =>
     num.toString().replace(/\d/g, (d) => '০১২৩৪৫৬৭৮৯'[parseInt(d, 10)]);
 
+  const totalAmount = (stats?.totalApprovedAmount || 3500).toLocaleString('en-US');
+  const donorCount = stats?.verifiedDonors || 2;
+
   return (
-    <section className="py-14 sm:py-20 bg-stone-50/70 border-t border-b border-stone-200/80 relative overflow-hidden">
+    <section className="py-10 sm:py-14 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 border border-red-200 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
-            <Heart className="w-3.5 h-3.5 fill-current" />
-            <span>{lang === 'bn' ? 'স্বচ্ছ ও যাচাইকৃত অবদান' : 'Verified Contributions'}</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-stone-900 tracking-tight">
+        {/* Left-aligned Section Header with Red Accent Bar */}
+        <div className="flex items-center gap-2.5 mb-6">
+          <span className="w-1.5 h-6 rounded-full bg-[#D62828] shrink-0" />
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-stone-900 tracking-tight">
             {lang === 'bn' ? 'মানবতার পাশে যারা দাঁড়িয়েছেন' : 'Standing by Humanity'}
           </h2>
-          <p className="text-xs sm:text-sm text-stone-600 mt-2 leading-relaxed">
-            {lang === 'bn'
-              ? 'আপনাদের ভালোবাসা ও সহযোগিতায় অসহায় মানুষের পাশে দাঁড়ানো সম্ভব হচ্ছে। প্রতিটি অনুদানই আমাদের এগিয়ে যাওয়ার অনুপ্রেরণা।'
-              : 'Your selfless support empowers our ground relief and medical missions for underprivileged families.'}
-          </p>
         </div>
 
-        {/* 4 Statistics Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mb-12">
-          <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-2xs text-center">
-            <div className="w-9 h-9 mx-auto rounded-xl bg-red-50 text-[#D62828] flex items-center justify-center mb-2">
-              <Heart className="w-4 h-4" />
+        {/* 5-Block Horizontal Showcase */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 items-stretch">
+          {/* Block 1: Featured Red Total Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="lg:col-span-3 rounded-2xl bg-gradient-to-br from-[#EF233C] via-[#D62828] to-[#A4161A] text-white p-5 sm:p-6 shadow-[0_12px_30px_-10px_rgba(214,40,40,0.45)] flex flex-col items-center justify-center text-center"
+          >
+            <div className="text-3xl sm:text-4xl font-black tracking-tight leading-none">
+              <AnimatedCounter
+                value={lang === 'bn' ? `৳${toBn(totalAmount)}` : `৳${totalAmount}`}
+              />
             </div>
-            <div className="text-xl sm:text-2xl font-black text-stone-900">
-              ৳ {toBn((stats?.totalApprovedAmount || 3500).toLocaleString('en-US'))}
-            </div>
-            <p className="text-xs text-stone-500 font-semibold mt-0.5">
+            <p className="text-xs sm:text-sm font-medium text-red-50/95 mt-2">
               {lang === 'bn' ? 'সর্বমোট অনুমোদিত অনুদান' : 'Total Approved Funds'}
             </p>
+            <Link
+              href="/donate"
+              className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white hover:bg-red-50 px-5 py-1.5 text-xs font-bold text-[#D62828] shadow-sm transition active:scale-[0.98]"
+            >
+              <span>{lang === 'bn' ? 'অনুদান দিন' : 'Donate Now'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </motion.div>
+
+          {/* Blocks 2, 3, 4: 3 Soft Blush Stat Cards */}
+          <div className="lg:col-span-6 grid grid-cols-3 gap-2.5 sm:gap-4">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.4, delay: 0.08, ease: 'easeOut' }}
+              className="rounded-2xl bg-[#FFF4F5] p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-[0_4px_16px_-6px_rgba(214,40,40,0.08)]"
+            >
+              <Heart className="w-6 h-6 sm:w-7 sm:h-7 text-[#D62828] fill-[#D62828] mb-2.5" />
+              <div className="text-base sm:text-xl font-black text-stone-900 leading-tight">
+                <AnimatedCounter
+                  value={lang === 'bn' ? `${toBn(donorCount)} জন` : `${donorCount}`}
+                />
+              </div>
+              <p className="text-[11px] sm:text-xs font-semibold text-stone-600 mt-1 leading-snug">
+                {lang === 'bn' ? 'সক্রিয় অনুদানদাতা' : 'Verified Donors'}
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.4, delay: 0.16, ease: 'easeOut' }}
+              className="rounded-2xl bg-[#FFF4F5] p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-[0_4px_16px_-6px_rgba(214,40,40,0.08)]"
+            >
+              <Target className="w-6 h-6 sm:w-7 sm:h-7 text-[#D62828] mb-2.5" />
+              <div className="text-base sm:text-xl font-black text-stone-900 leading-tight">
+                <AnimatedCounter value={lang === 'bn' ? `${toBn(1)} টি` : '1'} />
+              </div>
+              <p className="text-[11px] sm:text-xs font-semibold text-stone-600 mt-1 leading-snug">
+                {lang === 'bn' ? 'চলমান ক্যাম্পেইন' : 'Active Campaigns'}
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.4, delay: 0.24, ease: 'easeOut' }}
+              className="rounded-2xl bg-[#FFF4F5] p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-[0_4px_16px_-6px_rgba(214,40,40,0.08)]"
+            >
+              <Check className="w-6 h-6 sm:w-7 sm:h-7 text-[#D62828] stroke-[3] mb-2.5" />
+              <div className="text-base sm:text-xl font-black text-stone-900 leading-tight">
+                <AnimatedCounter value={lang === 'bn' ? '১০০%' : '100%'} />
+              </div>
+              <p className="text-[11px] sm:text-xs font-semibold text-stone-600 mt-1 leading-snug">
+                {lang === 'bn' ? 'সরাসরি মাঠপর্যায়ে বিতরণ' : 'Direct Ground Delivery'}
+              </p>
+            </motion.div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-2xs text-center">
-            <div className="w-9 h-9 mx-auto rounded-xl bg-red-50 text-[#D62828] flex items-center justify-center mb-2">
-              <Users className="w-4 h-4" />
-            </div>
-            <div className="text-xl sm:text-2xl font-black text-stone-900">
-              {toBn(stats?.verifiedDonors || 2)} জন
-            </div>
-            <p className="text-xs text-stone-500 font-semibold mt-0.5">
-              {lang === 'bn' ? 'যাচাইকৃত অনুদানদাতা' : 'Verified Donors'}
-            </p>
-          </div>
-
-          <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-2xs text-center">
-            <div className="w-9 h-9 mx-auto rounded-xl bg-red-50 text-[#D62828] flex items-center justify-center mb-2">
-              <Target className="w-4 h-4" />
-            </div>
-            <div className="text-xl sm:text-2xl font-black text-stone-900">
-              {toBn(1)} টি
-            </div>
-            <p className="text-xs text-stone-500 font-semibold mt-0.5">
-              {lang === 'bn' ? 'চলমান ক্যাম্পেইন' : 'Active Campaigns'}
-            </p>
-          </div>
-
-          <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-2xs text-center">
-            <div className="w-9 h-9 mx-auto rounded-xl bg-red-50 text-[#D62828] flex items-center justify-center mb-2">
-              <Award className="w-4 h-4" />
-            </div>
-            <div className="text-xl sm:text-2xl font-black text-stone-900">
-              ১০০%
-            </div>
-            <p className="text-xs text-stone-500 font-semibold mt-0.5">
-              {lang === 'bn' ? 'সরাসরি মাঠপর্যায়ে বিতরণ' : 'Direct Ground Delivery'}
-            </p>
-          </div>
-        </div>
-
-        {/* Approved Donors Grid */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-stone-800 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#D62828]" />
-              <span>{lang === 'bn' ? 'সম্প্রতি অনুমোদিত শুভাকাঙ্ক্ষীদের তালিকা' : 'Recently Verified Donors'}</span>
+          {/* Block 5: Honored Supporters List Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
+            className="lg:col-span-3 rounded-2xl bg-[#FFF4F5] p-5 sm:p-6 flex flex-col justify-center shadow-[0_4px_16px_-6px_rgba(214,40,40,0.08)]"
+          >
+            <h3 className="text-xs sm:text-sm font-extrabold text-[#D62828] mb-3">
+              {lang === 'bn' ? 'আমাদের সম্মানিত সহায়তাকারী' : 'Our Honored Supporters'}
             </h3>
-            <span className="text-[11px] text-stone-500">
-              {lang === 'bn' ? 'প্রশাসক দ্বারা সরাসরি ভেরিফায়েড' : 'Admin Verified'}
-            </span>
-          </div>
 
-          {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {Array.from({ length: 4 }).map((_, n) => (
-                <div key={n} className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs space-y-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-2.5">
-                      <Skeleton className="size-9 rounded-full shrink-0" />
-                      <div className="space-y-1">
-                        <Skeleton className="h-3.5 w-24 rounded-md" />
-                        <Skeleton className="h-2.5 w-16 rounded-md" />
-                      </div>
-                    </div>
-                    <Skeleton className="h-4 w-14 rounded-full" />
-                  </div>
-                  <div className="pt-2 border-t border-stone-100 flex justify-between items-center">
-                    <Skeleton className="h-4 w-16 rounded-md" />
-                    <Skeleton className="h-5 w-20 rounded-md" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : donors.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-stone-200 p-8 text-center text-stone-500 text-xs">
-              {lang === 'bn' ? 'কোনো অনুমোদিত অনুদানের তালিকা পাওয়া যায়নি।' : 'No approved donations yet.'}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {donors.map((donor) => (
-                <div
-                  key={donor.id}
-                  className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs hover:border-red-200 hover:shadow-xs transition-all flex flex-col justify-between"
-                >
-                  <div className="flex items-start justify-between gap-2 mb-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="size-9 rounded-full bg-red-50 text-[#D62828] font-bold text-xs flex items-center justify-center shrink-0 border border-red-100">
-                        {donor.donorName[0] || 'দ'}
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-stone-900 leading-tight">
-                          {donor.donorName}
-                        </div>
-                        <div className="text-[10px] text-stone-400 mt-0.5">
-                          {new Date(donor.createdAt).toLocaleDateString('bn-BD')}
-                        </div>
-                      </div>
-                    </div>
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-50 text-[#D62828] text-[10px] font-bold border border-red-200 shrink-0">
-                      <ShieldCheck className="w-3 h-3" />
-                      <span>যাচাইকৃত</span>
+            {isLoading ? (
+              <div className="space-y-2">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton key={i} className="h-4 w-full rounded-md" />
+                ))}
+              </div>
+            ) : donors.length === 0 ? (
+              <p className="text-xs text-stone-500">
+                {lang === 'bn' ? 'কোনো অনুমোদিত অনুদানের তালিকা পাওয়া যায়নি।' : 'No approved donations yet.'}
+              </p>
+            ) : (
+              <ul className="space-y-2">
+                {donors.slice(0, 4).map((donor, idx) => (
+                  <motion.li
+                    key={donor.id}
+                    initial={{ opacity: 0, x: -12 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, amount: 0.1 }}
+                    transition={{ duration: 0.35, delay: 0.12 * idx, ease: 'easeOut' }}
+                    className="flex items-center gap-2 text-xs"
+                  >
+                    <CheckCircle2
+                      className={`w-3.5 h-3.5 shrink-0 ${
+                        idx % 2 === 0 ? 'text-emerald-600' : 'text-[#D62828]'
+                      }`}
+                    />
+                    <span className="font-semibold text-stone-800 truncate">
+                      {donor.donorName}
                     </span>
-                  </div>
-
-                  <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
-                    <span className="text-stone-500 text-[11px] truncate max-w-[120px]">
-                      {donor.campaignTitle}
-                    </span>
-                    <span className="font-black text-[#D62828]">
-                      ৳ {toBn(donor.amount.toLocaleString('en-US'))}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                  </motion.li>
+                ))}
+              </ul>
+            )}
+          </motion.div>
         </div>
       </div>
     </section>

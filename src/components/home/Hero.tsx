@@ -5,9 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  FileText,
   Search,
-  CheckCircle2,
   MapPin,
   Sparkles,
   Users,
@@ -15,8 +13,6 @@ import {
   HeartHandshake,
   GraduationCap,
   ArrowRight,
-  ChevronLeft,
-  ChevronRight,
   ShieldCheck,
   Heart,
 } from 'lucide-react';
@@ -24,6 +20,7 @@ import { Language } from '@/types';
 import { IMPACT_STATS } from '@/data/mockData';
 import { useGetHeroSlidesQuery } from '@/store/api/contentApi';
 import { useGetPublicSummaryQuery } from '@/store/api/dashboardApi';
+import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 
 interface HeroProps {
   lang: Language;
@@ -320,7 +317,7 @@ export default function Hero({
       className="relative pb-8 sm:pb-12 overflow-hidden bg-white"
     >
       {/* Full-Bleed Dynamic Hero Banner */}
-      <div className="relative w-full min-h-[430px] sm:min-h-[480px] lg:min-h-[540px] flex items-center overflow-hidden bg-[#2B0808]">
+      <div className="relative w-full min-h-[430px] sm:min-h-[480px] lg:min-h-[540px] flex items-center overflow-hidden bg-stone-900">
         {/* Background Slideshow Image */}
         <AnimatePresence mode="wait">
           <motion.div
@@ -342,14 +339,10 @@ export default function Hero({
           </motion.div>
         </AnimatePresence>
 
-        {/* Website Red/Dark Gradient Overlay for Text Readability */}
+        {/* Subtle Dark Scrim on Left for Text Readability (No Red Tint or Blur) */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-r from-[#2B0808]/95 via-[#5C1111]/80 to-[#2B0808]/25 sm:from-[#2B0808]/95 sm:via-[#6B1414]/70 sm:to-transparent"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 to-transparent"
+          className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/30 to-transparent"
         />
 
         {/* Hero Foreground Content */}
@@ -364,8 +357,7 @@ export default function Hero({
                 exit={{ opacity: 0, y: 8 }}
                 transition={{ duration: 0.25 }}
               >
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D62828] border border-red-400/40 text-white text-[11px] sm:text-xs font-bold shadow-md">
-                  <Heart className="w-3 h-3 fill-white shrink-0" />
+                <div className="inline-flex items-center px-3.5 py-1 rounded-full bg-[#D62828] border border-red-400/40 text-white text-[11px] sm:text-xs font-bold shadow-md">
                   <span>{lang === 'bn' ? activeSlide.badgeBn : activeSlide.badgeEn}</span>
                 </div>
               </motion.div>
@@ -385,74 +377,30 @@ export default function Hero({
                   {lang === 'bn' ? activeSlide.titleBn : activeSlide.titleEn}
                 </h1>
 
-                <p className="text-xs sm:text-base text-stone-100/90 leading-relaxed max-w-lg drop-shadow-xs">
+                <p className="text-xs sm:text-base text-stone-100 leading-relaxed max-w-lg drop-shadow-xs">
                   {lang === 'bn' ? activeSlide.subtitleBn : activeSlide.subtitleEn}
                 </p>
               </motion.div>
             </AnimatePresence>
 
             {/* Primary & Secondary Action Buttons */}
-            <div className="flex flex-col items-start sm:flex-row sm:items-center gap-2.5 sm:gap-3 pt-1">
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 pt-1">
               <button
                 type="button"
                 onClick={() => handleAction(activeSlide.btnPrimaryAction)}
-                className="px-6 py-2.5 sm:py-3 rounded-full bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-red-950/40 hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
+                className="whitespace-nowrap px-4 py-2 sm:px-6 sm:py-3 rounded-full bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
               >
                 <span>{lang === 'bn' ? activeSlide.btnPrimaryBn : activeSlide.btnPrimaryEn}</span>
-                <PrimaryIcon className="w-4 h-4 fill-current text-white shrink-0" />
-                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </button>
 
               <button
                 type="button"
                 onClick={() => handleAction(activeSlide.btnSecondaryAction)}
-                className="px-5 py-2.5 sm:py-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xs text-white font-bold text-xs sm:text-sm border border-white/50 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
+                className="whitespace-nowrap px-4 py-2 sm:px-5 sm:py-3 rounded-full bg-black/25 hover:bg-black/40 text-white font-bold text-xs sm:text-sm border border-white/60 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
               >
-                <SecondaryIcon className="w-4 h-4 text-amber-300 shrink-0" />
                 <span>{lang === 'bn' ? activeSlide.btnSecondaryBn : activeSlide.btnSecondaryEn}</span>
-                <ArrowRight className="w-3.5 h-3.5 shrink-0 hidden sm:inline" />
               </button>
             </div>
-
-            {/* Slide Indicators */}
-            {heroSlides.length > 1 && (
-              <div className="flex items-center gap-3 pt-2">
-                <div className="flex items-center gap-1.5">
-                  {heroSlides.map((_, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => setCurrentSlide(idx)}
-                      className={`transition-all duration-300 rounded-full cursor-pointer ${
-                        safeIndex === idx
-                          ? 'w-7 h-2 bg-[#D62828] ring-1 ring-white/60'
-                          : 'w-2 h-2 bg-white/45 hover:bg-white/75'
-                      }`}
-                      aria-label={`Slide ${idx + 1}`}
-                    />
-                  ))}
-                </div>
-
-                <div className="flex items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={prevSlide}
-                    className="p-1.5 rounded-full bg-black/30 hover:bg-black/50 text-white border border-white/25 transition cursor-pointer"
-                    aria-label="Previous Slide"
-                  >
-                    <ChevronLeft className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={nextSlide}
-                    className="p-1.5 rounded-full bg-black/30 hover:bg-black/50 text-white border border-white/25 transition cursor-pointer"
-                    aria-label="Next Slide"
-                  >
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -473,7 +421,7 @@ export default function Hero({
                   </div>
                   <div className="min-w-0">
                     <div className="text-sm sm:text-xl font-black text-stone-900 leading-tight">
-                      {lang === 'bn' ? stat.countBn : stat.countEn}
+                      <AnimatedCounter value={lang === 'bn' ? stat.countBn : stat.countEn} />
                     </div>
                     <div className="text-[10px] sm:text-xs font-semibold text-stone-500 truncate mt-0.5">
                       <span className="sm:hidden">{lang === 'bn' ? stat.shortLabelBn : stat.shortLabelEn}</span>
@@ -523,82 +471,59 @@ export default function Hero({
           </a>
         </div>
 
-        {/* --- Premium Field Photography Showcase Underneath Hero --- */}
-        <div className="pt-6 sm:pt-8 border-t border-stone-200">
+        {/* --- Field Photography Showcase Underneath Hero --- */}
+        <div className="pt-4 sm:pt-6">
           {/* Header Row */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-8">
-            <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100/80 text-red-900 text-xs font-bold mb-2 shadow-2xs">
-                <Sparkles className="w-3.5 h-3.5 text-[#D62828]" />
-                <span>{lang === 'bn' ? 'মাঠপর্যায়ের বাস্তব চিত্র' : 'Live Fieldwork Gallery'}</span>
-              </div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-stone-900 tracking-tight">
+          <div className="flex items-center justify-between gap-3 mb-5">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="w-1.5 h-5 sm:h-6 rounded-full bg-[#D62828] shrink-0" />
+              <h2 className="text-base sm:text-xl md:text-2xl font-black text-stone-900 tracking-tight truncate">
                 {lang === 'bn' ? 'রৌমারী ও চরাঞ্চলে আমাদের মানবিক কার্যক্রম' : 'Humanitarian Initiatives in Remote Chars'}
               </h2>
-              <p className="text-xs sm:text-sm text-stone-600 mt-1 max-w-2xl">
-                {lang === 'bn'
-                  ? 'শীতবস্ত্র বিতরণ, বিনামূল্যে চিকিৎসা ক্যাম্প, জরুরি খাদ্য সহায়তা এবং সুবিধাবঞ্চিত শিশুদের শিক্ষার আলোকচ্ছটা।'
-                  : 'Delivering winter warmth, emergency medical relief, food packages, and underprivileged child education.'}
-              </p>
             </div>
 
             <button
+              type="button"
               onClick={onOpenActivities}
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#D62828] hover:text-[#E53935] transition-colors group cursor-pointer self-start md:self-auto shrink-0 bg-white px-4 py-2 rounded-full border border-stone-200 shadow-2xs hover:shadow-xs"
+              className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#D62828] hover:text-[#B91C1C] transition-colors group cursor-pointer shrink-0"
             >
-              <span>{lang === 'bn' ? 'সকল কার্যক্রমের ছবি দেখুন' : 'Explore All Gallery Photos'}</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <span>{lang === 'bn' ? 'সব দেখুন' : 'View All'}</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </div>
 
-          {/* 4 Premium Visual Cards Grid - NO TEXT OVER IMAGES */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          {/* 4 Visual Cards Grid — 2 per row on mobile, 4 per row on desktop */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {fieldHighlights.map((item) => {
               return (
                 <div
                   key={item.id}
                   onClick={onOpenActivities}
-                  className="group bg-white rounded-2xl border border-stone-200/90 overflow-hidden shadow-xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between"
+                  className="group bg-[#FFF8F8] rounded-2xl border border-red-100/80 overflow-hidden shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer flex flex-col justify-between"
                 >
-                  {/* Clean Authentic Image - NO TEXT OVER IMAGE */}
+                  {/* Image with bottom-left tag badge */}
                   <div className="relative w-full aspect-16/10 bg-stone-100 overflow-hidden">
                     <Image
                       src={item.imageUrl}
                       alt={lang === 'bn' ? item.titleBn : item.titleEn}
                       fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      sizes="(max-width: 1024px) 50vw, 25vw"
                       className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                     />
+                    <span className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-full bg-[#D62828] text-white text-[10px] sm:text-[11px] font-bold shadow-xs">
+                      {lang === 'bn' ? item.tagBn : item.tagEn}
+                    </span>
                   </div>
 
-                  {/* Clean Content Below Image */}
-                  <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between gap-2 text-xs">
-                        <span className={`text-[11px] font-bold text-white px-2.5 py-0.5 rounded-md ${item.badgeColor}`}>
-                          {lang === 'bn' ? item.tagBn : item.tagEn}
-                        </span>
-                        <span className="inline-flex items-center gap-1 text-[11px] text-stone-500 font-medium">
-                          <MapPin className="w-3 h-3 text-[#D62828] shrink-0" />
-                          <span className="truncate max-w-[110px]">{lang === 'bn' ? item.locationBn : item.locationEn}</span>
-                        </span>
-                      </div>
+                  {/* Compact Title & Stat Below Image */}
+                  <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-2">
+                    <h3 className="text-xs sm:text-sm font-bold text-stone-900 group-hover:text-[#D62828] transition line-clamp-2 leading-snug">
+                      {lang === 'bn' ? item.titleBn : item.titleEn}
+                    </h3>
 
-                      <h3 className="text-base font-bold text-stone-900 group-hover:text-[#D62828] transition line-clamp-2 leading-snug">
-                        {lang === 'bn' ? item.titleBn : item.titleEn}
-                      </h3>
-
-                      <p className="text-xs text-stone-600 line-clamp-2 leading-relaxed">
-                        {lang === 'bn' ? item.descBn : item.descEn}
-                      </p>
-                    </div>
-
-                    <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
-                      <span className="font-bold text-[#D62828]">✓ {lang === 'bn' ? item.statBn : item.statEn}</span>
-                      <span className="text-stone-400 font-semibold group-hover:text-[#D62828] transition flex items-center gap-0.5">
-                        {lang === 'bn' ? 'বিস্তারিত' : 'View'}
-                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                      </span>
+                    <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-stone-700">
+                      <Heart className="w-3.5 h-3.5 text-[#D62828] fill-[#D62828] shrink-0" />
+                      <span className="truncate">{lang === 'bn' ? item.statBn : item.statEn}</span>
                     </div>
                   </div>
                 </div>

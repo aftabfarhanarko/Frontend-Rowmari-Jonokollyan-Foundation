@@ -8,14 +8,11 @@ import { useLazyTrackApplicationQuery } from '@/store/api/applicationsApi';
 // Modular Home Page Sections
 import {
   Hero,
-  QuickActions,
   ImpactStats,
   HowItWorks,
   RecentActivities,
   TrackAndSupport,
-  OngoingCampaigns,
   DonorShowcaseSection,
-  RoumariHomeSection,
   Testimonials,
   AboutUs,
   JoinCTA,
@@ -95,11 +92,6 @@ export default function HomePage() {
           onOpenActivities={scrollToActivities}
         />
 
-        <QuickActions
-          lang={lang}
-          onOpenVolunteer={() => setVolunteerModalOpen(true)}
-        />
-
         <ImpactStats lang={lang} />
 
         {/* 3 Steps How It Works */}
@@ -109,20 +101,13 @@ export default function HomePage() {
           lang={lang}
         />
 
-        <OngoingCampaigns
-          lang={lang}
-        />
-
         {/* Verified Public Donor Showcase */}
         <DonorShowcaseSection lang={lang} />
 
-        {/* Dedicated Roumari Information & Community News Feature */}
-        <RoumariHomeSection />
-
+        {/* Roumari Portal & Application Status Tracking */}
         <TrackAndSupport
           lang={lang}
           onSearchTracking={handleSearchTracking}
-          onOpenVolunteer={() => setVolunteerModalOpen(true)}
         />
 
         {/* Real Beneficiary & Volunteer Testimonials */}

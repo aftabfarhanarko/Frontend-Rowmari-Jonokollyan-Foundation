@@ -2,22 +2,28 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Search, HandHeart, Users, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
+import Image from 'next/image';
+import { Phone, Newspaper, ArrowRight, ShieldCheck } from 'lucide-react';
 import { Language } from '@/types';
+import { useGetRoumariOverviewQuery } from '@/store/api/roumariApi';
 
 interface TrackAndSupportProps {
   lang: Language;
   onSearchTracking: (id: string) => void;
   onOpenDonation?: () => void;
-  onOpenVolunteer: () => void;
+  onOpenVolunteer?: () => void;
 }
 
 export default function TrackAndSupport({
   lang,
   onSearchTracking,
-  onOpenVolunteer,
 }: TrackAndSupportProps) {
   const [trackingId, setTrackingId] = useState('');
+  const { data: overview } = useGetRoumariOverviewQuery();
+
+  const tourist = overview?.touristPlaces?.[0];
+  const latestNews = overview?.latestNews?.[0];
+  const firstEmergency = overview?.emergencyContacts?.[0];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,123 +32,139 @@ export default function TrackAndSupport({
   };
 
   return (
-    <section className="py-12 md:py-16 bg-white relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-stretch">
-          {/* Left Card: "আবেদনের অবস্থা দেখুন" (Tracking) */}
-          <div className="bg-white rounded-3xl border border-stone-200/90 p-6 sm:p-8 lg:p-9 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
-            <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 border border-red-200/80 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
-                <Search className="w-3.5 h-3.5" />
-                <span>{lang === 'bn' ? 'স্বচ্ছ অনলাইন ট্র্যাকিং পোর্টাল' : 'Live Tracking Portal'}</span>
-              </div>
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-stone-900 tracking-tight leading-tight mb-2">
-                {lang === 'bn' ? 'আবেদনের সর্বশেষ স্থিতি জানুন' : 'Track Application Status'}
+    <section className="py-5 sm:py-7 bg-white relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
+          {/* Left Card: রৌমারী ডিজিটাল তথ্য বাতায়ন ও সংবাদ */}
+          <div className="rounded-2xl bg-[#FFF4F5] p-4 sm:p-5 shadow-[0_4px_16px_-6px_rgba(214,40,40,0.08)] flex flex-col justify-between">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-1 h-4 rounded-full bg-[#D62828] shrink-0" />
+              <h2 className="text-sm sm:text-base font-extrabold text-stone-900 tracking-tight">
+                {lang === 'bn' ? (
+                  <>
+                    রৌমারী ডিজিটাল তথ্য <span className="text-[#D62828]">বাতায়ন ও সংবাদ</span>
+                  </>
+                ) : (
+                  <>
+                    Roumari Digital <span className="text-[#D62828]">Portal &amp; News</span>
+                  </>
+                )}
               </h2>
-              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                {lang === 'bn'
-                  ? 'আপনার আবেদন আইডি বা নিবন্ধিত মোবাইল নম্বর লিখে বর্তমান যাচাই ও অনুমোদনের অবস্থা সরাসরি পর্যবেক্ষণ করুন।'
-                  : 'Enter your tracking ID or registered mobile number to monitor the review progress in real time.'}
-              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-3.5 items-center">
+              {/* Featured Image */}
+              <Link
+                href="/roumari"
+                className="sm:col-span-5 relative h-28 sm:h-[116px] w-full rounded-xl overflow-hidden bg-stone-200 block group"
+              >
+                <Image
+                  src={
+                    tourist?.featuredImage ||
+                    'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'
+                  }
+                  alt={tourist?.name || 'রৌমারী ডিজিটাল তথ্য বাতায়ন'}
+                  fill
+                  sizes="(max-width: 640px) 100vw, 240px"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </Link>
+
+              {/* Quick Links & CTA */}
+              <div className="sm:col-span-7 space-y-2">
+                <Link
+                  href="/roumari"
+                  className="flex items-center gap-2 group text-xs font-bold text-stone-800 hover:text-[#D62828] transition-colors"
+                >
+                  <span className="w-6 h-6 rounded-full bg-[#D62828] text-white flex items-center justify-center shrink-0">
+                    <Phone className="w-3 h-3" />
+                  </span>
+                  <span className="truncate">
+                    {firstEmergency?.name || (lang === 'bn' ? 'জরুরি হটলাইন নম্বর' : 'Emergency Hotlines')}
+                  </span>
+                </Link>
+
+                <Link
+                  href={latestNews ? `/roumari/news/${latestNews.slug}` : '/roumari'}
+                  className="flex items-center gap-2 group text-xs font-bold text-stone-800 hover:text-[#D62828] transition-colors"
+                >
+                  <span className="w-6 h-6 rounded-full bg-[#D62828] text-white flex items-center justify-center shrink-0">
+                    <Newspaper className="w-3 h-3" />
+                  </span>
+                  <span className="truncate">
+                    {latestNews?.headline || (lang === 'bn' ? 'রৌমারী তাজা সংবাদ' : 'Roumari Latest News')}
+                  </span>
+                </Link>
+
+                <div className="pt-0.5">
+                  <Link
+                    href="/roumari"
+                    className="inline-flex items-center gap-1 rounded-full border border-[#D62828]/60 bg-white hover:bg-[#D62828] text-[#D62828] hover:text-white px-3.5 py-1 text-[11px] font-bold transition-colors"
+                  >
+                    <span>{lang === 'bn' ? 'আরও দেখুন' : 'View More'}</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Card: আবেদনের সর্বশেষ স্থিতি জানুন */}
+          <div className="rounded-2xl bg-[#FFF4F5] p-4 sm:p-5 shadow-[0_4px_16px_-6px_rgba(214,40,40,0.08)] flex flex-col justify-between">
+            <div>
+              <div className="border-b border-red-200/60 pb-2 mb-3">
+                <h2 className="text-sm sm:text-base font-extrabold text-stone-900 tracking-tight">
+                  {lang === 'bn' ? (
+                    <>
+                      <span className="text-[#D62828]">আবেদনের</span> সর্বশেষ স্থিতি জানুন
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-[#D62828]">Track</span> Application Status
+                    </>
+                  )}
+                </h2>
+              </div>
 
               {/* Search Form */}
-              <form onSubmit={handleSearch} className="mt-6 flex flex-col sm:flex-row gap-2.5">
+              <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="text"
                   value={trackingId}
                   onChange={(e) => setTrackingId(e.target.value)}
-                  placeholder={
-                    lang === 'bn'
-                      ? 'আবেদন আইডি (যেমন: RJF-2026-0842)'
-                      : 'Application ID (e.g., RJF-2026-0842)'
-                  }
-                  className="flex-1 px-4 py-3.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828] bg-stone-50 focus:bg-white transition shadow-2xs font-mono"
+                  placeholder={lang === 'bn' ? 'আপনার আইডি লিখুন...' : 'Enter your ID...'}
+                  className="flex-1 px-3.5 py-2 rounded-xl bg-white border border-red-100 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:outline-hidden focus:ring-2 focus:ring-[#D62828] font-mono"
                 />
                 <button
                   type="submit"
-                  className="px-6 py-3.5 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-sm transition shadow-md hover:shadow-lg cursor-pointer whitespace-nowrap active:scale-98 flex items-center justify-center gap-2 group/btn"
+                  className="px-4 py-2 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition shadow-sm cursor-pointer whitespace-nowrap active:scale-[0.98] inline-flex items-center justify-center gap-1.5"
                 >
-                  <Search className="w-4 h-4" />
-                  <span>{lang === 'bn' ? 'অনুসন্ধান করুন' : 'Search Status'}</span>
+                  <span>{lang === 'bn' ? 'অনুসন্ধান করুন' : 'Search'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </form>
-
-              {/* Sample IDs tip */}
-              <div className="mt-4 flex items-center gap-2 text-xs text-stone-500 flex-wrap">
-                <span className="font-medium">{lang === 'bn' ? 'ডেমো আইডি দিয়ে দেখুন:' : 'Sample IDs:'}</span>
-                {['RJF-2026-0842', 'RJF-2026-0915', 'RJF-2026-0720'].map((sampleId) => (
-                  <button
-                    key={sampleId}
-                    type="button"
-                    onClick={() => {
-                      setTrackingId(sampleId);
-                      onSearchTracking(sampleId);
-                    }}
-                    className="font-mono text-xs px-2.5 py-1 rounded-md bg-stone-100 hover:bg-red-50 text-stone-700 hover:text-[#D62828] border border-stone-200 transition font-semibold cursor-pointer"
-                  >
-                    {sampleId}
-                  </button>
-                ))}
-              </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-stone-100 flex items-center gap-2 text-xs text-stone-500">
-              <ShieldCheck className="w-4 h-4 text-red-600 shrink-0" />
-              <span>
-                {lang === 'bn'
-                  ? 'সার্ভারে প্রতিটি আবেদনের তথ্য সুরক্ষিত ও নিরাপদ এনক্রিপশনে সংরক্ষিত।'
-                  : 'All applications are encrypted and processed with complete confidentiality.'}
+            {/* Sample IDs */}
+            <div className="mt-3 flex items-center gap-1.5 flex-wrap">
+              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-stone-500 mr-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>{lang === 'bn' ? 'ডেমো:' : 'Demo:'}</span>
               </span>
-            </div>
-          </div>
-
-          {/* Right Card: "আপনিও পাশে দাঁড়ান" (Rich Crimson Brand Box) */}
-          <div className="bg-gradient-to-br from-[#D62828] via-[#B91C1C] to-[#991B1B] text-white rounded-3xl p-6 sm:p-8 lg:p-9 shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden border border-red-700/60 group">
-            {/* Background Ambient Glow */}
-            <div className="absolute -top-10 -right-10 w-56 h-56 bg-red-400/15 rounded-full blur-3xl pointer-events-none group-hover:bg-red-400/25 transition-all duration-500" />
-
-            <div className="relative z-10">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-950/60 border border-red-400/30 text-red-200 text-xs font-bold mb-3 shadow-2xs">
-                <HandHeart className="w-3.5 h-3.5 text-red-300" />
-                <span>{lang === 'bn' ? 'মানবতার অংশীদারিত্ব' : 'Partnership for Humanity'}</span>
-              </div>
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight leading-tight mb-2">
-                {lang === 'bn' ? 'মানবতার কল্যাণে আপনার হাত বাড়িয়ে দিন' : 'Stand With Us Today'}
-              </h2>
-              <p className="text-xs sm:text-sm text-red-100/90 leading-relaxed font-normal">
-                {lang === 'bn'
-                  ? 'রৌমারীর প্রত্যন্ত চরাঞ্চলের অসহায় শীতার্ত মানুষের সেবায় আপনার মেধা, সময়, শ্রম ও সহমর্মিতা যুক্ত করুন।'
-                  : 'Contribute your time, skills, volunteerism, and compassion to serve the marginalized people of Rowmari.'}
-              </p>
-
-              {/* Action Buttons */}
-              <div className="mt-8 flex flex-wrap items-center gap-3.5">
+              {['RJF-2026-0842', 'RJF-2026-0915', 'RJF-2026-0720'].map((sampleId) => (
                 <button
-                  onClick={onOpenVolunteer}
-                  className="px-6 py-3.5 rounded-2xl bg-white text-[#D62828] hover:bg-red-50 font-bold text-sm transition-all shadow-md hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center gap-2"
+                  key={sampleId}
+                  type="button"
+                  onClick={() => {
+                    setTrackingId(sampleId);
+                    onSearchTracking(sampleId);
+                  }}
+                  className="font-mono text-[11px] px-2.5 py-1 rounded-lg bg-[#FCE7E8] hover:bg-[#D62828] text-[#B91C1C] hover:text-white transition font-bold cursor-pointer"
                 >
-                  <Users className="w-4 h-4 text-[#D62828]" />
-                  <span>{lang === 'bn' ? 'স্বেচ্ছাসেবক হিসেবে যুক্ত হোন' : 'Join as Volunteer'}</span>
+                  {sampleId}
                 </button>
-
-                <Link
-                  href="/activities"
-                  className="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm transition-all shadow-md hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center gap-2"
-                >
-                  <span>{lang === 'bn' ? 'আমাদের কার্যক্রম দেখুন' : 'View Activities'}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
+              ))}
             </div>
-
-            <p className="text-xs text-red-200/80 mt-6 pt-4 border-t border-red-700/60 relative z-10 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-red-300 shrink-0" />
-              <span>
-                {lang === 'bn'
-                  ? 'সকল মানবিক কার্যক্রমের বিবরণ ও সেবা কার্যক্রমের প্রতিবেদন উন্মুক্ত ও স্বচ্ছ।'
-                  : 'All humanitarian operations and relief details are published transparently.'}
-              </span>
-            </p>
           </div>
         </div>
       </div>
