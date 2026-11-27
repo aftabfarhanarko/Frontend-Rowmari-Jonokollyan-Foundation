@@ -13,6 +13,7 @@ export const API_ENDPOINTS = {
   },
   campaigns: {
     list: '/campaigns',
+    detail: (id: string) => `/campaigns/${id}`,
     bySlug: (slug: string) => `/campaigns/by-slug/${slug}`,
     donate: '/donations/record',
   },
@@ -147,6 +148,7 @@ export const API_ENDPOINTS = {
     adminDesignation: '/committees/admin/designation',
     adminDesignationById: (id: string) => `/committees/admin/designation/${id}`,
     adminMembers: '/committees/admin/members',
+    adminMemberById: (id: string) => `/committees/admin/members/${id}`,
     adminMember: '/committees/admin/member',
     adminMembership: '/committees/admin/membership',
     adminMembershipById: (id: string) => `/committees/admin/membership/${id}`,

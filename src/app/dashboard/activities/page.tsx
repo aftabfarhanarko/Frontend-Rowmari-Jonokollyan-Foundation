@@ -1,10 +1,11 @@
 "use client"
 
 import React, { useState } from "react"
+import Link from "next/link"
 import { PageHeader } from "@/components/dashboard/PageHeader"
 import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
-import { Plus, X, Loader2 } from "lucide-react"
+import { Plus, X, Loader2, Eye } from "lucide-react"
 import { useGetActivitiesQuery, useCreateActivityMutation } from "@/store/api/activitiesApi"
 import { toast } from "sonner"
 
@@ -47,12 +48,47 @@ export default function ActivitiesDashboardPage() {
   }
 
   const columns = [
-    { header: "আইডি", accessorKey: "id", className: "font-mono text-xs font-bold text-[#D62828]" },
-    { header: "কার্যক্রমের নাম", accessorKey: "titleBn", sortable: true, className: "font-semibold" },
+    {
+      header: "আইডি",
+      accessorKey: "id",
+      className: "font-mono text-xs font-bold text-[#D62828]",
+      cell: (r: any) => (
+        <Link href={`/dashboard/activities/${r.id}`} className="hover:underline">
+          {r.id?.slice(0, 8)}...
+        </Link>
+      ),
+    },
+    {
+      header: "কার্যক্রমের নাম",
+      accessorKey: "titleBn",
+      sortable: true,
+      className: "font-semibold",
+      cell: (r: any) => (
+        <Link
+          href={`/dashboard/activities/${r.id}`}
+          className="hover:text-[#D62828] transition font-semibold"
+        >
+          {r.titleBn}
+        </Link>
+      ),
+    },
     { header: "ক্যাটাগরি", accessorKey: "categoryBn" },
     { header: "এলাকা", accessorKey: "locationBn" },
     { header: "উপকারভোগী", accessorKey: "beneficiariesCount", align: "center" as const },
     { header: "তারিখ", accessorKey: "dateBn" },
+    {
+      header: "পদক্ষেপ",
+      align: "right" as const,
+      cell: (r: any) => (
+        <Link
+          href={`/dashboard/activities/${r.id}`}
+          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold border border-stone-200 text-stone-700 hover:border-[#D62828] hover:text-[#D62828] transition"
+        >
+          <Eye className="size-3 text-[#D62828]" />
+          <span>বিস্তারিত</span>
+        </Link>
+      ),
+    },
   ]
 
   return (

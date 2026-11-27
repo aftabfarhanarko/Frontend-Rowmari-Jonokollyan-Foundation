@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import Link from "next/link"
 import {
   Mail,
   Trash2,
@@ -81,7 +82,9 @@ export function CmsMessagesTab() {
               >
                 <div className="space-y-1.5 flex-1 min-w-0">
                   <div className="flex items-center gap-2.5">
-                    <span className="font-bold text-stone-900 text-sm">{msg.name}</span>
+                    <span className="font-bold text-stone-900 text-sm hover:text-[#D62828] transition">
+                      <Link href={`/dashboard/messages/${msg.id}`}>{msg.name}</Link>
+                    </span>
                     <span className="text-[10px] text-stone-400 font-mono">
                       {new Date(msg.createdAt).toLocaleString("bn-BD")}
                     </span>
@@ -95,16 +98,13 @@ export function CmsMessagesTab() {
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
-                  <Button
-                    type="button"
-                    size="xs"
-                    variant="outline"
-                    onClick={() => setSelectedMessage(msg)}
-                    className="gap-1 text-xs cursor-pointer"
+                  <Link
+                    href={`/dashboard/messages/${msg.id}`}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold border border-stone-200 text-stone-700 hover:border-[#D62828] hover:text-[#D62828] transition"
                   >
                     <Eye className="size-3.5" />
                     <span>পূর্ণ বার্তা</span>
-                  </Button>
+                  </Link>
                   <button
                     type="button"
                     onClick={() => handleDelete(msg.id, msg.name)}

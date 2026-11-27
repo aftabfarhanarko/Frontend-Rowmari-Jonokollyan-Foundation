@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import Link from "next/link"
 import {
   Megaphone,
   Plus,
@@ -234,8 +235,10 @@ export function CmsModalTab() {
                           <span className="inline-block px-2 py-0.5 rounded-md bg-red-50 text-[#D62828] border border-red-200 text-[10px] font-bold">
                             {item.badge || "সাধারণ ঘোষণা"}
                           </span>
-                          <h4 className="font-bold text-stone-900 leading-snug line-clamp-2">
-                            {item.title}
+                          <h4 className="font-bold text-stone-900 leading-snug line-clamp-2 hover:text-[#D62828] transition">
+                            <Link href={`/dashboard/modal/${item.id}`}>
+                              {item.title}
+                            </Link>
                           </h4>
                           <p className="text-xs text-stone-500 line-clamp-1">{item.description}</p>
                         </div>
@@ -310,13 +313,13 @@ export function CmsModalTab() {
 
                       <td className="py-3.5 px-4 text-right whitespace-nowrap">
                         <div className="inline-flex items-center gap-1">
-                          <button
-                            onClick={() => setPreviewModal(item)}
-                            className="p-1.5 rounded-lg text-stone-600 hover:bg-stone-100 transition cursor-pointer"
-                            title="লাইভ প্রিভিউ দেখুন"
+                          <Link
+                            href={`/dashboard/modal/${item.id}`}
+                            className="p-1.5 rounded-lg text-stone-600 hover:text-[#D62828] hover:bg-stone-100 transition cursor-pointer"
+                            title="বিস্তারিত পেজ দেখুন"
                           >
                             <Eye className="w-4 h-4" />
-                          </button>
+                          </Link>
                           <button
                             onClick={() => openEditDialog(item)}
                             className="p-1.5 rounded-lg text-blue-600 hover:bg-blue-50 transition cursor-pointer"

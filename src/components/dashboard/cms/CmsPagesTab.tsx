@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { FileText, Plus, Edit2, Trash2, ExternalLink, Loader2, Search } from "lucide-react"
+import { FileText, Plus, Edit2, Trash2, ExternalLink, Loader2, Search, Eye } from "lucide-react"
 import {
   useGetAdminPagesQuery,
   useCreatePageMutation,
@@ -148,7 +148,9 @@ export function CmsPagesTab() {
                   <tr key={page.id} className="hover:bg-stone-50/70 transition-colors">
                     <td className="py-3.5 px-4 font-mono text-stone-400 font-semibold">{page.displayOrder || idx + 1}</td>
                     <td className="py-3.5 px-4">
-                      <div className="font-bold text-stone-900 text-sm">{page.title}</div>
+                      <div className="font-bold text-stone-900 text-sm hover:text-[#D62828] transition">
+                        <Link href={`/dashboard/pages/${page.id}`}>{page.title}</Link>
+                      </div>
                       {page.subtitle && <div className="text-[11px] text-stone-400 truncate max-w-xs">{page.subtitle}</div>}
                     </td>
                     <td className="py-3.5 px-4 font-mono text-xs text-red-800">/{page.slug}</td>
@@ -159,6 +161,9 @@ export function CmsPagesTab() {
                     </td>
                     <td className="py-3.5 px-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">
+                        <Link href={`/dashboard/pages/${page.id}`} title="বিস্তারিত পেজ দেখুন" className="p-1.5 rounded-lg text-stone-600 hover:text-[#D62828] hover:bg-stone-100 transition">
+                          <Eye className="size-3.5" />
+                        </Link>
                         <Link href={`/${page.slug === "home" ? "" : page.slug}`} target="_blank" title="লাইভ পেজ দেখুন" className="p-1.5 rounded-lg text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition">
                           <ExternalLink className="size-3.5" />
                         </Link>

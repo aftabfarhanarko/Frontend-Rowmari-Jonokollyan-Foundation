@@ -41,6 +41,11 @@ export const campaignsApi = baseApi.injectEndpoints({
       transformResponse: (result: CampaignResult) => (Array.isArray(result) ? result : result.items).map(mapCampaign),
       providesTags: [{ type: 'Campaigns', id: 'LIST' }],
     }),
+    getCampaignById: builder.query<any, string>({
+      query: (id) => ({ url: API_ENDPOINTS.campaigns.detail(id) }),
+      transformResponse: (res: any) => ({ ...mapCampaign(res), ...res }),
+      providesTags: (_res, _err, id) => [{ type: 'Campaigns', id }],
+    }),
     submitDonation: builder.mutation<DonationResponse, DonationPayload>({
       query: (form) => ({
         url: API_ENDPOINTS.campaigns.donate,
@@ -74,4 +79,4 @@ export const campaignsApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetCampaignsQuery, useSubmitDonationMutation, useCreateCampaignMutation } = campaignsApi;
+export const { useGetCampaignsQuery, useGetCampaignByIdQuery, useSubmitDonationMutation, useCreateCampaignMutation } = campaignsApi;

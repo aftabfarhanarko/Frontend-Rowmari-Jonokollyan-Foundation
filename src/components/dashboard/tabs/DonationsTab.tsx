@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import Link from "next/link"
 import { useGetAdminDonationsListQuery, useReviewDonationStatusMutation } from "@/store/api/donationsApi"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Search, Eye, X, CheckCircle2, XCircle } from "lucide-react"
@@ -113,7 +114,11 @@ export function DonationsTab() {
               {filtered.map((d: any) => (
                 <tr key={d.id} className="hover:bg-stone-50/70">
                   <td className="p-3">
-                    <p className="font-bold text-stone-900">{d.donorName || "বেনামী দাতা"}</p>
+                    <p className="font-bold text-stone-900 hover:text-[#D62828] transition">
+                      <Link href={`/dashboard/donations/${d.id}`}>
+                        {d.donorName || "বেনামী দাতা"}
+                      </Link>
+                    </p>
                     <p className="text-[11px] text-stone-500">{d.donorPhone || d.senderPhone || "-"}</p>
                   </td>
                   <td className="p-3 font-black text-stone-900">৳{Number(d.amount).toLocaleString("bn-BD")}</td>
@@ -131,13 +136,13 @@ export function DonationsTab() {
                     </span>
                   </td>
                   <td className="p-3 text-right">
-                    <Button
-                      size="sm" variant="outline"
-                      onClick={() => { setSelectedDonation(d); setAdminNote(d.adminNote || "") }}
-                      className="text-xs h-7 border-stone-300 hover:border-[#D62828] cursor-pointer"
+                    <Link
+                      href={`/dashboard/donations/${d.id}`}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold border border-stone-300 text-stone-700 hover:border-[#D62828] hover:text-[#D62828] transition"
                     >
-                      <Eye className="size-3 mr-1" /> যাচাই
-                    </Button>
+                      <Eye className="size-3 mr-1 text-[#D62828]" />
+                      <span>বিস্তারিত</span>
+                    </Link>
                   </td>
                 </tr>
               ))}

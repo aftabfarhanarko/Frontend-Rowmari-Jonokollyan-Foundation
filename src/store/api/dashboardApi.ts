@@ -198,6 +198,11 @@ export const dashboardApi = baseApi.injectEndpoints({
       }),
       providesTags: ['Volunteers'],
     }),
+
+    getVolunteerById: builder.query<any, string>({
+      query: (id) => ({ url: API_ENDPOINTS.volunteers.detail(id) }),
+      providesTags: (_res, _err, id) => [{ type: 'Volunteers', id }],
+    }),
     approveVolunteer: builder.mutation<BackendVolunteer, { id: string; isApproved: boolean }>({
       query: ({ id, isApproved }) => ({
         url: API_ENDPOINTS.volunteers.approve(id),
@@ -248,6 +253,10 @@ export const dashboardApi = baseApi.injectEndpoints({
       }),
       providesTags: ['AuditLogs'],
     }),
+    getAuditLogById: builder.query<any, string>({
+      query: (id) => ({ url: `${API_ENDPOINTS.audit.logs}/${id}` }),
+      providesTags: (_res, _err, id) => [{ type: 'AuditLogs', id }],
+    }),
 
     // Admin Notifications
     getAdminNotifications: builder.query<BackendNotification[], void>({
@@ -278,6 +287,7 @@ export const {
   useCreateExpenseMutation,
   useReviewExpenseMutation,
   useGetAdminVolunteersQuery,
+  useGetVolunteerByIdQuery,
   useApproveVolunteerMutation,
   useGetAdminUsersQuery,
   useUpdateUserRoleMutation,
@@ -285,6 +295,7 @@ export const {
   useGetAccessControlRolesQuery,
   useGetAccessControlPermissionsQuery,
   useGetAuditLogsQuery,
+  useGetAuditLogByIdQuery,
   useGetAdminNotificationsQuery,
   useGetMyApplicationsQuery,
   useGetMyDonationsQuery,

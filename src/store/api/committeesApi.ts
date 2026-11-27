@@ -107,6 +107,11 @@ export const committeesApi = baseApi.injectEndpoints({
       providesTags: ['Committees'],
     }),
 
+    getAdminMemberById: builder.query<any, string>({
+      query: (id) => ({ url: API_ENDPOINTS.committees.adminMemberById(id) }),
+      providesTags: (_res, _err, id) => [{ type: 'Committees', id }],
+    }),
+
     createCommittee: builder.mutation<CommitteeItem, Partial<CommitteeItem>>({
       query: (data) => ({ url: API_ENDPOINTS.committees.adminCommittee, method: 'POST', data }),
       invalidatesTags: ['Committees'],
@@ -148,6 +153,7 @@ export const {
   useLazyVerifyMemberByIdQuery,
   useGetAdminCommitteesQuery,
   useGetAdminMembersQuery,
+  useGetAdminMemberByIdQuery,
   useCreateCommitteeMutation,
   useUpdateCommitteeMutation,
   useDeleteCommitteeMutation,

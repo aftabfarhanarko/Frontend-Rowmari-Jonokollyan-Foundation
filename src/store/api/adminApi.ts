@@ -1,6 +1,6 @@
 import { baseApi } from './baseApi';
 import { API_ENDPOINTS } from './endpoints';
-import { NoticeModalItem, HeroSlideItem, FooterConfigItem } from './contentApi';
+import { NoticeModalItem, HeroSlideItem, FooterConfigItem, NewsEventItem, GalleryItem } from './contentApi';
 
 export interface CMSPage {
   id: string;
@@ -278,6 +278,11 @@ export const adminApi = baseApi.injectEndpoints({
       providesTags: ['Notifications'],
     }),
 
+    getAdminContactMessageById: builder.query<any, string>({
+      query: (id) => ({ url: API_ENDPOINTS.admin.contactMessageById(id) }),
+      providesTags: (_res, _err, id) => [{ type: 'Notifications', id }],
+    }),
+
     deleteAdminContactMessage: builder.mutation<{ success: boolean }, string>({
       query: (id) => ({
         url: API_ENDPOINTS.admin.contactMessageById(id),
@@ -293,6 +298,16 @@ export const adminApi = baseApi.injectEndpoints({
         params: params || { page: 1, limit: 100 },
       }),
       providesTags: ['Media'],
+    }),
+
+    getAdminGalleryById: builder.query<GalleryItem, string>({
+      query: (id) => ({ url: API_ENDPOINTS.admin.galleryById(id) }),
+      providesTags: (_res, _err, id) => [{ type: 'Media', id }],
+    }),
+
+    getAdminNewsEventById: builder.query<NewsEventItem, string>({
+      query: (id) => ({ url: API_ENDPOINTS.admin.newsEventById(id) }),
+      providesTags: (_res, _err, id) => [{ type: 'News', id }],
     }),
 
     deleteAdminMedia: builder.mutation<{ success: boolean }, string>({
@@ -438,8 +453,11 @@ export const {
   useUpdateAdminUserRolesMutation,
   useDeleteAdminUserMutation,
   useGetAdminContactMessagesQuery,
+  useGetAdminContactMessageByIdQuery,
   useDeleteAdminContactMessageMutation,
   useGetAdminMediaQuery,
+  useGetAdminGalleryByIdQuery,
+  useGetAdminNewsEventByIdQuery,
   useDeleteAdminMediaMutation,
   useGetAdminActivityLogsQuery,
   useGetAdminNoticeModalsQuery,

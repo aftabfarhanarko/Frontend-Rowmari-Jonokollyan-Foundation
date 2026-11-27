@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useState } from "react"
-import { Newspaper, Plus, Loader2, Search, ExternalLink } from "lucide-react"
+import Link from "next/link"
+import { Newspaper, Plus, Loader2, Search, ExternalLink, Eye } from "lucide-react"
 import { useGetNewsEventsQuery, useCreateNewsEventMutation, NewsEventItem } from "@/store/api/contentApi"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -104,13 +105,20 @@ export function CmsNewsTab() {
                         {item.type === "EVENT" ? "ইভেন্ট" : "সংবাদ"}
                       </Badge>
                     </td>
-                    <td className="py-3.5 px-4 font-bold text-stone-900 text-sm">{item.title}</td>
+                    <td className="py-3.5 px-4 font-bold text-stone-900 text-sm hover:text-[#D62828] transition">
+                      <Link href={`/dashboard/news/${item.id}`}>{item.title}</Link>
+                    </td>
                     <td className="py-3.5 px-4 text-stone-500 max-w-sm truncate">{item.summary || item.content?.slice(0, 80) || "—"}</td>
                     <td className="py-3.5 px-4 text-stone-400 font-mono text-[11px]">{new Date(item.createdAt).toLocaleDateString("bn-BD")}</td>
                     <td className="py-3.5 px-4 text-right">
-                      <a href="/news" target="_blank" className="inline-flex p-1.5 rounded-lg text-stone-500 hover:text-stone-900 hover:bg-stone-100" title="পাবলিক পেজে দেখুন">
-                        <ExternalLink className="size-3.5" />
-                      </a>
+                      <div className="flex items-center justify-end gap-1">
+                        <Link href={`/dashboard/news/${item.id}`} className="inline-flex p-1.5 rounded-lg text-stone-500 hover:text-[#D62828] hover:bg-stone-100" title="বিস্তারিত পেজ দেখুন">
+                          <Eye className="size-3.5" />
+                        </Link>
+                        <a href="/news" target="_blank" className="inline-flex p-1.5 rounded-lg text-stone-500 hover:text-stone-900 hover:bg-stone-100" title="পাবলিক পেজে দেখুন">
+                          <ExternalLink className="size-3.5" />
+                        </a>
+                      </div>
                     </td>
                   </tr>
                 ))}

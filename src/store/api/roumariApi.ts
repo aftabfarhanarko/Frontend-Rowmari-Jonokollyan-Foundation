@@ -78,6 +78,11 @@ export const roumariApi = baseApi.injectEndpoints({
       providesTags: ['Roumari'],
     }),
 
+    getRoumariDirectoryById: builder.query<any, string>({
+      query: (id) => ({ url: `${API_ENDPOINTS.roumari.directory}/${id}` }),
+      providesTags: (_res, _err, id) => [{ type: 'Roumari', id }],
+    }),
+
     getRoumariTouristPlaces: builder.query<RoumariTouristPlaceItem[], void>({
       query: () => ({ url: API_ENDPOINTS.roumari.touristPlaces }),
       providesTags: ['Roumari'],
@@ -147,6 +152,7 @@ export const {
   useGetRoumariOverviewQuery,
   useGetEmergencyContactsQuery,
   useGetRoumariDirectoriesQuery,
+  useGetRoumariDirectoryByIdQuery,
   useGetRoumariTouristPlacesQuery,
   useGetRoumariTouristPlaceBySlugQuery,
   useGetRoumariNewsQuery,

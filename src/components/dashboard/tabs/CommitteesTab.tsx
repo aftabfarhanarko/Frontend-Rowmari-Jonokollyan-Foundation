@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import Link from "next/link"
 import {
   useGetAdminCommitteesQuery,
   useGetAdminMembersQuery,
@@ -10,7 +11,7 @@ import {
   useDeleteCommitteeMutation,
 } from "@/store/api/committeesApi"
 import { Button } from "@/components/ui/button"
-import { Plus, Users, ShieldCheck, Award, Trash2 } from "lucide-react"
+import { Plus, Users, ShieldCheck, Award, Trash2, Eye } from "lucide-react"
 
 export function CommitteesTab() {
   const [activeTab, setActiveTab] = useState<"committees" | "members" | "designations">("committees")
@@ -165,16 +166,34 @@ export function CommitteesTab() {
             <table className="w-full text-left text-xs">
               <thead className="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold">
                 <tr>
-                  <th className="p-3">RJF মেম্বার আইডি</th><th className="p-3">নাম</th><th className="p-3">মোবাইল</th><th className="p-3">স্ট্যাটাস</th>
+                  <th className="p-3">RJF মেম্বার আইডি</th><th className="p-3">নাম</th><th className="p-3">মোবাইল</th><th className="p-3">স্ট্যাটাস</th><th className="p-3 text-right">পদক্ষেপ</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
                 {membersRes?.items?.map((m) => (
                   <tr key={m.id} className="hover:bg-stone-50/60">
-                    <td className="p-3 font-mono font-bold text-[#D62828]">{m.memberId}</td>
-                    <td className="p-3 font-bold text-stone-900">{m.nameBn} <span className="block text-[11px] text-stone-500 font-normal">{m.nameEn}</span></td>
+                    <td className="p-3 font-mono font-bold text-[#D62828]">
+                      <Link href={`/dashboard/committees/${m.id}`} className="hover:underline">
+                        {m.memberId}
+                      </Link>
+                    </td>
+                    <td className="p-3 font-bold text-stone-900">
+                      <Link href={`/dashboard/committees/${m.id}`} className="hover:text-[#D62828] transition">
+                        {m.nameBn} <span className="block text-[11px] text-stone-500 font-normal">{m.nameEn}</span>
+                      </Link>
+                    </td>
                     <td className="p-3 font-mono">{m.phoneNumber}</td>
                     <td className="p-3"><span className="px-2 py-0.5 rounded text-[10px] bg-red-50 text-red-700 font-bold">সক্রিয়</span></td>
+                    <td className="p-3 text-right">
+                      <Link
+                        href={`/dashboard/committees/${m.id}`}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-stone-700 hover:text-[#D62828] hover:bg-red-50 border border-stone-200"
+                        title="সদস্যের সম্পূর্ণ প্রোফাইল দেখুন"
+                      >
+                        <Eye className="size-3 text-[#D62828]" />
+                        <span>বিস্তারিত</span>
+                      </Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>

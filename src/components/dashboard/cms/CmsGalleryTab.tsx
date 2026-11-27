@@ -2,7 +2,8 @@
 
 import React, { useState } from "react"
 import Image from "next/image"
-import { Image as ImageIcon, Plus, Loader2, Copy, Check, ExternalLink } from "lucide-react"
+import Link from "next/link"
+import { Image as ImageIcon, Plus, Loader2, Copy, Check, ExternalLink, Eye } from "lucide-react"
 import { useGetGalleryQuery, useCreateGalleryItemMutation, GalleryItem } from "@/store/api/contentApi"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -85,16 +86,23 @@ export function CmsGalleryTab() {
               </div>
 
               <div className="p-3.5 space-y-2">
-                <div className="font-bold text-stone-900 text-xs line-clamp-1">{item.title}</div>
+                <div className="font-bold text-stone-900 text-xs line-clamp-1 hover:text-[#D62828] transition">
+                  <Link href={`/dashboard/gallery/${item.id}`}>{item.title}</Link>
+                </div>
                 {item.caption && <p className="text-[11px] text-stone-500 line-clamp-2">{item.caption}</p>}
                 <div className="flex items-center justify-between pt-1 border-t border-stone-100">
                   <button type="button" onClick={() => handleCopyUrl(item.imageUrl, item.id)} className="flex items-center gap-1 text-[11px] font-bold text-red-800 hover:text-red-950 transition cursor-pointer">
                     {copiedId === item.id ? <Check className="size-3 text-red-600" /> : <Copy className="size-3" />}
                     <span>{copiedId === item.id ? "কপি হয়েছে!" : "URL কপি করুন"}</span>
                   </button>
-                  <a href={item.imageUrl} target="_blank" rel="noreferrer" className="p-1 text-stone-400 hover:text-stone-700 transition" title="মূল ছবি দেখুন">
-                    <ExternalLink className="size-3.5" />
-                  </a>
+                  <div className="flex items-center gap-1">
+                    <Link href={`/dashboard/gallery/${item.id}`} className="p-1 text-stone-400 hover:text-[#D62828] transition" title="বিস্তারিত পেজ দেখুন">
+                      <Eye className="size-3.5" />
+                    </Link>
+                    <a href={item.imageUrl} target="_blank" rel="noreferrer" className="p-1 text-stone-400 hover:text-stone-700 transition" title="মূল ছবি দেখুন">
+                      <ExternalLink className="size-3.5" />
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>

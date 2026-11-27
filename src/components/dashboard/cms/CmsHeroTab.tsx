@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import Link from "next/link"
 import {
   Layers,
   Plus,
@@ -258,8 +259,10 @@ export function CmsHeroTab() {
                             </span>
                           )}
                         </div>
-                        <h4 className="font-bold text-stone-900 leading-snug line-clamp-1">
-                          {item.titleBn}
+                        <h4 className="font-bold text-stone-900 leading-snug line-clamp-1 hover:text-[#D62828] transition">
+                          <Link href={`/dashboard/hero/${item.id}`}>
+                            {item.titleBn}
+                          </Link>
                         </h4>
                         <p className="text-xs text-stone-500 line-clamp-1">{item.subtitleBn}</p>
                       </div>
@@ -304,13 +307,13 @@ export function CmsHeroTab() {
 
                     <td className="py-3.5 px-4 text-right whitespace-nowrap">
                       <div className="inline-flex items-center gap-1">
-                        <button
-                          onClick={() => setPreviewSlide(item)}
-                          className="p-1.5 rounded-lg text-stone-600 hover:bg-stone-100 transition cursor-pointer"
-                          title="লাইভ প্রিভিউ দেখুন"
+                        <Link
+                          href={`/dashboard/hero/${item.id}`}
+                          className="p-1.5 rounded-lg text-stone-600 hover:text-[#D62828] hover:bg-stone-100 transition cursor-pointer"
+                          title="বিস্তারিত পেজ দেখুন"
                         >
                           <Eye className="w-4 h-4" />
-                        </button>
+                        </Link>
                         <button
                           onClick={() => openEditDialog(item)}
                           className="p-1.5 rounded-lg text-blue-600 hover:bg-blue-50 transition cursor-pointer"

@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import Link from "next/link"
 import {
   useGetRoumariDirectoriesQuery,
   useGetRoumariNewsQuery,
@@ -10,7 +11,7 @@ import {
   useDeleteRoumariNewsMutation,
 } from "@/store/api/roumariApi"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, Phone, Newspaper, Compass } from "lucide-react"
+import { Plus, Trash2, Phone, Newspaper, Compass, Eye } from "lucide-react"
 
 export function RoumariTab() {
   const [activeSection, setActiveSection] = useState<"directory" | "news" | "places">("directory")
@@ -113,14 +114,23 @@ export function RoumariTab() {
               <tbody className="divide-y divide-stone-100">
                 {directories?.map((d) => (
                   <tr key={d.id} className="hover:bg-stone-50/60">
-                    <td className="p-3 font-bold text-stone-900">{d.name} {d.isEmergency && <span className="ml-1 text-[10px] text-red-600 font-bold">[জরুরি]</span>}</td>
+                    <td className="p-3 font-bold text-stone-900 hover:text-[#D62828] transition">
+                      <Link href={`/dashboard/roumari/${d.id}`}>
+                        {d.name} {d.isEmergency && <span className="ml-1 text-[10px] text-red-600 font-bold">[জরুরি]</span>}
+                      </Link>
+                    </td>
                     <td className="p-3"><span className="px-2 py-0.5 rounded bg-stone-100 text-[10px]">{d.category}</span></td>
                     <td className="p-3 font-mono font-bold text-stone-700">{d.phoneNumber}</td>
                     <td className="p-3 text-stone-500">{d.address}</td>
                     <td className="p-3 text-right">
-                      <button onClick={async () => { if (confirm("মুছে ফেলতে চান?")) { await deleteDir(d.id); refetchDir() } }} className="text-stone-400 hover:text-red-600 p-1">
-                        <Trash2 className="size-3.5" />
-                      </button>
+                      <div className="flex items-center justify-end gap-1">
+                        <Link href={`/dashboard/roumari/${d.id}`} className="text-stone-400 hover:text-[#D62828] p-1" title="বিস্তারিত দেখুন">
+                          <Eye className="size-3.5" />
+                        </Link>
+                        <button onClick={async () => { if (confirm("মুছে ফেলতে চান?")) { await deleteDir(d.id); refetchDir() } }} className="text-stone-400 hover:text-red-600 p-1" title="মুছে ফেলুন">
+                          <Trash2 className="size-3.5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

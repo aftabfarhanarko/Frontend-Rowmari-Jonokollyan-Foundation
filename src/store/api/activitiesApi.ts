@@ -27,7 +27,7 @@ export const activitiesApi = baseApi.injectEndpoints({
             ]
           : [{ type: 'Activities', id: 'LIST' }],
     }),
-    getActivityById: builder.query<ActivityItem, string>({
+    getActivityById: builder.query<any, string>({
       query: (id) => ({
         url: `${API_ENDPOINTS.activities.list}/${id}`,
         method: 'GET',

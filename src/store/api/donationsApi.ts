@@ -85,6 +85,11 @@ export const donationsApi = baseApi.injectEndpoints({
       providesTags: ['Donations'],
     }),
 
+    getDonationById: builder.query<any, string>({
+      query: (id) => ({ url: API_ENDPOINTS.donations.detail(id) }),
+      providesTags: (_res, _err, id) => [{ type: 'Donations', id }],
+    }),
+
     reviewDonationStatus: builder.mutation<AdminDonationItem, { id: string; status: 'APPROVED' | 'REJECTED'; adminNote?: string }>({
       query: ({ id, ...data }) => ({
         url: API_ENDPOINTS.donations.adminReview(id),
@@ -101,5 +106,6 @@ export const {
   useGetPublicDonationStatsQuery,
   useGetPublicApprovedDonorsQuery,
   useGetAdminDonationsListQuery,
+  useGetDonationByIdQuery,
   useReviewDonationStatusMutation,
 } = donationsApi;

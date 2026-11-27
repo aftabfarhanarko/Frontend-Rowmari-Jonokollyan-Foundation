@@ -1,10 +1,11 @@
 "use client"
 
 import React, { useState } from "react"
+import Link from "next/link"
 import { DataTable } from "@/components/ui/data-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Plus, X, Loader2 } from "lucide-react"
+import { Plus, X, Loader2, Eye } from "lucide-react"
 import { useCreateCampaignMutation } from "@/store/api/campaignsApi"
 import { toast } from "sonner"
 
@@ -44,12 +45,29 @@ export function CampaignsTab({ campaignsList }: CampaignsTabProps) {
   }
 
   const columns = [
-    { header: "আইডি", accessorKey: "id", className: "font-mono text-xs font-bold text-[#D62828]" },
+    {
+      header: "আইডি",
+      accessorKey: "id",
+      className: "font-mono text-xs font-bold text-[#D62828]",
+      cell: (r: any) => (
+        <Link href={`/dashboard/campaigns/${r.rawId || r.id}`} className="hover:underline">
+          {r.id}
+        </Link>
+      ),
+    },
     {
       header: "ক্যাম্পেইনের নাম",
       accessorKey: "titleBn",
       sortable: true,
       className: "font-semibold",
+      cell: (r: any) => (
+        <Link
+          href={`/dashboard/campaigns/${r.rawId || r.id}`}
+          className="hover:text-[#D62828] transition font-semibold"
+        >
+          {r.titleBn}
+        </Link>
+      ),
     },
     {
       header: "লক্ষ্যমাত্রা",
@@ -84,6 +102,19 @@ export function CampaignsTab({ campaignsList }: CampaignsTabProps) {
         >
           {r.status}
         </Badge>
+      ),
+    },
+    {
+      header: "পদক্ষেপ",
+      align: "right" as const,
+      cell: (r: any) => (
+        <Link
+          href={`/dashboard/campaigns/${r.rawId || r.id}`}
+          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold border border-stone-200 text-stone-700 hover:border-[#D62828] hover:text-[#D62828] transition"
+        >
+          <Eye className="size-3 text-[#D62828]" />
+          <span>বিস্তারিত</span>
+        </Link>
       ),
     },
   ]
