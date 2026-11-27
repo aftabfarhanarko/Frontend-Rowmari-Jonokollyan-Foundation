@@ -52,7 +52,7 @@ export function PageEditModal({
               <label className="block text-xs font-bold text-stone-700 mb-1">উপশিরোনাম</label>
               <input type="text" value={formData.subtitle} onChange={(e) => setFormData((prev: any) => ({ ...prev, subtitle: e.target.value }))} placeholder="মানবিক সেবায় একটি অঙ্গীকার" className="w-full px-3 py-2 text-xs rounded-xl border border-stone-300" />
             </div>
-            <ImageUploader value={formData.bannerImageUrl} onChange={(url) => setFormData((prev: any) => ({ ...prev, bannerImageUrl: url }))} label="ব্যানার বা কভার ছবি" aspectRatio="banner" description="JPG, PNG, WEBP (ImgBB ক্লাউড)" />
+            <ImageUploader value={formData.bannerImageUrl} onChange={(url) => setFormData((prev: any) => ({ ...prev, bannerImageUrl: url }))} label="ব্যানার বা কভার ছবি" aspectRatio="banner" description="JPG, PNG, WEBP" />
           </div>
 
           <div>

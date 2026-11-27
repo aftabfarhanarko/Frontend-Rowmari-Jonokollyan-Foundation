@@ -48,11 +48,11 @@ export function ProfileTab({ currentUser, currentRole, updateProfileMutation, re
     setAvatarPreview(URL.createObjectURL(file))
     setIsUploadingAvatar(true)
     try {
-      toast.info("প্রোফাইল ছবি ImgBB ক্লাউডে আপলোড হচ্ছে...")
+      toast.info("প্রোফাইল ছবি আপলোড হচ্ছে...")
       const res = await uploadToImgbb(file)
       if (res?.url) {
         await updateProfileMutation({ avatarUrl: res.url }).unwrap()
-        toast.success("প্রোফাইল ছবি সফলভাবে ক্লাউডে আপলোড হয়েছে!")
+        toast.success("প্রোফাইল ছবি সফলভাবে আপডেট হয়েছে!")
         refetchCurrentUser?.()
       }
     } catch (err: any) {
@@ -117,19 +117,13 @@ export function ProfileTab({ currentUser, currentRole, updateProfileMutation, re
             <h3 className="text-base font-bold text-stone-900">{currentUser?.fullName || "ব্যবহারকারী"}</h3>
             <span className="px-2.5 py-0.5 rounded-full bg-red-50 text-[#D62828] border border-red-200 font-bold text-[11px]">{ROLE_METAS[currentRole]?.titleBn || "সুপার অ্যাডমিন"}</span>
           </div>
-          <p className="text-xs text-stone-500">ImgBB ক্লাউডের মাধ্যমে ছবি আপলোড ও সেভ রাখুন।</p>
+          <p className="text-xs text-stone-500">পরিষ্কার ও সাম্প্রতিক ছবি নির্বাচন করুন।</p>
           <div className="pt-1 flex flex-wrap items-center justify-center sm:justify-start gap-2">
             <input type="file" ref={avatarInputRef} accept="image/*" className="hidden" onChange={handleAvatarSelect} />
             <Button size="sm" variant="outline" type="button" onClick={() => avatarInputRef.current?.click()} disabled={isUploadingAvatar} className="text-xs h-8 border-stone-300 gap-1.5 cursor-pointer">
               {isUploadingAvatar ? <Loader2 className="size-3.5 animate-spin" /> : <Upload className="size-3.5 text-[#D62828]" />}
               <span>নতুন ছবি আপলোড</span>
             </Button>
-            {currentUser?.avatarUrl && (
-              <span className="text-[11px] text-[#D62828] font-semibold flex items-center gap-1">
-                <CheckCircle2 className="size-3" />
-                <span>ক্লাউডে সংরক্ষিত</span>
-              </span>
-            )}
           </div>
         </div>
       </div>

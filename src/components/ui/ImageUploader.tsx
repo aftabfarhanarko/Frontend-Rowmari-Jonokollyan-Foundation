@@ -62,11 +62,11 @@ export function ImageUploader({
 
     setIsUploading(true);
     try {
-      toast.info("ImgBB ক্লাউডে ছবি আপলোড হচ্ছে...", { duration: 2500 });
+      toast.info("ছবি আপলোড হচ্ছে...", { duration: 2500 });
       const res = await uploadToImgbb(file);
       if (res?.url) {
         onChange(res.url);
-        toast.success("ছবি সফলভাবে আপলোড হয়েছে এবং লিঙ্ক যুক্ত হয়েছে!");
+        toast.success("ছবি সফলভাবে আপলোড হয়েছে!");
       }
     } catch (err: any) {
       setLocalPreview(null);
@@ -165,7 +165,7 @@ export function ImageUploader({
           <div className="flex-1 space-y-1 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-1.5 text-xs font-bold text-red-800">
               <CheckCircle2 className="size-3.5 text-red-600" />
-              <span>{isUploading ? "আপলোড হচ্ছে..." : "ImgBB ক্লাউডে হোস্ট করা হয়েছে"}</span>
+              <span>{isUploading ? "আপলোড হচ্ছে..." : "ছবি আপলোড সম্পন্ন"}</span>
             </div>
             {value && (
               <p className="text-[11px] text-stone-500 font-mono truncate max-w-xs sm:max-w-md">
@@ -221,7 +221,7 @@ export function ImageUploader({
           {isUploading ? (
             <div className="flex flex-col items-center justify-center py-2">
               <Loader2 className="size-6 text-[#D62828] animate-spin mb-1.5" />
-              <p className="text-xs font-bold text-stone-800">ImgBB ক্লাউডে আপলোড হচ্ছে...</p>
+              <p className="text-xs font-bold text-stone-800">ছবি আপলোড হচ্ছে...</p>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center">

@@ -87,7 +87,7 @@ export function GalleryUploadModal({
             label="গ্যালারির ছবি নির্বাচন / আপলোড"
             required
             aspectRatio="video"
-            description="JPG, PNG, WEBP (ImgBB ক্লাউড)"
+            description="JPG, PNG, WEBP"
           />
 
           <div>

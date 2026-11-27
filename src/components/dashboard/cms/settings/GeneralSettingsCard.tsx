@@ -68,7 +68,7 @@ export function GeneralSettingsCard({
           onChange={setSiteLogoUrl}
           label="অফিসিয়াল লোগো"
           aspectRatio="square"
-          description="JPG, PNG, WEBP (ImgBB ক্লাউড)"
+          description="JPG, PNG, WEBP"
         />
       </div>
 

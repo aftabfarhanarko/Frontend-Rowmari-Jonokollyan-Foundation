@@ -100,7 +100,7 @@ export async function uploadToImgbb(
 
     const data = response.data?.data;
     if (!data || !data.url) {
-      throw new Error("ImgBB ক্লাউডে ছবি আপলোড ব্যর্থ হয়েছে। কোনো URL পাওয়া যায়নি।");
+      throw new Error("ছবি আপলোড ব্যর্থ হয়েছে। কোনো লিঙ্ক পাওয়া যায়নি।");
     }
 
     return {
@@ -114,7 +114,7 @@ export async function uploadToImgbb(
       error.response?.data?.error?.message ||
       error.response?.data?.message ||
       error.message ||
-      "ImgBB আপলোড ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।";
+      "ছবি আপলোড ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।";
     throw new Error(message);
   }
 }

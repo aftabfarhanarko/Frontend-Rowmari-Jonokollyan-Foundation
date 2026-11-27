@@ -88,7 +88,7 @@ export function NewsEditModal({
             onChange={setImageUrl}
             label="সংবাদ বা ইভেন্টের ব্যানার ছবি"
             aspectRatio="video"
-            description="JPG, PNG, WEBP (ImgBB ক্লাউড)"
+            description="JPG, PNG, WEBP"
           />
 
           <div>
