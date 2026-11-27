@@ -1,17 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
-import { Heart, Users, Mail, HandHeart } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Language } from '@/types';
 
 interface Props {
   lang: Language;
   onOpenDonation?: () => void;
-  onOpenVolunteer: () => void;
+  onOpenVolunteer?: () => void;
 }
 
-export default function JoinCTA({ lang, onOpenDonation, onOpenVolunteer }: Props) {
+export default function JoinCTA({ lang }: Props) {
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
   const [email, setEmail] = useState('');
   const [done, setDone] = useState(false);
@@ -24,70 +24,79 @@ export default function JoinCTA({ lang, onOpenDonation, onOpenVolunteer }: Props
   };
 
   return (
-    <section className="relative overflow-hidden py-10 md:py-14">
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#D62828] via-[#B91C1C] to-[#7f1d1d] p-6 md:p-10 shadow-lg">
-          <div aria-hidden className="pointer-events-none absolute -top-20 -right-20 h-72 w-72 rounded-full bg-[#E53935]/15 blur-3xl" />
-          <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-red-300/15 blur-3xl" />
-
-          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div className="space-y-5 text-white">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight">
-                {t('আপনার ছোট একটি পদক্ষেপ বদলে দিতে পারে একটি পরিবারের জীবন', 'One small step from you can change a family’s life')}
+    <section className="relative w-full overflow-hidden bg-[#FFF4F5] py-4 md:py-5">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
+        <div className="flex flex-col lg:flex-row lg:items-center gap-5 lg:gap-8 lg:pr-56">
+          {/* Left: envelope icon + text */}
+          <div className="flex items-center gap-4 min-w-0 lg:flex-1">
+            <svg viewBox="0 0 48 48" className="w-12 h-12 shrink-0 drop-shadow-sm" aria-hidden>
+              <rect x="4" y="10" width="40" height="30" rx="5" fill="#D62828" />
+              <path
+                d="M6 14 L24 28 L42 14"
+                fill="none"
+                stroke="#fff"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <div className="min-w-0">
+              <h2 className="text-base sm:text-lg lg:text-xl font-extrabold text-stone-900 leading-snug">
+                {t('মানবতার কল্যাণে আমাদের সাথে যুক্ত হোন', 'Join us for the welfare of humanity')}
               </h2>
-              <p className="text-red-50/85 leading-relaxed">
-                {t('স্বেচ্ছাসেবক হোন, অথবা আমাদের মানবিক কার্যক্রমে যুক্ত থাকুন।', 'Join as a volunteer, or stay connected with our humanitarian work.')}
+              <p className="text-xs text-stone-600 mt-1">
+                {t(
+                  'নতুন কার্যক্রম ও সকল জরুরি আপডেট নিয়মিত পেতে ইমেইল দিয়ে যুক্ত থাকুন।',
+                  'Subscribe to receive regular updates on our humanitarian initiatives.'
+                )}
               </p>
-              <div className="flex flex-wrap gap-3 pt-1">
-                <button
-                  onClick={onOpenVolunteer}
-                  className="px-6 py-3 rounded-full bg-[#E53935] hover:bg-[#D32F2F] font-bold text-sm flex items-center gap-2 shadow-lg shadow-red-900/30 transition active:scale-[0.98] cursor-pointer"
-                >
-                  <Users className="w-4 h-4" />
-                  {t('স্বেচ্ছাসেবক হোন', 'Join as Volunteer')}
-                </button>
-                <Link
-                  href="/donate"
-                  className="px-6 py-3 rounded-full bg-white/15 hover:bg-white/25 border border-white/30 backdrop-blur-md font-bold text-sm flex items-center gap-2 transition active:scale-[0.98] cursor-pointer text-white"
-                >
-                  <Heart className="w-4 h-4 text-red-300 fill-current" />
-                  {t('অনুদান দিন', 'Donate Now')}
-                </Link>
-              </div>
             </div>
+          </div>
 
-            <form
-              onSubmit={submit}
-              className="rounded-3xl bg-white/12 border border-white/25 backdrop-blur-xl p-6 md:p-7 space-y-4 text-white"
-            >
-              <div className="flex items-center gap-2 font-bold">
-                <Mail className="w-5 h-5" />
-                {t('আপডেট পেতে ইমেইল দিন', 'Get updates by email')}
+          {/* Middle: form */}
+          <div className="lg:w-[440px] shrink-0">
+            {done ? (
+              <div className="inline-flex items-center gap-2 rounded-xl bg-white border border-emerald-200 px-4 py-3 text-xs sm:text-sm font-bold text-emerald-700 shadow-sm">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <span>{t('ধন্যবাদ! আপনার ইমেইল যুক্ত হয়েছে।', 'Thank you! Your email has been added.')}</span>
               </div>
-              {done ? (
-                <p className="text-sm text-red-100">{t('ধন্যবাদ! আপনার ইমেইল যুক্ত হয়েছে।', 'Thank you! Your email has been added.')}</p>
-              ) : (
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder={t('আপনার ইমেইল', 'Your email')}
-                    className="flex-1 min-w-0 px-4 py-3 rounded-xl bg-white/90 text-stone-900 placeholder:text-stone-500 text-sm outline-none focus:ring-2 focus:ring-white/70"
-                  />
-                  <button
-                    type="submit"
-                    className="px-6 py-3 rounded-xl bg-white text-[#D62828] font-bold text-sm hover:bg-red-50 transition active:scale-[0.98] cursor-pointer"
-                  >
-                    {t('যুক্ত হোন', 'Subscribe')}
-                  </button>
-                </div>
-              )}
-            </form>
+            ) : (
+              <form onSubmit={submit} className="flex items-center gap-2">
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={t('আপনার ইমেইল লিখুন...', 'Enter your email...')}
+                  className="flex-1 min-w-0 px-5 py-3 rounded-xl bg-white shadow-md text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 outline-none focus:ring-2 focus:ring-[#D62828]"
+                />
+                <button
+                  type="submit"
+                  className="px-5 sm:px-6 py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition active:scale-[0.98] cursor-pointer whitespace-nowrap inline-flex items-center gap-2 shadow-md"
+                >
+                  <span>{t('যুক্ত হোন', 'Subscribe')}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </form>
+            )}
           </div>
         </div>
-      </div>
+      </motion.div>
+
+      {/* Right: hands holding plant (put your image at public/images/hands-plant.png) */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/hands-plant.png"
+        alt=""
+        aria-hidden
+        className="hidden lg:block pointer-events-none absolute right-0 bottom-0 h-full max-h-40 w-auto object-contain object-bottom"
+      />
     </section>
   );
 }

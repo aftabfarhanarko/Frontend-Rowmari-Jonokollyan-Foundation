@@ -69,27 +69,6 @@ const quickLinks = [
   { href: '/contact', bn: 'যোগাযোগ', en: 'Contact Us' },
 ];
 
-const socialLinks = [
-  {
-    href: 'https://www.facebook.com/share/1ESs7zSjYo/',
-    label: 'Facebook Page',
-    Icon: FacebookIcon,
-    color: 'text-[#1877F2]',
-  },
-  {
-    href: 'https://www.facebook.com/share/g/186KVkSwCg/',
-    label: 'Facebook Group',
-    Icon: FacebookIcon,
-    color: 'text-[#1877F2]',
-  },
-  {
-    href: 'https://youtube.com',
-    label: 'YouTube',
-    Icon: YoutubeIcon,
-    color: 'text-[#FF0000]',
-  },
-];
-
 /* ---------- Motion variants ---------- */
 const container: Variants = {
   hidden: {},
@@ -110,6 +89,138 @@ const listItem: Variants = {
   hidden: { opacity: 0, x: -8 },
   show: { opacity: 1, x: 0, transition: { duration: 0.35, ease: EASE } },
 };
+
+/* ---------- Soft people-silhouette backdrop (pure SVG, no image file) ---------- */
+type Kind = 'man' | 'woman' | 'child' | 'elder';
+
+const SHAPES: Record<Kind, { head: [number, number]; body: string }> = {
+  man: {
+    head: [-172, 16],
+    body:
+      'M-24,-150 C-24,-156 -18,-158 -10,-158 L10,-158 C18,-158 24,-156 24,-150 L29,-84 C29,-79 23,-79 22,-84 L19,-122 L19,-84 L17,0 L3,0 L0,-76 L-3,0 L-17,0 L-19,-84 L-19,-122 L-22,-84 C-23,-79 -29,-79 -29,-84 Z',
+  },
+  woman: {
+    head: [-174, 15],
+    body:
+      'M-18,-152 C-18,-158 -12,-160 -7,-160 L7,-160 C12,-160 18,-158 18,-152 L20,-112 C24,-82 36,-40 42,0 L-42,0 C-36,-40 -24,-82 -20,-112 Z',
+  },
+  child: {
+    head: [-96, 14],
+    body:
+      'M-16,-76 C-16,-81 -10,-83 -6,-83 L6,-83 C10,-83 16,-81 16,-76 L18,-42 L10,-42 L9,0 L2,0 L0,-36 L-2,0 L-9,0 L-10,-42 L-18,-42 Z',
+  },
+  elder: {
+    head: [-166, 15],
+    body:
+      'M-22,-146 C-22,-152 -16,-154 -9,-154 L9,-154 C16,-154 22,-152 22,-146 L27,-82 C27,-77 21,-77 20,-82 L17,-118 L17,-82 L15,0 L3,0 L0,-72 L-3,0 L-15,0 L-17,-82 L-17,-118 L-20,-82 C-21,-77 -27,-77 -27,-82 Z M34,-96 L38,-96 L38,0 L34,0 Z',
+  },
+};
+
+// x position, kind, scale
+const FRONT: [number, Kind, number][] = [
+  [70, 'woman', 1.45],
+  [150, 'child', 1.05],
+  [235, 'man', 1.55],
+  [330, 'elder', 1.4],
+  [420, 'woman', 1.5],
+  [500, 'child', 0.95],
+  [585, 'man', 1.5],
+  [680, 'woman', 1.6],
+  [765, 'child', 1.05],
+  [850, 'man', 1.55],
+  [945, 'elder', 1.4],
+  [1030, 'woman', 1.5],
+  [1110, 'child', 1.0],
+  [1195, 'man', 1.55],
+  [1285, 'woman', 1.45],
+  [1355, 'child', 1.0],
+];
+
+const BACK: [number, Kind, number][] = [
+  [30, 'man', 1.2],
+  [195, 'woman', 1.15],
+  [375, 'man', 1.25],
+  [545, 'woman', 1.2],
+  [720, 'man', 1.15],
+  [895, 'woman', 1.25],
+  [990, 'child', 0.9],
+  [1070, 'man', 1.2],
+  [1245, 'woman', 1.15],
+  [1395, 'man', 1.2],
+];
+
+function Silhouette({ kind }: { kind: Kind }) {
+  const sh = SHAPES[kind];
+  return (
+    <g>
+      <circle cx="0" cy={sh.head[0]} r={sh.head[1]} />
+      <path d={sh.body} />
+    </g>
+  );
+}
+
+function PeopleBackdrop() {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[170px] sm:h-[320px] lg:h-[400px] select-none"
+      style={{
+        WebkitMaskImage:
+          'linear-gradient(to top, #000 0%, #000 35%, transparent 100%)',
+        maskImage:
+          'linear-gradient(to top, #000 0%, #000 35%, transparent 100%)',
+      }}
+    >
+      <svg
+        viewBox="0 0 1400 330"
+        preserveAspectRatio="xMidYMax slice"
+        className="h-full w-full"
+      >
+        <defs>
+          <linearGradient id="ppl-front" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#E53935" stopOpacity="0.20" />
+            <stop offset="1" stopColor="#B91C1C" stopOpacity="0.38" />
+          </linearGradient>
+          <linearGradient id="ppl-back" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#E53935" stopOpacity="0.08" />
+            <stop offset="1" stopColor="#D62828" stopOpacity="0.16" />
+          </linearGradient>
+          <filter id="ppl-soft" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="2.2" />
+          </filter>
+          <filter id="ppl-ground" x="-50%" y="-200%" width="200%" height="500%">
+            <feGaussianBlur stdDeviation="5" />
+          </filter>
+        </defs>
+
+        {/* far row: blurred, lighter, gives depth */}
+        <g fill="url(#ppl-back)" filter="url(#ppl-soft)">
+          {BACK.map(([x, kind, sc], i) => (
+            <g key={`b${i}`} transform={`translate(${x} 330) scale(${sc})`}>
+              <Silhouette kind={kind} />
+            </g>
+          ))}
+        </g>
+
+        {/* soft ground shadows under the front row */}
+        <g fill="#7F1D1D" opacity="0.22" filter="url(#ppl-ground)">
+          {FRONT.map(([x, , sc], i) => (
+            <ellipse key={`g${i}`} cx={x + 14} cy={328} rx={34 * sc} ry={5} />
+          ))}
+        </g>
+
+        {/* front row */}
+        <g fill="url(#ppl-front)">
+          {FRONT.map(([x, kind, sc], i) => (
+            <g key={`f${i}`} transform={`translate(${x} 330) scale(${sc})`}>
+              <Silhouette kind={kind} />
+            </g>
+          ))}
+        </g>
+      </svg>
+    </div>
+  );
+}
 
 export default function Footer({
   lang,
@@ -253,165 +364,169 @@ export default function Footer({
       </div>
 
       {/* ============ Main columns ============ */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
-        <motion.div
-          variants={container}
-          {...viewProps}
-          className="grid grid-cols-2 lg:grid-cols-12 gap-x-6 gap-y-10 lg:gap-12"
-        >
-          {/* Brand (full width on mobile) */}
-          <motion.div variants={item} className="col-span-2 lg:col-span-5 space-y-5">
-            <div className="flex items-center gap-3.5">
-              <motion.div
-                whileHover={reduceMotion ? undefined : { rotate: 8, scale: 1.06 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 18 }}
-                className="w-14 h-14 rounded-full overflow-hidden bg-white p-1 shrink-0 shadow-sm border border-stone-200 ring-2 ring-red-500/10 flex items-center justify-center"
-              >
-                <Image
-                  src="/logo.png"
-                  alt="রৌমারী জনকল্যাণ ফাউন্ডেশন লোগো"
-                  width={56}
-                  height={56}
-                  className="object-contain"
-                />
-              </motion.div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <h3 className="text-lg sm:text-xl font-extrabold text-[#D62828] leading-tight">
-                    {isBn ? FOUNDATION_INFO.nameBn : FOUNDATION_INFO.nameEn}
-                  </h3>
-                  <BadgeCheck className="w-4 h-4 text-[#D62828] shrink-0" />
+      <div className="relative">
+        <PeopleBackdrop />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12 pb-16 sm:pb-28">
+          <motion.div
+            variants={container}
+            {...viewProps}
+            className="grid grid-cols-2 lg:grid-cols-12 gap-x-6 gap-y-10 lg:gap-12"
+          >
+            {/* Brand (full width on mobile) */}
+            <motion.div variants={item} className="col-span-2 lg:col-span-5 space-y-5">
+              <div className="flex items-center gap-3.5">
+                <motion.div
+                  whileHover={reduceMotion ? undefined : { rotate: 8, scale: 1.06 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 18 }}
+                  className="w-14 h-14 rounded-full overflow-hidden bg-white p-1 shrink-0 shadow-sm border border-stone-200 ring-2 ring-red-500/10 flex items-center justify-center"
+                >
+                  <Image
+                    src="/logo.png"
+                    alt="রৌমারী জনকল্যাণ ফাউন্ডেশন লোগো"
+                    width={56}
+                    height={56}
+                    className="object-contain"
+                  />
+                </motion.div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="text-lg sm:text-xl font-extrabold text-[#D62828] leading-tight">
+                      {isBn ? FOUNDATION_INFO.nameBn : FOUNDATION_INFO.nameEn}
+                    </h3>
+                    <BadgeCheck className="w-4 h-4 text-[#D62828] shrink-0" />
+                  </div>
+                  <p className="text-xs sm:text-sm text-stone-500 font-medium mt-0.5">
+                    {isBn ? FOUNDATION_INFO.establishedBn : FOUNDATION_INFO.establishedEn} •{' '}
+                    {isBn ? FOUNDATION_INFO.yearsActiveBn : FOUNDATION_INFO.yearsActiveEn}
+                  </p>
                 </div>
-                <p className="text-xs sm:text-sm text-stone-500 font-medium mt-0.5">
-                  {isBn ? FOUNDATION_INFO.establishedBn : FOUNDATION_INFO.establishedEn} •{' '}
-                  {isBn ? FOUNDATION_INFO.yearsActiveBn : FOUNDATION_INFO.yearsActiveEn}
+              </div>
+
+              <p className="text-sm text-stone-600 leading-relaxed max-w-md">
+                {activeAboutSummary}
+              </p>
+
+              {/* Registration */}
+              <div className="rounded-xl bg-white border border-stone-200 border-l-4 border-l-[#D62828] p-3.5 text-xs space-y-1 shadow-xs max-w-md">
+                <div className="flex items-center gap-1.5 text-[#D62828] font-bold">
+                  <ShieldCheck className="w-4 h-4 shrink-0" />
+                  <span>{isBn ? 'স্বীকৃত ও অনুমোদিত সমাজসেবা ট্রাস্ট' : 'Verified & Registered Charity Trust'}</span>
+                </div>
+                <p className="text-[11px] text-stone-500 leading-relaxed">
+                  {activeRegistrationNo}
                 </p>
               </div>
-            </div>
 
-            <p className="text-sm text-stone-600 leading-relaxed max-w-md">
-              {activeAboutSummary}
-            </p>
-
-            {/* Registration */}
-            <div className="rounded-xl bg-white border border-stone-200 border-l-4 border-l-[#D62828] p-3.5 text-xs space-y-1 shadow-xs max-w-md">
-              <div className="flex items-center gap-1.5 text-[#D62828] font-bold">
-                <ShieldCheck className="w-4 h-4 shrink-0" />
-                <span>{isBn ? 'স্বীকৃত ও অনুমোদিত সমাজসেবা ট্রাস্ট' : 'Verified & Registered Charity Trust'}</span>
+              {/* Social */}
+              <div>
+                <p className="text-xs font-semibold text-stone-500 mb-2">
+                  {isBn ? 'আমাদের সাথে যুক্ত থাকুন' : 'Stay connected'}
+                </p>
+                <div className="flex flex-wrap items-center gap-2">
+                  {dynamicSocialLinks.map((s) => (
+                    <motion.a
+                      key={s.label}
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={s.label}
+                      whileHover={reduceMotion ? undefined : { y: -3 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-3 py-2 rounded-full bg-white border border-stone-200 hover:border-[#D62828]/40 hover:shadow-md hover:shadow-red-500/10 text-xs font-semibold text-stone-700 hover:text-[#D62828] transition-colors flex items-center gap-2"
+                    >
+                      <s.Icon className={`w-4 h-4 shrink-0 ${s.color}`} />
+                      <span>{s.label}</span>
+                    </motion.a>
+                  ))}
+                </div>
               </div>
-              <p className="text-[11px] text-stone-500 leading-relaxed">
-                {activeRegistrationNo}
-              </p>
-            </div>
+            </motion.div>
 
-            {/* Social */}
-            <div>
-              <p className="text-xs font-semibold text-stone-500 mb-2">
-                {isBn ? 'আমাদের সাথে যুক্ত থাকুন' : 'Stay connected'}
-              </p>
-              <div className="flex flex-wrap items-center gap-2">
-                {dynamicSocialLinks.map((s) => (
-                  <motion.a
-                    key={s.label}
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={s.label}
-                    whileHover={reduceMotion ? undefined : { y: -3 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-3 py-2 rounded-full bg-white border border-stone-200 hover:border-[#D62828]/40 hover:shadow-md hover:shadow-red-500/10 text-xs font-semibold text-stone-700 hover:text-[#D62828] transition-colors flex items-center gap-2"
-                  >
-                    <s.Icon className={`w-4 h-4 shrink-0 ${s.color}`} />
-                    <span>{s.label}</span>
-                  </motion.a>
+            {/* Quick links (half width on mobile) */}
+            <motion.div variants={item} className="col-span-2 sm:col-span-1 lg:col-span-3 space-y-4">
+              <h4 className="text-sm font-bold text-stone-900 flex items-center gap-2">
+                <span className="w-1 h-4 rounded-full bg-[#D62828]" />
+                {isBn ? 'মূল পাতাগুলো' : 'Quick Links'}
+              </h4>
+              <motion.ul
+                variants={listContainer}
+                className="grid grid-cols-2 sm:grid-cols-1 gap-x-4 gap-y-2.5 text-sm"
+              >
+                {quickLinks.map((l) => (
+                  <motion.li key={l.href} variants={listItem}>
+                    <Link
+                      href={l.href}
+                      className="group inline-flex items-center gap-1 text-stone-600 hover:text-[#D62828] transition-colors"
+                    >
+                      <ChevronRight className="w-3.5 h-3.5 text-stone-300 group-hover:text-[#D62828] group-hover:translate-x-0.5 transition" />
+                      <span>{isBn ? l.bn : l.en}</span>
+                    </Link>
+                  </motion.li>
                 ))}
-              </div>
-            </div>
-          </motion.div>
+              </motion.ul>
+            </motion.div>
 
-          {/* Quick links (half width on mobile) */}
-          <motion.div variants={item} className="col-span-2 sm:col-span-1 lg:col-span-3 space-y-4">
-            <h4 className="text-sm font-bold text-stone-900 flex items-center gap-2">
-              <span className="w-1 h-4 rounded-full bg-[#D62828]" />
-              {isBn ? 'মূল পাতাগুলো' : 'Quick Links'}
-            </h4>
-            <motion.ul
-              variants={listContainer}
-              className="grid grid-cols-2 sm:grid-cols-1 gap-x-4 gap-y-2.5 text-sm"
-            >
-              {quickLinks.map((l) => (
-                <motion.li key={l.href} variants={listItem}>
-                  <Link
-                    href={l.href}
-                    className="group inline-flex items-center gap-1 text-stone-600 hover:text-[#D62828] transition-colors"
-                  >
-                    <ChevronRight className="w-3.5 h-3.5 text-stone-300 group-hover:text-[#D62828] group-hover:translate-x-0.5 transition" />
-                    <span>{isBn ? l.bn : l.en}</span>
-                  </Link>
+            {/* Contact */}
+            <motion.div variants={item} className="col-span-2 sm:col-span-1 lg:col-span-4 space-y-4">
+              <h4 className="text-sm font-bold text-stone-900 flex items-center gap-2">
+                <span className="w-1 h-4 rounded-full bg-[#D62828]" />
+                {isBn ? 'কেন্দ্রীয় কার্যালয় ও যোগাযোগ' : 'Headquarters & Contact'}
+              </h4>
+
+              <motion.ul variants={listContainer} className="space-y-3.5 text-sm">
+                <motion.li variants={listItem} className="flex items-start gap-3">
+                  <span className="w-9 h-9 rounded-xl bg-red-50 text-[#D62828] flex items-center justify-center shrink-0">
+                    <MapPin className="w-4 h-4" />
+                  </span>
+                  <span className="leading-relaxed pt-1.5">
+                    {activeAddress}
+                  </span>
                 </motion.li>
-              ))}
-            </motion.ul>
+
+                <motion.li variants={listItem}>
+                  <a href={phoneHref} className="group flex items-center gap-3">
+                    <span className="w-9 h-9 rounded-xl bg-red-50 text-[#D62828] flex items-center justify-center shrink-0 group-hover:bg-[#D62828] group-hover:text-white transition-colors">
+                      <Phone className="w-4 h-4" />
+                    </span>
+                    <span className="leading-tight">
+                      <span className="block text-[11px] text-stone-400">
+                        {isBn ? 'হটলাইন (২৪/৭)' : 'Hotline (24/7)'}
+                      </span>
+                      <span className="font-semibold text-stone-800 group-hover:text-[#D62828] transition-colors">
+                        {activeHotline}
+                      </span>
+                    </span>
+                  </a>
+                </motion.li>
+
+                <motion.li variants={listItem}>
+                  <a href={`mailto:${activeEmail}`} className="group flex items-center gap-3">
+                    <span className="w-9 h-9 rounded-xl bg-red-50 text-[#D62828] flex items-center justify-center shrink-0 group-hover:bg-[#D62828] group-hover:text-white transition-colors">
+                      <Mail className="w-4 h-4" />
+                    </span>
+                    <span className="leading-tight min-w-0">
+                      <span className="block text-[11px] text-stone-400">
+                        {isBn ? 'ইমেইল' : 'Email'}
+                      </span>
+                      <span className="font-semibold text-stone-800 group-hover:text-[#D62828] transition-colors break-all">
+                        {activeEmail}
+                      </span>
+                    </span>
+                  </a>
+                </motion.li>
+              </motion.ul>
+
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-stone-200 bg-white hover:border-[#D62828]/40 hover:text-[#D62828] text-stone-600 text-xs font-semibold transition-colors"
+              >
+                <Lock className="w-3.5 h-3.5" />
+                <span>{isBn ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard'}</span>
+              </Link>
+            </motion.div>
           </motion.div>
+        </div>
 
-          {/* Contact */}
-          <motion.div variants={item} className="col-span-2 sm:col-span-1 lg:col-span-4 space-y-4">
-            <h4 className="text-sm font-bold text-stone-900 flex items-center gap-2">
-              <span className="w-1 h-4 rounded-full bg-[#D62828]" />
-              {isBn ? 'কেন্দ্রীয় কার্যালয় ও যোগাযোগ' : 'Headquarters & Contact'}
-            </h4>
-
-            <motion.ul variants={listContainer} className="space-y-3.5 text-sm">
-              <motion.li variants={listItem} className="flex items-start gap-3">
-                <span className="w-9 h-9 rounded-xl bg-red-50 text-[#D62828] flex items-center justify-center shrink-0">
-                  <MapPin className="w-4 h-4" />
-                </span>
-                <span className="leading-relaxed pt-1.5">
-                  {activeAddress}
-                </span>
-              </motion.li>
-
-              <motion.li variants={listItem}>
-                <a href={phoneHref} className="group flex items-center gap-3">
-                  <span className="w-9 h-9 rounded-xl bg-red-50 text-[#D62828] flex items-center justify-center shrink-0 group-hover:bg-[#D62828] group-hover:text-white transition-colors">
-                    <Phone className="w-4 h-4" />
-                  </span>
-                  <span className="leading-tight">
-                    <span className="block text-[11px] text-stone-400">
-                      {isBn ? 'হটলাইন (২৪/৭)' : 'Hotline (24/7)'}
-                    </span>
-                    <span className="font-semibold text-stone-800 group-hover:text-[#D62828] transition-colors">
-                      {activeHotline}
-                    </span>
-                  </span>
-                </a>
-              </motion.li>
-
-              <motion.li variants={listItem}>
-                <a href={`mailto:${activeEmail}`} className="group flex items-center gap-3">
-                  <span className="w-9 h-9 rounded-xl bg-red-50 text-[#D62828] flex items-center justify-center shrink-0 group-hover:bg-[#D62828] group-hover:text-white transition-colors">
-                    <Mail className="w-4 h-4" />
-                  </span>
-                  <span className="leading-tight min-w-0">
-                    <span className="block text-[11px] text-stone-400">
-                      {isBn ? 'ইমেইল' : 'Email'}
-                    </span>
-                    <span className="font-semibold text-stone-800 group-hover:text-[#D62828] transition-colors break-all">
-                      {activeEmail}
-                    </span>
-                  </span>
-                </a>
-              </motion.li>
-            </motion.ul>
-
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-stone-200 bg-white hover:border-[#D62828]/40 hover:text-[#D62828] text-stone-600 text-xs font-semibold transition-colors"
-            >
-              <Lock className="w-3.5 h-3.5" />
-              <span>{isBn ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard'}</span>
-            </Link>
-          </motion.div>
-        </motion.div>
       </div>
 
       {/* ============ Red bottom bar ============ */}
@@ -419,7 +534,7 @@ export default function Footer({
         <motion.div
           variants={container}
           {...viewProps}
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-28 sm:pb-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs"
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3.5 pb-16 sm:pt-5 sm:pb-5 flex flex-col md:flex-row items-center justify-between gap-2 sm:gap-3 text-xs"
         >
           <motion.p variants={item} className="text-center md:text-left">
             {activeCopyright}

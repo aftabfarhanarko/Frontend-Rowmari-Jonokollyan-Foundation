@@ -16,6 +16,7 @@ import {
   FileText
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import { PageBanner } from '@/components/layout/PageBanner';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
@@ -96,49 +97,25 @@ export default function VolunteerPage() {
       />
 
       <main className="flex-1 pb-20 sm:pb-24">
-        {/* Header Hero Banner */}
-        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-red-50/50 via-white to-white">
-          <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-red-400/20 blur-3xl" />
-            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
-          </div>
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-3xl"
-            >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
-                <Users className="w-3.5 h-3.5 text-[#D62828]" />
-                <span>{t('স্বেচ্ছাসেবী নেটওয়ার্ক • মানবতার কল্যাণে তারুণ্য', 'Volunteer Network • Youth for Humanity')}</span>
-              </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
-                {t('আপনার মেধা ও সময় দিয়ে চরাঞ্চলের মানুষের পাশে দাঁড়ান', 'Join Rowmari’s Largest Humanitarian Volunteer Force')}
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed font-normal">
-                {t(
-                  'রৌমারী জনকল্যাণ ফাউন্ডেশনের প্রতিটি কার্যক্রম পরিচালিত হয় উদ্যমী তরুণ ও সমাজসেবীদের স্বেচ্ছাশ্রমের ভিত্তিতে। আপনিও যুক্ত হয়ে পরিবর্তনের অংশীদার হোন।',
-                  'Every relief mission is carried out by selfless youth volunteers. Offer your energy, skills, and empathy to create a real impact in remote chars.'
-                )}
-              </p>
-            </motion.div>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <button
-                onClick={() => setModalOpen(true)}
-                className="px-8 py-3.5 rounded-full bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm shadow-xl shadow-red-950/20 transition cursor-pointer flex items-center gap-2"
-              >
-                <span>{t('স্বেচ্ছাসেবক হিসেবে নিবন্ধন করুন', 'Apply as Volunteer Now')}</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        </section>
+        <PageBanner
+          badge={t('স্বেচ্ছাসেবী নেটওয়ার্ক • মানবতার কল্যাণে তারুণ্য', 'Volunteer Network • Youth for Humanity')}
+          title={t('আপনার মেধা ও সময় দিয়ে চরাঞ্চলের মানুষের পাশে দাঁড়ান', 'Join Rowmari’s Largest Humanitarian Volunteer Force')}
+          subtitle={t(
+            'রৌমারী জনকল্যাণ ফাউন্ডেশনের প্রতিটি কার্যক্রম পরিচালিত হয় উদ্যমী তরুণ ও সমাজসেবীদের স্বেচ্ছাশ্রমের ভিত্তিতে। আপনিও যুক্ত হয়ে পরিবর্তনের অংশীদার হোন।',
+            'Every relief mission is carried out by selfless youth volunteers. Offer your energy, skills, and empathy to create a real impact in remote chars.'
+          )}
+        >
+          <button
+            onClick={() => setModalOpen(true)}
+            className="px-7 py-3 rounded-full bg-white hover:bg-red-50 text-[#D62828] font-bold text-xs sm:text-sm shadow-lg transition cursor-pointer inline-flex items-center gap-2 active:scale-[0.98]"
+          >
+            <span>{t('স্বেচ্ছাসেবক হিসেবে নিবন্ধন করুন', 'Apply as Volunteer Now')}</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </PageBanner>
 
         {/* Featured Image Banner */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-2 mb-12 sm:mb-16">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 mb-10 sm:mb-14">
           <div className="relative w-full h-64 sm:h-80 md:h-[400px] rounded-3xl overflow-hidden shadow-2xl border border-stone-200">
             <Image
               src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=1600&auto=format&fit=crop"

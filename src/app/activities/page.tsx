@@ -18,6 +18,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import { PageBanner } from '@/components/layout/PageBanner';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
@@ -62,68 +63,46 @@ export default function ActivitiesPage() {
       />
 
       <main className="flex-1 pb-20 sm:pb-24">
-        {/* Header Hero Banner */}
-        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-red-50/50 via-white to-white">
-          <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-red-300/30 blur-3xl" />
-            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
+        <PageBanner
+          badge={t('মাঠপর্যায়ের মানবিক কার্যক্রম ও ফটো আর্কাইভ', 'Live Fieldwork Archive & Impact')}
+          title={t('রৌমারী ও দুর্গম চরাঞ্চলে আমাদের মানবিক কার্যক্রম', 'Frontline Relief Across River Island Chars')}
+          subtitle={t(
+            'শীতবস্ত্র বিতরণ, বিনামূল্যে চিকিৎসা ক্যাম্প, জরুরি খাদ্য সহায়তা এবং দরিদ্র শিক্ষার্থীদের শিক্ষাবৃত্তি—আমাদের প্রতিটি উদ্যোগের স্বচ্ছ চিত্র।',
+            'Verified field relief initiatives in remote chars of Rowmari and Kurigram: winter blankets, physician clinics, food aid, and student scholarships.'
+          )}
+        />
+
+        {/* Filter and Search Bar */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* Category Pills */}
+          <div className="flex flex-wrap items-center gap-2">
+            {categories.map((c) => (
+              <button
+                key={c.key}
+                onClick={() => setActiveCategory(c.key)}
+                className={`px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                  activeCategory === c.key
+                    ? 'bg-[#D62828] text-white shadow-sm'
+                    : 'bg-[#FFF4F5] text-stone-700 hover:bg-red-100/70'
+                }`}
+              >
+                {t(c.labelBn, c.labelEn)}
+              </button>
+            ))}
           </div>
 
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-3xl"
-            >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
-                <Sparkles className="w-3.5 h-3.5 text-[#D62828]" />
-                <span>{t('মাঠপর্যায়ের মানবিক কার্যক্রম ও ফটো আর্কাইভ', 'Live Fieldwork Archive & Impact')}</span>
-              </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
-                {t('রৌমারী ও দুর্গম চরাঞ্চলে আমাদের মানবিক কার্যক্রম', 'Frontline Relief Across River Island Chars')}
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed">
-                {t(
-                  'শীতবস্ত্র বিতরণ, বিনামূল্যে চিকিৎসা ক্যাম্প, জরুরি খাদ্য সহায়তা এবং দরিদ্র শিক্ষার্থীদের শিক্ষাবৃত্তি—আমাদের প্রতিটি উদ্যোগের স্বচ্ছ চিত্র।',
-                  'Verified field relief initiatives in remote chars of Rowmari and Kurigram: winter blankets, physician clinics, food aid, and student scholarships.'
-                )}
-              </p>
-            </motion.div>
-
-            {/* Filter and Search Bar */}
-            <div className="mt-8 pt-6 border-t border-stone-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              {/* Category Pills */}
-              <div className="flex flex-wrap items-center gap-2">
-                {categories.map((c) => (
-                  <button
-                    key={c.key}
-                    onClick={() => setActiveCategory(c.key)}
-                    className={`px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-                      activeCategory === c.key
-                        ? 'bg-[#D62828] text-white shadow-md'
-                        : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
-                    }`}
-                  >
-                    {t(c.labelBn, c.labelEn)}
-                  </button>
-                ))}
-              </div>
-
-              {/* Search Box */}
-              <div className="relative w-full md:w-72">
-                <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={t('কার্যক্রম বা চরের নাম খুঁজুন...', 'Search activity or location...')}
-                  className="w-full pl-10 pr-4 py-2 rounded-xl bg-white border border-stone-200 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30 shadow-2xs"
-                />
-              </div>
-            </div>
+          {/* Search Box */}
+          <div className="relative w-full md:w-72">
+            <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t('কার্যক্রম বা চরের নাম খুঁজুন...', 'Search activity or location...')}
+              className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#FFF4F5] border border-red-100 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#D62828]/30"
+            />
           </div>
-        </section>
+        </div>
 
         {/* Activities Grid */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8">

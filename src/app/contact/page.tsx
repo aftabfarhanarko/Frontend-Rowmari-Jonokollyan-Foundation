@@ -16,6 +16,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import { PageBanner } from '@/components/layout/PageBanner';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
@@ -70,39 +71,17 @@ export default function ContactPage() {
       />
 
       <main className="flex-1 pb-20 sm:pb-24">
-        {/* Header Hero Banner */}
-        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-red-50/50 via-white to-white">
-          <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-red-400/20 blur-3xl" />
-            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
-          </div>
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-3xl"
-            >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
-                <MapPin className="w-3.5 h-3.5 text-[#D62828]" />
-                <span>{t('রৌমারী প্রধান কার্যালয় ও সার্বক্ষণিক হেল্পডেস্ক', 'Rowmari Main Headquarters & 24/7 Desk')}</span>
-              </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
-                {t('যোগাযোগ ও যেকোনো সহায়তার ঠিকানা', 'Contact & Emergency Helpline')}
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed font-normal">
-                {t(
-                  'রৌমারী জনকল্যাণ ফাউন্ডেশনের কার্যালয়ে সরাসরি উপস্থিত হয়ে, জরুরি ত্রাণ ও সেবা ডেস্কে কল করে অথবা অনলাইন বার্তার মাধ্যমে যেকোনো প্রয়োজনে যোগাযোগ করুন।',
-                  'Visit our central office in Rowmari, Kurigram, dial our 24/7 emergency relief line, or send an inquiry directly to our administrative committee.'
-                )}
-              </p>
-            </motion.div>
-          </div>
-        </section>
+        <PageBanner
+          badge={t('রৌমারী প্রধান কার্যালয় ও সার্বক্ষণিক হেল্পডেস্ক', 'Rowmari Main Headquarters & 24/7 Desk')}
+          title={t('যোগাযোগ ও যেকোনো সহায়তার ঠিকানা', 'Contact & Emergency Helpline')}
+          subtitle={t(
+            'রৌমারী জনকল্যাণ ফাউন্ডেশনের কার্যালয়ে সরাসরি উপস্থিত হয়ে, জরুরি ত্রাণ ও সেবা ডেস্কে কল করে অথবা অনলাইন বার্তার মাধ্যমে যেকোনো প্রয়োজনে যোগাযোগ করুন।',
+            'Visit our central office in Rowmari, Kurigram, dial our 24/7 emergency relief line, or send an inquiry directly to our administrative committee.'
+          )}
+        />
 
         {/* Contact Content Grid */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
             {/* Contact Details Cards */}
             <div className="lg:col-span-5 space-y-4">

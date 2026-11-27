@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { Users, Target, HeartPulse, ShieldCheck, FileText, Newspaper, Image as ImageIcon, Mail, UserCheck, Key } from "lucide-react"
+import { Users, Target, HeartPulse, ShieldCheck, FileText, Newspaper, Image as ImageIcon, Mail, UserCheck, Key, BarChart3, PieChart } from "lucide-react"
 
 interface AdminOverviewTabProps {
   adminDashboard: any
@@ -20,28 +20,60 @@ export function AdminOverviewTab({
   appItems,
   onSelectTab,
 }: AdminOverviewTabProps) {
+  const totalUsers = adminDashboard?.users?.total ?? userItems.length
+  const activeUsers = adminDashboard?.users?.active ?? userItems.length
+  const totalVolunteers = volunteerItems.length
+  const totalCampaigns = adminDashboard?.operations?.totalCampaigns ?? campaignsCount
+  const totalApplications = adminDashboard?.operations?.totalApplications ?? appItems.length
+
+  const chartItems = [
+    { label: "নিবন্ধিত ইউজার", value: totalUsers, color: "#D62828", unit: "জন" },
+    { label: "সক্রিয় স্বেচ্ছাসেবক", value: totalVolunteers, color: "#E53935", unit: "জন" },
+    { label: "চলমান ক্যাম্পেইন", value: totalCampaigns, color: "#B91C1C", unit: "টি" },
+    { label: "ত্রাণ ও সেবা", value: totalApplications, color: "#7F1D1D", unit: "টি" },
+  ]
+  const maxChartVal = Math.max(...chartItems.map((i) => i.value), 1)
+  const totalChartSum = chartItems.reduce((sum, i) => sum + i.value, 0) || 1
+
+  // Build SVG donut segments
+  const radius = 52
+  const circumference = 2 * Math.PI * radius
+  let cumulativeOffset = 0
+  const donutSegments = chartItems.map((item) => {
+    const pct = item.value / totalChartSum
+    const dash = pct * circumference
+    const seg = {
+      ...item,
+      pct: Math.round(pct * 100),
+      dashArray: `${dash} ${circumference - dash}`,
+      dashOffset: -cumulativeOffset,
+    }
+    cumulativeOffset += dash
+    return seg
+  })
+
   const kpis = [
     {
       title: "মোট নিবন্ধিত ইউজার",
-      value: adminDashboard?.users?.total !== undefined ? `${adminDashboard.users.total} জন` : `${userItems.length} জন`,
-      subtitle: adminDashboard?.users?.active !== undefined ? `${adminDashboard.users.active} জন সক্রিয় সদস্য` : "সকল সাধারণ সদস্য",
+      value: `${totalUsers} জন`,
+      subtitle: `${activeUsers} জন সক্রিয় সদস্য`,
       icon: Users,
     },
     {
       title: "স্বেচ্ছাসেবক নেটওয়ার্ক",
-      value: `${volunteerItems.length} জন`,
+      value: `${totalVolunteers} জন`,
       subtitle: "মাঠপর্যায়ে সক্রিয় টিম",
       icon: Users,
     },
     {
       title: "চলমান ক্যাম্পেইন",
-      value: adminDashboard?.operations?.totalCampaigns !== undefined ? `${adminDashboard.operations.totalCampaigns} টি` : `${campaignsCount} টি`,
+      value: `${totalCampaigns} টি`,
       subtitle: "মাঠপর্যায়ে সক্রিয়",
       icon: Target,
     },
     {
       title: "ত্রাণ ও সেবা বিতরণ",
-      value: adminDashboard?.operations?.totalApplications !== undefined ? `${adminDashboard.operations.totalApplications} টি` : `${appItems.length} টি`,
+      value: `${totalApplications} টি`,
       subtitle: "চিকিৎসা ও শিক্ষা কর্মসূচি",
       icon: HeartPulse,
     },
@@ -75,6 +107,103 @@ export function AdminOverviewTab({
             </div>
           )
         })}
+      </div>
+
+      {/* Overview Charts (Bar Chart + Donut Chart) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        {/* Bar Chart */}
+        <div className="lg:col-span-7 bg-white p-5 rounded-3xl border border-stone-200/90 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-xl bg-red-50 text-[#D62828]">
+                <BarChart3 className="size-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-extrabold text-stone-900">কার্যক্রম ও নেটওয়ার্ক পরিসংখ্যান</h3>
+                <p className="text-[11px] text-stone-500">সদস্য, স্বেচ্ছাসেবক, ক্যাম্পেইন ও সেবা বিতরণের তুলনামূলক চিত্র</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-4 gap-3 sm:gap-5 items-end h-48 pt-6 pb-2 px-2 border-b border-stone-100">
+            {chartItems.map((item, idx) => {
+              const heightPct = Math.max(Math.round((item.value / maxChartVal) * 100), 10)
+              return (
+                <div key={idx} className="flex flex-col items-center h-full justify-end group">
+                  <span className="text-xs font-black text-stone-900 mb-1.5">
+                    {item.value} {item.unit}
+                  </span>
+                  <div className="w-full max-w-[48px] flex-1 flex items-end justify-center bg-stone-50 rounded-t-xl overflow-hidden">
+                    <div
+                      className="w-full rounded-t-xl transition-all duration-700 group-hover:opacity-90"
+                      style={{ height: `${heightPct}%`, backgroundColor: item.color }}
+                    />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          <div className="grid grid-cols-4 gap-3 sm:gap-5 pt-2.5 px-2">
+            {chartItems.map((item, idx) => (
+              <div key={idx} className="text-center text-[11px] font-bold text-stone-600 leading-tight">
+                {item.label}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Donut Distribution Chart */}
+        <div className="lg:col-span-5 bg-white p-5 rounded-3xl border border-stone-200/90 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 rounded-xl bg-red-50 text-[#D62828]">
+              <PieChart className="size-4" />
+            </div>
+            <div>
+              <h3 className="text-sm font-extrabold text-stone-900">সামগ্রিক অনুপাত চার্ট</h3>
+              <p className="text-[11px] text-stone-500">সিস্টেমের মোট কার্যক্রমের শতকরা হিসাব</p>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 my-auto">
+            <div className="relative size-36 shrink-0 flex items-center justify-center">
+              <svg viewBox="0 0 130 130" className="size-full -rotate-90">
+                <circle cx="65" cy="65" r={radius} fill="none" stroke="#F5F5F4" strokeWidth="18" />
+                {donutSegments.map((seg, idx) => (
+                  <circle
+                    key={idx}
+                    cx="65"
+                    cy="65"
+                    r={radius}
+                    fill="none"
+                    stroke={seg.color}
+                    strokeWidth="18"
+                    strokeDasharray={seg.dashArray}
+                    strokeDashoffset={seg.dashOffset}
+                    strokeLinecap="butt"
+                  />
+                ))}
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <span className="text-xl font-black text-stone-900 leading-none">{totalChartSum}</span>
+                <span className="text-[10px] font-semibold text-stone-500 mt-1">মোট রেকর্ড</span>
+              </div>
+            </div>
+
+            <div className="w-full space-y-2">
+              {donutSegments.map((seg, idx) => (
+                <div key={idx} className="flex items-center justify-between text-xs gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="size-2.5 rounded-full shrink-0" style={{ backgroundColor: seg.color }} />
+                    <span className="font-semibold text-stone-700 truncate">{seg.label}</span>
+                  </div>
+                  <span className="font-bold text-stone-900 shrink-0">
+                    {seg.value} ({seg.pct}%)
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Super Admin CMS Hub */}

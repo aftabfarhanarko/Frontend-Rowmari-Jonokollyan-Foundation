@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { ShieldCheck, Users, HeartHandshake, HeartPulse, ArrowRight } from 'lucide-react';
 import { Language } from '@/types';
 import { IMPACT_STATS } from '@/data/mockData';
@@ -50,7 +51,7 @@ export default function ImpactStats({ lang }: ImpactStatsProps) {
   ];
 
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-b from-rose-50/90 via-[#FFF4F5] to-[#FFF4F5] pt-8 pb-6 md:pt-12 md:pb-8">
+    <section className="relative w-full overflow-hidden bg-gradient-to-b from-rose-50/90 via-[#FFF4F5] to-[#FFF4F5] pt-6 pb-5 md:pt-8 md:pb-6">
       {/* Full-bleed Curved Red Wave Background */}
       <svg
         aria-hidden
@@ -121,8 +122,12 @@ export default function ImpactStats({ lang }: ImpactStatsProps) {
             {displayStats.map((stat, idx) => {
               const Icon = stat.icon;
               return (
-                <div
+                <motion.div
                   key={idx}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.4, delay: idx * 0.09, ease: 'easeOut' }}
                   className="bg-white/95 rounded-2xl p-4 sm:p-5 shadow-[0_8px_24px_-8px_rgba(0,0,0,0.1)] flex flex-col items-center justify-center text-center hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
                 >
                   <div className="w-11 h-11 rounded-full bg-red-50 text-[#D62828] flex items-center justify-center mb-3">
@@ -134,7 +139,7 @@ export default function ImpactStats({ lang }: ImpactStatsProps) {
                   <p className="text-xs sm:text-sm font-semibold text-stone-600 mt-1.5 leading-snug">
                     {lang === 'bn' ? stat.labelBn : stat.labelEn}
                   </p>
-                </div>
+                </motion.div>
               );
             })}
           </div>

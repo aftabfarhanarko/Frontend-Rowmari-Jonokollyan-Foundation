@@ -13,6 +13,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import { PageBanner } from '@/components/layout/PageBanner';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
@@ -60,54 +61,32 @@ export default function NewsPage() {
       />
 
       <main className="flex-1 pb-20 sm:pb-24">
-        {/* Header Hero Banner */}
-        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-red-50/50 via-white to-white">
-          <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-red-400/20 blur-3xl" />
-            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
-          </div>
+        <PageBanner
+          badge={t('অফিসিয়াল সংবাদ, কর্মসূচি ও প্রেস বিজ্ঞপ্তি', 'Official Press Releases & Event Announcements')}
+          title={t('সংবাদ, কার্যক্রম ও আগামী দিনের কর্মসূচি', 'News, Announcements & Events')}
+          subtitle={t(
+            'রৌমারী জনকল্যাণ ফাউন্ডেশনের চলমান মানবিক উদ্যোগ, ত্রাণ বিতরণ প্রতিবেদন এবং আসন্ন ফ্রি চিকিৎসা ক্যাম্পের সর্বশেষ আপডেট।',
+            'Stay informed with verified reports on relief drives, free doctor clinics, education aid, and upcoming char community assemblies.'
+          )}
+        />
 
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-3xl"
+        {/* Filter Tabs */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2 flex flex-wrap items-center gap-2">
+          {tabs.map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => setActiveTab(tab.key)}
+              className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                activeTab === tab.key
+                  ? 'bg-[#D62828] text-white shadow-sm'
+                  : 'bg-[#FFF4F5] text-stone-700 hover:bg-red-100/70'
+              }`}
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-[#E53935] text-xs font-bold mb-3 shadow-2xs">
-                <Bell className="w-3.5 h-3.5 text-[#E53935]" />
-                <span>{t('অফিসিয়াল সংবাদ, কর্মসূচি ও প্রেস বিজ্ঞপ্তি', 'Official Press Releases & Event Announcements')}</span>
-              </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
-                {t('সংবাদ, কার্যক্রম ও আগামী দিনের কর্মসূচি', 'News, Announcements & Events')}
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed font-normal">
-                {t(
-                  'রৌমারী জনকল্যাণ ফাউন্ডেশনের চলমান মানবিক উদ্যোগ, ত্রাণ বিতরণ প্রতিবেদন এবং আসন্ন ফ্রি চিকিৎসা ক্যাম্পের সর্বশেষ আপডেট।',
-                  'Stay informed with verified reports on relief drives, free doctor clinics, education aid, and upcoming char community assemblies.'
-                )}
-              </p>
-            </motion.div>
-
-            {/* Filter Tabs */}
-            <div className="flex flex-wrap items-center gap-2 mt-8 pt-4 border-t border-stone-200/80">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.key}
-                  type="button"
-                  onClick={() => setActiveTab(tab.key)}
-                  className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-                    activeTab === tab.key
-                      ? 'bg-[#E53935] text-white shadow-md'
-                      : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
-                  }`}
-                >
-                  {t(tab.labelBn, tab.labelEn)}
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
+              {t(tab.labelBn, tab.labelEn)}
+            </button>
+          ))}
+        </div>
 
         {/* News Grid */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">

@@ -314,7 +314,7 @@ export default function Hero({
   return (
     <section
       id="home"
-      className="relative pb-8 sm:pb-12 overflow-hidden bg-white"
+      className="relative pb-5 sm:pb-7 overflow-hidden bg-white"
     >
       {/* Full-Bleed Dynamic Hero Banner */}
       <div className="relative w-full min-h-[430px] sm:min-h-[480px] lg:min-h-[540px] flex items-center overflow-hidden bg-stone-900">
@@ -412,8 +412,12 @@ export default function Hero({
             {heroStats.map((stat, idx) => {
               const StatIcon = stat.icon;
               return (
-                <div
+                <motion.div
                   key={idx}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.35, delay: idx * 0.08, ease: 'easeOut' }}
                   className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-3 px-1.5 sm:px-4 text-center sm:text-left"
                 >
                   <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center text-[#D62828] shrink-0">
@@ -428,49 +432,14 @@ export default function Hero({
                       <span className="hidden sm:inline">{lang === 'bn' ? stat.labelBn : stat.labelEn}</span>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 mt-6 sm:mt-8">
-
-        {/* Trust Credential Strip Underneath Panoramic Banner */}
-        <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-stone-500 px-2 sm:px-1">
-          <div className="flex items-center gap-1.5 text-stone-600">
-            <ShieldCheck className="w-4 h-4 text-[#D62828] shrink-0" />
-            <span>
-              {lang === 'bn' ? 'অধিভুক্তি ও অনুমোদন:' : 'Affiliation & Status:'}{' '}
-              <a
-                href="/about"
-                className="underline text-[#D62828] font-bold hover:text-[#E53935] transition"
-              >
-                {lang === 'bn'
-                  ? 'সরকারি সমাজসেবা ট্রাস্ট ও অনুমোদিত ছাড়পত্র'
-                  : 'Verified trust certificates & registration'}
-              </a>
-            </span>
-          </div>
-
-          <div className="hidden md:flex items-center gap-2 text-stone-600 font-medium">
-            <span>১২,৫০০+ মানুষ সহায়তাপ্রাপ্ত</span>
-            <span>•</span>
-            <span>৪৫০+ সক্রিয় স্বেচ্ছাসেবক</span>
-            <span>•</span>
-            <span>৮+ বছরের নিবেদিত মানবিক সেবা</span>
-          </div>
-
-          <a
-            href="/volunteer"
-            className="text-[#E53935] font-bold hover:underline inline-flex items-center gap-1"
-          >
-            <span>{lang === 'bn' ? 'স্বেচ্ছাসেবক হিসেবে যোগ দিন' : 'Join as Volunteer'}</span>
-            <span>→</span>
-          </a>
-        </div>
-
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5 mt-5 sm:mt-6">
         {/* --- Field Photography Showcase Underneath Hero --- */}
         <div className="pt-4 sm:pt-6">
           {/* Header Row */}
@@ -494,10 +463,14 @@ export default function Hero({
 
           {/* 4 Visual Cards Grid — 2 per row on mobile, 4 per row on desktop */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {fieldHighlights.map((item) => {
+            {fieldHighlights.map((item, idx) => {
               return (
-                <div
+                <motion.div
                   key={item.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.4, delay: idx * 0.08, ease: 'easeOut' }}
                   onClick={onOpenActivities}
                   className="group bg-[#FFF8F8] rounded-2xl border border-red-100/80 overflow-hidden shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer flex flex-col justify-between"
                 >
@@ -526,7 +499,7 @@ export default function Hero({
                       <span className="truncate">{lang === 'bn' ? item.statBn : item.statEn}</span>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>

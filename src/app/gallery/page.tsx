@@ -15,6 +15,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import { PageBanner } from '@/components/layout/PageBanner';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
@@ -69,53 +70,31 @@ export default function GalleryPage() {
       />
 
       <main className="flex-1 pb-20 sm:pb-24">
-        {/* Header Hero Banner */}
-        <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14 bg-gradient-to-b from-red-50/50 via-white to-white">
-          <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-red-400/20 blur-3xl" />
-            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
-          </div>
+        <PageBanner
+          badge={t('মাঠপর্যায়ের মানবিক কার্যক্রমের বাস্তব ফটো আর্কাইভ', 'Verified Real Fieldwork Photographic Archive')}
+          title={t('রৌমারী ও চরাঞ্চলের বাস্তব চিত্র গ্যালারি', 'Humanitarian Action Across Rowmari')}
+          subtitle={t(
+            'কনকনে শীতে ব্রহ্মপুত্র চরে কম্বল বিতরণ থেকে শুরু করে মেডিকেল ক্যাম্প, বন্যা ত্রাণ ও শিক্ষার্থীদের বই বিতরণ—আমাদের মাঠপর্যায়ের কার্যক্রমের প্রামাণ্য চিত্র।',
+            'High-resolution field photographs documenting winter warmth drives, free doctor clinics, river island flood rescue, and children education scholarships.'
+          )}
+        />
 
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-3xl"
+        {/* Filter Pills */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2 flex flex-wrap items-center gap-2">
+          {tags.map((tag) => (
+            <button
+              key={tag.key}
+              onClick={() => setSelectedTag(tag.key)}
+              className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                selectedTag === tag.key
+                  ? 'bg-[#D62828] text-white shadow-sm'
+                  : 'bg-[#FFF4F5] text-stone-700 hover:bg-red-100/70'
+              }`}
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
-                <Sparkles className="w-3.5 h-3.5 text-[#D62828]" />
-                <span>{t('মাঠপর্যায়ের মানবিক কার্যক্রমের বাস্তব ফটো আর্কাইভ', 'Verified Real Fieldwork Photographic Archive')}</span>
-              </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
-                {t('রৌমারী ও চরাঞ্চলের বাস্তব চিত্র গ্যালারি', 'Humanitarian Action Across Rowmari')}
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed font-normal">
-                {t(
-                  'কনকনে শীতে ব্রহ্মপুত্র চরে কম্বল বিতরণ থেকে শুরু করে মেডিকেল ক্যাম্প, বন্যা ত্রাণ ও শিক্ষার্থীদের বই বিতরণ—আমাদের মাঠপর্যায়ের কার্যক্রমের প্রামাণ্য চিত্র।',
-                  'High-resolution field photographs documenting winter warmth drives, free doctor clinics, river island flood rescue, and children education scholarships.'
-                )}
-              </p>
-            </motion.div>
-
-            {/* Filter Pills */}
-            <div className="flex flex-wrap items-center gap-2 mt-8 pt-4 border-t border-stone-200/80">
-              {tags.map((tag) => (
-                <button
-                  key={tag.key}
-                  onClick={() => setSelectedTag(tag.key)}
-                  className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-                    selectedTag === tag.key
-                      ? 'bg-[#D62828] text-white shadow-md'
-                      : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
-                  }`}
-                >
-                  {t(tag.labelBn, tag.labelEn)}
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
+              {t(tag.labelBn, tag.labelEn)}
+            </button>
+          ))}
+        </div>
 
         {/* Gallery Grid */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">

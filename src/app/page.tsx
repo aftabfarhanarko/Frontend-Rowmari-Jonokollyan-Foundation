@@ -13,7 +13,6 @@ import {
   RecentActivities,
   TrackAndSupport,
   DonorShowcaseSection,
-  Testimonials,
   AboutUs,
   JoinCTA,
 } from '@/components/home';
@@ -109,9 +108,6 @@ export default function HomePage() {
           lang={lang}
           onSearchTracking={handleSearchTracking}
         />
-
-        {/* Real Beneficiary & Volunteer Testimonials */}
-        <Testimonials lang={lang} />
 
         <AboutUs
           lang={lang}

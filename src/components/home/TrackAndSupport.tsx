@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { Phone, Newspaper, ArrowRight, ShieldCheck } from 'lucide-react';
 import { Language } from '@/types';
 import { useGetRoumariOverviewQuery } from '@/store/api/roumariApi';
@@ -32,11 +33,17 @@ export default function TrackAndSupport({
   };
 
   return (
-    <section className="py-5 sm:py-7 bg-white relative overflow-hidden">
+    <section className="py-5 sm:py-6 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
           {/* Left Card: রৌমারী ডিজিটাল তথ্য বাতায়ন ও সংবাদ */}
-          <div className="rounded-2xl bg-[#FFF4F5] p-4 sm:p-5 shadow-[0_4px_16px_-6px_rgba(214,40,40,0.08)] flex flex-col justify-between">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="rounded-2xl bg-[#FFF4F5] p-4 sm:p-5 shadow-[0_4px_16px_-6px_rgba(214,40,40,0.08)] flex flex-col justify-between"
+          >
             <div className="flex items-center gap-2 mb-3">
               <span className="w-1 h-4 rounded-full bg-[#D62828] shrink-0" />
               <h2 className="text-sm sm:text-base font-extrabold text-stone-900 tracking-tight">
@@ -107,10 +114,16 @@ export default function TrackAndSupport({
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Card: আবেদনের সর্বশেষ স্থিতি জানুন */}
-          <div className="rounded-2xl bg-[#FFF4F5] p-4 sm:p-5 shadow-[0_4px_16px_-6px_rgba(214,40,40,0.08)] flex flex-col justify-between">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}
+            className="rounded-2xl bg-[#FFF4F5] p-4 sm:p-5 shadow-[0_4px_16px_-6px_rgba(214,40,40,0.08)] flex flex-col justify-between"
+          >
             <div>
               <div className="border-b border-red-200/60 pb-2 mb-3">
                 <h2 className="text-sm sm:text-base font-extrabold text-stone-900 tracking-tight">
@@ -165,7 +178,7 @@ export default function TrackAndSupport({
                 </button>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

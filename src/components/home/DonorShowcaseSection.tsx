@@ -24,7 +24,7 @@ export default function DonorShowcaseSection({ lang }: DonorShowcaseSectionProps
   const donorCount = stats?.verifiedDonors || 2;
 
   return (
-    <section className="py-10 sm:py-14 bg-white relative overflow-hidden">
+    <section className="py-5 sm:py-7 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Left-aligned Section Header with Red Accent Bar */}
         <div className="flex items-center gap-2.5 mb-6">

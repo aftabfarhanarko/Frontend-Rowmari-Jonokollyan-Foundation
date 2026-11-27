@@ -17,6 +17,7 @@ import {
   FileCheck
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import { PageBanner } from '@/components/layout/PageBanner';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
@@ -124,51 +125,24 @@ export default function AboutPage() {
       />
 
       <main className="flex-1 pb-20 sm:pb-24">
-        {/* Hero Section with Ambient Gradient Orbs */}
-        <section className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16 bg-gradient-to-b from-red-50/50 via-white to-white">
-          <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-20 -left-20 h-72 w-72 rounded-full bg-red-300/30 blur-3xl" />
-            <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl" />
-          </div>
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-3xl"
-            >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100/80 border border-red-300/50 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
-                <Award className="w-3.5 h-3.5 text-[#D62828]" />
-                <span>{t('স্থাপিত ২০১৮ • রৌমারী, কুড়িগ্রাম • সামাজিক অলাভজনক সংস্থা', 'Est. 2018 • Rowmari, Kurigram • Non-Profit Organization')}</span>
+        <PageBanner
+          badge={t('স্থাপিত ২০১৮ • রৌমারী, কুড়িগ্রাম • সামাজিক অলাভজনক সংস্থা', 'Est. 2018 • Rowmari, Kurigram • Non-Profit Organization')}
+          title={t('মানুষের পাশে, মানুষের জন্য—আমাদের অঙ্গীকার', 'Standing by People, For Humanity')}
+          subtitle={t(
+            'রৌমারী জনকল্যাণ ফাউন্ডেশন (RJF) কুড়িগ্রামের দুর্গম ব্রহ্মপুত্র চরাঞ্চলের সুবিধাবঞ্চিত, শীতার্ত, দরিদ্র ও মুমূর্ষু মানুষের পাশে নিঃস্বার্থভাবে কাজ করে যাওয়া একটি স্থানীয় মানবিক সংগঠন।',
+            'Rowmari Janakalyan Foundation is a verified grassroots humanitarian foundation dedicated to uplifting vulnerable river-island char communities of Kurigram through winter warmth, healthcare, and education.'
+          )}
+        >
+          {/* Impact Metric Strip */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-4">
+            {stats.map((s, idx) => (
+              <div key={idx} className="rounded-2xl bg-white/95 p-4 sm:p-5 text-center shadow-md">
+                <div className="text-2xl sm:text-3xl font-black text-[#D62828] mb-1">{t(s.valueBn, s.valueEn)}</div>
+                <div className="text-xs sm:text-sm font-semibold text-stone-600">{t(s.labelBn, s.labelEn)}</div>
               </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
-                {t('মানুষের পাশে, মানুষের জন্য—আমাদের অঙ্গীকার', 'Standing by People, For Humanity')}
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-stone-600 leading-relaxed font-normal">
-                {t(
-                  'রৌমারী জনকল্যাণ ফাউন্ডেশন (RJF) কুড়িগ্রামের দুর্গম ব্রহ্মপুত্র চরাঞ্চলের সুবিধাবঞ্চিত, শীতার্ত, দরিদ্র ও মুমূর্ষু মানুষের পাশে নিঃস্বার্থভাবে কাজ করে যাওয়া একটি স্থানীয় মানবিক সংগঠন।',
-                  'Rowmari Janakalyan Foundation is a verified grassroots humanitarian foundation dedicated to uplifting vulnerable river-island char communities of Kurigram through winter warmth, healthcare, and education.'
-                )}
-              </p>
-            </motion.div>
-
-            {/* Impact Metric Strip */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.15 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-8 sm:mt-10"
-            >
-              {stats.map((s, idx) => (
-                <div key={idx} className={`${glassCard} p-4 sm:p-5 text-center`}>
-                  <div className="text-2xl sm:text-3xl font-black text-[#D62828] mb-1">{t(s.valueBn, s.valueEn)}</div>
-                  <div className="text-xs sm:text-sm font-semibold text-stone-600">{t(s.labelBn, s.labelEn)}</div>
-                </div>
-              ))}
-            </motion.div>
+            ))}
           </div>
-        </section>
+        </PageBanner>
 
         {/* Featured Real Field Image Showcase */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-2 mb-14 sm:mb-20">
