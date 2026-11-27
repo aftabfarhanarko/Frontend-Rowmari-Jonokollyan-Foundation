@@ -12,16 +12,16 @@ interface Props {
 
 const FAQS = [
   {
-    qBn: 'কারা সহায়তার জন্য আবেদন করতে পারেন?',
-    qEn: 'Who can apply for assistance?',
-    aBn: 'রৌমারী ও আশপাশের এলাকার অসহায়, দরিদ্র ও ক্ষতিগ্রস্ত পরিবার আবেদন করতে পারেন। আবেদন যাচাই করে সহায়তা দেওয়া হয়।',
-    aEn: 'Vulnerable, low-income and affected families in Rowmari and nearby areas can apply. Every request is verified before help is given.',
+    qBn: 'ফাউন্ডেশনের অনুদান প্রক্রিয়া ও আর্থিক স্বচ্ছতা কীভাবে বজায় রাখা হয়?',
+    qEn: 'How does the foundation ensure financial transparency and audit?',
+    aBn: 'প্রতিটি অনুদান বিকাশ, নগদ ও ব্যাংকের মাধ্যমে গ্রহণ করা হয় এবং ডিজিটাল পদ্ধতিতে ভেরিফাই করে উন্মুক্ত দাতা তালিকায় লিপিবদ্ধ করা হয়। বছর শেষে নিয়মিত অডিট রিপোর্ট প্রকাশ করা হয়।',
+    aEn: 'Every contribution through bKash, Nagad, and bank is digitally verified and published on our transparent donor showcase. Financial audits are maintained annually.',
   },
   {
-    qBn: 'আমার আবেদনের অবস্থা কীভাবে জানব?',
-    qEn: 'How do I check my application status?',
-    aBn: 'আবেদনের পর পাওয়া ট্র্যাকিং আইডি দিয়ে হোমপেজের “আবেদনের অবস্থা” অংশে খুঁজলেই বর্তমান অবস্থা দেখা যাবে।',
-    aEn: 'Use the tracking ID you received in the “Track Application” section on the home page to see the current status.',
+    qBn: 'ফাউন্ডেশনের সদস্য ও কর্মকর্তাদের পরিচয় কীভাবে যাচাই করব?',
+    qEn: 'How can I verify official RJF committee members and identity?',
+    aBn: 'আমাদের ওয়েবসাইটের “সদস্য যাচাই” মেন্যুতে গিয়ে মেম্বার আইডি (যেমন: RJF-000001) দিয়ে সার্চ করলেই সদস্যের ছবি, পদবি ও কমিটির মেয়াদ সরাসরি দেখা যাবে।',
+    aEn: 'Visit the “Member Verification” portal and enter the Member ID (e.g. RJF-000001) to verify official designation, photo, and committee term directly.',
   },
   {
     qBn: 'ফাউন্ডেশনে কীভাবে অনলাইন অনুদান দেওয়া যায়?',

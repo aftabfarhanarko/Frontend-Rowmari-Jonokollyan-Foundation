@@ -46,7 +46,7 @@ interface DashboardContentProps {
 }
 
 export function DashboardContent({ activeTab, onSelectTab }: DashboardContentProps) {
-  const { currentRole, setAssistanceModalOpen } = useAppStore()
+  const { currentRole } = useAppStore()
   const roleMeta = ROLE_METAS[currentRole] || ROLE_METAS.COMMUNITY_MEMBER
   const [mounted, setMounted] = React.useState(false)
 

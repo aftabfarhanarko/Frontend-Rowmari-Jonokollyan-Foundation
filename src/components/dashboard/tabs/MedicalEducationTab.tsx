@@ -45,12 +45,6 @@ export function MedicalEducationTab({ type, data }: MedicalEducationTabProps) {
           searchable
           searchPlaceholder="আবেদনকারী বা রোগ দিয়ে খুঁজুন..."
           pageSize={10}
-          actions={
-            <Button size="xs" onClick={() => setAssistanceModalOpen(true)} className="gap-1 bg-[#D62828] hover:bg-[#B91C1C] text-white cursor-pointer font-bold">
-              <Plus className="size-3.5" />
-              <span>নতুন আবেদনপত্র</span>
-            </Button>
-          }
         />
       </div>
     )
@@ -85,12 +79,6 @@ export function MedicalEducationTab({ type, data }: MedicalEducationTabProps) {
         searchable
         searchPlaceholder="শিক্ষার্থীর নাম বা প্রতিষ্ঠান..."
         pageSize={10}
-        actions={
-          <Button size="xs" onClick={() => setAssistanceModalOpen(true)} className="gap-1 bg-[#D62828] hover:bg-[#B91C1C] text-white cursor-pointer font-bold">
-            <Plus className="size-3.5" />
-            <span>বৃত্তি আবেদন যোগ</span>
-          </Button>
-        }
       />
     </div>
   )

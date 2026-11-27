@@ -16,7 +16,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
-import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { useGetNewsQuery } from '@/store/api/applicationsApi';
@@ -25,7 +24,6 @@ import { Language } from '@/types';
 export default function NewsPage() {
   const [lang, setLang] = useState<Language>('bn');
   const [activeTab, setActiveTab] = useState<'all' | 'news' | 'event' | 'notice'>('all');
-  const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
@@ -155,7 +153,7 @@ export default function NewsPage() {
           </div>
 
           {/* Newsletter Box */}
-          <div className="mt-12 sm:mt-16 rounded-3xl bg-gradient-to-br from-[#D62828] to-[#08351f] p-6 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="mt-12 sm:mt-16 rounded-3xl bg-gradient-to-br from-[#D62828] to-[#7f1d1d] p-6 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2 max-w-xl text-center md:text-left">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-red-200 text-xs font-bold">
                 <Mail className="w-3.5 h-3.5" />
@@ -200,23 +198,15 @@ export default function NewsPage() {
 
       <Footer 
         lang={lang} 
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <MobileBottomBar
         lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <BackToTop />
-
-      <AssistanceModal
-        isOpen={assistanceModalOpen}
-        onClose={() => setAssistanceModalOpen(false)}
-        lang={lang}
-      />
 
       <DonationModal
         isOpen={donationModalOpen}

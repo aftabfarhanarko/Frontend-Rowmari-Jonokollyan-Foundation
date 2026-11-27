@@ -84,7 +84,7 @@ export default function Testimonials({ lang }: Props) {
 
               {/* Author / Beneficiary Info */}
               <figcaption className="flex items-center gap-3 pt-4 border-t border-stone-100">
-                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#D62828] to-[#084224] text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#D62828] to-[#991B1B] text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
                   {t(s.nameBn, s.nameEn).charAt(0)}
                 </div>
                 <div className="min-w-0">

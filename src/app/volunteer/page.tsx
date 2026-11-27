@@ -20,7 +20,6 @@ import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
 import VolunteerModal from '@/components/modals/VolunteerModal';
-import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { Language } from '@/types';
@@ -28,7 +27,6 @@ import { Language } from '@/types';
 export default function VolunteerPage() {
   const [lang, setLang] = useState<Language>('bn');
   const [modalOpen, setModalOpen] = useState(false);
-  const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
@@ -56,7 +54,7 @@ export default function VolunteerPage() {
       titleEn: 'Medical Camps & Healthcare Cell',
       descBn: 'বিশেষজ্ঞ ডাক্তার ক্যাম্পে রোগী নিবন্ধন, প্রেসক্রিপশন বিতরণ ও জরুরি ওষুধ ব্যবস্থাপনায় সহায়তা।',
       descEn: 'Managing patient registration, crowd flow, and prescription medicine distribution during clinics.',
-      color: 'bg-teal-100 text-teal-700',
+      color: 'bg-red-50 text-red-700',
     },
     {
       icon: Sparkles,
@@ -64,7 +62,7 @@ export default function VolunteerPage() {
       titleEn: 'Media, IT & Public Relations',
       descBn: 'মাঠপর্যায়ের কাজের স্থিরচিত্র ও ভিডিও ধারণ, সোশ্যাল মিডিয়ায় সচেতনতা সৃষ্টি ও ডিজিটাল ডাটা এন্ট্রি।',
       descEn: 'Photographic documentation, social awareness publishing, and beneficiary application records.',
-      color: 'bg-indigo-100 text-indigo-700',
+      color: 'bg-stone-100 text-stone-800',
     },
   ];
 
@@ -239,13 +237,11 @@ export default function VolunteerPage() {
 
       <Footer 
         lang={lang} 
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <MobileBottomBar
         lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
@@ -254,12 +250,6 @@ export default function VolunteerPage() {
       <VolunteerModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        lang={lang}
-      />
-
-      <AssistanceModal
-        isOpen={assistanceModalOpen}
-        onClose={() => setAssistanceModalOpen(false)}
         lang={lang}
       />
 

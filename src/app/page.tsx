@@ -30,17 +30,13 @@ import {
 } from '@/components/layout';
 
 // Interactive Modals
-import AssistanceModal from '@/components/modals/AssistanceModal';
 import VolunteerModal from '@/components/modals/VolunteerModal';
 import TrackingResultModal from '@/components/modals/TrackingResultModal';
 import AnnouncementModal from '@/components/modals/AnnouncementModal';
 
 export default function HomePage() {
   const [lang, setLang] = useState<Language>('bn');
-
   const [announcementModalOpen, setAnnouncementModalOpen] = useState(false);
-
-  const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [volunteerModalOpen, setVolunteerModalOpen] = useState(false);
 
   const [trackingModalOpen, setTrackingModalOpen] = useState(false);
@@ -79,25 +75,6 @@ export default function HomePage() {
     setTrackingModalOpen(true);
   };
 
-  const handleAssistanceSubmitted = (newId: string) => {
-    const newRecord: ApplicationTrackingStatus = {
-      id: newId,
-      applicantName: 'সম্মানিত আবেদনকারী',
-      categoryBn: 'মানবিক সহায়তা আবেদন',
-      categoryEn: 'Humanitarian Assistance Request',
-      submittedDateBn: 'আজই (নতুন)',
-      submittedDateEn: 'Today (New)',
-      status: 'pending',
-      statusNoteBn: 'আপনার আবেদনটি সফলভাবে সার্ভারে সংরক্ষিত হয়েছে। প্রাথমিক যাচাই কমিটি দ্রুত পর্যালোচনা সম্পন্ন করবে।',
-      statusNoteEn: 'Application received and waiting for preliminary verification review.',
-      assignedOfficerBn: 'যাচাই কমিটি, রৌমারী শাখা',
-    };
-    setApplicationsMap((prev) => ({
-      ...prev,
-      [newId]: newRecord,
-    }));
-  };
-
   const scrollToActivities = () => {
     const el = document.getElementById('activities');
     if (el) {
@@ -115,24 +92,21 @@ export default function HomePage() {
       <main className="flex-1">
         <Hero
           lang={lang}
-          onOpenAssistance={() => setAssistanceModalOpen(true)}
           onOpenActivities={scrollToActivities}
         />
 
         <QuickActions
           lang={lang}
-          onOpenAssistance={() => setAssistanceModalOpen(true)}
           onOpenVolunteer={() => setVolunteerModalOpen(true)}
         />
 
         <ImpactStats lang={lang} />
 
         {/* 3 Steps How It Works */}
-        <HowItWorks lang={lang} onOpenAssistance={() => setAssistanceModalOpen(true)} />
+        <HowItWorks lang={lang} />
 
         <RecentActivities
           lang={lang}
-          onOpenAssistance={() => setAssistanceModalOpen(true)}
         />
 
         <OngoingCampaigns
@@ -156,7 +130,6 @@ export default function HomePage() {
 
         <AboutUs
           lang={lang}
-          onOpenAssistance={() => setAssistanceModalOpen(true)}
         />
 
         {/* Join CTA & Newsletter Subscription */}
@@ -168,22 +141,13 @@ export default function HomePage() {
 
       <Footer
         lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
       />
 
       <MobileBottomBar
         lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
       />
 
       <BackToTop />
-
-      <AssistanceModal
-        isOpen={assistanceModalOpen}
-        onClose={() => setAssistanceModalOpen(false)}
-        lang={lang}
-        onSubmittedSuccess={handleAssistanceSubmitted}
-      />
 
       <VolunteerModal
         isOpen={volunteerModalOpen}
@@ -203,7 +167,6 @@ export default function HomePage() {
         isOpen={announcementModalOpen}
         onClose={() => setAnnouncementModalOpen(false)}
         lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
       />
     </div>
   );

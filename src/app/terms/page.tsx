@@ -4,14 +4,12 @@ import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
-import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
 import { useGetPublicPageQuery } from '@/store/api/adminApi';
 import { Language } from '@/types';
 
 export default function TermsPage() {
   const [lang, setLang] = useState<Language>('bn');
-  const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
   const { data: pageData } = useGetPublicPageQuery('terms-and-conditions');
 
@@ -62,20 +60,12 @@ export default function TermsPage() {
 
       <Footer 
         lang={lang} 
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <MobileBottomBar
         lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
-      />
-
-      <AssistanceModal
-        isOpen={assistanceModalOpen}
-        onClose={() => setAssistanceModalOpen(false)}
-        lang={lang}
       />
 
       <DonationModal

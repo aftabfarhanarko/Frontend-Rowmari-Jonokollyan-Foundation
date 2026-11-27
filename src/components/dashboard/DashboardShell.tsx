@@ -12,7 +12,6 @@ import { toast } from "sonner"
 import { useGetCurrentUserQuery } from "@/store/api/authApi"
 import { UserRole } from "@/types"
 
-import AssistanceModal from "@/components/modals/AssistanceModal"
 import VolunteerModal from "@/components/modals/VolunteerModal"
 import AnnouncementModal from "@/components/modals/AnnouncementModal"
 
@@ -175,13 +174,11 @@ export function DashboardShell({ children, defaultTab }: DashboardShellProps) {
         </main>
       </div>
 
-      <AssistanceModal isOpen={assistanceModalOpen} onClose={() => setAssistanceModalOpen(false)} lang={lang} />
       <VolunteerModal isOpen={volunteerModalOpen} onClose={() => setVolunteerModalOpen(false)} lang={lang} />
       <AnnouncementModal
         isOpen={announcementModalOpen}
         onClose={() => setAnnouncementModalOpen(false)}
         lang={lang}
-        onOpenAssistance={() => { setAnnouncementModalOpen(false); setAssistanceModalOpen(true) }}
       />
     </div>
   )

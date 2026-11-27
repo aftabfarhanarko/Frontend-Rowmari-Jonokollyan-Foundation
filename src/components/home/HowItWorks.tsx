@@ -7,10 +7,10 @@ import { Language } from '@/types';
 
 interface Props {
   lang: Language;
-  onOpenAssistance: () => void;
+  onOpenAssistance?: () => void;
 }
 
-export default function HowItWorks({ lang, onOpenAssistance }: Props) {
+export default function HowItWorks({ lang }: Props) {
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
 
   const steps = [
@@ -18,36 +18,36 @@ export default function HowItWorks({ lang, onOpenAssistance }: Props) {
       num: '০১',
       numEn: '01',
       icon: FileText,
-      badgeBn: 'সহজ ডিজিটাল পোর্টাল',
-      badgeEn: 'Simple Portal',
-      title: t('সহজ অনলাইন আবেদন', 'Submit Your Request'),
+      badgeBn: 'তহবিল ও স্বচ্ছতা',
+      badgeEn: 'Fundraising & Trust',
+      title: t('স্বচ্ছ ডিজিটাল অনুদান', 'Transparent Digital Donations'),
       text: t(
-        'অনলাইন ফর্মে নিজের বা অসহায় প্রতিবেশীর চিকিৎসা, খাদ্য, শীতবস্ত্র বা শিক্ষা সহায়তার প্রয়োজন জানান। সাথে সাথেই পাবেন একটি ইউনিক ট্র্যাকিং আইডি।',
-        'Fill in the online form with your details and need. You receive an instant tracking ID upon submission.'
+        'বিকাশ, নগদ বা ব্যাংক ট্রান্সফারের মাধ্যমে প্রাপ্ত অনুদানের প্রতিটি টাকা ডিজিটাল ভেরিফিকেশন ও অডিটের আওতায় সংরক্ষিত হয়।',
+        'Every donation received through bKash, Nagad, or direct transfer is digitally logged and publicly verified for full transparency.'
       ),
     },
     {
       num: '০২',
       numEn: '02',
       icon: ShieldCheck,
-      badgeBn: 'মাঠপর্যায়ের নিরীক্ষা',
+      badgeBn: 'সরেজমিন নিরীক্ষা',
       badgeEn: 'Field Verification',
-      title: t('কমিটির নিরপেক্ষ যাচাই', 'Committee Verification'),
+      title: t('মাঠপর্যায়ে সরেজমিনে যাচাই', 'On-Ground Verification'),
       text: t(
-        'আমাদের রৌমারী শাখা ও চরাঞ্চলের দায়িত্বশীল যাচাই কমিটি সরেজমিনে সত্যতা ও অগ্রাধিকার যাচাই করে দ্রুততম সময়ে নিরপেক্ষ সিদ্ধান্ত গ্রহণ করে।',
-        'Our local field verification committee checks details on the ground ensuring transparency and immediate priority matching.'
+        'রৌমারীর দুর্গম চরাঞ্চলে আমাদের নিবেদিত স্বেচ্ছাসেবক দল বাড়ি বাড়ি গিয়ে প্রকৃত শীতার্ত, দরিদ্র ও রোগীদের অগ্রাধিকার তালিকা তৈরি করে।',
+        'Our dedicated grassroots volunteer team conducts door-to-door field audits across remote chars to identify truly vulnerable families.'
       ),
     },
     {
       num: '০৩',
       numEn: '03',
       icon: HandHeart,
-      badgeBn: 'সম্মানের সাথে প্রদান',
+      badgeBn: 'মর্যাদাপূর্ণ হস্তান্তর',
       badgeEn: 'Dignified Aid',
-      title: t('মর্যাদাপূর্ণ সহায়তা হস্তান্তর', 'Dignified Delivery'),
+      title: t('সরাসরি মর্যাদাপূর্ণ বিতরণ', 'Direct Dignified Distribution'),
       text: t(
-        'অনুমোদন সাপেক্ষে কোনো লোকদেখানো প্রচার ছাড়াই সরাসরি আবেদনকারীর নিকট সহায়তা সামগ্রী বা চিকিৎসা অনুদান পৌঁছে দেওয়া হয়।',
-        'Once verified, food, medical care, or winter relief is handed over with dignity, respect, and complete privacy.'
+        'কোনো মধ্যস্বত্বভোগী ছাড়াই সরাসরি সুবিধাভোগীদের হাতে কম্বল, খাদ্যসামগ্রী ও চিকিৎসা সহায়তা পরম শ্রদ্ধার সাথে হস্তান্তর করা হয়।',
+        'Relief goods, medicine, and winter supplies are handed directly to beneficiaries with dignity, zero overhead, and complete accountability.'
       ),
     },
   ];
@@ -59,13 +59,13 @@ export default function HowItWorks({ lang, onOpenAssistance }: Props) {
         <div className="text-center max-w-2xl mx-auto mb-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 border border-red-200/80 text-[#D62828] text-xs font-bold mb-3 shadow-2xs">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>{t('স্বচ্ছ ও সহজ ৩টি ধাপ', 'Simple 3-Step Process')}</span>
+            <span>{t('স্বচ্ছ ও কার্যকর ৩টি ধাপ', 'Simple 3-Step Operation')}</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#E53935] tracking-tight mb-2">
-            {t('সহায়তা পেতে যা করতে হবে', 'How to Receive Assistance')}
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-stone-900 tracking-tight mb-2">
+            {t('কীভাবে পরিচালিত হয় আমাদের কার্যক্রম', 'How Our Humanitarian Operations Work')}
           </h2>
           <p className="text-xs sm:text-sm text-stone-500 font-medium">
-            {t('কোনো মধ্যস্বত্বভোগী ছাড়া সরাসরি ফাউন্ডেশনের সেবার আওতায় আসার স্বচ্ছ প্রক্রিয়া।', 'Direct and transparent assistance workflow with zero middlemen.')}
+            {t('কোনো মধ্যস্বত্বভোগী ছাড়া শতভাগ স্বচ্ছতার সাথে সরাসরি চরাঞ্চলের মানুষের কাছে পৌঁছানোর কর্মপদ্ধতি।', 'Direct, transparent, and accountable field workflow delivering aid straight to remote char families.')}
           </p>
         </div>
 
@@ -86,7 +86,7 @@ export default function HowItWorks({ lang, onOpenAssistance }: Props) {
                 <div>
                   {/* Top Step Pill & Icon */}
                   <div className="flex items-center justify-between mb-5">
-                    <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-[#D62828] to-[#0a4628] text-white flex items-center justify-center shadow-md shadow-red-900/20 group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-13 h-13 rounded-2xl bg-linear-to-br from-[#D62828] to-[#991B1B] text-white flex items-center justify-center shadow-md shadow-red-900/20 group-hover:scale-110 transition-transform duration-300">
                       <Icon className="w-6 h-6" />
                     </div>
 

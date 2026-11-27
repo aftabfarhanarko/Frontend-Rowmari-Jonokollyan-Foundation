@@ -20,16 +20,12 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
-import AssistanceModal from '@/components/modals/AssistanceModal';
-import DonationModal from '@/components/modals/DonationModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { useGetPublicPageQuery } from '@/store/api/adminApi';
 import { Language } from '@/types';
 
 export default function AboutPage() {
   const [lang, setLang] = useState<Language>('bn');
-  const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
-  const [donationModalOpen, setDonationModalOpen] = useState(false);
   const { data: pageData } = useGetPublicPageQuery('about-us');
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
@@ -125,7 +121,6 @@ export default function AboutPage() {
       <Navbar 
         lang={lang} 
         onToggleLang={() => setLang(l => l === 'bn' ? 'en' : 'bn')} 
-        onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <main className="flex-1 pb-20 sm:pb-24">
@@ -391,17 +386,17 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="p-6 sm:p-7 rounded-2xl bg-[#D62828] text-white flex flex-col justify-between shadow-xl shadow-red-950/20">
             <div>
-              <h3 className="text-lg sm:text-xl font-bold mb-2">{t('সহায়তা প্রয়োজন?', 'Need Assistance?')}</h3>
+              <h3 className="text-lg sm:text-xl font-bold mb-2">{t('মানবতার পাশে অনুদান দিন', 'Support With Donations')}</h3>
               <p className="text-xs sm:text-sm text-red-100/90 leading-relaxed mb-4">
-                {t('চিকিৎসা, শীতবস্ত্র, শিক্ষা বা খাদ্য সহায়তার জন্য অনলাইনে সরাসরি আবেদন করুন। ট্র্যাকিং আইডিসহ দ্রুত সমাধান মিলবে।', 'Submit an assistance request for healthcare, winter aid, or food relief with an online tracking ID.')}
+                {t('রৌমারী ও চরাঞ্চলের অসহায় পরিবারের খাদ্য, চিকিৎসা ও শীতবস্ত্র সেবায় আপনার সামান্য অনুদান বিরাট পরিবর্তন আনতে পারে।', 'Your small contribution provides emergency healthcare, food, and winter clothes to struggling char families.')}
               </p>
             </div>
-            <button
-              onClick={() => setAssistanceModalOpen(true)}
-              className="w-full py-3 rounded-xl bg-white text-[#D62828] font-bold text-xs sm:text-sm hover:bg-red-50 transition cursor-pointer"
+            <Link
+              href="/donate"
+              className="w-full py-3 rounded-xl bg-white text-[#D62828] font-bold text-xs sm:text-sm hover:bg-red-50 transition cursor-pointer text-center block shadow-sm"
             >
-              {t('সহায়তার আবেদন করুন', 'Request Help Online')}
-            </button>
+              {t('অনুদান দিন', 'Donate to RJF')}
+            </Link>
           </div>
 
           <div className="p-6 sm:p-7 rounded-2xl bg-white border-2 border-[#D62828] flex flex-col justify-between shadow-xl shadow-red-950/10">
@@ -421,31 +416,9 @@ export default function AboutPage() {
         </div>
       </main>
 
-      <Footer 
-        lang={lang} 
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
-        onOpenDonation={() => setDonationModalOpen(true)}
-      />
-
-      <MobileBottomBar
-        lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
-        onOpenDonation={() => setDonationModalOpen(true)}
-      />
-
+      <Footer lang={lang} />
+      <MobileBottomBar lang={lang} />
       <BackToTop />
-
-      <AssistanceModal
-        isOpen={assistanceModalOpen}
-        onClose={() => setAssistanceModalOpen(false)}
-        lang={lang}
-      />
-
-      <DonationModal
-        isOpen={donationModalOpen}
-        onClose={() => setDonationModalOpen(false)}
-        lang={lang}
-      />
     </div>
   );
 }

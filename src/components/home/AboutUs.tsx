@@ -8,7 +8,7 @@ import { FOUNDATION_INFO } from '@/data/mockData';
 
 interface AboutUsProps {
   lang: Language;
-  onOpenAssistance: () => void;
+  onOpenAssistance?: () => void;
   onOpenDonation?: () => void;
 }
 

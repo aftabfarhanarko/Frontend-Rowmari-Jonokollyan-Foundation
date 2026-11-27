@@ -96,8 +96,8 @@ export default function TrackAndSupport({
             </div>
           </div>
 
-          {/* Right Card: "আপনিও পাশে দাঁড়ান" (Deep Emerald box) */}
-          <div className="bg-gradient-to-br from-[#D62828] via-[#0b4d2c] to-[#991B1B] text-white rounded-3xl p-6 sm:p-8 lg:p-9 shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden border border-red-700/60 group">
+          {/* Right Card: "আপনিও পাশে দাঁড়ান" (Rich Crimson Brand Box) */}
+          <div className="bg-gradient-to-br from-[#D62828] via-[#B91C1C] to-[#991B1B] text-white rounded-3xl p-6 sm:p-8 lg:p-9 shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden border border-red-700/60 group">
             {/* Background Ambient Glow */}
             <div className="absolute -top-10 -right-10 w-56 h-56 bg-red-400/15 rounded-full blur-3xl pointer-events-none group-hover:bg-red-400/25 transition-all duration-500" />
 

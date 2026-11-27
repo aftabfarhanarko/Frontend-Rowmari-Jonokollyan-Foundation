@@ -15,7 +15,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
-import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
 import { GlassSection, SectionHeading, glassCard } from '@/components/ui/glass';
 import { useGetPublicPageQuery } from '@/store/api/adminApi';
@@ -23,7 +22,6 @@ import { Language } from '@/types';
 
 export default function PrivacyPolicyPage() {
   const [lang, setLang] = useState<Language>('bn');
-  const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
   const { data: pageData } = useGetPublicPageQuery('privacy-policy');
 
@@ -157,23 +155,15 @@ export default function PrivacyPolicyPage() {
 
       <Footer 
         lang={lang} 
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <MobileBottomBar
         lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <BackToTop />
-
-      <AssistanceModal
-        isOpen={assistanceModalOpen}
-        onClose={() => setAssistanceModalOpen(false)}
-        lang={lang}
-      />
 
       <DonationModal
         isOpen={donationModalOpen}

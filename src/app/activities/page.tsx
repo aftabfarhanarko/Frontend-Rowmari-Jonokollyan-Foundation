@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Calendar, 
@@ -20,7 +21,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
-import AssistanceModal from '@/components/modals/AssistanceModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { useGetActivitiesQuery } from '@/store/api/activitiesApi';
 import { Language, ActivityCategory, ActivityItem } from '@/types';
@@ -30,7 +30,6 @@ export default function ActivitiesPage() {
   const [activeCategory, setActiveCategory] = useState<ActivityCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedActivity, setSelectedActivity] = useState<ActivityItem | null>(null);
-  const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const { data: activities = [], isLoading, isError } = useGetActivitiesQuery();
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
@@ -272,15 +271,18 @@ export default function ActivitiesPage() {
                 </div>
 
                 <div className="flex flex-wrap gap-3 pt-2">
-                  <button
-                    onClick={() => {
-                      setSelectedActivity(null);
-                      setAssistanceModalOpen(true);
-                    }}
-                    className="w-full py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center shadow-md"
+                  <Link
+                    href="/donate"
+                    className="flex-1 py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center shadow-md flex items-center justify-center gap-1.5"
                   >
-                    {t('সহায়তার আবেদন করুন', 'Request Help in Area')}
-                  </button>
+                    <span>{t('অনুদান দিন', 'Donate to this Cause')}</span>
+                  </Link>
+                  <Link
+                    href="/volunteer"
+                    className="px-5 py-3 rounded-xl border border-stone-300 hover:border-red-300 bg-white hover:bg-red-50 text-stone-800 font-bold text-xs sm:text-sm transition cursor-pointer text-center flex items-center justify-center gap-1.5"
+                  >
+                    <span>{t('স্বেচ্ছাসেবক হন', 'Volunteer')}</span>
+                  </Link>
                 </div>
               </div>
             </motion.div>
@@ -288,23 +290,9 @@ export default function ActivitiesPage() {
         )}
       </AnimatePresence>
 
-      <Footer 
-        lang={lang} 
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
-      />
-
-      <MobileBottomBar
-        lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
-      />
-
+      <Footer lang={lang} />
+      <MobileBottomBar lang={lang} />
       <BackToTop />
-
-      <AssistanceModal
-        isOpen={assistanceModalOpen}
-        onClose={() => setAssistanceModalOpen(false)}
-        lang={lang}
-      />
     </div>
   );
 }

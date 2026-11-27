@@ -24,7 +24,7 @@ import { Language } from '@/types';
 
 interface HeroProps {
   lang: Language;
-  onOpenAssistance: () => void;
+  onOpenAssistance?: () => void;
   onOpenActivities: () => void;
   onOpenDonation?: (campaignId?: string) => void;
 }
@@ -61,7 +61,7 @@ export default function Hero({
       btnSecondaryAction: 'activities',
       btnSecondaryIcon: Search,
       imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1800&q=85',
-      overlayGradient: 'from-[#073B22]/90 via-[#073B22]/65 to-black/30',
+      overlayGradient: 'from-[#7f1d1d]/90 via-[#991b1b]/65 to-black/30',
     },
     {
       id: 'slide-2',
@@ -98,9 +98,9 @@ export default function Hero({
         'বিনা চিকিৎসায় যেন কোনো প্রাণ না হারায়—অসহায় রোগীদের বড় ধরনের অপারেশন, জটিল হৃদরোগ, থ্যালাসেমিয়া ও ওষুধে জরুরি স্বাস্থ্যসেবা ও সহায়তা প্রদান।',
       subtitleEn:
         'No life should be lost for lack of medicine. Providing vital medical grants, complex surgery support, and free physician camps in remote river island unions.',
-      btnPrimaryBn: 'চিকিৎসা সহায়তা আবেদন',
-      btnPrimaryEn: 'Apply Medical Aid',
-      btnPrimaryAction: 'assistance',
+      btnPrimaryBn: 'চিকিৎসায় অনুদান দিন',
+      btnPrimaryEn: 'Support Healthcare',
+      btnPrimaryAction: 'donate',
       btnPrimaryIcon: HeartPulse,
       btnSecondaryBn: 'কার্যক্রম দেখুন',
       btnSecondaryEn: 'View Healthcare Work',
@@ -121,16 +121,16 @@ export default function Hero({
         'অর্থের অভাবে যেন কোনো দরিদ্র মেধাবী শিশুর পড়াশোনা বন্ধ না হয়—রৌমারীর চরাঞ্চলে প্রাথমিক ও মাধ্যমিক শিক্ষার্থীদের স্কুল ব্যাগ, বইপত্র ও মাসিক বৃত্তি প্রদান।',
       subtitleEn:
         'Poverty must not stop education. Distributing school supplies, notebooks, bags, and monthly scholarships to prevent student dropouts in remote chars.',
-      btnPrimaryBn: 'শিক্ষা উপবৃত্তি আবেদন',
-      btnPrimaryEn: 'Scholarship Aid',
-      btnPrimaryAction: 'assistance',
+      btnPrimaryBn: 'শিক্ষায় অনুদান দিন',
+      btnPrimaryEn: 'Support Education',
+      btnPrimaryAction: 'donate',
       btnPrimaryIcon: GraduationCap,
       btnSecondaryBn: 'কার্যক্রম দেখুন',
       btnSecondaryEn: 'View Education Work',
       btnSecondaryAction: 'activities',
       btnSecondaryIcon: Sparkles,
       imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1800&q=85',
-      overlayGradient: 'from-[#1e1b4b]/90 via-[#312e81]/65 to-black/30',
+      overlayGradient: 'from-[#881337]/90 via-[#991B1B]/65 to-black/30',
     },
   ];
 
@@ -206,7 +206,7 @@ export default function Hero({
       titleEn: 'Free Medical Camps & Medicines',
       tagBn: 'চিকিৎসা সহায়তা',
       tagEn: 'Healthcare Aid',
-      badgeColor: 'bg-teal-700',
+      badgeColor: 'bg-red-800',
       statBn: '৮৫০+ রোগী চিকিৎসাপ্রাপ্ত',
       statEn: '850+ Patients Treated',
       locationBn: 'চর শৌলমারী ইউনিয়ন',

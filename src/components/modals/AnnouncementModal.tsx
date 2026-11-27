@@ -1,21 +1,23 @@
 'use client';
 
 import React from 'react';
-import { Megaphone, X } from 'lucide-react';
+import Link from 'next/link';
+import { Megaphone, X, Heart, Users } from 'lucide-react';
 import { Language } from '@/types';
 
 interface AnnouncementModalProps {
   isOpen: boolean;
   onClose: () => void;
   lang: Language;
-  onOpenAssistance: () => void;
+  onOpenAssistance?: () => void;
+  onOpenDonation?: () => void;
 }
 
 export default function AnnouncementModal({
   isOpen,
   onClose,
   lang,
-  onOpenAssistance,
+  onOpenDonation,
 }: AnnouncementModalProps) {
   if (!isOpen) return null;
 
@@ -64,8 +66,8 @@ export default function AnnouncementModal({
             </h3>
             <p className="text-xs md:text-sm text-stone-600 mt-2 leading-relaxed">
               {lang === 'bn'
-                ? 'তীব্র শীতে রৌমারীর ব্রহ্মপুত্র নদের দুর্গম চরাঞ্চলের অসহায় পরিবারের মাঝে কম্বল ও শীতবস্ত্র বিতরণ কার্যক্রম পুরোদমে শুরু হয়েছে। যেকোনো জরুরি মানবিক সহায়তার জন্য আবেদন করুন।'
-                : 'Winter relief and blanket distribution campaigns are actively ongoing across river-island char communities. Please apply for verified humanitarian aid.'}
+                ? 'তীব্র শীতে রৌমারীর ব্রহ্মপুত্র নদের দুর্গম চরাঞ্চলের অসহায় পরিবারের মাঝে কম্বল ও শীতবস্ত্র বিতরণ কার্যক্রম পুরোদমে শুরু হয়েছে। আপনার সামান্য অনুদানে ফুটতে পারে একটি অসহায় পরিবারের মুখে হাসি।'
+                : 'Winter relief and blanket distribution campaigns are actively ongoing across river-island char communities. Your small contribution brings warmth to a struggling family.'}
             </p>
           </div>
 
@@ -75,33 +77,33 @@ export default function AnnouncementModal({
               <span className="font-mono font-bold text-sm text-red-800">+880 1712-345678</span>
               <span className="text-[11px] text-stone-600 block mt-0.5">ভোলামোড়, রৌমারী উপজেলা, রংপুর, বাংলাদেশ (৫৬৪০)</span>
             </div>
-            <button
-              onClick={() => {
-                onClose();
-                onOpenAssistance();
-              }}
-              className="px-3 py-1.5 bg-[#D62828] text-white rounded-lg text-xs font-semibold hover:bg-[#B91C1C] transition cursor-pointer"
+            <Link
+              href="/donate"
+              onClick={onClose}
+              className="px-3 py-1.5 bg-[#D62828] text-white rounded-lg text-xs font-semibold hover:bg-[#B91C1C] transition cursor-pointer flex items-center gap-1"
             >
-              {lang === 'bn' ? 'সহায়তা চান' : 'Get Help'}
-            </button>
+              <Heart className="w-3.5 h-3.5 fill-current" />
+              <span>{lang === 'bn' ? 'অনুদান দিন' : 'Donate'}</span>
+            </Link>
           </div>
 
           <div className="grid grid-cols-2 gap-3 mb-4">
-            <button
-              onClick={() => {
-                onClose();
-                onOpenAssistance();
-              }}
-              className="py-2.5 px-3 rounded-xl border border-red-700 text-red-800 hover:bg-red-50 text-xs font-semibold transition text-center"
-            >
-              {lang === 'bn' ? 'সহায়তার আবেদন করুন' : 'Request Assistance'}
-            </button>
-            <button
+            <Link
+              href="/donate"
               onClick={onClose}
-              className="py-2.5 px-3 rounded-xl bg-red-700 text-white hover:bg-red-800 text-xs font-semibold transition text-center"
+              className="py-2.5 px-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white text-xs font-bold transition text-center flex items-center justify-center gap-1.5 shadow-sm"
             >
-              {lang === 'bn' ? 'বিজ্ঞপ্তি বন্ধ করুন' : 'Dismiss Alert'}
-            </button>
+              <Heart className="w-3.5 h-3.5 fill-current" />
+              <span>{lang === 'bn' ? 'অনুদান দিন' : 'Donate Now'}</span>
+            </Link>
+            <Link
+              href="/volunteer"
+              onClick={onClose}
+              className="py-2.5 px-3 rounded-xl border border-stone-300 text-stone-800 hover:bg-stone-50 text-xs font-semibold transition text-center flex items-center justify-center gap-1.5"
+            >
+              <Users className="w-3.5 h-3.5 text-[#D62828]" />
+              <span>{lang === 'bn' ? 'স্বেচ্ছাসেবক হন' : 'Join Volunteer'}</span>
+            </Link>
           </div>
 
           <div className="text-center pt-2 border-t border-stone-100">

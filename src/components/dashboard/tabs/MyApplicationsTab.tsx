@@ -26,11 +26,11 @@ export function MyApplicationsTab({ myApps }: MyApplicationsTabProps) {
         </div>
         <Button
           size="sm"
-          onClick={() => setAssistanceModalOpen(true)}
+          onClick={() => window.location.href = '/donate'}
           className="bg-[#D62828] hover:bg-[#B91C1C] text-white text-xs gap-1.5 cursor-pointer font-bold shadow-xs"
         >
           <Plus className="size-3.5" />
-          <span>নতুন আবেদন করুন</span>
+          <span>তহবিলে অনুদান দিন</span>
         </Button>
       </div>
 

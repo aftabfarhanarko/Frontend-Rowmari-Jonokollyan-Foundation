@@ -19,7 +19,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
-import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { FOUNDATION_INFO } from '@/data/mockData';
@@ -34,7 +33,6 @@ export default function ContactPage() {
   const [sendContactMessage, { isLoading: isSubmitting }] = useSendContactMessageMutation();
   const { data: publicSettings } = useGetPublicSettingsQuery();
   const [submitted, setSubmitted] = useState(false);
-  const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
   const [donationModalOpen, setDonationModalOpen] = useState(false);
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
@@ -263,23 +261,15 @@ export default function ContactPage() {
 
       <Footer 
         lang={lang} 
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <MobileBottomBar
         lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <BackToTop />
-
-      <AssistanceModal
-        isOpen={assistanceModalOpen}
-        onClose={() => setAssistanceModalOpen(false)}
-        lang={lang}
-      />
 
       <DonationModal
         isOpen={donationModalOpen}

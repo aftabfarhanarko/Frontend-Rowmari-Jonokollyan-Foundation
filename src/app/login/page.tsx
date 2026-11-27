@@ -19,7 +19,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
-import AssistanceModal from '@/components/modals/AssistanceModal';
 import { useLoginMutation } from '@/store/api/authApi';
 import { useAppStore } from '@/store/useAppStore';
 import { UserRole } from '@/types';
@@ -35,9 +34,6 @@ function LoginForm() {
   const currentRole = useAppStore((state) => state.currentRole);
   const setIsAuthenticated = useAppStore((state) => state.setIsAuthenticated);
   const isAuthenticated = useAppStore((state) => state.isAuthenticated);
-
-  const assistanceModalOpen = useAppStore((state) => state.assistanceModalOpen);
-  const setAssistanceModalOpen = useAppStore((state) => state.setAssistanceModalOpen);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -274,21 +270,13 @@ function LoginForm() {
 
       <Footer
         lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
       />
 
       <MobileBottomBar
         lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
       />
 
       <BackToTop />
-
-      <AssistanceModal
-        isOpen={assistanceModalOpen}
-        onClose={() => setAssistanceModalOpen(false)}
-        lang={lang}
-      />
     </div>
   );
 }

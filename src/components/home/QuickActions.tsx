@@ -6,7 +6,7 @@ import { Language } from '@/types';
 
 interface QuickActionsProps {
   lang: Language;
-  onOpenAssistance: () => void;
+  onOpenAssistance?: () => void;
   onOpenDonation?: () => void;
   onOpenVolunteer: () => void;
 }

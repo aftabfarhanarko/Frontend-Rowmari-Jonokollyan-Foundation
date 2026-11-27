@@ -2,20 +2,22 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { 
   MapPin, 
   Calendar, 
   ArrowRight, 
   X,
   Users,
-  CheckCircle2
+  CheckCircle2,
+  Heart
 } from 'lucide-react';
 import { Language, ActivityCategory, ActivityItem } from '@/types';
 import { useGetActivitiesQuery } from '@/store/api/activitiesApi';
 
 interface RecentActivitiesProps {
   lang: Language;
-  onOpenAssistance: () => void;
+  onOpenAssistance?: () => void;
 }
 
 export default function RecentActivities({
@@ -196,15 +198,14 @@ export default function RecentActivities({
                 >
                   {lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
                 </button>
-                <button
-                  onClick={() => {
-                    setSelectedActivity(null);
-                    onOpenAssistance();
-                  }}
-                  className="px-4 py-2 bg-red-800 hover:bg-red-900 text-white rounded-xl text-xs font-semibold cursor-pointer"
+                <Link
+                  href="/donate"
+                  onClick={() => setSelectedActivity(null)}
+                  className="px-4 py-2 bg-[#D62828] hover:bg-[#B91C1C] text-white rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 shadow-xs"
                 >
-                  {lang === 'bn' ? 'সহায়তা চান?' : 'Need Help?'}
-                </button>
+                  <Heart className="w-3.5 h-3.5 fill-current" />
+                  <span>{lang === 'bn' ? 'অনুদান দিন' : 'Donate'}</span>
+                </Link>
               </div>
             </div>
           </div>

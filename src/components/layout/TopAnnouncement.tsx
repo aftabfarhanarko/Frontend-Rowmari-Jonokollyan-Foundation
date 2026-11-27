@@ -30,7 +30,7 @@ export default function TopAnnouncement({
   };
 
   const alertContentBn =
-    'জরুরি ঘোষণা: রৌমারী ও দুর্গম চরাঞ্চলে শীতবস্ত্র ও কম্বল বিতরণ কার্যক্রম চলমান • অসহায় রোগীর চিকিৎসায় জরুরি সহায়তা প্রদান • হটলাইন: +880 1712-345678 • রৌমারী জনকল্যাণ ফাউন্ডেশন মানুষের পাশে, মানুষের জন্য';
+    'জরুরি ঘোষণা: রৌমারী ও দুর্গম চরাঞ্চলে শীতবস্ত্র ও কম্বল বিতরণ কার্যক্রম চলমান • অসহায় রোগীর চিকিৎসায় জরুরি সেবা ও ওষুধ প্রদান • হটলাইন: +880 1712-345678 • রৌমারী জনকল্যাণ ফাউন্ডেশন মানুষের পাশে, মানুষের জন্য';
 
   const alertContentEn =
     'Urgent Notice: Winter clothing & blanket distribution ongoing across Rowmari & riverine chars • Emergency medical assistance for underprivileged patients • Hotline: +880 1712-345678 • Rowmari Jonokolyan Foundation beside humanity, for humanity';

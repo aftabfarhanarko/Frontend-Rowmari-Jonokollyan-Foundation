@@ -23,7 +23,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
-import AssistanceModal from '@/components/modals/AssistanceModal';
 import DonationModal from '@/components/modals/DonationModal';
 import { useRegisterUserMutation } from '@/store/api/authApi';
 import { useAppStore } from '@/store/useAppStore';
@@ -46,8 +45,6 @@ export default function RegisterPage() {
   }, [isAuthenticated, currentRole, router]);
   const donationModalOpen = useAppStore((state) => state.donationModalOpen);
   const setDonationModalOpen = useAppStore((state) => state.setDonationModalOpen);
-  const assistanceModalOpen = useAppStore((state) => state.assistanceModalOpen);
-  const setAssistanceModalOpen = useAppStore((state) => state.setAssistanceModalOpen);
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -363,23 +360,15 @@ export default function RegisterPage() {
 
       <Footer
         lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <MobileBottomBar
         lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
         onOpenDonation={() => setDonationModalOpen(true)}
       />
 
       <BackToTop />
-
-      <AssistanceModal
-        isOpen={assistanceModalOpen}
-        onClose={() => setAssistanceModalOpen(false)}
-        lang={lang}
-      />
 
       <DonationModal
         isOpen={donationModalOpen}

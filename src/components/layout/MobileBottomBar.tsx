@@ -7,7 +7,6 @@ import { Language } from '@/types';
 
 interface MobileBottomBarProps {
   lang: Language;
-  onOpenAssistance?: () => void;
   onOpenDonation?: () => void;
   onOpenVolunteer?: () => void;
 }

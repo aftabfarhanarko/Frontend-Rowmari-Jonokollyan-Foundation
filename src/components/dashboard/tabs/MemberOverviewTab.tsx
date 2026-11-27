@@ -4,7 +4,7 @@ import React from "react"
 import { useAppStore } from "@/store/useAppStore"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { FileText, Target, Mail, Users, CheckCircle2, Plus, UserCheck } from "lucide-react"
+import { FileText, Target, Mail, Users, CheckCircle2, Plus, UserCheck, Heart } from "lucide-react"
 
 interface MemberOverviewTabProps {
   onSelectTab?: (tab: string) => void
@@ -130,9 +130,9 @@ export function MemberOverviewTab({
           এক ক্লিকে আপনার প্রয়োজনীয় সেবা গ্রহণ করুন
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          <Button onClick={() => setAssistanceModalOpen(true)} className="bg-[#D62828] hover:bg-[#B91C1C] text-white text-xs py-2.5 h-auto justify-start gap-2 shadow-xs cursor-pointer">
-            <FileText className="size-4" />
-            <span>সহায়তার নতুন আবেদন</span>
+          <Button onClick={() => window.location.href = '/donate'} className="bg-[#D62828] hover:bg-[#B91C1C] text-white text-xs py-2.5 h-auto justify-start gap-2 shadow-xs cursor-pointer">
+            <Heart className="size-4" />
+            <span>তহবিলে অনুদান দিন</span>
           </Button>
 
           <Button onClick={() => setVolunteerModalOpen(true)} variant="outline" className="border-stone-300 bg-white hover:bg-red-50 text-stone-800 hover:text-[#D62828] text-xs py-2.5 h-auto justify-start gap-2 shadow-xs cursor-pointer">

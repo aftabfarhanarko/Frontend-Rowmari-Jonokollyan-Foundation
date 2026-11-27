@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Calendar, 
@@ -17,7 +18,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
-import AssistanceModal from '@/components/modals/AssistanceModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { GALLERY_ITEMS } from '@/data/mockData';
 import { Language } from '@/types';
@@ -44,7 +44,6 @@ export default function GalleryPage() {
     : GALLERY_ITEMS;
 
   const [previewItem, setPreviewItem] = useState<typeof GALLERY_ITEMS[0] | null>(null);
-  const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
 
@@ -228,15 +227,18 @@ export default function GalleryPage() {
                 </h2>
 
                 <div className="flex flex-wrap gap-3 pt-2">
-                  <button
-                    onClick={() => {
-                      setPreviewItem(null);
-                      setAssistanceModalOpen(true);
-                    }}
-                    className="w-full py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center shadow-md"
+                  <Link
+                    href="/donate"
+                    className="flex-1 py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center shadow-md flex items-center justify-center gap-1.5"
                   >
-                    {t('সহায়তার আবেদন করুন', 'Request Help in this Area')}
-                  </button>
+                    <span>{t('অনুদান দিন', 'Donate to RJF')}</span>
+                  </Link>
+                  <Link
+                    href="/volunteer"
+                    className="px-5 py-3 rounded-xl border border-stone-200 bg-white hover:bg-stone-100 text-stone-800 font-bold text-xs sm:text-sm transition cursor-pointer text-center flex items-center justify-center gap-1.5"
+                  >
+                    <span>{t('স্বেচ্ছাসেবক হন', 'Volunteer')}</span>
+                  </Link>
                 </div>
               </div>
             </motion.div>
@@ -244,23 +246,9 @@ export default function GalleryPage() {
         )}
       </AnimatePresence>
 
-      <Footer 
-        lang={lang} 
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
-      />
-
-      <MobileBottomBar
-        lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
-      />
-
+      <Footer lang={lang} />
+      <MobileBottomBar lang={lang} />
       <BackToTop />
-
-      <AssistanceModal
-        isOpen={assistanceModalOpen}
-        onClose={() => setAssistanceModalOpen(false)}
-        lang={lang}
-      />
     </div>
   );
 }

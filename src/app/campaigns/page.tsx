@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { 
   Heart, 
@@ -17,7 +18,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import BackToTop from '@/components/BackToTop';
-import AssistanceModal from '@/components/modals/AssistanceModal';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { useGetCampaignsQuery } from '@/store/api/campaignsApi';
 import { Language } from '@/types';
@@ -25,8 +25,6 @@ import { Language } from '@/types';
 export default function CampaignsPage() {
   const [lang, setLang] = useState<Language>('bn');
   const [activeTab, setActiveTab] = useState<'all' | 'winter' | 'medical' | 'education'>('all');
-  const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
-  const [selectedCampaignCategory, setSelectedCampaignCategory] = useState('general');
   const { data: campaigns = [], isLoading, isError } = useGetCampaignsQuery();
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
@@ -34,7 +32,7 @@ export default function CampaignsPage() {
   const tabs = [
     { key: 'all' as const, labelBn: 'সকল ক্যাম্পেইন', labelEn: 'All Campaigns' },
     { key: 'winter' as const, labelBn: 'শীতবস্ত্র তহবিল', labelEn: 'Winter Relief' },
-    { key: 'medical' as const, labelBn: 'চিকিৎসা সহায়তা', labelEn: 'Medical Fund' },
+    { key: 'medical' as const, labelBn: 'চিকিৎসা তহবিল', labelEn: 'Medical Fund' },
     { key: 'education' as const, labelBn: 'শিক্ষাবৃত্তি', labelEn: 'Education' },
   ];
 
@@ -185,14 +183,21 @@ export default function CampaignsPage() {
                     </div>
                   </div>
 
-                  <div className="p-5 sm:p-6 pt-0">
-                    <button
-                      onClick={() => setAssistanceModalOpen(true)}
-                      className="w-full py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-md active:scale-98"
+                  <div className="p-5 sm:p-6 pt-0 flex items-center gap-3">
+                    <Link
+                      href={`/donate?campaign=${camp.id}`}
+                      className="flex-1 py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-md active:scale-98"
                     >
-                      <Heart className="w-4 h-4 text-red-300" />
-                      <span>{t('সহায়তার আবেদন করুন', 'Apply for Assistance')}</span>
-                    </button>
+                      <Heart className="w-4 h-4 fill-current" />
+                      <span>{t('অনুদান দিন', 'Donate Now')}</span>
+                    </Link>
+                    <Link
+                      href="/volunteer"
+                      className="px-4 py-3 rounded-xl border border-stone-200 hover:border-red-300 bg-stone-50 hover:bg-red-50 text-stone-700 hover:text-[#D62828] font-semibold text-xs sm:text-sm transition flex items-center justify-center gap-1.5"
+                    >
+                      <Users className="w-4 h-4" />
+                      <span>{t('স্বেচ্ছাসেবক', 'Volunteer')}</span>
+                    </Link>
                   </div>
                 </motion.div>
               );
@@ -201,23 +206,9 @@ export default function CampaignsPage() {
         </section>
       </main>
 
-      <Footer 
-        lang={lang} 
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
-      />
-
-      <MobileBottomBar
-        lang={lang}
-        onOpenAssistance={() => setAssistanceModalOpen(true)}
-      />
-
+      <Footer lang={lang} />
+      <MobileBottomBar lang={lang} />
       <BackToTop />
-
-      <AssistanceModal
-        isOpen={assistanceModalOpen}
-        onClose={() => setAssistanceModalOpen(false)}
-        lang={lang}
-      />
     </div>
   );
 }
