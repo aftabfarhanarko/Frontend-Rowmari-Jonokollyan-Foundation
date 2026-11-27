@@ -15,6 +15,22 @@ export interface DonationSubmissionPayload {
   notes?: string;
 }
 
+export interface AdminCreateDonationPayload {
+  donorName?: string;
+  donorPhone?: string;
+  donorEmail?: string;
+  isAnonymous?: boolean;
+  amount: number;
+  campaignId?: string;
+  paymentMethod?: 'CASH' | 'BANK_TRANSFER' | 'BKASH' | 'NAGAD' | 'ROCKET' | 'OTHER';
+  senderPhone?: string;
+  transactionReference?: string;
+  paymentProofUrl?: string;
+  notes?: string;
+  adminNote?: string;
+  status?: 'PENDING' | 'APPROVED';
+}
+
 export interface PublicDonationStats {
   totalApprovedAmount: number;
   totalApprovedDonations: number;
@@ -98,6 +114,15 @@ export const donationsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Donations', 'Campaigns', 'Reports'],
     }),
+
+    adminCreateDonation: builder.mutation<AdminDonationItem, AdminCreateDonationPayload>({
+      query: (data) => ({
+        url: API_ENDPOINTS.donations.adminCreate,
+        method: 'POST',
+        data,
+      }),
+      invalidatesTags: ['Donations', 'Campaigns', 'Reports'],
+    }),
   }),
 });
 
@@ -108,4 +133,5 @@ export const {
   useGetAdminDonationsListQuery,
   useGetDonationByIdQuery,
   useReviewDonationStatusMutation,
+  useAdminCreateDonationMutation,
 } = donationsApi;

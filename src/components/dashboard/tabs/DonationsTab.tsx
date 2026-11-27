@@ -2,9 +2,15 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { useGetAdminDonationsListQuery, useReviewDonationStatusMutation } from "@/store/api/donationsApi"
+import {
+  useGetAdminDonationsListQuery,
+  useReviewDonationStatusMutation,
+  useAdminCreateDonationMutation,
+} from "@/store/api/donationsApi"
+import { useGetCampaignsQuery } from "@/store/api/campaignsApi"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Search, Eye, X, CheckCircle2, XCircle } from "lucide-react"
+import { ExternalLink, Search, Eye, X, CheckCircle2, XCircle, Plus, Loader2 } from "lucide-react"
+import { toast } from "sonner"
 
 export function DonationsTab() {
   const [statusFilter, setStatusFilter] = useState<string>("ALL")
@@ -12,22 +18,89 @@ export function DonationsTab() {
   const [selectedDonation, setSelectedDonation] = useState<any | null>(null)
   const [adminNote, setAdminNote] = useState("")
   const [reviewDonation, { isLoading: isReviewing }] = useReviewDonationStatusMutation()
+  const [adminCreateDonation, { isLoading: isCreating }] = useAdminCreateDonationMutation()
 
   const { data: donationsRes, refetch } = useGetAdminDonationsListQuery({
     status: statusFilter === "ALL" ? undefined : statusFilter,
     page: 1, limit: 50,
   })
+  const { data: campaignsRes } = useGetCampaignsQuery()
+  const campaigns: any[] = Array.isArray(campaignsRes) ? campaignsRes : (campaignsRes as any)?.items || []
 
-  const donations = donationsRes?.items || []
+  const donations = Array.isArray(donationsRes) ? donationsRes : donationsRes?.items || []
+
+  // Add Donation Modal State
+  const [addModalOpen, setAddModalOpen] = useState(false)
+  const [donorName, setDonorName] = useState("")
+  const [donorPhone, setDonorPhone] = useState("")
+  const [donorEmail, setDonorEmail] = useState("")
+  const [isAnonymous, setIsAnonymous] = useState(false)
+  const [amount, setAmount] = useState("")
+  const [paymentMethod, setPaymentMethod] = useState<"CASH" | "BANK_TRANSFER" | "BKASH" | "NAGAD" | "ROCKET" | "OTHER">("CASH")
+  const [campaignId, setCampaignId] = useState("")
+  const [transactionReference, setTransactionReference] = useState("")
+  const [createStatus, setCreateStatus] = useState<"APPROVED" | "PENDING">("APPROVED")
+  const [notes, setNotes] = useState("")
+  const [createAdminNote, setCreateAdminNote] = useState("")
+
+  const resetAddForm = () => {
+    setDonorName("")
+    setDonorPhone("")
+    setDonorEmail("")
+    setIsAnonymous(false)
+    setAmount("")
+    setPaymentMethod("CASH")
+    setCampaignId("")
+    setTransactionReference("")
+    setCreateStatus("APPROVED")
+    setNotes("")
+    setCreateAdminNote("")
+  }
+
+  const handleCreateDonation = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const numAmount = Number(amount)
+    if (!numAmount || numAmount < 10) {
+      toast.error("অনুদানের পরিমাণ সর্বনিম্ন ১০ টাকা হতে হবে")
+      return
+    }
+    if (!isAnonymous && !donorName.trim()) {
+      toast.error("দাতার নাম লিখুন অথবা 'বেনামী দাতা' নির্বাচন করুন")
+      return
+    }
+
+    try {
+      await adminCreateDonation({
+        donorName: isAnonymous ? undefined : donorName.trim(),
+        donorPhone: donorPhone.trim() || undefined,
+        donorEmail: donorEmail.trim() || undefined,
+        isAnonymous,
+        amount: numAmount,
+        paymentMethod,
+        campaignId: campaignId || undefined,
+        transactionReference: transactionReference.trim() || undefined,
+        status: createStatus,
+        notes: notes.trim() || undefined,
+        adminNote: createAdminNote.trim() || undefined,
+      }).unwrap()
+      toast.success("নতুন অনুদান সফলভাবে তহবিলে যুক্ত করা হয়েছে")
+      setAddModalOpen(false)
+      resetAddForm()
+      refetch()
+    } catch (err: any) {
+      toast.error(err?.data?.message || err?.message || "অনুদান যুক্ত করতে ব্যর্থ হয়েছে")
+    }
+  }
 
   const handleReview = async (id: string, status: "APPROVED" | "REJECTED") => {
     try {
       await reviewDonation({ id, status, adminNote }).unwrap()
+      toast.success(status === "APPROVED" ? "অনুদান অনুমোদন করা হয়েছে" : "অনুদান বাতিল করা হয়েছে")
       setSelectedDonation(null)
       setAdminNote("")
       refetch()
     } catch (err: any) {
-      alert(err?.data?.message || "হালনাগাদ ব্যর্থ হয়েছে")
+      toast.error(err?.data?.message || "হালনাগাদ ব্যর্থ হয়েছে")
     }
   }
 
@@ -72,9 +145,9 @@ export function DonationsTab() {
         </div>
       </div>
 
-      {/* Filter and Search Bar */}
+      {/* Filter, Search and Add Button Bar */}
       <div className="bg-white p-4 rounded-xl border border-stone-200 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {["ALL", "PENDING", "APPROVED", "REJECTED"].map((st) => (
             <button
               key={st} onClick={() => setStatusFilter(st)}
@@ -86,13 +159,23 @@ export function DonationsTab() {
             </button>
           ))}
         </div>
-        <div className="relative w-full sm:w-64">
-          <Search className="size-4 absolute left-3 top-2.5 text-stone-400" />
-          <input
-            type="text" placeholder="নাম, ফোন বা TrxID..." value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-stone-300 focus:outline-none focus:border-[#D62828]"
-          />
+        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+          <div className="relative flex-1 sm:w-64">
+            <Search className="size-4 absolute left-3 top-2.5 text-stone-400" />
+            <input
+              type="text" placeholder="নাম, ফোন বা TrxID..." value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-stone-300 focus:outline-none focus:border-[#D62828]"
+            />
+          </div>
+          <Button
+            size="sm"
+            onClick={() => { resetAddForm(); setAddModalOpen(true) }}
+            className="bg-[#D62828] hover:bg-[#B91C1C] text-white text-xs font-bold gap-1.5 cursor-pointer shrink-0"
+          >
+            <Plus className="size-3.5" />
+            <span>নতুন অনুদান যোগ করুন</span>
+          </Button>
         </div>
       </div>
 
@@ -192,6 +275,192 @@ export function DonationsTab() {
                 <CheckCircle2 className="size-3.5 mr-1" /> অনুমোদন করুন
               </Button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Admin Add Donation / Fund Modal */}
+      {addModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-xl w-full p-6 space-y-4 shadow-2xl border border-stone-200 max-h-[90vh] overflow-y-auto animate-in fade-in-50 zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b pb-3 border-stone-100">
+              <div>
+                <h3 className="font-black text-base text-stone-900">নতুন অনুদান ও তহবিল যুক্ত করুন</h3>
+                <p className="text-[11px] text-stone-500">অফলাইন, নগদ, ব্যাংক বা সরাসরি প্রাপ্ত অনুদান তহবিলে লিপিবদ্ধ করুন</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setAddModalOpen(false)}
+                className="text-stone-400 hover:text-stone-700 cursor-pointer"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateDonation} className="space-y-3.5 text-xs">
+              <div className="flex items-center gap-2 bg-stone-50 px-3 py-2 rounded-xl border border-stone-200">
+                <input
+                  type="checkbox"
+                  id="isAnonymous"
+                  checked={isAnonymous}
+                  onChange={(e) => setIsAnonymous(e.target.checked)}
+                  className="rounded text-[#D62828] focus:ring-[#D62828]"
+                />
+                <label htmlFor="isAnonymous" className="font-bold text-stone-700 cursor-pointer">
+                  বেনামী দাতা (নাম গোপন রাখুন)
+                </label>
+              </div>
+
+              {!isAnonymous && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-bold text-stone-700 mb-1">
+                      দাতার নাম <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required={!isAnonymous}
+                      value={donorName}
+                      onChange={(e) => setDonorName(e.target.value)}
+                      placeholder="যেমন: মো. আব্দুল করিম"
+                      className="w-full px-3 py-2 rounded-xl border border-stone-300"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-stone-700 mb-1">দাতার ফোন (ঐচ্ছিক)</label>
+                    <input
+                      type="text"
+                      value={donorPhone}
+                      onChange={(e) => setDonorPhone(e.target.value)}
+                      placeholder="যেমন: 01712345678"
+                      className="w-full px-3 py-2 rounded-xl border border-stone-300 font-mono"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-stone-700 mb-1">
+                    অনুদানের পরিমাণ (টাকা) <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    min={10}
+                    required
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="যেমন: 5000"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 font-bold"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-stone-700 mb-1">গ্রহণ মাধ্যম</label>
+                  <select
+                    value={paymentMethod}
+                    onChange={(e) => setPaymentMethod(e.target.value as any)}
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 font-semibold"
+                  >
+                    <option value="CASH">নগদ (Cash)</option>
+                    <option value="BANK_TRANSFER">ব্যাংক ট্রান্সফার (Bank)</option>
+                    <option value="BKASH">বিকাশ (bKash)</option>
+                    <option value="NAGAD">নগদ (Nagad)</option>
+                    <option value="ROCKET">রকেট (Rocket)</option>
+                    <option value="OTHER">অন্যান্য</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-stone-700 mb-1">ক্যাম্পেইন / তহবিল খাত</label>
+                  <select
+                    value={campaignId}
+                    onChange={(e) => setCampaignId(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 font-semibold"
+                  >
+                    <option value="">সাধারণ তহবিল (General Fund)</option>
+                    {campaigns.map((c: any) => (
+                      <option key={c.id} value={c.id}>
+                        {c.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-bold text-stone-700 mb-1">স্ট্যাটাস</label>
+                  <select
+                    value={createStatus}
+                    onChange={(e) => setCreateStatus(e.target.value as "APPROVED" | "PENDING")}
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 font-semibold"
+                  >
+                    <option value="APPROVED">সরাসরি অনুমোদিত (Approved)</option>
+                    <option value="PENDING">অপেক্ষমান (Pending)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-stone-700 mb-1">ট্রানজেকশন আইডি / রসিদ নং (ঐচ্ছিক)</label>
+                  <input
+                    type="text"
+                    value={transactionReference}
+                    onChange={(e) => setTransactionReference(e.target.value)}
+                    placeholder="যেমন: CASH-001 বা TRX123"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300 font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold text-stone-700 mb-1">দাতার ইমেইল (ঐচ্ছিক)</label>
+                  <input
+                    type="email"
+                    value={donorEmail}
+                    onChange={(e) => setDonorEmail(e.target.value)}
+                    placeholder="donor@example.com"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-300"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-bold text-stone-700 mb-1">মন্তব্য / বিবরণ (ঐচ্ছিক)</label>
+                <textarea
+                  rows={2}
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="অনুদান সংক্রান্ত নোট বা উদ্দেশ্য..."
+                  className="w-full px-3 py-2 rounded-xl border border-stone-300"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-stone-700 mb-1">অ্যাডমিন নোট (ঐচ্ছিক)</label>
+                <input
+                  type="text"
+                  value={createAdminNote}
+                  onChange={(e) => setCreateAdminNote(e.target.value)}
+                  placeholder="অভ্যন্তরীণ যাচাই মন্তব্য..."
+                  className="w-full px-3 py-2 rounded-xl border border-stone-300"
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-stone-100">
+                <Button type="button" variant="outline" onClick={() => setAddModalOpen(false)}>
+                  বাতিল
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isCreating}
+                  className="bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold gap-1.5 cursor-pointer"
+                >
+                  {isCreating && <Loader2 className="size-3.5 animate-spin" />}
+                  <span>অনুদান সংরক্ষণ করুন</span>
+                </Button>
+              </div>
+            </form>
           </div>
         </div>
       )}

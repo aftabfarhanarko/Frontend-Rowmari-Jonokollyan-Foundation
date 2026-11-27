@@ -97,6 +97,7 @@ export const API_ENDPOINTS = {
     publicStats: '/donations/public/stats',
     publicShowcase: '/donations/public/showcase',
     adminAll: '/donations/admin/all',
+    adminCreate: '/donations/admin',
     adminReview: (id: string) => `/donations/admin/${id}/review`,
   },
   expenses: {
