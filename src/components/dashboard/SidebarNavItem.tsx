@@ -38,17 +38,17 @@ export function SidebarNavItem({
       onClick={onClick}
       title={isCollapsed ? item.titleBn : undefined}
       className={cn(
-        "group relative flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold transition-all text-left",
+        "group relative flex w-full items-center justify-between rounded-xl px-3 py-2 md:px-3.5 md:py-2.5 text-xs md:text-sm font-semibold transition-all text-left",
         isActive
           ? "bg-[#D62828] text-white shadow-xs font-bold"
           : "text-stone-600 hover:text-stone-900 hover:bg-stone-100/80",
         isCollapsed && "justify-center px-2 py-2.5"
       )}
     >
-      <div className={cn("flex items-center gap-2.5 min-w-0", isCollapsed && "gap-0")}>
+      <div className={cn("flex items-center gap-2.5 md:gap-3 min-w-0", isCollapsed && "gap-0")}>
         <Icon
           className={cn(
-            "size-4 shrink-0 transition-colors",
+            "size-4 md:size-[18px] shrink-0 transition-colors",
             isActive ? "text-white" : "text-stone-400 group-hover:text-stone-700"
           )}
         />
@@ -60,7 +60,7 @@ export function SidebarNavItem({
           {item.badge !== undefined && (
             <span
               className={cn(
-                "px-1.5 py-0.5 rounded-full text-[10px] font-bold",
+                "px-1.5 py-0.5 rounded-full text-[10px] md:text-[11px] font-bold",
                 isActive
                   ? "bg-white/20 text-white"
                   : item.badgeVariant === "urgent"

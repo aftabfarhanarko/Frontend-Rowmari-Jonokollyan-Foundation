@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   Mail,
@@ -25,6 +25,7 @@ import { UserRole } from '@/types';
 import { toast } from 'sonner';
 
 function LoginForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectParam = searchParams?.get('redirect');
 
@@ -45,13 +46,25 @@ function LoginForm() {
 
   const t = (bn: string, en: string) => (lang === 'bn' ? bn : en);
 
-  // If already authenticated, redirect safely
+  // If already authenticated with valid session cookies, redirect safely; otherwise clear stale auth state
   useEffect(() => {
-    if (isAuthenticated) {
-      const target = redirectParam ? decodeURIComponent(redirectParam) : '/dashboard';
-      window.location.href = target;
+    if (!isAuthenticated || isRedirecting) return;
+    if (typeof document === 'undefined') return;
+
+    const hasSessionCookie = document.cookie.includes('rjf_session=1');
+    const roleMatch = document.cookie.match(/rjf_auth_role=([^;]+)/);
+    const cookieRole = roleMatch?.[1];
+    const hasValidRole = cookieRole === 'SUPER_ADMIN' || cookieRole === 'COMMUNITY_MEMBER';
+
+    if (!hasSessionCookie || !hasValidRole) {
+      setIsAuthenticated(false);
+      return;
     }
-  }, [isAuthenticated, redirectParam]);
+
+    const decoded = redirectParam ? decodeURIComponent(redirectParam) : '/dashboard';
+    const target = decoded.startsWith('/') && !decoded.startsWith('/login') ? decoded : '/dashboard';
+    router.replace(target);
+  }, [isAuthenticated, isRedirecting, redirectParam, router, setIsAuthenticated]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,13 +101,13 @@ function LoginForm() {
       );
       toast.success(welcomeMsg);
 
-      const target = redirectParam ? decodeURIComponent(redirectParam) : '/dashboard';
+      const decoded = redirectParam ? decodeURIComponent(redirectParam) : '/dashboard';
+      const target = decoded.startsWith('/') && !decoded.startsWith('/login') ? decoded : '/dashboard';
 
-      // Use a brief timeout so mobile users clearly see the green toast before redirecting,
-      // and use window.location.href to guarantee browser HTTP cookie submission to Next.js middleware
+      // Brief delay so users see the success toast before client-side navigation
       setTimeout(() => {
-        window.location.href = target;
-      }, 700);
+        router.replace(target);
+      }, 300);
     } catch (err: any) {
       setIsRedirecting(false);
       const errorMsg =

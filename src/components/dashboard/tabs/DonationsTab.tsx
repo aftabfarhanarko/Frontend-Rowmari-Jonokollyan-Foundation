@@ -11,6 +11,7 @@ import { useGetCampaignsQuery } from "@/store/api/campaignsApi"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Search, Eye, X, CheckCircle2, XCircle, Plus, Loader2 } from "lucide-react"
 import { toast } from "sonner"
+import { DashboardModal } from "@/components/dashboard/DashboardModal"
 
 export function DonationsTab() {
   const [statusFilter, setStatusFilter] = useState<string>("ALL")
@@ -239,7 +240,7 @@ export function DonationsTab() {
 
       {/* Review Modal */}
       {selectedDonation && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+        <DashboardModal>
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-xl">
             <div className="flex items-center justify-between border-b pb-3 border-stone-200">
               <h3 className="font-black text-lg text-stone-900">অনুদান বিস্তারিত ও যাচাই</h3>
@@ -276,13 +277,13 @@ export function DonationsTab() {
               </Button>
             </div>
           </div>
-        </div>
+        </DashboardModal>
       )}
 
       {/* Admin Add Donation / Fund Modal */}
       {addModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-xl w-full p-6 space-y-4 shadow-2xl border border-stone-200 max-h-[90vh] overflow-y-auto animate-in fade-in-50 zoom-in-95 duration-150">
+        <DashboardModal>
+          <div className="bg-white rounded-3xl max-w-xl w-full p-6 space-y-4 shadow-2xl border border-stone-200 max-h-[85vh] overflow-y-auto animate-in fade-in-50 zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b pb-3 border-stone-100">
               <div>
                 <h3 className="font-black text-base text-stone-900">নতুন অনুদান ও তহবিল যুক্ত করুন</h3>
@@ -462,7 +463,7 @@ export function DonationsTab() {
               </div>
             </form>
           </div>
-        </div>
+        </DashboardModal>
       )}
     </div>
   )

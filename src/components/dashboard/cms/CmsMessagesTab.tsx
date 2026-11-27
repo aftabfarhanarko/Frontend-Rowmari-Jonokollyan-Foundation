@@ -18,6 +18,7 @@ import {
   ContactMessageItem,
 } from "@/store/api/adminApi"
 import { Button } from "@/components/ui/button"
+import { DashboardModal } from "@/components/dashboard/DashboardModal"
 import { toast } from "sonner"
 import { SkeletonList } from "@/components/ui/skeleton"
 
@@ -122,7 +123,7 @@ export function CmsMessagesTab() {
 
       {/* Message Modal */}
       {selectedMessage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+        <DashboardModal>
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-stone-200 space-y-4 animate-in fade-in-50 zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-stone-100 pb-3">
               <h3 className="text-base font-black text-stone-900">বার্তার বিস্তারিত</h3>
@@ -162,7 +163,7 @@ export function CmsMessagesTab() {
               </Button>
             </div>
           </div>
-        </div>
+        </DashboardModal>
       )}
     </div>
   )

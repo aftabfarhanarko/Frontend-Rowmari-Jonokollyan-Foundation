@@ -5,6 +5,7 @@ import { Shield, X, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { AdminUserItem } from "@/store/api/adminApi"
 import { SystemRoleItem } from "./CreateUserModal"
+import { DashboardModal } from "@/components/dashboard/DashboardModal"
 
 interface EditRoleModalProps {
   user: AdminUserItem | null
@@ -28,8 +29,8 @@ export function EditRoleModal({
   if (!user) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-stone-200 overflow-hidden space-y-4">
+    <DashboardModal>
+      <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-stone-200 overflow-hidden space-y-4 animate-in fade-in duration-200">
         <div className="flex items-center justify-between p-5 border-b border-stone-100 bg-stone-50/70">
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-xl bg-red-100 text-red-800">
@@ -123,6 +124,6 @@ export function EditRoleModal({
           </div>
         </div>
       </div>
-    </div>
+    </DashboardModal>
   )
 }

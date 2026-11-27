@@ -1,13 +1,14 @@
 "use client"
 
 import React, { useState, useEffect, useMemo } from "react"
+import Link from "next/link"
 import { usePathname, useSearchParams } from "next/navigation"
 import { useAppStore } from "@/store/useAppStore"
 import { getNavItemsForRole, ROLE_METAS } from "@/config/dashboard-navigation"
 import { RoleBadge } from "@/components/dashboard/RoleBadge"
 import { SidebarNavItem } from "@/components/dashboard/SidebarNavItem"
 import { cn } from "@/lib/utils"
-import { Shield, X, PanelLeftClose, PanelLeftOpen } from "lucide-react"
+import { Shield, X, PanelLeftClose, PanelLeftOpen, Home } from "lucide-react"
 
 interface SidebarProps {
   isOpenMobile?: boolean
@@ -63,7 +64,7 @@ export function Sidebar({
     return (
       <div key={categoryKey} className="mb-4">
         {!isCollapsed && (
-          <div className="px-3 mb-1.5 text-[10px] font-bold uppercase tracking-wider text-stone-400">
+          <div className="px-3 mb-1.5 text-[10px] md:text-xs font-bold uppercase tracking-wider text-stone-400">
             {title}
           </div>
         )}
@@ -88,32 +89,43 @@ export function Sidebar({
   const sidebarContent = (
     <div
       className={cn(
-        "flex flex-col h-full bg-white border-r border-stone-200/90 select-none transition-all duration-300",
-        isCollapsed ? "w-18" : "w-64"
+        "flex flex-col h-full bg-white border-r border-stone-200/90 select-none md:transition-all md:duration-200",
+        isCollapsed ? "w-18" : "w-56 md:w-72 lg:w-[19rem]"
       )}
     >
       {/* Top Header in Mobile */}
-      <div className="flex md:hidden items-center justify-between p-4 border-b border-stone-200">
+      <div className="flex md:hidden items-center justify-between px-3.5 py-3 border-b border-stone-200">
         <div className="text-sm font-bold text-[#D62828]">ড্যাশবোর্ড মেনু</div>
-        <button
-          type="button"
-          onClick={onCloseMobile}
-          className="p-1 rounded-md text-stone-500 hover:bg-stone-100 cursor-pointer"
-          aria-label="Close Sidebar"
-        >
-          <X className="size-5" />
-        </button>
+        <div className="flex items-center gap-1">
+          <Link
+            href="/"
+            onClick={onCloseMobile}
+            className="p-1.5 rounded-lg text-stone-600 hover:text-[#D62828] hover:bg-red-50"
+            aria-label="হোম পেজ"
+            title="হোম পেজে যান"
+          >
+            <Home className="size-4.5" />
+          </Link>
+          <button
+            type="button"
+            onClick={onCloseMobile}
+            className="p-1.5 rounded-lg text-stone-500 hover:bg-stone-100 cursor-pointer"
+            aria-label="Close Sidebar"
+          >
+            <X className="size-4.5" />
+          </button>
+        </div>
       </div>
 
       {/* Role Summary Banner */}
       {!isCollapsed ? (
         <div className="p-3 m-3 rounded-2xl bg-stone-50 border border-stone-200/80">
           <div className="flex items-center gap-2 mb-1">
-            <Shield className="size-3.5 text-[#D62828]" />
-            <span className="text-[11px] font-bold text-stone-700">সিস্টেম রোল:</span>
+            <Shield className="size-3.5 md:size-4 text-[#D62828]" />
+            <span className="text-[11px] md:text-xs font-bold text-stone-700">সিস্টেম রোল:</span>
           </div>
           <RoleBadge role={effectiveRole} size="sm" />
-          <p className="text-[10px] text-stone-500 mt-1.5 leading-snug">
+          <p className="text-[10px] md:text-xs text-stone-500 mt-1.5 leading-snug">
             {ROLE_METAS[effectiveRole]?.descriptionBn || "সুপার অ্যাডমিন সেন্ট্রাল কন্ট্রোল প্যানেল"}
           </p>
         </div>
@@ -131,7 +143,7 @@ export function Sidebar({
       </div>
 
       {/* Footer / Desktop Collapse Toggle */}
-      <div className="p-2 border-t border-stone-100 bg-stone-50/50 flex items-center justify-between text-[10px] text-stone-400">
+      <div className="p-2 md:p-2.5 border-t border-stone-100 bg-stone-50/50 flex items-center justify-between text-[10px] md:text-xs text-stone-400">
         {!isCollapsed && <span className="truncate px-1">রৌমারী জনকল্যাণ ফাউন্ডেশন</span>}
         {onToggleCollapse && (
           <button
@@ -150,7 +162,7 @@ export function Sidebar({
   return (
     <>
       {/* Desktop Persistent Sidebar */}
-      <aside className="hidden md:block shrink-0 sticky top-16 h-[calc(100vh-4rem)] z-30">
+      <aside className="hidden md:block shrink-0 sticky top-[4.625rem] h-[calc(100vh-4.625rem)] z-30">
         {sidebarContent}
       </aside>
 
@@ -158,10 +170,10 @@ export function Sidebar({
       {isOpenMobile && (
         <div className="fixed inset-0 z-50 flex md:hidden">
           <div
-            className="fixed inset-0 bg-stone-900/40 backdrop-blur-xs transition-opacity"
+            className="fixed inset-0 bg-stone-900/40"
             onClick={onCloseMobile}
           />
-          <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white shadow-xl z-10 animate-in slide-in-from-left duration-200">
+          <div className="relative flex flex-col w-56 bg-white shadow-xl z-10">
             {sidebarContent}
           </div>
         </div>

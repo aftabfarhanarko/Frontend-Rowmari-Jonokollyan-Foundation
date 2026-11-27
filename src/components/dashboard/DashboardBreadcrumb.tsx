@@ -53,7 +53,7 @@ export function DashboardBreadcrumb({ className = "", customTitle }: DashboardBr
   const isRootDashboard = segments.length === 1 && segments[0] === "dashboard" && !tabParam
 
   return (
-    <nav aria-label="Breadcrumb" className={`flex items-center text-xs text-stone-500 ${className}`}>
+    <nav aria-label="Breadcrumb" className={`flex items-center text-xs md:text-sm text-stone-500 ${className}`}>
       <ol className="flex items-center space-x-1.5 sm:space-x-2">
         <li>
           <Link

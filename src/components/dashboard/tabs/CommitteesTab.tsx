@@ -21,6 +21,7 @@ import {
   MemberItem,
 } from "@/store/api/committeesApi"
 import { Button } from "@/components/ui/button"
+import { DashboardModal } from "@/components/dashboard/DashboardModal"
 import { SkeletonTable, SkeletonCard } from "@/components/ui/skeleton"
 import {
   Plus,
@@ -744,10 +745,7 @@ export function CommitteesTab() {
       {/* Modal 1: Create / Edit Designation */}
       {/* ---------------------------------------------------------------------- */}
       {isDesigModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
-          onClick={() => setIsDesigModalOpen(false)}
-        >
+        <DashboardModal onBackdropClick={() => setIsDesigModalOpen(false)}>
           <div
             className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden p-6 space-y-4"
             onClick={(e) => e.stopPropagation()}
@@ -844,17 +842,14 @@ export function CommitteesTab() {
               </div>
             </form>
           </div>
-        </div>
+        </DashboardModal>
       )}
 
       {/* ---------------------------------------------------------------------- */}
       {/* Modal 2: Create / Edit Committee */}
       {/* ---------------------------------------------------------------------- */}
       {isCommModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
-          onClick={() => setIsCommModalOpen(false)}
-        >
+        <DashboardModal onBackdropClick={() => setIsCommModalOpen(false)}>
           <div
             className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden p-6 space-y-4"
             onClick={(e) => e.stopPropagation()}
@@ -951,19 +946,16 @@ export function CommitteesTab() {
               </div>
             </form>
           </div>
-        </div>
+        </DashboardModal>
       )}
 
       {/* ---------------------------------------------------------------------- */}
       {/* Modal 3: Create / Edit Member */}
       {/* ---------------------------------------------------------------------- */}
       {isMemModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto"
-          onClick={() => setIsMemModalOpen(false)}
-        >
+        <DashboardModal onBackdropClick={() => setIsMemModalOpen(false)}>
           <div
-            className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-stone-200 p-6 space-y-4 my-8"
+            className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-stone-200 p-6 space-y-4 my-4"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-stone-100 pb-3">
@@ -1154,7 +1146,7 @@ export function CommitteesTab() {
               </div>
             </form>
           </div>
-        </div>
+        </DashboardModal>
       )}
     </div>
   )

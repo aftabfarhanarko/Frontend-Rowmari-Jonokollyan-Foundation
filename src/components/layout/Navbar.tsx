@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -35,6 +35,7 @@ import {
   LogOut,
   User,
   MapPin,
+  Smartphone,
 } from 'lucide-react';
 import { Language, UserRole } from '@/types';
 import TopAnnouncement from '@/components/TopAnnouncement';
@@ -42,6 +43,7 @@ import { useAppStore } from '@/store/useAppStore';
 import { useLogoutMutation, useGetCurrentUserQuery } from '@/store/api/authApi';
 import { toast } from 'sonner';
 import PwaInstallButton from '@/components/pwa/PwaInstallButton';
+import { usePwa } from '@/context/PwaContext';
 
 interface NavbarProps {
   lang: Language;
@@ -178,7 +180,28 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+  const { isInstallable, isInstalled, promptInstall } = usePwa();
   const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!userMenuOpen) return;
+    const handleOutside = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setUserMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handleOutside);
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.removeEventListener('mousedown', handleOutside);
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, [userMenuOpen]);
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
 
@@ -405,36 +428,95 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                 <span aria-hidden className="hidden xl:block w-px h-6 bg-stone-200 mx-0.5" />
 
                 {isUserLoggedIn ? (
-                  <div className="flex items-center gap-1.5">
-                    {currentRole === 'SUPER_ADMIN' ? (
-                      <Link
-                        href="/dashboard"
-                        className="whitespace-nowrap px-3 py-1.5 rounded-full border border-[#D62828] bg-red-50 text-[#D62828] hover:bg-[#D62828] hover:text-white text-[13px] font-bold transition flex items-center gap-1.5 shadow-2xs"
-                        title={lang === 'bn' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard'}
-                      >
-                        <LayoutDashboard className="w-3.5 h-3.5 shrink-0" />
-                        <span className="hidden 2xl:inline">{lang === 'bn' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard'}</span>
-                        <span className="2xl:hidden">{lang === 'bn' ? 'ড্যাশবোর্ড' : 'Dashboard'}</span>
-                      </Link>
-                    ) : (
-                      <Link
-                        href="/dashboard"
-                        className="whitespace-nowrap px-3 py-1.5 rounded-full border border-[#D62828] bg-red-50 text-[#D62828] hover:bg-[#D62828] hover:text-white text-[13px] font-bold transition flex items-center gap-1.5 shadow-2xs max-w-[170px]"
-                        title={lang === 'bn' ? 'আমার ড্যাশবোর্ড' : 'My Dashboard'}
-                      >
-                        <LayoutDashboard className="w-3.5 h-3.5 shrink-0" />
-                        <span className="truncate">{currentUser?.fullName || (lang === 'bn' ? 'আমার ড্যাশবোর্ড' : 'My Dashboard')}</span>
-                      </Link>
-                    )}
+                  <div ref={userMenuRef} className="relative flex items-center">
                     <button
                       type="button"
-                      onClick={handleLogout}
-                      title={lang === 'bn' ? 'লগআউট করুন' : 'Logout'}
-                      aria-label={lang === 'bn' ? 'লগআউট করুন' : 'Logout'}
-                      className="p-2 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
+                      onClick={() => setUserMenuOpen((prev) => !prev)}
+                      aria-expanded={userMenuOpen}
+                      aria-haspopup="menu"
+                      title={currentUser?.fullName || (lang === 'bn' ? 'অ্যাকাউন্ট মেনু' : 'Account Menu')}
+                      className="flex items-center gap-1.5 rounded-full p-1 pr-2 border border-stone-200 bg-white hover:border-[#D62828]/40 hover:bg-red-50/40 transition cursor-pointer shadow-2xs"
                     >
-                      <LogOut className="w-4 h-4" />
+                      <div className="flex w-8 h-8 select-none items-center justify-center rounded-full bg-linear-to-br from-[#D62828] to-red-600 text-xs font-bold text-white overflow-hidden">
+                        {currentUser?.avatarUrl ? (
+                          <img src={currentUser.avatarUrl} alt={currentUser.fullName || 'User'} className="w-full h-full object-cover" />
+                        ) : currentUser?.fullName ? (
+                          currentUser.fullName[0]
+                        ) : (
+                          currentRole === 'SUPER_ADMIN' ? 'অ' : 'স'
+                        )}
+                      </div>
+                      <ChevronDown className={`w-3.5 h-3.5 text-stone-500 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
                     </button>
+
+                    {userMenuOpen && (
+                      <div
+                        role="menu"
+                        className="absolute right-0 top-full mt-2 w-60 rounded-2xl border border-stone-200 bg-white p-1.5 shadow-xl z-50"
+                      >
+                        <div className="px-3 py-2.5 border-b border-stone-100">
+                          <div className="text-sm font-bold text-stone-900 truncate">
+                            {currentUser?.fullName || (currentRole === 'SUPER_ADMIN' ? (lang === 'bn' ? 'সুপার অ্যাডমিন' : 'Super Admin') : (lang === 'bn' ? 'সদস্য' : 'Member'))}
+                          </div>
+                          <div className="text-xs font-medium text-[#D62828] mt-0.5">
+                            {currentRole === 'SUPER_ADMIN'
+                              ? (lang === 'bn' ? 'অ্যাডমিন পোর্টাল' : 'Admin Portal')
+                              : (lang === 'bn' ? 'সদস্য পোর্টাল' : 'Member Portal')}
+                          </div>
+                        </div>
+
+                        <div className="py-1 space-y-0.5">
+                          <Link
+                            href="/dashboard"
+                            onClick={() => setUserMenuOpen(false)}
+                            role="menuitem"
+                            className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-semibold text-stone-800 hover:bg-red-50 hover:text-[#D62828] transition-colors"
+                          >
+                            <LayoutDashboard className="w-4 h-4 text-[#D62828]" />
+                            <span>
+                              {currentRole === 'SUPER_ADMIN'
+                                ? (lang === 'bn' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard')
+                                : (lang === 'bn' ? 'আমার ড্যাশবোর্ড' : 'My Dashboard')}
+                            </span>
+                          </Link>
+
+                          {onToggleLang && (
+                            <button
+                              type="button"
+                              role="menuitem"
+                              onClick={() => {
+                                onToggleLang();
+                                setUserMenuOpen(false);
+                              }}
+                              className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-sm font-medium text-stone-700 hover:bg-stone-100 transition-colors cursor-pointer text-left"
+                            >
+                              <span className="flex items-center gap-2.5">
+                                <Globe className="w-4 h-4 text-stone-500" />
+                                <span>{lang === 'bn' ? 'ভাষা পরিবর্তন' : 'Language'}</span>
+                              </span>
+                              <span className="px-2 py-0.5 rounded-md bg-stone-100 text-xs font-bold text-stone-800">
+                                {lang === 'bn' ? 'EN' : 'বাংলা'}
+                              </span>
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="border-t border-stone-100 pt-1">
+                          <button
+                            type="button"
+                            role="menuitem"
+                            onClick={() => {
+                              setUserMenuOpen(false);
+                              handleLogout();
+                            }}
+                            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors cursor-pointer text-left"
+                          >
+                            <LogOut className="w-4 h-4" />
+                            <span>{lang === 'bn' ? 'লগআউট' : 'Logout'}</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="flex items-center gap-1.5">
@@ -460,7 +542,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                   </div>
                 )}
 
-                {onToggleLang && (
+                {!isUserLoggedIn && onToggleLang && (
                   <motion.button
                     onClick={onToggleLang}
                     whileTap={{ scale: 0.95 }}
@@ -525,31 +607,21 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
       </div>
 
       {/* Mobile Side Navigation Drawer Portal (Rendered directly in document.body) */}
-      {mounted && typeof document !== 'undefined' && createPortal(
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <div className="fixed inset-0 z-[9999] xl:hidden flex">
-              {/* Backdrop Dimming Overlay */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.22 }}
-                onClick={() => setMobileMenuOpen(false)}
-                className="fixed inset-0 bg-stone-950/55 backdrop-blur-[3px] cursor-pointer"
-              />
+      {mounted && mobileMenuOpen && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[9999] xl:hidden flex">
+          {/* Backdrop Dimming Overlay */}
+          <div
+            onClick={() => setMobileMenuOpen(false)}
+            className="fixed inset-0 bg-stone-950/50 cursor-pointer"
+          />
 
-              {/* Premium compact side panel sliding from left */}
-              <motion.aside
-                role="dialog"
-                aria-modal="true"
-                aria-label={lang === 'bn' ? 'নেভিগেশন মেনু' : 'Navigation menu'}
-                initial={{ x: '-100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '-100%' }}
-                transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                className="relative z-10 w-[74vw] max-w-[272px] h-[100dvh] bg-gradient-to-b from-white via-white to-stone-50 rounded-r-[28px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.45)] flex flex-col overflow-hidden"
-              >
+          {/* Compact side panel */}
+          <aside
+            role="dialog"
+            aria-modal="true"
+            aria-label={lang === 'bn' ? 'নেভিগেশন মেনু' : 'Navigation menu'}
+            className="relative z-10 w-[74vw] max-w-[272px] h-[100dvh] bg-gradient-to-b from-white via-white to-stone-50 rounded-r-[28px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.45)] flex flex-col overflow-hidden"
+          >
                 {/* Brand accent strip */}
                 <div className="h-1 w-full shrink-0 bg-gradient-to-r from-[#D62828] via-[#E53935] to-[#B91C1C]" />
 
@@ -593,18 +665,15 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                 <div className="mx-4 h-px bg-gradient-to-r from-transparent via-stone-200 to-transparent shrink-0" />
 
                 {/* Navigation Links */}
-                <motion.nav
+                <nav
                   aria-label="Mobile"
-                  variants={drawerListVariants}
-                  initial={reduceMotion ? 'show' : 'hidden'}
-                  animate="show"
                   className="flex-1 overflow-y-auto px-3 py-3 space-y-0.5 overscroll-contain"
                 >
                   {mobileDrawerLinks.map((link) => {
                     const active = isActive(link.href);
                     const Icon = link.icon;
                     return (
-                      <motion.div key={link.href} variants={drawerItemVariants}>
+                      <div key={link.href}>
                         <Link
                           href={link.href}
                           onClick={() => setMobileMenuOpen(false)}
@@ -639,92 +708,100 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                               }`}
                           />
                         </Link>
-                      </motion.div>
+                      </div>
                     );
                   })}
-                </motion.nav>
+                </nav>
 
-                {/* Footer: Donate, Language, Install, Account */}
-                <div className="px-4 pt-3 pb-4 border-t border-stone-200/80 bg-white/90 space-y-2.5 shrink-0 pb-[max(1rem,env(safe-area-inset-bottom))]">
-                  {/* Donate CTA */}
+                {/* Footer: Donate, Language + Install, Account + Logout */}
+                <div className="px-3.5 pt-2.5 pb-3.5 border-t border-stone-200/80 bg-white space-y-2 shrink-0 pb-[max(0.875rem,env(safe-area-inset-bottom))]">
+                  {/* Row 1: Primary Donate CTA */}
                   <Link
                     href="/donate"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-br from-[#E53935] to-[#C62020] text-white text-[13px] font-bold flex items-center justify-center gap-2 shadow-md shadow-red-500/25 active:scale-[0.98] transition"
+                    className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-br from-[#E53935] to-[#C62020] text-white text-[13px] font-bold flex items-center justify-center gap-2 shadow-sm shadow-red-500/20 active:scale-[0.98] transition"
                   >
                     <Heart className="w-4 h-4 fill-current" />
                     <span>{lang === 'bn' ? 'অনুদান দিন' : 'Donate Now'}</span>
                   </Link>
 
-                  {/* Language Toggle with sliding pill */}
-                  {onToggleLang && (
-                    <div className="relative grid grid-cols-2 p-0.5 rounded-xl bg-stone-100 border border-stone-200/80">
-                      <motion.span
-                        aria-hidden
-                        className="absolute top-0.5 bottom-0.5 left-0.5 w-[calc(50%-2px)] rounded-[10px] bg-white shadow-sm border border-stone-200/80"
-                        animate={{ x: lang === 'bn' ? 0 : '100%' }}
-                        transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (lang !== 'bn') onToggleLang();
-                        }}
-                        className={`relative z-10 py-1.5 rounded-[10px] text-[13px] font-bold text-center cursor-pointer transition-colors ${lang === 'bn' ? 'text-[#D62828]' : 'text-stone-500 hover:text-stone-800'
-                          }`}
-                      >
-                        বাংলা
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (lang !== 'en') onToggleLang();
-                        }}
-                        className={`relative z-10 py-1.5 rounded-[10px] text-[13px] font-bold text-center cursor-pointer transition-colors ${lang === 'en' ? 'text-[#D62828]' : 'text-stone-500 hover:text-stone-800'
-                          }`}
-                      >
-                        EN
-                      </button>
+                  {/* Row 2: Compact Language + Install App side-by-side */}
+                  {(onToggleLang || (isInstallable && !isInstalled)) && (
+                    <div className={`grid gap-2 ${onToggleLang && isInstallable && !isInstalled ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                      {onToggleLang && (
+                        <div className="grid grid-cols-2 p-0.5 rounded-xl bg-stone-100 border border-stone-200/80">
+                          <button
+                            type="button"
+                            onClick={() => { if (lang !== 'bn') onToggleLang(); }}
+                            className={`py-1.5 rounded-[10px] text-xs font-bold text-center cursor-pointer transition-colors ${lang === 'bn' ? 'bg-white text-[#D62828] shadow-xs' : 'text-stone-500 hover:text-stone-800'}`}
+                          >
+                            বাংলা
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { if (lang !== 'en') onToggleLang(); }}
+                            className={`py-1.5 rounded-[10px] text-xs font-bold text-center cursor-pointer transition-colors ${lang === 'en' ? 'bg-white text-[#D62828] shadow-xs' : 'text-stone-500 hover:text-stone-800'}`}
+                          >
+                            EN
+                          </button>
+                        </div>
+                      )}
+
+                      {isInstallable && !isInstalled && (
+                        <button
+                          type="button"
+                          onClick={promptInstall}
+                          className="py-1.5 px-2.5 rounded-xl border border-[#D62828]/25 bg-red-50 hover:bg-red-100 text-[#D62828] font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-[0.98] cursor-pointer"
+                        >
+                          <Smartphone className="w-3.5 h-3.5 shrink-0" />
+                          <span className="truncate">{lang === 'bn' ? 'অ্যাপ ইনস্টল' : 'Install App'}</span>
+                        </button>
+                      )}
                     </div>
                   )}
 
-                  {/* Install App button in Drawer */}
-                  <PwaInstallButton variant="drawer" lang={lang} />
-
-                  {/* Account Button */}
-                  <Link
-                    href={isUserLoggedIn ? '/dashboard' : '/login'}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-2.5 px-3 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-[13px] flex items-center justify-center gap-2 shadow-md shadow-stone-900/15 transition active:scale-[0.98] text-center"
-                  >
-                    <User className="w-4 h-4 text-[#F3C474]" />
-                    <span>
-                      {isUserLoggedIn
-                        ? (currentRole === 'SUPER_ADMIN'
-                          ? (lang === 'bn' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard')
-                          : (lang === 'bn' ? 'আমার ড্যাশবোর্ড' : 'My Dashboard'))
-                        : (lang === 'bn' ? 'আমার অ্যাকাউন্ট' : 'My Account')}
-                    </span>
-                  </Link>
-
-                  {isUserLoggedIn && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        handleLogout();
-                      }}
-                      className="w-full py-1 text-center text-xs font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5"
+                  {/* Row 3: Dashboard / Account + Logout */}
+                  {isUserLoggedIn ? (
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex-1 min-w-0 py-2 px-3 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition active:scale-[0.98]"
+                      >
+                        <LayoutDashboard className="w-3.5 h-3.5 text-[#F3C474] shrink-0" />
+                        <span className="truncate">
+                          {currentRole === 'SUPER_ADMIN'
+                            ? (lang === 'bn' ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard')
+                            : (lang === 'bn' ? 'আমার ড্যাশবোর্ড' : 'My Dashboard')}
+                        </span>
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          handleLogout();
+                        }}
+                        title={lang === 'bn' ? 'লগআউট' : 'Logout'}
+                        aria-label={lang === 'bn' ? 'লগআউট' : 'Logout'}
+                        className="py-2 px-2.5 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs flex items-center justify-center gap-1 transition active:scale-[0.98] cursor-pointer shrink-0"
+                      >
+                        <LogOut className="w-3.5 h-3.5" />
+                        <span>{lang === 'bn' ? 'লগআউট' : 'Logout'}</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-full py-2.5 px-3 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-[13px] flex items-center justify-center gap-2 shadow-sm transition active:scale-[0.98]"
                     >
-                      <LogOut className="w-3.5 h-3.5" />
-                      <span>{lang === 'bn' ? 'লগআউট' : 'Logout'}</span>
-                    </button>
+                      <User className="w-4 h-4 text-[#F3C474]" />
+                      <span>{lang === 'bn' ? 'লগইন / অ্যাকাউন্ট' : 'Login / Account'}</span>
+                    </Link>
                   )}
                 </div>
-              </motion.aside>
-            </div>
-          )}
-        </AnimatePresence>,
+              </aside>
+            </div>,
         document.body
       )}
     </>

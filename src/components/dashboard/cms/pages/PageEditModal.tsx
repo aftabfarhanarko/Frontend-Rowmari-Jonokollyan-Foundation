@@ -4,6 +4,7 @@ import React from "react"
 import { Loader2, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ImageUploader } from "@/components/ui/ImageUploader"
+import { DashboardModal } from "@/components/dashboard/DashboardModal"
 
 interface PageEditModalProps {
   isOpen: boolean
@@ -25,8 +26,8 @@ export function PageEditModal({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-stone-200 my-8 space-y-5 animate-in fade-in-50 zoom-in-95 duration-150">
+    <DashboardModal>
+      <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-stone-200 my-4 space-y-5 animate-in fade-in-50 zoom-in-95 duration-150">
         <div className="flex items-center justify-between border-b border-stone-100 pb-4">
           <div>
             <h3 className="text-lg font-black text-stone-900">{editingPageId ? "পেজ সম্পাদনা করুন" : "নতুন পাবলিক পেজ তৈরি"}</h3>
@@ -104,6 +105,6 @@ export function PageEditModal({
           </div>
         </form>
       </div>
-    </div>
+    </DashboardModal>
   )
 }

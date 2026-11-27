@@ -141,7 +141,7 @@ export function DashboardShell({ children, defaultTab }: DashboardShellProps) {
           onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
         />
 
-        <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
+        <main className="relative min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
           <div className="mx-auto w-full max-w-7xl">
             {isPermitted ? (
               <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">

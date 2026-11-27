@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Plus, X, Loader2, Eye } from "lucide-react"
 import { useGetActivitiesQuery, useCreateActivityMutation } from "@/store/api/activitiesApi"
 import { toast } from "sonner"
+import { DashboardModal } from "@/components/dashboard/DashboardModal"
 
 export default function ActivitiesDashboardPage() {
   const { data: activitiesRes } = useGetActivitiesQuery()
@@ -122,7 +123,7 @@ export default function ActivitiesDashboardPage() {
       </div>
 
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
+        <DashboardModal>
           <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl border border-stone-200 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between border-b border-stone-100 pb-3 mb-4">
               <h3 className="text-base font-bold text-stone-900">নতুন কার্যক্রম / প্রজেক্ট রিপোর্ট</h3>
@@ -192,7 +193,7 @@ export default function ActivitiesDashboardPage() {
               </div>
             </form>
           </div>
-        </div>
+        </DashboardModal>
       )}
     </div>
   )

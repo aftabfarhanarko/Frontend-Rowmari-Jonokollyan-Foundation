@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button"
 import { AdminUserItem } from "@/store/api/adminApi"
 import { SystemRoleItem } from "./CreateUserModal"
 import { toast } from "sonner"
+import { DashboardModal } from "@/components/dashboard/DashboardModal"
 
 interface UserDetailsModalProps {
   user: AdminUserItem | null
@@ -51,8 +52,8 @@ export function UserDetailsModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-stone-200 overflow-hidden flex flex-col max-h-[90vh]">
+    <DashboardModal>
+      <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-stone-200 overflow-hidden flex flex-col max-h-[85vh] animate-in fade-in duration-200">
         {/* Top Header */}
         <div className="flex items-center justify-between p-5 border-b border-stone-100 bg-stone-50/80">
           <div className="flex items-center gap-3">
@@ -247,6 +248,6 @@ export function UserDetailsModal({
           </Button>
         </div>
       </div>
-    </div>
+    </DashboardModal>
   )
 }

@@ -3,6 +3,7 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { DashboardModal } from "@/components/dashboard/DashboardModal"
 import {
   Megaphone,
   Plus,
@@ -349,8 +350,8 @@ export function CmsModalTab() {
 
       {/* Create / Edit Modal Dialog */}
       {isDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-3xl border border-stone-200 shadow-2xl max-w-2xl w-full my-8 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <DashboardModal>
+          <div className="bg-white rounded-3xl border border-stone-200 shadow-2xl max-w-2xl w-full my-4 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <div className="p-5 sm:p-6 border-b border-stone-200 flex items-center justify-between bg-stone-50">
               <div className="flex items-center gap-2">
                 <Megaphone className="w-5 h-5 text-[#D62828]" />
@@ -588,15 +589,12 @@ export function CmsModalTab() {
               </div>
             </form>
           </div>
-        </div>
+        </DashboardModal>
       )}
 
       {/* Live Preview Modal Popup */}
       {previewModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
-          onClick={() => setPreviewModal(null)}
-        >
+        <DashboardModal onBackdropClick={() => setPreviewModal(null)}>
           <div
             className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border-2 border-red-500 overflow-hidden animate-in fade-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
@@ -676,7 +674,7 @@ export function CmsModalTab() {
               </div>
             </div>
           </div>
-        </div>
+        </DashboardModal>
       )}
     </div>
   )

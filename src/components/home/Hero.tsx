@@ -21,7 +21,9 @@ import {
   Heart,
 } from 'lucide-react';
 import { Language } from '@/types';
+import { IMPACT_STATS } from '@/data/mockData';
 import { useGetHeroSlidesQuery } from '@/store/api/contentApi';
+import { useGetPublicSummaryQuery } from '@/store/api/dashboardApi';
 
 interface HeroProps {
   lang: Language;
@@ -134,6 +136,52 @@ export default function Hero({
   const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
   const { data: dbSlides } = useGetHeroSlidesQuery();
+  const { data: summary } = useGetPublicSummaryQuery();
+
+  const toBnNum = (n: number | string) =>
+    n.toString().replace(/\d/g, (d) => '০১২৩৪৫৬৭৮৯'[parseInt(d, 10)]);
+
+  const heroStats = useMemo(
+    () => [
+      {
+        icon: Users,
+        countBn: summary?.applicationsApproved ? `${toBnNum(summary.applicationsApproved)}+` : IMPACT_STATS[0].countBn,
+        countEn: summary?.applicationsApproved ? `${summary.applicationsApproved}+` : IMPACT_STATS[0].countEn,
+        labelBn: IMPACT_STATS[0].labelBn,
+        labelEn: IMPACT_STATS[0].labelEn,
+        shortLabelBn: 'সুবিধাভোগী',
+        shortLabelEn: 'Served',
+      },
+      {
+        icon: HeartHandshake,
+        countBn: IMPACT_STATS[1].countBn,
+        countEn: IMPACT_STATS[1].countEn,
+        labelBn: IMPACT_STATS[1].labelBn,
+        labelEn: IMPACT_STATS[1].labelEn,
+        shortLabelBn: 'প্রকল্প',
+        shortLabelEn: 'Projects',
+      },
+      {
+        icon: HeartPulse,
+        countBn: IMPACT_STATS[2].countBn,
+        countEn: IMPACT_STATS[2].countEn,
+        labelBn: IMPACT_STATS[2].labelBn,
+        labelEn: IMPACT_STATS[2].labelEn,
+        shortLabelBn: 'চিকিৎসা',
+        shortLabelEn: 'Medical',
+      },
+      {
+        icon: ShieldCheck,
+        countBn: summary?.activeVolunteers ? `${toBnNum(summary.activeVolunteers)}+` : IMPACT_STATS[3].countBn,
+        countEn: summary?.activeVolunteers ? `${summary.activeVolunteers}+` : IMPACT_STATS[3].countEn,
+        labelBn: IMPACT_STATS[3].labelBn,
+        labelEn: IMPACT_STATS[3].labelEn,
+        shortLabelBn: 'স্বেচ্ছাসেবক',
+        shortLabelEn: 'Volunteers',
+      },
+    ],
+    [summary]
+  );
 
   // Dynamic slides from database with default fallbacks
   const heroSlides = useMemo(() => {
@@ -269,137 +317,177 @@ export default function Hero({
   return (
     <section
       id="home"
-      className="relative pt-0 sm:pt-4 pb-8 sm:pb-12 overflow-hidden bg-white"
+      className="relative pb-8 sm:pb-12 overflow-hidden bg-white"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        {/* Full-Width Split Hero Card (Clean White Editorial Layout - NO TEXT OVER IMAGE) */}
-        <div className="relative w-full rounded-2xl md:rounded-3xl border border-stone-200/90 shadow-sm bg-white overflow-hidden p-5 sm:p-7 md:p-9 lg:p-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
-            {/* Left Column: Text & Action Controls (On Clean White Background) */}
-            <div className="lg:col-span-7 flex flex-col justify-between space-y-4 sm:space-y-5">
-              {/* Top Tagline Badge */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`badge-${activeSlide.id}`}
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 border border-red-200 text-[#D62828] text-xs font-bold shadow-2xs">
-                    <span className="w-2 h-2 rounded-full bg-[#D62828] animate-pulse" />
-                    <span>{lang === 'bn' ? activeSlide.badgeBn : activeSlide.badgeEn}</span>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+      {/* Full-Bleed Dynamic Hero Banner */}
+      <div className="relative w-full min-h-[430px] sm:min-h-[480px] lg:min-h-[540px] flex items-center overflow-hidden bg-[#2B0808]">
+        {/* Background Slideshow Image */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`bg-${activeSlide.id}`}
+            initial={{ opacity: 0, scale: 1.03 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={activeSlide.imageUrl}
+              alt={lang === 'bn' ? activeSlide.titleBn : activeSlide.titleEn}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center sm:object-right"
+            />
+          </motion.div>
+        </AnimatePresence>
 
-              {/* Category, Title & Subtitle */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`text-${activeSlide.id}`}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.35, ease: 'easeOut' }}
-                  className="space-y-3 sm:space-y-4"
-                >
-                  <div className="inline-block">
-                    <span className="text-[11px] sm:text-xs font-bold tracking-wider uppercase px-2.5 py-1 rounded-md bg-stone-100 text-stone-700">
-                      {lang === 'bn' ? activeSlide.categoryBn : activeSlide.categoryEn}
-                    </span>
-                  </div>
+        {/* Website Red/Dark Gradient Overlay for Text Readability */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-r from-[#2B0808]/95 via-[#5C1111]/80 to-[#2B0808]/25 sm:from-[#2B0808]/95 sm:via-[#6B1414]/70 sm:to-transparent"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 to-transparent"
+        />
 
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-black text-stone-900 leading-[1.25] tracking-tight">
-                    {lang === 'bn' ? activeSlide.titleBn : activeSlide.titleEn}
-                  </h1>
+        {/* Hero Foreground Content */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20 sm:pt-12 sm:pb-24">
+          <div className="max-w-xl lg:max-w-2xl space-y-3.5 sm:space-y-5">
+            {/* Top Pill Badge */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`badge-${activeSlide.id}`}
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 8 }}
+                transition={{ duration: 0.25 }}
+              >
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D62828] border border-red-400/40 text-white text-[11px] sm:text-xs font-bold shadow-md">
+                  <Heart className="w-3 h-3 fill-white shrink-0" />
+                  <span>{lang === 'bn' ? activeSlide.badgeBn : activeSlide.badgeEn}</span>
+                </div>
+              </motion.div>
+            </AnimatePresence>
 
-                  <p className="text-sm sm:text-base text-stone-600 leading-relaxed font-normal max-w-xl">
-                    {lang === 'bn' ? activeSlide.subtitleBn : activeSlide.subtitleEn}
-                  </p>
+            {/* Headline & Subtitle */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`text-${activeSlide.id}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className="space-y-2.5 sm:space-y-3.5"
+              >
+                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white leading-[1.2] tracking-tight drop-shadow-sm">
+                  {lang === 'bn' ? activeSlide.titleBn : activeSlide.titleEn}
+                </h1>
 
-                  {/* Primary & Secondary Buttons */}
-                  <div className="flex flex-wrap items-center gap-3 pt-2">
-                    <button
-                      onClick={() => handleAction(activeSlide.btnPrimaryAction)}
-                      className="px-6 py-2.5 sm:py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition-all shadow-md hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
-                    >
-                      <PrimaryIcon className="w-4 h-4 text-white shrink-0" />
-                      <span>{lang === 'bn' ? activeSlide.btnPrimaryBn : activeSlide.btnPrimaryEn}</span>
-                    </button>
+                <p className="text-xs sm:text-base text-stone-100/90 leading-relaxed max-w-lg drop-shadow-xs">
+                  {lang === 'bn' ? activeSlide.subtitleBn : activeSlide.subtitleEn}
+                </p>
+              </motion.div>
+            </AnimatePresence>
 
-                    <button
-                      onClick={() => handleAction(activeSlide.btnSecondaryAction)}
-                      className="px-6 py-2.5 sm:py-3 rounded-xl bg-white hover:bg-stone-50 text-stone-800 font-bold text-xs sm:text-sm border border-stone-300 transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
-                    >
-                      <SecondaryIcon className="w-4 h-4 text-[#D62828] shrink-0" />
-                      <span>{lang === 'bn' ? activeSlide.btnSecondaryBn : activeSlide.btnSecondaryEn}</span>
-                    </button>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+            {/* Primary & Secondary Action Buttons */}
+            <div className="flex flex-col items-start sm:flex-row sm:items-center gap-2.5 sm:gap-3 pt-1">
+              <button
+                type="button"
+                onClick={() => handleAction(activeSlide.btnPrimaryAction)}
+                className="px-6 py-2.5 sm:py-3 rounded-full bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-red-950/40 hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
+              >
+                <span>{lang === 'bn' ? activeSlide.btnPrimaryBn : activeSlide.btnPrimaryEn}</span>
+                <PrimaryIcon className="w-4 h-4 fill-current text-white shrink-0" />
+                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+              </button>
 
-              {/* Slider Controls & Slide Indicators */}
-              <div className="flex items-center gap-4 pt-2 border-t border-stone-100">
+              <button
+                type="button"
+                onClick={() => handleAction(activeSlide.btnSecondaryAction)}
+                className="px-5 py-2.5 sm:py-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xs text-white font-bold text-xs sm:text-sm border border-white/50 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
+              >
+                <SecondaryIcon className="w-4 h-4 text-amber-300 shrink-0" />
+                <span>{lang === 'bn' ? activeSlide.btnSecondaryBn : activeSlide.btnSecondaryEn}</span>
+                <ArrowRight className="w-3.5 h-3.5 shrink-0 hidden sm:inline" />
+              </button>
+            </div>
+
+            {/* Slide Indicators */}
+            {heroSlides.length > 1 && (
+              <div className="flex items-center gap-3 pt-2">
                 <div className="flex items-center gap-1.5">
                   {heroSlides.map((_, idx) => (
                     <button
                       key={idx}
+                      type="button"
                       onClick={() => setCurrentSlide(idx)}
                       className={`transition-all duration-300 rounded-full cursor-pointer ${
-                        currentSlide === idx
-                          ? 'w-7 h-2 bg-[#D62828]'
-                          : 'w-2 h-2 bg-stone-300 hover:bg-stone-400'
+                        safeIndex === idx
+                          ? 'w-7 h-2 bg-[#D62828] ring-1 ring-white/60'
+                          : 'w-2 h-2 bg-white/45 hover:bg-white/75'
                       }`}
                       aria-label={`Slide ${idx + 1}`}
                     />
                   ))}
                 </div>
 
-                <div className="flex items-center gap-1 text-stone-400 ml-auto">
+                <div className="flex items-center gap-1.5">
                   <button
+                    type="button"
                     onClick={prevSlide}
-                    className="p-1.5 rounded-full hover:bg-stone-100 text-stone-600 border border-stone-200 transition cursor-pointer"
+                    className="p-1.5 rounded-full bg-black/30 hover:bg-black/50 text-white border border-white/25 transition cursor-pointer"
                     aria-label="Previous Slide"
                   >
-                    <ChevronLeft className="w-4 h-4" />
+                    <ChevronLeft className="w-3.5 h-3.5" />
                   </button>
                   <button
+                    type="button"
                     onClick={nextSlide}
-                    className="p-1.5 rounded-full hover:bg-stone-100 text-stone-600 border border-stone-200 transition cursor-pointer"
+                    className="p-1.5 rounded-full bg-black/30 hover:bg-black/50 text-white border border-white/25 transition cursor-pointer"
                     aria-label="Next Slide"
                   >
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
-            </div>
-
-            {/* Right Column: Clean Authentic Photography (NO TEXT OVER IMAGE) */}
-            <div className="lg:col-span-5 relative">
-              <div className="relative w-full aspect-4/3 sm:aspect-16/10 lg:aspect-4/3 rounded-xl sm:rounded-2xl overflow-hidden shadow-md border border-stone-200/80 bg-stone-100">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeSlide.id}
-                    initial={{ opacity: 0, scale: 1.02 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5, ease: 'easeInOut' }}
-                    className="absolute inset-0"
-                  >
-                    <Image
-                      src={activeSlide.imageUrl}
-                      alt={lang === 'bn' ? activeSlide.titleBn : activeSlide.titleEn}
-                      fill
-                      priority
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                      className="object-cover"
-                    />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </div>
+            )}
           </div>
         </div>
+      </div>
+
+      {/* Floating Dynamic Stats Bar overlapping bottom edge of Hero */}
+      <div className="relative z-20 max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 -mt-10 sm:-mt-12">
+        <div className="bg-white rounded-2xl shadow-[0_14px_40px_-12px_rgba(0,0,0,0.18)] border border-stone-200/90 px-2 py-3.5 sm:px-6 sm:py-5">
+          <div className="grid grid-cols-4 divide-x divide-stone-200/80">
+            {heroStats.map((stat, idx) => {
+              const StatIcon = stat.icon;
+              return (
+                <div
+                  key={idx}
+                  className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-3 px-1.5 sm:px-4 text-center sm:text-left"
+                >
+                  <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center text-[#D62828] shrink-0">
+                    <StatIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm sm:text-xl font-black text-stone-900 leading-tight">
+                      {lang === 'bn' ? stat.countBn : stat.countEn}
+                    </div>
+                    <div className="text-[10px] sm:text-xs font-semibold text-stone-500 truncate mt-0.5">
+                      <span className="sm:hidden">{lang === 'bn' ? stat.shortLabelBn : stat.shortLabelEn}</span>
+                      <span className="hidden sm:inline">{lang === 'bn' ? stat.labelBn : stat.labelEn}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 mt-6 sm:mt-8">
 
         {/* Trust Credential Strip Underneath Panoramic Banner */}
         <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-stone-500 px-2 sm:px-1">

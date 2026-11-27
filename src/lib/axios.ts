@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
+import { useAppStore } from '@/store/useAppStore';
 
 const configuredOrigin = process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/$/, '');
 export const API_BASE_URL = configuredOrigin
@@ -7,10 +8,22 @@ export const API_BASE_URL = configuredOrigin
   : 'https://api-rowmari-jonokollyan-foundation.onrender.com/api/v1';
 
 let accessToken: string | null = null;
+export const getAccessToken = () => {
+  if (accessToken) return accessToken;
+  if (typeof window !== 'undefined') {
+    accessToken = sessionStorage.getItem('rjf_access_token');
+  }
+  return accessToken;
+};
 export const setAccessToken = (token: string | null) => {
   accessToken = token;
-  if (typeof document !== 'undefined' && token) {
-    document.cookie = `rjf_session=1; path=/; max-age=604800; SameSite=Lax`;
+  if (typeof window !== 'undefined') {
+    if (token) {
+      sessionStorage.setItem('rjf_access_token', token);
+      document.cookie = `rjf_session=1; path=/; max-age=604800; SameSite=Lax`;
+    } else {
+      sessionStorage.removeItem('rjf_access_token');
+    }
   }
 };
 
@@ -58,7 +71,8 @@ export const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use((config) => {
-  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+  const token = getAccessToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   // Let the browser set the multipart boundary for FormData requests.
   if (typeof FormData !== 'undefined' && config.data instanceof FormData) {
     config.headers.delete('Content-Type');
@@ -119,6 +133,8 @@ apiClient.interceptors.response.use(
           document.cookie = 'rjf_session=; path=/; max-age=0';
           document.cookie = 'rjf_auth_role=; path=/; max-age=0';
         }
+        useAppStore.getState().setIsAuthenticated(false);
+        useAppStore.getState().setCurrentRole('COMMUNITY_MEMBER');
         return Promise.reject({
           status: 401,
           message: 'সেশনের মেয়াদ শেষ হয়েছে। পুনরায় লগইন করুন।',

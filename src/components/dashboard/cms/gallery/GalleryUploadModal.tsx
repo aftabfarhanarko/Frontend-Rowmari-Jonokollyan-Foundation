@@ -4,6 +4,7 @@ import React from "react"
 import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ImageUploader } from "@/components/ui/ImageUploader"
+import { DashboardModal } from "@/components/dashboard/DashboardModal"
 
 interface GalleryUploadModalProps {
   isOpen: boolean
@@ -43,7 +44,7 @@ export function GalleryUploadModal({
   const loading = isSubmitting ?? isCreating ?? false
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+    <DashboardModal>
       <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200 space-y-4 animate-in fade-in-50 zoom-in-95 duration-150">
         <div className="flex items-center justify-between border-b border-stone-100 pb-3">
           <h3 className="text-base font-black text-stone-900">
@@ -124,6 +125,6 @@ export function GalleryUploadModal({
           </div>
         </form>
       </div>
-    </div>
+    </DashboardModal>
   )
 }

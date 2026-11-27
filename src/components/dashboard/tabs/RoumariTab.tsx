@@ -21,6 +21,7 @@ import {
   RoumariTouristPlaceItem,
 } from "@/store/api/roumariApi"
 import { Button } from "@/components/ui/button"
+import { DashboardModal } from "@/components/dashboard/DashboardModal"
 import { Badge } from "@/components/ui/badge"
 import { ImageUploader } from "@/components/ui/ImageUploader"
 import {
@@ -748,7 +749,7 @@ export function RoumariTab() {
       {/* MODAL 1: DIRECTORY ADD/EDIT MODAL */}
       {/* ========================================================= */}
       {dirModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+        <DashboardModal>
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-stone-200 space-y-4 animate-in fade-in-50 zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-stone-100 pb-3">
               <h3 className="text-base font-black text-stone-900">
@@ -873,15 +874,15 @@ export function RoumariTab() {
               </div>
             </form>
           </div>
-        </div>
+        </DashboardModal>
       )}
 
       {/* ========================================================= */}
       {/* MODAL 2: LOCAL NEWS ADD/EDIT MODAL */}
       {/* ========================================================= */}
       {newsModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-stone-200 space-y-4 animate-in fade-in-50 zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
+        <DashboardModal>
+          <div className="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-stone-200 space-y-4 animate-in fade-in-50 zoom-in-95 duration-150 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-stone-100 pb-3">
               <h3 className="text-base font-black text-stone-900">
                 {editingNews ? "সংবাদ সম্পাদনা" : "নতুন স্থানীয় সংবাদ প্রকাশ"}
@@ -1005,15 +1006,15 @@ export function RoumariTab() {
               </div>
             </form>
           </div>
-        </div>
+        </DashboardModal>
       )}
 
       {/* ========================================================= */}
       {/* MODAL 3: TOURIST PLACES ADD/EDIT MODAL */}
       {/* ========================================================= */}
       {placeModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-stone-200 space-y-4 animate-in fade-in-50 zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
+        <DashboardModal>
+          <div className="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-stone-200 space-y-4 animate-in fade-in-50 zoom-in-95 duration-150 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-stone-100 pb-3">
               <h3 className="text-base font-black text-stone-900">
                 {editingPlace ? "দর্শনীয় স্থানের তথ্য সম্পাদনা" : "নতুন দর্শনীয় স্থান যোগ"}
@@ -1113,7 +1114,7 @@ export function RoumariTab() {
               </div>
             </form>
           </div>
-        </div>
+        </DashboardModal>
       )}
     </div>
   )
