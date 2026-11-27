@@ -4,6 +4,7 @@ import React, { useState } from "react"
 import { ShieldCheck, ShieldAlert, Loader2, Activity, Calendar, Globe } from "lucide-react"
 import { useGetAdminActivityLogsQuery } from "@/store/api/adminApi"
 import { Badge } from "@/components/ui/badge"
+import { SkeletonTable } from "@/components/ui/skeleton"
 
 export function CmsActivityLogsTab() {
   const [page, setPage] = useState(1)
@@ -37,9 +38,8 @@ export function CmsActivityLogsTab() {
       {/* Logs Table */}
       <div className="bg-white rounded-2xl border border-stone-200/90 shadow-2xs overflow-hidden">
         {isLoading ? (
-          <div className="p-12 flex flex-col items-center justify-center gap-2 text-stone-500">
-            <Loader2 className="size-6 animate-spin text-[#D62828]" />
-            <span className="text-xs">অডিট লগ লোড হচ্ছে...</span>
+          <div className="p-4">
+            <SkeletonTable rows={8} columns={5} showToolbar={false} showPagination={false} />
           </div>
         ) : logs.length === 0 ? (
           <div className="p-12 text-center text-stone-500 space-y-2">

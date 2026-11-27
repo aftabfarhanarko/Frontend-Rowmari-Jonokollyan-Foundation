@@ -21,6 +21,7 @@ import BackToTop from '@/components/BackToTop';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { useGetCampaignsQuery } from '@/store/api/campaignsApi';
 import { Language } from '@/types';
+import { SkeletonCard } from '@/components/ui/skeleton';
 
 export default function CampaignsPage() {
   const [lang, setLang] = useState<Language>('bn');
@@ -101,10 +102,14 @@ export default function CampaignsPage() {
         {/* Campaigns Grid */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {isLoading ? <p className="col-span-full py-12 text-center">{t('তথ্য লোড হচ্ছে…', 'Loading campaigns…')}</p> : null}
+            {isLoading ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <SkeletonCard key={i} variant="campaign" />
+              ))
+            ) : null}
             {isError ? <p role="alert" className="col-span-full py-12 text-center">{t('ক্যাম্পেইন লোড করা যায়নি। পরে আবার চেষ্টা করুন।', 'Campaigns could not be loaded. Please try again.')}</p> : null}
             {!isLoading && !isError && filteredCampaigns.length === 0 ? <p className="col-span-full py-12 text-center">{t('কোনো ক্যাম্পেইন পাওয়া যায়নি।', 'No campaigns are currently available.')}</p> : null}
-            {filteredCampaigns.map((camp) => {
+            {!isLoading && filteredCampaigns.map((camp) => {
               const percentage = Math.min(
                 100,
                 Math.round((camp.raisedAmount / camp.targetAmount) * 100)

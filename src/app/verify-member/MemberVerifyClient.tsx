@@ -6,6 +6,7 @@ import Footer from '@/components/layout/Footer';
 import MobileBottomBar from '@/components/layout/MobileBottomBar';
 import { useLazyVerifyMemberByIdQuery } from '@/store/api/committeesApi';
 import { MemberVerificationCard } from '@/components/team/MemberVerificationCard';
+import { SkeletonProfile } from '@/components/ui/skeleton';
 import { Search, ShieldCheck, AlertCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -60,7 +61,13 @@ export default function MemberVerifyClient() {
         </form>
 
         {/* Verification Result */}
-        {profile && <MemberVerificationCard profile={profile} />}
+        {isLoading && (
+          <div className="max-w-2xl mx-auto">
+            <SkeletonProfile />
+          </div>
+        )}
+
+        {profile && !isLoading && <MemberVerificationCard profile={profile} />}
 
         {error && !isLoading && (
           <div className="max-w-md mx-auto bg-red-50 border border-red-200 p-4 rounded-2xl text-center space-y-1">

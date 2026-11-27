@@ -194,3 +194,81 @@ button, input, select, textarea {
     @apply font-sans;
   }
 }
+
+/* Premium Skeleton Shimmer Keyframes & Tokens */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(228, 228, 231, 0.45) 0%,
+    rgba(244, 244, 245, 0.9) 50%,
+    rgba(228, 228, 231, 0.45) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.8s infinite ease-in-out;
+}
+
+.dark .animate-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(39, 39, 42, 0.6) 0%,
+    rgba(63, 63, 70, 0.85) 50%,
+    rgba(39, 39, 42, 0.6) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.8s infinite ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-skeleton {
+    animation: none;
+    background: rgba(228, 228, 231, 0.7);
+  }
+  .dark .animate-skeleton {
+    animation: none;
+    background: rgba(39, 39, 42, 0.7);
+  }
+}
+
+/* Sonner Toast Global Customization - Hide close button & Ensure generous gap between icon and text */
+[data-sonner-toaster] [data-close-button],
+[data-sonner-toast] [data-close-button],
+[data-sonner-toast] button[aria-label="Close toast"],
+[data-sonner-toast] button[data-close-button] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  clip: rect(0, 0, 0, 0) !important;
+}
+
+[data-sonner-toast] [data-icon] {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  margin-right: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+[data-sonner-toast] [data-content] {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  padding-left: 2px !important;
+}
+

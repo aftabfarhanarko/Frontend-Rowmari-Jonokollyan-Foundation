@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { NewsEditModal } from "./news/NewsEditModal"
+import { SkeletonTable } from "@/components/ui/skeleton"
 
 export function CmsNewsTab() {
   const { data: newsRes, isLoading, refetch } = useGetNewsEventsQuery()
@@ -77,10 +78,7 @@ export function CmsNewsTab() {
 
       <div className="bg-white rounded-2xl border border-stone-200/90 shadow-2xs overflow-hidden">
         {isLoading ? (
-          <div className="p-12 flex flex-col items-center justify-center gap-2 text-stone-500">
-            <Loader2 className="size-6 animate-spin text-[#D62828]" />
-            <span className="text-xs">সংবাদ লোড হচ্ছে...</span>
-          </div>
+          <SkeletonTable rows={5} columns={6} showHeader showToolbar={false} showPagination={false} />
         ) : filteredItems.length === 0 ? (
           <div className="p-12 text-center text-stone-500 space-y-2">
             <Newspaper className="size-10 text-stone-300 mx-auto" />

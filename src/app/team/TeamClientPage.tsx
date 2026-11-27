@@ -8,6 +8,7 @@ import { useGetPublicCommitteesQuery } from '@/store/api/committeesApi';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Users, ShieldCheck, User, Search, MapPin } from 'lucide-react';
+import { Skeleton, SkeletonCard } from '@/components/ui/skeleton';
 
 export default function TeamClientPage() {
   const { data: committees, isLoading } = useGetPublicCommitteesQuery();
@@ -49,24 +50,35 @@ export default function TeamClientPage() {
 
         {/* Committee Tabs */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-          {activeCommittees.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => setSelectedCommitteeId(c.id)}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition cursor-pointer ${
-                (currentCommittee?.id === c.id)
-                  ? 'bg-[#D62828] text-white shadow-xs'
-                  : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50'
-              }`}
-            >
-              {c.name} ({c.year})
-            </button>
-          ))}
+          {isLoading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-9 w-32 rounded-xl shrink-0" />
+            ))
+          ) : (
+            activeCommittees.map((c) => (
+              <button
+                key={c.id}
+                onClick={() => setSelectedCommitteeId(c.id)}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition cursor-pointer ${
+                  (currentCommittee?.id === c.id)
+                    ? 'bg-[#D62828] text-white shadow-xs'
+                    : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50'
+                }`}
+              >
+                {c.name} ({c.year})
+              </button>
+            ))
+          )}
         </div>
 
         {/* Members Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {memberships.map((m) => {
+          {isLoading ? (
+            Array.from({ length: 8 }).map((_, i) => (
+              <SkeletonCard key={i} variant="team" />
+            ))
+          ) : (
+            memberships.map((m) => {
             const member = m.member;
             const designation = m.designation;
             if (!member) return null;
@@ -107,7 +119,7 @@ export default function TeamClientPage() {
                 </Link>
               </div>
             );
-          })}
+          }))}
         </div>
       </main>
       <Footer lang="bn" />

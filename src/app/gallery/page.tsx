@@ -22,11 +22,12 @@ import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/compo
 import { GALLERY_ITEMS } from '@/data/mockData';
 import { Language } from '@/types';
 import { useGetGalleryQuery } from '@/store/api/contentApi';
+import { SkeletonCard } from '@/components/ui/skeleton';
 
 export default function GalleryPage() {
   const [lang, setLang] = useState<Language>('bn');
   const [selectedTag, setSelectedTag] = useState('all');
-  const { data: galleryRes } = useGetGalleryQuery();
+  const { data: galleryRes, isLoading } = useGetGalleryQuery();
   const backendItems = Array.isArray(galleryRes) ? galleryRes : (galleryRes as any)?.items || [];
 
   const liveItems = backendItems.length > 0
@@ -126,17 +127,24 @@ export default function GalleryPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-            {filteredItems.map((item: any, idx: number) => (
-              <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: idx * 0.04 }}
-                onClick={() => setPreviewItem(item)}
-                className={`${glassCardHover} overflow-hidden cursor-pointer group flex flex-col justify-between`}
-              >
+          {isLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <SkeletonCard key={i} variant="gallery" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+              {filteredItems.map((item: any, idx: number) => (
+                <motion.div
+                  key={item.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: idx * 0.04 }}
+                  onClick={() => setPreviewItem(item)}
+                  className={`${glassCardHover} overflow-hidden cursor-pointer group flex flex-col justify-between`}
+                >
                 <div className="relative w-full h-64 sm:h-72 overflow-hidden bg-stone-100">
                   <Image
                     src={item.imageUrl || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80'}
@@ -185,6 +193,7 @@ export default function GalleryPage() {
               </motion.div>
             ))}
           </div>
+          )}
         </section>
       </main>
 

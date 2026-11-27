@@ -6,6 +6,7 @@ import { Target, Clock, Users, CheckCircle2, ArrowRight, HeartHandshake } from '
 import { Language } from '@/types';
 import { useGetCampaignsQuery } from '@/store/api/campaignsApi';
 import { CAMPAIGNS_DATA } from '@/data/mockData';
+import { SkeletonCard } from '@/components/ui/skeleton';
 
 interface OngoingCampaignsProps {
   lang: Language;
@@ -50,10 +51,10 @@ export default function OngoingCampaigns({ lang }: OngoingCampaignsProps) {
         {/* Campaigns Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           {isLoading ? (
-            <p className="col-span-full text-center py-10 text-stone-500 font-medium">লোড হচ্ছে...</p>
-          ) : null}
-
-          {campaigns.map((camp) => {
+            Array.from({ length: 2 }).map((_, i) => (
+              <SkeletonCard key={i} variant="campaign" />
+            ))
+          ) : campaigns.map((camp) => {
             // Target beneficiaries calculation (from amount or mock estimate)
             const targetBeneficiaries = Math.max(100, Math.round(camp.targetAmount / 250));
             const servedBeneficiaries = Math.min(targetBeneficiaries, Math.round(camp.raisedAmount / 250));

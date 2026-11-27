@@ -11,6 +11,7 @@ import { ShieldAlert } from "lucide-react"
 import { toast } from "sonner"
 import { useGetCurrentUserQuery } from "@/store/api/authApi"
 import { UserRole } from "@/types"
+import { DashboardShellSkeleton } from "@/components/ui/skeleton"
 
 import VolunteerModal from "@/components/modals/VolunteerModal"
 import AnnouncementModal from "@/components/modals/AnnouncementModal"
@@ -112,17 +113,9 @@ export function DashboardShell({ children, defaultTab }: DashboardShellProps) {
     }
   }, [isAuthReady, currentRole, activeTab])
 
-  // Clean full-screen loading spinner while auth and role are resolving
+  // Clean structured skeleton while auth and role are resolving
   if (!isAuthReady) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-white font-sans text-[#18181B] antialiased">
-        <div className="flex flex-col items-center gap-3">
-          <div className="size-10 rounded-full border-3 border-[#D62828] border-t-transparent animate-spin" />
-          <p className="text-sm font-bold text-stone-800">ড্যাশবোর্ড লোড হচ্ছে...</p>
-          <p className="text-xs text-stone-400">অনুমতি ও তথ্য যাচাই করা হচ্ছে...</p>
-        </div>
-      </div>
-    )
+    return <DashboardShellSkeleton />
   }
 
   const activeNavItem = DASHBOARD_NAV_ITEMS.find((it) => it.id === activeTab)

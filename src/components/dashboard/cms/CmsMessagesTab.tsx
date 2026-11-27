@@ -18,6 +18,7 @@ import {
 } from "@/store/api/adminApi"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+import { SkeletonList } from "@/components/ui/skeleton"
 
 export function CmsMessagesTab() {
   const { data: messagesRes, isLoading, refetch } = useGetAdminContactMessagesQuery()
@@ -63,9 +64,8 @@ export function CmsMessagesTab() {
       {/* Messages List / Details */}
       <div className="bg-white rounded-2xl border border-stone-200/90 shadow-2xs overflow-hidden">
         {isLoading ? (
-          <div className="p-12 flex flex-col items-center justify-center gap-2 text-stone-500">
-            <Loader2 className="size-6 animate-spin text-[#D62828]" />
-            <span className="text-xs">বার্তা লোড হচ্ছে...</span>
+          <div className="p-4">
+            <SkeletonList items={5} hasAvatar={true} />
           </div>
         ) : messages.length === 0 ? (
           <div className="p-12 text-center text-stone-500 space-y-2">

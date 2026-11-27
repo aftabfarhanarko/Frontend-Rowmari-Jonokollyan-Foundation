@@ -24,6 +24,7 @@ import BackToTop from '@/components/BackToTop';
 import { GlassSection, SectionHeading, glassCard, glassCardHover } from '@/components/ui/glass';
 import { useGetActivitiesQuery } from '@/store/api/activitiesApi';
 import { Language, ActivityCategory, ActivityItem } from '@/types';
+import { SkeletonCard } from '@/components/ui/skeleton';
 
 export default function ActivitiesPage() {
   const [lang, setLang] = useState<Language>('bn');
@@ -136,7 +137,12 @@ export default function ActivitiesPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredActivities.map((act) => (
+            {isLoading ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <SkeletonCard key={i} variant="activity" />
+              ))
+            ) : null}
+            {!isLoading && filteredActivities.map((act) => (
               <motion.div
                 key={act.id}
                 layout

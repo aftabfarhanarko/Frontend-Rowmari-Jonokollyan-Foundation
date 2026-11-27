@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Language, ActivityCategory, ActivityItem } from '@/types';
 import { useGetActivitiesQuery } from '@/store/api/activitiesApi';
+import { SkeletonCard } from '@/components/ui/skeleton';
 
 interface RecentActivitiesProps {
   lang: Language;
@@ -86,9 +87,14 @@ export default function RecentActivities({
 
         {/* 3-Column Activities Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-          {isLoading ? <p className="col-span-full text-center">Loading activities…</p> : null}
-          {isError ? <p role="alert" className="col-span-full text-center">Activities could not be loaded.</p> : null}
-          {filteredActivities.slice(0, 6).map((activity) => (
+          {isLoading ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <SkeletonCard key={i} variant="activity" />
+            ))
+          ) : isError ? (
+            <p role="alert" className="col-span-full text-center py-8 text-[#737B76]">কার্যক্রমের তথ্য লোড করা যায়নি।</p>
+          ) : (
+            filteredActivities.slice(0, 6).map((activity) => (
             <div
               key={activity.id}
               className="group bg-white rounded-2xl border border-stone-200/90 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
@@ -146,7 +152,7 @@ export default function RecentActivities({
                 </button>
               </div>
             </div>
-          ))}
+          )))}
         </div>
 
         {/* Modal for detailed activity view */}

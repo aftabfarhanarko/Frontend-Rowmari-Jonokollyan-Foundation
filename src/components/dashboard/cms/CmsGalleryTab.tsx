@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { GalleryUploadModal } from "./gallery/GalleryUploadModal"
+import { SkeletonCard } from "@/components/ui/skeleton"
 
 export function CmsGalleryTab() {
   const { data: galleryRes, isLoading, refetch } = useGetGalleryQuery()
@@ -62,9 +63,10 @@ export function CmsGalleryTab() {
       </div>
 
       {isLoading ? (
-        <div className="p-12 flex flex-col items-center justify-center gap-2 text-stone-500">
-          <Loader2 className="size-6 animate-spin text-[#D62828]" />
-          <span className="text-xs">গ্যালারি ফাইল লোড হচ্ছে...</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <SkeletonCard key={i} variant="gallery" />
+          ))}
         </div>
       ) : items.length === 0 ? (
         <div className="bg-white rounded-2xl border border-stone-200 p-12 text-center text-stone-500 space-y-2">

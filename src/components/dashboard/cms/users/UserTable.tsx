@@ -4,6 +4,7 @@ import React from "react"
 import { Users, Loader2, Edit3, Trash2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { SkeletonTable } from "@/components/ui/skeleton"
 import { AdminUserItem } from "@/store/api/adminApi"
 import { SystemRoleItem } from "./CreateUserModal"
 
@@ -30,9 +31,8 @@ export function UserTable({
 }: UserTableProps) {
   if (isLoading) {
     return (
-      <div className="p-12 flex flex-col items-center justify-center gap-2 text-stone-500">
-        <Loader2 className="size-6 animate-spin text-[#D62828]" />
-        <span className="text-xs">ইউজার ডেটা লোড হচ্ছে...</span>
+      <div className="p-4">
+        <SkeletonTable rows={6} columns={6} showToolbar={false} showPagination={false} />
       </div>
     )
   }

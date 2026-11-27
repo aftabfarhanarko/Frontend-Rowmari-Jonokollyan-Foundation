@@ -97,13 +97,17 @@ export default function ReduxProvider({
           ),
         }}
         toastOptions={{
+          closeButton: false,
           className:
-            '!bg-white !border !border-slate-200/80 !text-slate-900 !rounded-2xl !shadow-[0_8px_30px_rgba(15,23,42,0.10)] !px-4 !py-3 !w-[calc(100vw-32px)] sm:!w-[380px] !gap-3',
+            '!bg-white !border !border-slate-200/80 !text-slate-900 !rounded-2xl !shadow-[0_8px_30px_rgba(15,23,42,0.10)] !px-4 !py-3.5 !w-[calc(100vw-32px)] sm:!w-[380px] !items-center !gap-3.5',
           style: {
             fontFamily: 'inherit',
           },
           classNames: {
-            title: '!text-[14px] !font-semibold !text-slate-900',
+            closeButton: '!hidden !opacity-0 !pointer-events-none',
+            icon: '!mr-3.5 !flex !items-center !justify-center !shrink-0',
+            content: '!flex !flex-col !justify-center !gap-1 !pl-1',
+            title: '!text-[14px] !font-medium !text-slate-900 !leading-snug',
             description: '!text-[13px] !text-slate-500 !leading-relaxed',
             actionButton:
               '!bg-slate-900 !text-white !rounded-lg',

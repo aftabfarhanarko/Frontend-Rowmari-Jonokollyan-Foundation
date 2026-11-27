@@ -4,6 +4,7 @@ import React from 'react';
 import { Heart, Users, Target, ShieldCheck, Sparkles, Award } from 'lucide-react';
 import { useGetPublicApprovedDonorsQuery, useGetPublicDonationStatsQuery } from '@/store/api/donationsApi';
 import { Language } from '@/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface DonorShowcaseSectionProps {
   lang: Language;
@@ -99,9 +100,24 @@ export default function DonorShowcaseSection({ lang }: DonorShowcaseSectionProps
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {[1, 2, 3].map((n) => (
-                <div key={n} className="h-28 rounded-2xl bg-white border border-stone-200 animate-pulse" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {Array.from({ length: 4 }).map((_, n) => (
+                <div key={n} className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <Skeleton className="size-9 rounded-full shrink-0" />
+                      <div className="space-y-1">
+                        <Skeleton className="h-3.5 w-24 rounded-md" />
+                        <Skeleton className="h-2.5 w-16 rounded-md" />
+                      </div>
+                    </div>
+                    <Skeleton className="h-4 w-14 rounded-full" />
+                  </div>
+                  <div className="pt-2 border-t border-stone-100 flex justify-between items-center">
+                    <Skeleton className="h-4 w-16 rounded-md" />
+                    <Skeleton className="h-5 w-20 rounded-md" />
+                  </div>
+                </div>
               ))}
             </div>
           ) : donors.length === 0 ? (
