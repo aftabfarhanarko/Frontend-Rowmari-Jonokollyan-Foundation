@@ -20,16 +20,15 @@ export default function ReduxProvider({
 
       <Toaster
         position="top-right"
-       
         richColors
-        closeButton
+        closeButton={false}
         expand
         visibleToasts={4}
         duration={4000}
         theme="light"
         icons={{
           success: (
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600 shrink-0 mr-3">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -46,7 +45,7 @@ export default function ReduxProvider({
             </span>
           ),
           error: (
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600 shrink-0 mr-3">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -63,7 +62,7 @@ export default function ReduxProvider({
             </span>
           ),
           warning: (
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-50 text-amber-600">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-50 text-amber-600 shrink-0 mr-3">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -80,7 +79,7 @@ export default function ReduxProvider({
             </span>
           ),
           info: (
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-600 shrink-0 mr-3">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -99,15 +98,13 @@ export default function ReduxProvider({
         }}
         toastOptions={{
           className:
-            '!bg-white !border !border-slate-200/80 !text-slate-900 !rounded-2xl !shadow-[0_8px_30px_rgba(15,23,42,0.10)] !px-4 !py-3 !w-[calc(100vw-32px)] sm:!w-[380px]',
+            '!bg-white !border !border-slate-200/80 !text-slate-900 !rounded-2xl !shadow-[0_8px_30px_rgba(15,23,42,0.10)] !px-4 !py-3 !w-[calc(100vw-32px)] sm:!w-[380px] !gap-3',
           style: {
             fontFamily: 'inherit',
           },
           classNames: {
             title: '!text-[14px] !font-semibold !text-slate-900',
             description: '!text-[13px] !text-slate-500 !leading-relaxed',
-            closeButton:
-              '!bg-slate-50 !border-slate-200 !text-slate-500 hover:!bg-slate-100',
             actionButton:
               '!bg-slate-900 !text-white !rounded-lg',
             cancelButton:
