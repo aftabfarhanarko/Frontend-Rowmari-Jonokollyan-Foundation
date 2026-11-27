@@ -35,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="bn" className="h-full antialiased scroll-smooth font-sans">
+    <html lang="bn" className="h-full antialiased scroll-smooth font-sans" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="theme-color" content="#D62828" />
@@ -55,7 +55,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-full flex flex-col bg-white text-[#1E293B]">
+      <body className="min-h-full flex flex-col bg-white text-[#1E293B]" suppressHydrationWarning>
         <ReduxProvider>
           <PwaClientInit>
             {children}
