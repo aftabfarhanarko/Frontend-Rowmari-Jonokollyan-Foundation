@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { Language } from '@/types';
 import { FOUNDATION_INFO } from '@/data/mockData';
+import { useGetFooterConfigQuery } from '@/store/api/contentApi';
 
 interface FooterProps {
   lang: Language;
@@ -44,6 +45,14 @@ function YoutubeIcon({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
       <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+    </svg>
+  );
+}
+
+function LinkedinIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
+      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28z" />
     </svg>
   );
 }
@@ -108,7 +117,59 @@ export default function Footer({
 }: FooterProps) {
   const isBn = lang === 'bn';
   const reduceMotion = useReducedMotion();
-  const phoneHref = `tel:${FOUNDATION_INFO.hotline.replace(/\s+/g, '')}`;
+  const { data: footerConfig } = useGetFooterConfigQuery();
+
+  const activeAboutSummary = isBn
+    ? (footerConfig?.aboutSummaryBn || 'কুড়িগ্রাম জেলার ভারত সীমান্তবর্তী ও নদীবেষ্টিত রৌমারীর দুর্গম চরাঞ্চলের অসহায়, শীতার্ত, দরিদ্র রোগী ও চিকিৎসাবঞ্চিত মানুষের সার্বক্ষণিক সেবায় একটি নিবন্ধিত ও নিরপেক্ষ মানবিক সংগঠন।')
+    : (footerConfig?.aboutSummaryEn || 'A registered, non-political voluntary foundation dedicated to serving underprivileged families and remote river-island char communities in Rowmari and Kurigram.');
+
+  const activeRegistrationNo = isBn
+    ? (footerConfig?.registrationNoBn || FOUNDATION_INFO.registrationNoBn)
+    : (footerConfig?.registrationNoEn || FOUNDATION_INFO.registrationNoEn);
+
+  const activeAddress = isBn
+    ? (footerConfig?.addressBn || FOUNDATION_INFO.addressBn)
+    : (footerConfig?.addressEn || FOUNDATION_INFO.addressEn);
+
+  const activeHotline = footerConfig?.hotline || FOUNDATION_INFO.hotline;
+  const activeEmail = footerConfig?.emailPrimary || FOUNDATION_INFO.email;
+  const phoneHref = `tel:${activeHotline.replace(/[^\d+]/g, '')}`;
+
+  const dynamicSocialLinks = useMemo(() => {
+    const links = [
+      {
+        href: footerConfig?.facebookPageUrl || 'https://www.facebook.com/share/1ESs7zSjYo/',
+        label: 'Facebook Page',
+        Icon: FacebookIcon,
+        color: 'text-[#1877F2]',
+      },
+      {
+        href: footerConfig?.facebookGroupUrl || 'https://www.facebook.com/share/g/186KVkSwCg/',
+        label: 'Facebook Group',
+        Icon: FacebookIcon,
+        color: 'text-[#1877F2]',
+      },
+      {
+        href: footerConfig?.youtubeUrl || 'https://youtube.com',
+        label: 'YouTube',
+        Icon: YoutubeIcon,
+        color: 'text-[#FF0000]',
+      },
+    ];
+    if (footerConfig?.linkedinUrl) {
+      links.push({
+        href: footerConfig.linkedinUrl,
+        label: 'LinkedIn',
+        Icon: LinkedinIcon,
+        color: 'text-[#0A66C2]',
+      });
+    }
+    return links;
+  }, [footerConfig]);
+
+  const activeCopyright = isBn
+    ? (footerConfig?.copyrightTextBn || `© 2026 ${FOUNDATION_INFO.nameBn}। সর্বস্বত্ব সংরক্ষিত।`)
+    : (footerConfig?.copyrightTextEn || `© 2026 ${FOUNDATION_INFO.nameEn}. All rights reserved.`);
 
   // When the user prefers reduced motion, show everything immediately.
   const viewProps = reduceMotion
@@ -229,9 +290,7 @@ export default function Footer({
             </div>
 
             <p className="text-sm text-stone-600 leading-relaxed max-w-md">
-              {isBn
-                ? 'কুড়িগ্রাম জেলার ভারত সীমান্তবর্তী ও নদীবেষ্টিত রৌমারীর দুর্গম চরাঞ্চলের অসহায়, শীতার্ত, দরিদ্র রোগী ও চিকিৎসাবঞ্চিত মানুষের সার্বক্ষণিক সেবায় একটি নিবন্ধিত ও নিরপেক্ষ মানবিক সংগঠন।'
-                : 'A registered, non-political voluntary foundation dedicated to serving underprivileged families and remote river-island char communities in Rowmari and Kurigram.'}
+              {activeAboutSummary}
             </p>
 
             {/* Registration */}
@@ -241,7 +300,7 @@ export default function Footer({
                 <span>{isBn ? 'স্বীকৃত ও অনুমোদিত সমাজসেবা ট্রাস্ট' : 'Verified & Registered Charity Trust'}</span>
               </div>
               <p className="text-[11px] text-stone-500 leading-relaxed">
-                {isBn ? FOUNDATION_INFO.registrationNoBn : FOUNDATION_INFO.registrationNoEn}
+                {activeRegistrationNo}
               </p>
             </div>
 
@@ -251,7 +310,7 @@ export default function Footer({
                 {isBn ? 'আমাদের সাথে যুক্ত থাকুন' : 'Stay connected'}
               </p>
               <div className="flex flex-wrap items-center gap-2">
-                {socialLinks.map((s) => (
+                {dynamicSocialLinks.map((s) => (
                   <motion.a
                     key={s.label}
                     href={s.href}
@@ -307,7 +366,7 @@ export default function Footer({
                   <MapPin className="w-4 h-4" />
                 </span>
                 <span className="leading-relaxed pt-1.5">
-                  {isBn ? FOUNDATION_INFO.addressBn : FOUNDATION_INFO.addressEn}
+                  {activeAddress}
                 </span>
               </motion.li>
 
@@ -321,14 +380,14 @@ export default function Footer({
                       {isBn ? 'হটলাইন (২৪/৭)' : 'Hotline (24/7)'}
                     </span>
                     <span className="font-semibold text-stone-800 group-hover:text-[#D62828] transition-colors">
-                      {FOUNDATION_INFO.hotline}
+                      {activeHotline}
                     </span>
                   </span>
                 </a>
               </motion.li>
 
               <motion.li variants={listItem}>
-                <a href={`mailto:${FOUNDATION_INFO.email}`} className="group flex items-center gap-3">
+                <a href={`mailto:${activeEmail}`} className="group flex items-center gap-3">
                   <span className="w-9 h-9 rounded-xl bg-red-50 text-[#D62828] flex items-center justify-center shrink-0 group-hover:bg-[#D62828] group-hover:text-white transition-colors">
                     <Mail className="w-4 h-4" />
                   </span>
@@ -337,7 +396,7 @@ export default function Footer({
                       {isBn ? 'ইমেইল' : 'Email'}
                     </span>
                     <span className="font-semibold text-stone-800 group-hover:text-[#D62828] transition-colors break-all">
-                      {FOUNDATION_INFO.email}
+                      {activeEmail}
                     </span>
                   </span>
                 </a>
@@ -363,8 +422,7 @@ export default function Footer({
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-28 sm:pb-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs"
         >
           <motion.p variants={item} className="text-center md:text-left">
-            © 2026 {isBn ? FOUNDATION_INFO.nameBn : FOUNDATION_INFO.nameEn}।{' '}
-            {isBn ? 'সর্বস্বত্ব সংরক্ষিত।' : 'All rights reserved.'}
+            {activeCopyright}
           </motion.p>
 
           <motion.div

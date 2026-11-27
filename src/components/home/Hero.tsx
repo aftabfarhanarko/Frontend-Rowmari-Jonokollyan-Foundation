@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -21,6 +21,7 @@ import {
   Heart,
 } from 'lucide-react';
 import { Language } from '@/types';
+import { useGetHeroSlidesQuery } from '@/store/api/contentApi';
 
 interface HeroProps {
   lang: Language;
@@ -28,6 +29,101 @@ interface HeroProps {
   onOpenActivities: () => void;
   onOpenDonation?: (campaignId?: string) => void;
 }
+
+const DEFAULT_HERO_SLIDES = [
+  {
+    id: 'slide-1',
+    badgeBn: 'স্থাপিত ২০১৮ • রৌমারী, কুড়িগ্রাম • ৯ম বছরে পদার্পণ',
+    badgeEn: 'Est. 2018 • Rowmari, Kurigram • 8+ Years of Service',
+    categoryBn: 'মানবিক সহায়তা মিশন',
+    categoryEn: 'Humanitarian Mission',
+    titleBn: 'মানুষের পাশে, মানুষের জন্য',
+    titleEn: 'Standing by People, For Humanity',
+    subtitleBn:
+      'রৌমারী ও ব্রহ্মপুত্রের দুর্গম চরাঞ্চলের অসহায় শীতার্ত মানুষের পাশে দাঁড়ানোই আমাদের কাজ। শীতবস্ত্র, খাদ্য, শিক্ষা ও জরুরি চিকিৎসাসেবায় আমরা সার্বক্ষণিক নিবেদিত।',
+    subtitleEn:
+      'Dedicated to serving the underprivileged in Rowmari and remote river island chars through winter relief, food aid, education, and healthcare support.',
+    btnPrimaryBn: 'অনুদান দিন',
+    btnPrimaryEn: 'Donate Now',
+    btnPrimaryAction: 'donate',
+    btnPrimaryIcon: Heart,
+    btnSecondaryBn: 'কার্যক্রম দেখুন',
+    btnSecondaryEn: 'Explore Activities',
+    btnSecondaryAction: 'activities',
+    btnSecondaryIcon: Search,
+    imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1800&q=85',
+    overlayGradient: 'from-[#7f1d1d]/90 via-[#991b1b]/65 to-black/30',
+  },
+  {
+    id: 'slide-2',
+    badgeBn: 'শীতবস্ত্র ও জরুরি খাদ্য সহায়তা তহবিল',
+    badgeEn: 'Winter Warmth & Food Aid Relief',
+    categoryBn: 'ত্রাণ ও পুনর্বাসন উইং',
+    categoryEn: 'Relief & Rehabilitation Wing',
+    titleBn: 'চরাঞ্চলের শীতার্ত মানুষের মুখে ফুটুক উষ্ণতার হাসি',
+    titleEn: 'Spreading Warmth & Nutrition to Char Families',
+    subtitleBn:
+      'তীব্র শীতে রৌমারীর ব্রহ্মপুত্র নদের প্রত্যন্ত চরাঞ্চলের অসহায় পরিবার, বৃদ্ধ ও শিশুদের মাঝে কম্বল, খাদ্যসামগ্রী ও জরুরি মানবিক সহায়তা প্রদান।',
+    subtitleEn:
+      'Distributing warm blankets, food supplies, and urgent humanitarian relief to vulnerable families across river-island char unions.',
+    btnPrimaryBn: 'অনুদান দিন',
+    btnPrimaryEn: 'Donate Now',
+    btnPrimaryAction: 'donate',
+    btnPrimaryIcon: Heart,
+    btnSecondaryBn: 'কার্যক্রম দেখুন',
+    btnSecondaryEn: 'Explore Activities',
+    btnSecondaryAction: 'activities',
+    btnSecondaryIcon: Search,
+    imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1800&q=85',
+    overlayGradient: 'from-[#7f1d1d]/90 via-[#991b1b]/65 to-black/30',
+  },
+  {
+    id: 'slide-3',
+    badgeBn: 'দরিদ্র ও অসহায় রোগীর চিকিৎসা তহবিল',
+    badgeEn: 'Medical Aid & Healthcare Fund',
+    categoryBn: 'চিকিৎসা সহায়তা ও ফ্রি ওষুধ',
+    categoryEn: 'Healthcare & Medicine Aid',
+    titleBn: 'অসহায় রোগীর সুচিকিৎসায় আমাদের নিরলস অঙ্গীকার',
+    titleEn: 'Quality Healthcare for Every Underprivileged Life',
+    subtitleBn:
+      'বিনা চিকিৎসায় যেন কোনো প্রাণ না হারায়—অসহায় রোগীদের বড় ধরনের অপারেশন, জটিল হৃদরোগ, থ্যালাসেমিয়া ও ওষুধে জরুরি স্বাস্থ্যসেবা ও সহায়তা প্রদান।',
+    subtitleEn:
+      'No life should be lost for lack of medicine. Providing vital medical grants, complex surgery support, and free physician camps in remote river island unions.',
+    btnPrimaryBn: 'চিকিৎসায় অনুদান দিন',
+    btnPrimaryEn: 'Support Healthcare',
+    btnPrimaryAction: 'donate',
+    btnPrimaryIcon: HeartPulse,
+    btnSecondaryBn: 'কার্যক্রম দেখুন',
+    btnSecondaryEn: 'View Healthcare Work',
+    btnSecondaryAction: 'activities',
+    btnSecondaryIcon: HeartHandshake,
+    imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1800&q=85',
+    overlayGradient: 'from-[#991B1B]/90 via-[#B91C1C]/65 to-black/30',
+  },
+  {
+    id: 'slide-4',
+    badgeBn: 'চরাঞ্চলের সুবিধাবঞ্চিত শিশুদের মেধা বিকাশ',
+    badgeEn: 'Char Education & Child Empowerment',
+    categoryBn: 'শিক্ষা উপবৃত্তি ও বইপত্র',
+    categoryEn: 'Education & Scholarships',
+    titleBn: 'শিক্ষার আলোয় আলোকিত হোক প্রতিটি শিশুর ভবিষ্যৎ',
+    titleEn: 'Lighting the Lamp of Education for Every Child',
+    subtitleBn:
+      'অর্থের অভাবে যেন কোনো দরিদ্র মেধাবী শিশুর পড়াশোনা বন্ধ না হয়—রৌমারীর চরাঞ্চলে প্রাথমিক ও মাধ্যমিক শিক্ষার্থীদের স্কুল ব্যাগ, বইপত্র ও মাসিক বৃত্তি প্রদান।',
+    subtitleEn:
+      'Poverty must not stop education. Distributing school supplies, notebooks, bags, and monthly scholarships to prevent student dropouts in remote chars.',
+    btnPrimaryBn: 'শিক্ষায় অনুদান দিন',
+    btnPrimaryEn: 'Support Education',
+    btnPrimaryAction: 'donate',
+    btnPrimaryIcon: GraduationCap,
+    btnSecondaryBn: 'কার্যক্রম দেখুন',
+    btnSecondaryEn: 'View Education Work',
+    btnSecondaryAction: 'activities',
+    btnSecondaryIcon: Sparkles,
+    imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1800&q=85',
+    overlayGradient: 'from-[#881337]/90 via-[#991B1B]/65 to-black/30',
+  },
+];
 
 export default function Hero({
   lang,
@@ -37,102 +133,35 @@ export default function Hero({
 }: HeroProps) {
   const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { data: dbSlides } = useGetHeroSlidesQuery();
 
-  // 4 Full-Width Panoramic Hero Banner Slides
-  const heroSlides = [
-    {
-      id: 'slide-1',
-      badgeBn: 'স্থাপিত ২০১৮ • রৌমারী, কুড়িগ্রাম • ৯ম বছরে পদার্পণ',
-      badgeEn: 'Est. 2018 • Rowmari, Kurigram • 8+ Years of Service',
-      categoryBn: 'মানবিক সহায়তা মিশন',
-      categoryEn: 'Humanitarian Mission',
-      titleBn: 'মানুষের পাশে, মানুষের জন্য',
-      titleEn: 'Standing by People, For Humanity',
-      subtitleBn:
-        'রৌমারী ও ব্রহ্মপুত্রের দুর্গম চরাঞ্চলের অসহায় শীতার্ত মানুষের পাশে দাঁড়ানোই আমাদের কাজ। শীতবস্ত্র, খাদ্য, শিক্ষা ও জরুরি চিকিৎসাসেবায় আমরা সার্বক্ষণিক নিবেদিত।',
-      subtitleEn:
-        'Dedicated to serving the underprivileged in Rowmari and remote river island chars through winter relief, food aid, education, and healthcare support.',
-      btnPrimaryBn: 'অনুদান দিন',
-      btnPrimaryEn: 'Donate Now',
-      btnPrimaryAction: 'donate',
-      btnPrimaryIcon: Heart,
-      btnSecondaryBn: 'কার্যক্রম দেখুন',
-      btnSecondaryEn: 'Explore Activities',
-      btnSecondaryAction: 'activities',
-      btnSecondaryIcon: Search,
-      imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1800&q=85',
-      overlayGradient: 'from-[#7f1d1d]/90 via-[#991b1b]/65 to-black/30',
-    },
-    {
-      id: 'slide-2',
-      badgeBn: 'শীতবস্ত্র ও জরুরি খাদ্য সহায়তা তহবিল',
-      badgeEn: 'Winter Warmth & Food Aid Relief',
-      categoryBn: 'ত্রাণ ও পুনর্বাসন উইং',
-      categoryEn: 'Relief & Rehabilitation Wing',
-      titleBn: 'চরাঞ্চলের শীতার্ত মানুষের মুখে ফুটুক উষ্ণতার হাসি',
-      titleEn: 'Spreading Warmth & Nutrition to Char Families',
-      subtitleBn:
-        'তীব্র শীতে রৌমারীর ব্রহ্মপুত্র নদের প্রত্যন্ত চরাঞ্চলের অসহায় পরিবার, বৃদ্ধ ও শিশুদের মাঝে কম্বল, খাদ্যসামগ্রী ও জরুরি মানবিক সহায়তা প্রদান।',
-      subtitleEn:
-        'Distributing warm blankets, food supplies, and urgent humanitarian relief to vulnerable families across river-island char unions.',
-      btnPrimaryBn: 'অনুদান দিন',
-      btnPrimaryEn: 'Donate Now',
-      btnPrimaryAction: 'donate',
-      btnPrimaryIcon: Heart,
-      btnSecondaryBn: 'কার্যক্রম দেখুন',
-      btnSecondaryEn: 'Explore Activities',
-      btnSecondaryAction: 'activities',
-      btnSecondaryIcon: Search,
-      imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1800&q=85',
-      overlayGradient: 'from-[#7f1d1d]/90 via-[#991b1b]/65 to-black/30',
-    },
-    {
-      id: 'slide-3',
-      badgeBn: 'দরিদ্র ও অসহায় রোগীর চিকিৎসা তহবিল',
-      badgeEn: 'Medical Aid & Healthcare Fund',
-      categoryBn: 'চিকিৎসা সহায়তা ও ফ্রি ওষুধ',
-      categoryEn: 'Healthcare & Medicine Aid',
-      titleBn: 'অসহায় রোগীর সুচিকিৎসায় আমাদের নিরলস অঙ্গীকার',
-      titleEn: 'Quality Healthcare for Every Underprivileged Life',
-      subtitleBn:
-        'বিনা চিকিৎসায় যেন কোনো প্রাণ না হারায়—অসহায় রোগীদের বড় ধরনের অপারেশন, জটিল হৃদরোগ, থ্যালাসেমিয়া ও ওষুধে জরুরি স্বাস্থ্যসেবা ও সহায়তা প্রদান।',
-      subtitleEn:
-        'No life should be lost for lack of medicine. Providing vital medical grants, complex surgery support, and free physician camps in remote river island unions.',
-      btnPrimaryBn: 'চিকিৎসায় অনুদান দিন',
-      btnPrimaryEn: 'Support Healthcare',
-      btnPrimaryAction: 'donate',
-      btnPrimaryIcon: HeartPulse,
-      btnSecondaryBn: 'কার্যক্রম দেখুন',
-      btnSecondaryEn: 'View Healthcare Work',
-      btnSecondaryAction: 'activities',
-      btnSecondaryIcon: HeartHandshake,
-      imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1800&q=85',
-      overlayGradient: 'from-[#991B1B]/90 via-[#B91C1C]/65 to-black/30',
-    },
-    {
-      id: 'slide-4',
-      badgeBn: 'চরাঞ্চলের সুবিধাবঞ্চিত শিশুদের মেধা বিকাশ',
-      badgeEn: 'Char Education & Child Empowerment',
-      categoryBn: 'শিক্ষা উপবৃত্তি ও বইপত্র',
-      categoryEn: 'Education & Scholarships',
-      titleBn: 'শিক্ষার আলোয় আলোকিত হোক প্রতিটি শিশুর ভবিষ্যৎ',
-      titleEn: 'Lighting the Lamp of Education for Every Child',
-      subtitleBn:
-        'অর্থের অভাবে যেন কোনো দরিদ্র মেধাবী শিশুর পড়াশোনা বন্ধ না হয়—রৌমারীর চরাঞ্চলে প্রাথমিক ও মাধ্যমিক শিক্ষার্থীদের স্কুল ব্যাগ, বইপত্র ও মাসিক বৃত্তি প্রদান।',
-      subtitleEn:
-        'Poverty must not stop education. Distributing school supplies, notebooks, bags, and monthly scholarships to prevent student dropouts in remote chars.',
-      btnPrimaryBn: 'শিক্ষায় অনুদান দিন',
-      btnPrimaryEn: 'Support Education',
-      btnPrimaryAction: 'donate',
-      btnPrimaryIcon: GraduationCap,
-      btnSecondaryBn: 'কার্যক্রম দেখুন',
-      btnSecondaryEn: 'View Education Work',
-      btnSecondaryAction: 'activities',
-      btnSecondaryIcon: Sparkles,
-      imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1800&q=85',
-      overlayGradient: 'from-[#881337]/90 via-[#991B1B]/65 to-black/30',
-    },
-  ];
+  // Dynamic slides from database with default fallbacks
+  const heroSlides = useMemo(() => {
+    if (dbSlides && dbSlides.length > 0) {
+      return dbSlides.map((slide, idx) => ({
+        id: slide.id || `slide-${idx + 1}`,
+        badgeBn: slide.badgeBn || 'স্থাপিত ২০১৮ • রৌমারী, কুড়িগ্রাম • ৯ম বছরে পদার্পণ',
+        badgeEn: slide.badgeEn || 'Est. 2018 • Rowmari, Kurigram',
+        categoryBn: slide.categoryBn || 'মানবিক সহায়তা মিশন',
+        categoryEn: slide.categoryEn || 'Humanitarian Mission',
+        titleBn: slide.titleBn,
+        titleEn: slide.titleEn || slide.titleBn,
+        subtitleBn: slide.subtitleBn,
+        subtitleEn: slide.subtitleEn || slide.subtitleBn,
+        btnPrimaryBn: slide.btnPrimaryBn || 'অনুদান দিন',
+        btnPrimaryEn: slide.btnPrimaryEn || 'Donate Now',
+        btnPrimaryAction: slide.btnPrimaryLink || 'donate',
+        btnPrimaryIcon: Heart,
+        btnSecondaryBn: slide.btnSecondaryBn || 'কার্যক্রম দেখুন',
+        btnSecondaryEn: slide.btnSecondaryEn || 'Explore Activities',
+        btnSecondaryAction: slide.btnSecondaryLink || 'activities',
+        btnSecondaryIcon: Search,
+        imageUrl: slide.imageUrl || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1800&q=85',
+        overlayGradient: 'from-[#7f1d1d]/90 via-[#991b1b]/65 to-black/30',
+      }));
+    }
+    return DEFAULT_HERO_SLIDES;
+  }, [dbSlides]);
 
   // Continuous automatic slideshow rotation every 4 seconds
   useEffect(() => {
@@ -140,7 +169,7 @@ export default function Hero({
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, [currentSlide, heroSlides.length]);
+  }, [heroSlides.length]);
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
@@ -150,9 +179,14 @@ export default function Hero({
     setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
   };
 
-  const activeSlide = heroSlides[currentSlide];
+  const safeIndex = currentSlide >= heroSlides.length ? 0 : currentSlide;
+  const activeSlide = heroSlides[safeIndex] || heroSlides[0];
 
   const handleAction = (actionType: string) => {
+    if (actionType.startsWith('/') || actionType.startsWith('http')) {
+      router.push(actionType);
+      return;
+    }
     switch (actionType) {
       case 'donate':
         router.push('/donate');

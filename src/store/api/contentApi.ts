@@ -36,8 +36,92 @@ export interface NewsEventItem {
   createdAt: string;
 }
 
+export interface NoticeModalItem {
+  id: string;
+  headerTitle: string;
+  badge: string;
+  title: string;
+  description: string;
+  hotline: string;
+  address: string;
+  primaryBtnText: string;
+  primaryBtnLink: string;
+  secondaryBtnText: string;
+  secondaryBtnLink: string;
+  imageUrl?: string | null;
+  isActive: boolean;
+  startDate?: string | null;
+  endDate?: string | null;
+  displayFrequency: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HeroSlideItem {
+  id: string;
+  titleBn: string;
+  titleEn?: string | null;
+  subtitleBn: string;
+  subtitleEn?: string | null;
+  badgeBn?: string | null;
+  badgeEn?: string | null;
+  categoryBn?: string | null;
+  categoryEn?: string | null;
+  imageUrl: string;
+  btnPrimaryBn: string;
+  btnPrimaryEn: string;
+  btnPrimaryLink: string;
+  btnSecondaryBn: string;
+  btnSecondaryEn: string;
+  btnSecondaryLink: string;
+  displayOrder: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface FooterConfigItem {
+  id: string;
+  aboutSummaryBn: string;
+  aboutSummaryEn?: string | null;
+  addressBn: string;
+  addressEn?: string | null;
+  hotline: string;
+  phonePrimary: string;
+  phoneSecondary?: string | null;
+  emergencyHotline?: string | null;
+  emailPrimary: string;
+  emailSupport?: string | null;
+  registrationNoBn?: string | null;
+  registrationNoEn?: string | null;
+  facebookPageUrl?: string | null;
+  facebookGroupUrl?: string | null;
+  youtubeUrl?: string | null;
+  linkedinUrl?: string | null;
+  copyrightTextBn: string;
+  copyrightTextEn?: string | null;
+  quickLinks?: Array<{ href: string; bn: string; en: string }> | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export const contentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getActiveModal: builder.query<NoticeModalItem | null, void>({
+      query: () => ({ url: API_ENDPOINTS.content.activeModal }),
+      providesTags: ['Modals'],
+    }),
+
+    getHeroSlides: builder.query<HeroSlideItem[], void>({
+      query: () => ({ url: API_ENDPOINTS.content.heroSlides }),
+      providesTags: ['HeroSlides'],
+    }),
+
+    getFooterConfig: builder.query<FooterConfigItem, void>({
+      query: () => ({ url: API_ENDPOINTS.content.footer }),
+      providesTags: ['FooterConfig'],
+    }),
+
     getGallery: builder.query<GalleryItem[] | { items: GalleryItem[] }, { category?: string } | void>({
       query: (params) => ({
         url: API_ENDPOINTS.content.gallery,
@@ -89,6 +173,9 @@ export const contentApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useGetActiveModalQuery,
+  useGetHeroSlidesQuery,
+  useGetFooterConfigQuery,
   useGetGalleryQuery,
   useGetAnnouncementsQuery,
   useGetNewsEventsQuery,

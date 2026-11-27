@@ -26,6 +26,9 @@ export const baseApi = createApi({
     'Media',
     'Roumari',
     'Committees',
+    'Modals',
+    'HeroSlides',
+    'FooterConfig',
   ],
   endpoints: () => ({}),
 });

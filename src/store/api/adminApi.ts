@@ -1,5 +1,6 @@
 import { baseApi } from './baseApi';
 import { API_ENDPOINTS } from './endpoints';
+import { NoticeModalItem, HeroSlideItem, FooterConfigItem } from './contentApi';
 
 export interface CMSPage {
   id: string;
@@ -261,6 +262,111 @@ export const adminApi = baseApi.injectEndpoints({
       }),
       providesTags: ['AuditLogs'],
     }),
+
+    // 9. Emergency Notice Modals (Full CRUD)
+    getAdminNoticeModals: builder.query<NoticeModalItem[], void>({
+      query: () => ({ url: API_ENDPOINTS.admin.modals }),
+      providesTags: ['Modals'],
+    }),
+
+    getAdminNoticeModalById: builder.query<NoticeModalItem, string>({
+      query: (id) => ({ url: API_ENDPOINTS.admin.modalById(id) }),
+      providesTags: ['Modals'],
+    }),
+
+    createAdminNoticeModal: builder.mutation<NoticeModalItem, Partial<NoticeModalItem>>({
+      query: (data) => ({
+        url: API_ENDPOINTS.admin.modals,
+        method: 'POST',
+        data,
+      }),
+      invalidatesTags: ['Modals'],
+    }),
+
+    updateAdminNoticeModal: builder.mutation<NoticeModalItem, { id: string; data: Partial<NoticeModalItem> }>({
+      query: ({ id, data }) => ({
+        url: API_ENDPOINTS.admin.modalById(id),
+        method: 'PUT',
+        data,
+      }),
+      invalidatesTags: ['Modals'],
+    }),
+
+    toggleAdminNoticeModalStatus: builder.mutation<NoticeModalItem, string>({
+      query: (id) => ({
+        url: API_ENDPOINTS.admin.modalToggle(id),
+        method: 'PATCH',
+      }),
+      invalidatesTags: ['Modals'],
+    }),
+
+    deleteAdminNoticeModal: builder.mutation<{ success: boolean }, string>({
+      query: (id) => ({
+        url: API_ENDPOINTS.admin.modalById(id),
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Modals'],
+    }),
+
+    // 10. Hero Slides (Full CRUD)
+    getAdminHeroSlides: builder.query<HeroSlideItem[], void>({
+      query: () => ({ url: API_ENDPOINTS.admin.heroSlides }),
+      providesTags: ['HeroSlides'],
+    }),
+
+    getAdminHeroSlideById: builder.query<HeroSlideItem, string>({
+      query: (id) => ({ url: API_ENDPOINTS.admin.heroSlideById(id) }),
+      providesTags: ['HeroSlides'],
+    }),
+
+    createAdminHeroSlide: builder.mutation<HeroSlideItem, Partial<HeroSlideItem>>({
+      query: (data) => ({
+        url: API_ENDPOINTS.admin.heroSlides,
+        method: 'POST',
+        data,
+      }),
+      invalidatesTags: ['HeroSlides'],
+    }),
+
+    updateAdminHeroSlide: builder.mutation<HeroSlideItem, { id: string; data: Partial<HeroSlideItem> }>({
+      query: ({ id, data }) => ({
+        url: API_ENDPOINTS.admin.heroSlideById(id),
+        method: 'PUT',
+        data,
+      }),
+      invalidatesTags: ['HeroSlides'],
+    }),
+
+    toggleAdminHeroSlideStatus: builder.mutation<HeroSlideItem, string>({
+      query: (id) => ({
+        url: API_ENDPOINTS.admin.heroSlideToggle(id),
+        method: 'PATCH',
+      }),
+      invalidatesTags: ['HeroSlides'],
+    }),
+
+    deleteAdminHeroSlide: builder.mutation<{ success: boolean }, string>({
+      query: (id) => ({
+        url: API_ENDPOINTS.admin.heroSlideById(id),
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['HeroSlides'],
+    }),
+
+    // 11. Footer Configuration (Full CRUD)
+    getAdminFooterConfig: builder.query<FooterConfigItem, void>({
+      query: () => ({ url: API_ENDPOINTS.admin.footer }),
+      providesTags: ['FooterConfig'],
+    }),
+
+    updateAdminFooterConfig: builder.mutation<FooterConfigItem, Partial<FooterConfigItem>>({
+      query: (data) => ({
+        url: API_ENDPOINTS.admin.footer,
+        method: 'PUT',
+        data,
+      }),
+      invalidatesTags: ['FooterConfig'],
+    }),
   }),
 });
 
@@ -286,4 +392,18 @@ export const {
   useGetAdminMediaQuery,
   useDeleteAdminMediaMutation,
   useGetAdminActivityLogsQuery,
+  useGetAdminNoticeModalsQuery,
+  useGetAdminNoticeModalByIdQuery,
+  useCreateAdminNoticeModalMutation,
+  useUpdateAdminNoticeModalMutation,
+  useToggleAdminNoticeModalStatusMutation,
+  useDeleteAdminNoticeModalMutation,
+  useGetAdminHeroSlidesQuery,
+  useGetAdminHeroSlideByIdQuery,
+  useCreateAdminHeroSlideMutation,
+  useUpdateAdminHeroSlideMutation,
+  useToggleAdminHeroSlideStatusMutation,
+  useDeleteAdminHeroSlideMutation,
+  useGetAdminFooterConfigQuery,
+  useUpdateAdminFooterConfigMutation,
 } = adminApi;

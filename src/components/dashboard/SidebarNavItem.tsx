@@ -7,13 +7,14 @@ import { cn } from "@/lib/utils"
 import {
   LayoutDashboard, Droplet, Users, ClipboardCheck, Coins, Megaphone,
   FileText, HeartHandshake, Receipt, ShieldAlert, Settings,
-  ChevronRight, Newspaper, Image as ImageIcon, Layers, Mail, UserCheck
+  ChevronRight, Newspaper, Image as ImageIcon, Layers, Mail, UserCheck,
+  LayoutTemplate, MapPin
 } from "lucide-react"
 
 const ICON_MAP: Record<string, React.ElementType> = {
   LayoutDashboard, Droplet, Users, ClipboardCheck, Coins, Megaphone,
   FileText, HeartHandshake, Receipt, ShieldAlert, Settings, Newspaper,
-  Image: ImageIcon, Layers, Mail, UserCheck,
+  Image: ImageIcon, Layers, Mail, UserCheck, LayoutTemplate, MapPin,
 }
 
 interface SidebarNavItemProps {

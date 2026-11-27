@@ -55,6 +55,38 @@ export const DASHBOARD_NAV_ITEMS: NavItemConfig[] = [
 
   // 2. Public Website CMS Management
   {
+    id: "modal",
+    titleBn: "পপআপ নোটিশ (Modal)",
+    titleEn: "Emergency Notice Modal",
+    href: "/dashboard/modal",
+    iconName: "Megaphone",
+    badge: "পপআপ",
+    badgeVariant: "urgent",
+    category: "cms",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "হোমপেজের জরুরি পপআপ নোটিশ ও সময়সীমা নির্ধারণ",
+  },
+  {
+    id: "hero",
+    titleBn: "হিরো স্লাইডার (Hero)",
+    titleEn: "Hero Slider CMS",
+    href: "/dashboard/hero",
+    iconName: "Layers",
+    category: "cms",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "হোমপেজের হিরো ব্যানার, ছবি ও স্লাইড পরিচালনা",
+  },
+  {
+    id: "footer",
+    titleBn: "ফুটার সেটিংস (Footer)",
+    titleEn: "Footer Configuration",
+    href: "/dashboard/footer",
+    iconName: "LayoutTemplate",
+    category: "cms",
+    roles: ["SUPER_ADMIN"],
+    descriptionBn: "ফুটার সারসংক্ষেপ, জরুরি হটলাইন ও সামাজিক লিংক",
+  },
+  {
     id: "pages",
     titleBn: "পাবলিক পেজ ম্যানেজমেন্ট (CMS)",
     titleEn: "Public Pages CMS",
