@@ -141,8 +141,8 @@ export function DashboardShell({ children, defaultTab }: DashboardShellProps) {
           onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
         />
 
-        <main className="min-w-0 flex-1 p-3 sm:p-6 lg:p-8">
-          <div className="min-h-[calc(100vh-6.5rem)] rounded-3xl border border-stone-200/70 bg-white/70 p-4 shadow-[0_1px_0_0_rgba(255,255,255,0.8)_inset,0_20px_50px_-24px_rgba(214,40,40,0.08)] ring-1 ring-black/2 backdrop-blur-sm sm:p-6 lg:p-8">
+        <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
+          <div className="mx-auto w-full max-w-7xl">
             {isPermitted ? (
               <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                 {children ? children : <DashboardContent activeTab={activeTab} onSelectTab={(tabId) => setActiveTab(tabId)} />}

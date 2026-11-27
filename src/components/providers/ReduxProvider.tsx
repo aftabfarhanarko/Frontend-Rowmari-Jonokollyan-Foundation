@@ -21,14 +21,16 @@ export default function ReduxProvider({
       <Toaster
         position="top-right"
         richColors
-        closeButton={false}
-        expand
-        visibleToasts={4}
-        duration={4000}
+        closeButton
+        expand={false}
+        visibleToasts={3}
+        duration={3500}
         theme="light"
+        offset={{ top: '16px', right: '16px' }}
+        mobileOffset={{ top: '12px', left: '16px', right: '16px' }}
         icons={{
           success: (
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600 shrink-0 mr-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 shrink-0">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -45,7 +47,7 @@ export default function ReduxProvider({
             </span>
           ),
           error: (
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600 shrink-0 mr-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600 shrink-0">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -62,7 +64,7 @@ export default function ReduxProvider({
             </span>
           ),
           warning: (
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-50 text-amber-600 shrink-0 mr-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-50 text-amber-600 shrink-0">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -79,7 +81,7 @@ export default function ReduxProvider({
             </span>
           ),
           info: (
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-600 shrink-0 mr-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-600 shrink-0">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -97,18 +99,17 @@ export default function ReduxProvider({
           ),
         }}
         toastOptions={{
-          closeButton: false,
           className:
-            '!bg-white !border !border-slate-200/80 !text-slate-900 !rounded-2xl !shadow-[0_8px_30px_rgba(15,23,42,0.10)] !px-4 !py-3.5 !w-[calc(100vw-32px)] sm:!w-[380px] !items-center !gap-3.5',
+            '!bg-white !border !border-slate-200/80 !text-slate-900 !rounded-2xl !shadow-[0_10px_30px_rgba(15,23,42,0.12)] !px-4 !py-3 !w-full sm:!w-[380px] !max-w-full !items-center !gap-3',
           style: {
             fontFamily: 'inherit',
           },
           classNames: {
-            closeButton: '!hidden !opacity-0 !pointer-events-none',
-            icon: '!mr-3.5 !flex !items-center !justify-center !shrink-0',
-            content: '!flex !flex-col !justify-center !gap-1 !pl-1',
-            title: '!text-[14px] !font-medium !text-slate-900 !leading-snug',
-            description: '!text-[13px] !text-slate-500 !leading-relaxed',
+            closeButton: '!bg-white !border-slate-200 !text-slate-500 hover:!text-slate-800',
+            icon: '!flex !items-center !justify-center !shrink-0 !m-0',
+            content: '!flex !flex-col !justify-center !gap-0.5 !min-w-0 !flex-1',
+            title: '!text-[13px] sm:!text-[14px] !font-semibold !text-slate-900 !leading-snug !break-words',
+            description: '!text-[12px] sm:!text-[13px] !text-slate-500 !leading-relaxed !break-words',
             actionButton:
               '!bg-slate-900 !text-white !rounded-lg',
             cancelButton:
