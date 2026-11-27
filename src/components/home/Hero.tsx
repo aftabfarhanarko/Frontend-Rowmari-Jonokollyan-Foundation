@@ -237,155 +237,138 @@ export default function Hero({
       id="home"
       className="relative pt-0 sm:pt-4 pb-8 sm:pb-12 overflow-hidden bg-white"
     >
-      <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
-        {/* Full-Width Panoramic Hero Slider Card */}
-        <div className="relative w-full rounded-none sm:rounded-xl md:rounded-2xl overflow-hidden min-h-[300px] sm:min-h-[360px] md:min-h-[420px] lg:min-h-[460px] shadow-xl sm:border sm:border-stone-200/80 flex flex-col justify-between bg-stone-950">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeSlide.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.6, ease: 'easeInOut' }}
-              className="absolute inset-0 z-0"
-            >
-              {/* Full Background Photography */}
-              <Image
-                src={activeSlide.imageUrl}
-                alt={lang === 'bn' ? activeSlide.titleBn : activeSlide.titleEn}
-                fill
-                priority
-                sizes="(max-width: 1280px) 100vw, 1280px"
-                className="object-cover object-center scale-102 transition-transform duration-1000 ease-out"
-              />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        {/* Full-Width Split Hero Card (Clean White Editorial Layout - NO TEXT OVER IMAGE) */}
+        <div className="relative w-full rounded-2xl md:rounded-3xl border border-stone-200/90 shadow-sm bg-white overflow-hidden p-5 sm:p-7 md:p-9 lg:p-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
+            {/* Left Column: Text & Action Controls (On Clean White Background) */}
+            <div className="lg:col-span-7 flex flex-col justify-between space-y-4 sm:space-y-5">
+              {/* Top Tagline Badge */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`badge-${activeSlide.id}`}
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 border border-red-200 text-[#D62828] text-xs font-bold shadow-2xs">
+                    <span className="w-2 h-2 rounded-full bg-[#D62828] animate-pulse" />
+                    <span>{lang === 'bn' ? activeSlide.badgeBn : activeSlide.badgeEn}</span>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
 
-              {/* Multi-layered Deep Branded Gradient Overlay for 100% Crisp Typography */}
-              <div className={`absolute inset-0 z-10 bg-gradient-to-r ${activeSlide.overlayGradient}`} />
-              <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
-            </motion.div>
-          </AnimatePresence>
+              {/* Category, Title & Subtitle */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`text-${activeSlide.id}`}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                  className="space-y-3 sm:space-y-4"
+                >
+                  <div className="inline-block">
+                    <span className="text-[11px] sm:text-xs font-bold tracking-wider uppercase px-2.5 py-1 rounded-md bg-stone-100 text-stone-700">
+                      {lang === 'bn' ? activeSlide.categoryBn : activeSlide.categoryEn}
+                    </span>
+                  </div>
 
-          {/* Left & Right Chevron Arrows (Desktop/Tablet Only) */}
-          <button
-            onClick={prevSlide}
-            className="hidden sm:flex absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-full bg-black/40 hover:bg-black/70 text-white border border-white/20 backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95 cursor-pointer"
-            aria-label="Previous Slide"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
-            onClick={nextSlide}
-            className="hidden sm:flex absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-full bg-black/40 hover:bg-black/70 text-white border border-white/20 backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95 cursor-pointer"
-            aria-label="Next Slide"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-black text-stone-900 leading-[1.25] tracking-tight">
+                    {lang === 'bn' ? activeSlide.titleBn : activeSlide.titleEn}
+                  </h1>
 
-          {/* Slide Content Overlay (Inside the Banner) */}
-          <div className="relative z-20 flex-1 flex flex-col justify-between p-4 sm:p-7 md:p-10 lg:p-12 max-w-3xl">
-            {/* Top Tagline Badge */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`badge-${activeSlide.id}`}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.4 }}
-              >
-                <div className="inline-flex items-center gap-2 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-black/45 backdrop-blur-md border border-white/20 text-white text-[11px] sm:text-xs font-semibold shadow-md">
-                  <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-red-400 animate-pulse" />
-                  <span>{lang === 'bn' ? activeSlide.badgeBn : activeSlide.badgeEn}</span>
+                  <p className="text-sm sm:text-base text-stone-600 leading-relaxed font-normal max-w-xl">
+                    {lang === 'bn' ? activeSlide.subtitleBn : activeSlide.subtitleEn}
+                  </p>
+
+                  {/* Primary & Secondary Buttons */}
+                  <div className="flex flex-wrap items-center gap-3 pt-2">
+                    <button
+                      onClick={() => handleAction(activeSlide.btnPrimaryAction)}
+                      className="px-6 py-2.5 sm:py-3 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition-all shadow-md hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
+                    >
+                      <PrimaryIcon className="w-4 h-4 text-white shrink-0" />
+                      <span>{lang === 'bn' ? activeSlide.btnPrimaryBn : activeSlide.btnPrimaryEn}</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleAction(activeSlide.btnSecondaryAction)}
+                      className="px-6 py-2.5 sm:py-3 rounded-xl bg-white hover:bg-stone-50 text-stone-800 font-bold text-xs sm:text-sm border border-stone-300 transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
+                    >
+                      <SecondaryIcon className="w-4 h-4 text-[#D62828] shrink-0" />
+                      <span>{lang === 'bn' ? activeSlide.btnSecondaryBn : activeSlide.btnSecondaryEn}</span>
+                    </button>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Slider Controls & Slide Indicators */}
+              <div className="flex items-center gap-4 pt-2 border-t border-stone-100">
+                <div className="flex items-center gap-1.5">
+                  {heroSlides.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentSlide(idx)}
+                      className={`transition-all duration-300 rounded-full cursor-pointer ${
+                        currentSlide === idx
+                          ? 'w-7 h-2 bg-[#D62828]'
+                          : 'w-2 h-2 bg-stone-300 hover:bg-stone-400'
+                      }`}
+                      aria-label={`Slide ${idx + 1}`}
+                    />
+                  ))}
                 </div>
-              </motion.div>
-            </AnimatePresence>
 
-            {/* Middle Main Text & CTAs */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`text-${activeSlide.id}`}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -16 }}
-                transition={{ duration: 0.4, ease: 'easeOut' }}
-                className="my-auto py-2.5 sm:py-4 md:py-6 space-y-2.5 sm:space-y-3.5 md:space-y-4"
-              >
-                <div className="inline-block">
-                  <span className="text-[10px] sm:text-xs font-bold tracking-wider uppercase px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-md bg-[#E53935] text-white shadow-md">
-                    {lang === 'bn' ? activeSlide.categoryBn : activeSlide.categoryEn}
-                  </span>
-                </div>
-
-                <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-[46px] font-black text-white leading-[1.2] tracking-tight drop-shadow-md">
-                  {lang === 'bn' ? activeSlide.titleBn : activeSlide.titleEn}
-                </h1>
-
-                <p className="text-xs sm:text-sm md:text-base text-stone-100/95 leading-relaxed font-normal max-w-xl drop-shadow-sm line-clamp-2 sm:line-clamp-none">
-                  {lang === 'bn' ? activeSlide.subtitleBn : activeSlide.subtitleEn}
-                </p>
-
-                {/* Primary & Secondary Buttons Inside the Banner */}
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3.5 pt-1 sm:pt-2">
+                <div className="flex items-center gap-1 text-stone-400 ml-auto">
                   <button
-                    onClick={() => handleAction(activeSlide.btnPrimaryAction)}
-                    className="px-4 sm:px-6 md:px-7 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl bg-[#E53935] hover:bg-[#D32F2F] text-white font-bold text-xs sm:text-sm md:text-base transition-all duration-200 shadow-lg shadow-red-950/40 hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
+                    onClick={prevSlide}
+                    className="p-1.5 rounded-full hover:bg-stone-100 text-stone-600 border border-stone-200 transition cursor-pointer"
+                    aria-label="Previous Slide"
                   >
-                    <PrimaryIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white shrink-0" />
-                    <span>{lang === 'bn' ? activeSlide.btnPrimaryBn : activeSlide.btnPrimaryEn}</span>
+                    <ChevronLeft className="w-4 h-4" />
                   </button>
-
                   <button
-                    onClick={() => handleAction(activeSlide.btnSecondaryAction)}
-                    className="px-4 sm:px-6 md:px-7 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs sm:text-sm md:text-base border border-white/30 backdrop-blur-md transition-all duration-200 shadow-md hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
+                    onClick={nextSlide}
+                    className="p-1.5 rounded-full hover:bg-stone-100 text-stone-600 border border-stone-200 transition cursor-pointer"
+                    aria-label="Next Slide"
                   >
-                    <SecondaryIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white shrink-0" />
-                    <span>{lang === 'bn' ? activeSlide.btnSecondaryBn : activeSlide.btnSecondaryEn}</span>
+                    <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Bottom Spacer */}
-            <div className="h-3 sm:h-4" />
-          </div>
-
-          {/* Bottom Center Capsule Dot Pagination (Sleek Frosted Capsule) */}
-          <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-30 bg-white/85 dark:bg-black/60 backdrop-blur-md px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full border border-white/40 shadow-lg flex items-center gap-1.5 sm:gap-2">
-            {heroSlides.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentSlide(idx)}
-                className={`transition-all duration-300 rounded-full cursor-pointer ${
-                  currentSlide === idx
-                    ? 'w-6 sm:w-7 h-2 bg-[#E53935] shadow-xs'
-                    : 'w-2 h-2 bg-stone-400/80 hover:bg-stone-600'
-                }`}
-                aria-label={`Slide ${idx + 1}`}
-              />
-            ))}
-          </div>
-
-          {/* Bottom Right Brand Seal & Logo Watermark (Desktop/Tablet Only) */}
-          <div className="hidden sm:flex absolute bottom-3 sm:bottom-4 right-4 sm:right-6 z-30 items-center gap-2 bg-black/40 backdrop-blur-md px-2.5 sm:px-3.5 py-1 rounded-full border border-white/20 text-white shadow-xl pointer-events-none">
-            <Image
-              src="/logo.png"
-              alt="RJF Seal"
-              width={26}
-              height={26}
-              className="rounded-full object-contain"
-            />
-            <div className="text-left">
-              <div className="text-[9px] uppercase tracking-wider text-red-300 font-bold leading-tight">
-                RJF OFFICIAL
               </div>
-              <div className="text-[11px] font-black text-white leading-tight">
-                রৌমারী জনকল্যাণ ফাউন্ডেশন
+            </div>
+
+            {/* Right Column: Clean Authentic Photography (NO TEXT OVER IMAGE) */}
+            <div className="lg:col-span-5 relative">
+              <div className="relative w-full aspect-4/3 sm:aspect-16/10 lg:aspect-4/3 rounded-xl sm:rounded-2xl overflow-hidden shadow-md border border-stone-200/80 bg-stone-100">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeSlide.id}
+                    initial={{ opacity: 0, scale: 1.02 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5, ease: 'easeInOut' }}
+                    className="absolute inset-0"
+                  >
+                    <Image
+                      src={activeSlide.imageUrl}
+                      alt={lang === 'bn' ? activeSlide.titleBn : activeSlide.titleEn}
+                      fill
+                      priority
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-cover"
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </div>
             </div>
           </div>
         </div>
 
         {/* Trust Credential Strip Underneath Panoramic Banner */}
-        <div className="mt-3 sm:mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-stone-500 px-4 sm:px-2">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-stone-500 px-2 sm:px-1">
           <div className="flex items-center gap-1.5 text-stone-600">
             <ShieldCheck className="w-4 h-4 text-[#D62828] shrink-0" />
             <span>
@@ -419,7 +402,7 @@ export default function Hero({
         </div>
 
         {/* --- Premium Field Photography Showcase Underneath Hero --- */}
-        <div className="mt-10 sm:mt-14 pt-8 sm:pt-10 border-t border-red-950/10 px-4 sm:px-0">
+        <div className="pt-6 sm:pt-8 border-t border-stone-200">
           {/* Header Row */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-8">
             <div>
@@ -446,54 +429,55 @@ export default function Hero({
             </button>
           </div>
 
-          {/* 4 Premium Visual Cards Grid */}
+          {/* 4 Premium Visual Cards Grid - NO TEXT OVER IMAGES */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
             {fieldHighlights.map((item) => {
               return (
                 <div
                   key={item.id}
                   onClick={onOpenActivities}
-                  className="group relative h-72 sm:h-80 rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl border border-stone-200/90 transition-all duration-500 cursor-pointer flex flex-col justify-between p-4 sm:p-5"
+                  className="group bg-white rounded-2xl border border-stone-200/90 overflow-hidden shadow-xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between"
                 >
-                  {/* High Quality Authentic Image */}
-                  <Image
-                    src={item.imageUrl}
-                    alt={lang === 'bn' ? item.titleBn : item.titleEn}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
-                  />
-
-                  {/* Deep Contrast Multi-Stop Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/95 via-stone-950/45 to-stone-950/25 z-10 group-hover:via-stone-950/35 transition-colors duration-500" />
-
-                  {/* Top Overlay: Category Badge & Location Chip */}
-                  <div className="relative z-20 flex items-center justify-between gap-2">
-                    <span
-                      className={`text-[11px] font-bold text-white px-2.5 py-1 rounded-full shadow-md backdrop-blur-md ${item.badgeColor}`}
-                    >
-                      {lang === 'bn' ? item.tagBn : item.tagEn}
-                    </span>
-
-                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-white/90 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/20 shadow-xs">
-                      <MapPin className="w-3 h-3 text-red-400 shrink-0" />
-                      <span className="truncate max-w-[110px]">{lang === 'bn' ? item.locationBn : item.locationEn}</span>
-                    </span>
+                  {/* Clean Authentic Image - NO TEXT OVER IMAGE */}
+                  <div className="relative w-full aspect-16/10 bg-stone-100 overflow-hidden">
+                    <Image
+                      src={item.imageUrl}
+                      alt={lang === 'bn' ? item.titleBn : item.titleEn}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    />
                   </div>
 
-                  {/* Bottom Overlay: Title, Description & Impact Metric */}
-                  <div className="relative z-20 space-y-2">
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-white/20 backdrop-blur-md text-[11px] font-bold text-red-300 border border-white/20 shadow-xs">
-                      <span>✓ {lang === 'bn' ? item.statBn : item.statEn}</span>
+                  {/* Clean Content Below Image */}
+                  <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between gap-2 text-xs">
+                        <span className={`text-[11px] font-bold text-white px-2.5 py-0.5 rounded-md ${item.badgeColor}`}>
+                          {lang === 'bn' ? item.tagBn : item.tagEn}
+                        </span>
+                        <span className="inline-flex items-center gap-1 text-[11px] text-stone-500 font-medium">
+                          <MapPin className="w-3 h-3 text-[#D62828] shrink-0" />
+                          <span className="truncate max-w-[110px]">{lang === 'bn' ? item.locationBn : item.locationEn}</span>
+                        </span>
+                      </div>
+
+                      <h3 className="text-base font-bold text-stone-900 group-hover:text-[#D62828] transition line-clamp-2 leading-snug">
+                        {lang === 'bn' ? item.titleBn : item.titleEn}
+                      </h3>
+
+                      <p className="text-xs text-stone-600 line-clamp-2 leading-relaxed">
+                        {lang === 'bn' ? item.descBn : item.descEn}
+                      </p>
                     </div>
 
-                    <h3 className="text-base sm:text-lg font-bold text-white leading-snug group-hover:text-red-300 transition-colors duration-300 drop-shadow-md">
-                      {lang === 'bn' ? item.titleBn : item.titleEn}
-                    </h3>
-
-                    <p className="text-xs text-stone-200 line-clamp-2 leading-relaxed drop-shadow-xs">
-                      {lang === 'bn' ? item.descBn : item.descEn}
-                    </p>
+                    <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
+                      <span className="font-bold text-[#D62828]">✓ {lang === 'bn' ? item.statBn : item.statEn}</span>
+                      <span className="text-stone-400 font-semibold group-hover:text-[#D62828] transition flex items-center gap-0.5">
+                        {lang === 'bn' ? 'বিস্তারিত' : 'View'}
+                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                      </span>
+                    </div>
                   </div>
                 </div>
               );
