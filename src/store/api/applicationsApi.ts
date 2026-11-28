@@ -21,11 +21,25 @@ export const applicationsApi = baseApi.injectEndpoints({
     getNews: builder.query<NewsItem[], void>({
       query: () => ({ url: API_ENDPOINTS.content.newsEvents, params: { page: 1, limit: 100 } }),
       transformResponse: (response: BackendNews[] | { items: BackendNews[] }): NewsItem[] =>
-        (Array.isArray(response) ? response : response.items).map((item) => ({
-          id: item.id, type: item.type.toLowerCase() as NewsItem['type'], titleBn: item.title, titleEn: item.title,
-          dateBn: item.startDate || item.createdAt, dateEn: item.startDate || item.createdAt,
-          locationBn: item.location || '', locationEn: item.location || '', summaryBn: item.summary || '', summaryEn: item.summary || '', imageUrl: item.imageUrl,
-        })),
+        (Array.isArray(response) ? response : response.items || []).map((item: any) => {
+          const rawType = (item.type || 'NEWS').toLowerCase();
+          const type: NewsItem['type'] = rawType === 'event' ? 'event' : rawType === 'notice' ? 'notice' : 'news';
+          return {
+            id: item.id,
+            type,
+            titleBn: item.title,
+            titleEn: item.title,
+            dateBn: item.eventDate || item.startDate || item.createdAt,
+            dateEn: item.eventDate || item.startDate || item.createdAt,
+            locationBn: item.location || '',
+            locationEn: item.location || '',
+            summaryBn: item.summary || '',
+            summaryEn: item.summary || '',
+            contentBn: item.content || item.summary || '',
+            contentEn: item.content || item.summary || '',
+            imageUrl: item.imageUrl || item.coverImageUrl || undefined,
+          };
+        }),
     }),
     trackApplication: builder.query<ApplicationTrackingStatus, { referenceCode: string; phone: string }>({
       query: ({ referenceCode, phone }) => ({ url: API_ENDPOINTS.applications.track, method: 'POST', data: { referenceCode, phone: phoneValue(phone) } }),
@@ -60,10 +74,18 @@ export const applicationsApi = baseApi.injectEndpoints({
     }),
     applyVolunteer: builder.mutation<unknown, VolunteerPayload>({
       query: (form) => ({
-        url: API_ENDPOINTS.volunteers.register, method: 'POST', data: {
-          fullName: form.name, phone: phoneValue(form.phone), email: form.email, upazila: form.preferredWing,
-          skills: [form.profession, form.motivation].filter(Boolean).join(' — '), availabilityHoursPerWeek: Number(form.availability) || 1,
-        }
+        url: API_ENDPOINTS.volunteers.register,
+        method: 'POST',
+        data: {
+          fullName: form.name.trim(),
+          phone: phoneValue(form.phone),
+          ...(form.email?.trim() ? { email: form.email.trim() } : {}),
+          ...(form.preferredWing?.trim() ? { upazila: form.preferredWing.trim() } : {}),
+          ...( [form.profession, form.motivation].filter(Boolean).length > 0
+            ? { skills: [form.profession, form.motivation].filter(Boolean).join(' — ') }
+            : {}),
+          availabilityHoursPerWeek: Number(form.availability) || 1,
+        },
       }),
     }),
     sendContactMessage: builder.mutation<{ id: string; createdAt: string }, ContactMessagePayload>({

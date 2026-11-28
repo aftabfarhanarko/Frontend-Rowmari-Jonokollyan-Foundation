@@ -52,7 +52,7 @@ export interface GalleryItem {
 
 export interface NewsItem {
   id: string;
-  type: 'news' | 'event';
+  type: 'news' | 'event' | 'notice';
   titleBn: string;
   titleEn: string;
   dateBn: string;
@@ -61,6 +61,8 @@ export interface NewsItem {
   locationEn: string;
   summaryBn: string;
   summaryEn: string;
+  contentBn?: string;
+  contentEn?: string;
   imageUrl?: string;
 }
 

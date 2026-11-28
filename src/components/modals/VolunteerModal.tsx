@@ -63,7 +63,7 @@ export default function VolunteerModal({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 transition-opacity"
       onClick={(e) => {
         if (e.target === e.currentTarget) handleClose();
       }}
@@ -162,6 +162,21 @@ export default function VolunteerModal({
                     <p className="text-red-600 text-xs mt-1">{errors.age.message}</p>
                   )}
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
+                  {lang === 'bn' ? 'ইমেইল এড্রেস (অনুমোদনের পর লগইনের জন্য)' : 'Email Address (for login after approval)'}
+                </label>
+                <input
+                  type="email"
+                  {...register('email')}
+                  placeholder="example@email.com"
+                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D62828]"
+                />
+                {errors.email && (
+                  <p className="text-red-600 text-xs mt-1">{errors.email.message}</p>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

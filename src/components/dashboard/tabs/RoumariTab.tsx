@@ -44,7 +44,7 @@ export function RoumariTab() {
 
   // API Queries
   const { data: directories, isLoading: loadingDir, refetch: refetchDir } = useGetRoumariDirectoriesQuery()
-  const { data: newsRes, isLoading: loadingNews, refetch: refetchNews } = useGetRoumariNewsQuery({ limit: 50 })
+  const { data: newsRes, isLoading: loadingNews, refetch: refetchNews } = useGetRoumariNewsQuery({ limit: 50, page: 1 })
   const { data: places, isLoading: loadingPlaces, refetch: refetchPlaces } = useGetRoumariTouristPlacesQuery()
 
   // Directory Mutations

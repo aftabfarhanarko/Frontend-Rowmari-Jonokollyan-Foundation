@@ -96,7 +96,7 @@ export const roumariApi = baseApi.injectEndpoints({
     getRoumariNews: builder.query<{ items: RoumariNewsItem[]; total: number; page: number; limit: number }, { category?: string; search?: string; page?: number; limit?: number } | void>({
       query: (params) => ({
         url: API_ENDPOINTS.roumari.news,
-        params: params || {},
+        params: { page: 1, limit: 20, ...(params || {}) },
       }),
       providesTags: ['Roumari'],
     }),

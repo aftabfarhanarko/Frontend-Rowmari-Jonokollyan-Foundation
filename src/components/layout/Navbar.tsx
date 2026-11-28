@@ -90,6 +90,7 @@ const mobileDrawerLinks = [
   { href: '/', labelBn: 'হোম', labelEn: 'Home', icon: Home },
   { href: '/roumari', labelBn: 'আমাদের রৌমারী', labelEn: 'Our Roumari', icon: MapPin },
   { href: '/about', labelBn: 'আমাদের সম্পর্কে', labelEn: 'About Us', icon: Info },
+  { href: '/team', labelBn: 'কমিটি ও নেতৃত্ব', labelEn: 'Committee & Leadership', icon: Users },
   { href: '/activities', labelBn: 'কার্যক্রমসমূহ', labelEn: 'Activities', icon: Activity },
   { href: '/campaigns', labelBn: 'ক্যাম্পেইন', labelEn: 'Campaigns', icon: Target },
   { href: '/volunteer', labelBn: 'স্বেচ্ছাসেবক হোন', labelEn: 'Join as Volunteer', icon: HandHeart },
@@ -286,8 +287,8 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                     priority
                   />
                 </motion.div>
-                <div>
-                  <span className="text-base sm:text-lg 2xl:text-xl font-bold text-[#E53935] group-hover:text-[#D32F2F] transition-colors duration-300 leading-tight block whitespace-nowrap">
+                <div className="min-w-0">
+                  <span className="text-sm sm:text-base xl:text-lg 2xl:text-xl font-bold text-[#E53935] group-hover:text-[#D32F2F] transition-colors duration-300 leading-tight block whitespace-nowrap">
                     {lang === 'bn' ? 'রৌমারী জনকল্যাণ ফাউন্ডেশন' : 'Rowmari Janakalyan Foundation'}
                   </span>
                   <AnimatePresence initial={false}>
@@ -297,7 +298,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="text-[11px] text-stone-500 block leading-tight overflow-hidden whitespace-nowrap"
+                        className="hidden 2xl:block text-[11px] text-stone-500 leading-tight overflow-hidden whitespace-nowrap"
                       >
                         {lang === 'bn' ? 'স্থাপিত ২০১৮ • রৌমারী, কুড়িগ্রাম' : 'Est. 2018 • Rowmari, Kurigram'}
                       </motion.span>
@@ -308,18 +309,19 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
 
               {/* ============ Zone 2: Navigation (centered, never wraps) ============ */}
               <nav
-                className="hidden xl:flex flex-1 min-w-0 items-center justify-center gap-0.5 2xl:gap-1"
+                className="hidden lg:flex flex-1 min-w-0 items-center justify-center gap-0.5 xl:gap-1"
                 aria-label="Main"
               >
                 {primaryDesktopLinks.map((link) => {
                   const Icon = link.icon;
                   const active = isActive(link.href);
+                  const visibilityCls = link.href === '/volunteer' ? 'hidden 2xl:flex' : 'flex';
                   return (
                     <Link
                       key={link.href}
                       href={link.href}
                       aria-current={active ? 'page' : undefined}
-                      className={`relative whitespace-nowrap text-[13px] font-semibold py-2 px-3 rounded-lg flex items-center gap-1.5 transition-colors duration-200 ${active ? 'text-[#D62828] font-bold' : 'text-stone-600 hover:text-[#D62828] hover:bg-stone-50'
+                      className={`relative whitespace-nowrap text-[13px] font-semibold py-2 px-2.5 xl:px-3 rounded-lg ${visibilityCls} items-center gap-1.5 transition-colors duration-200 ${active ? 'text-[#D62828] font-bold' : 'text-stone-600 hover:text-[#D62828] hover:bg-stone-50'
                         }`}
                     >
                       {/* Single pill that slides between the active links */}
@@ -371,6 +373,20 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                         role="menu"
                       >
                         <div className="w-52 bg-white rounded-xl shadow-xl shadow-stone-900/10 border border-stone-200/90 py-1.5 overflow-hidden">
+                          {/* Volunteer link moves into More on laptops (< 2xl) */}
+                          <Link
+                            href="/volunteer"
+                            role="menuitem"
+                            onClick={() => setMoreMenuOpen(false)}
+                            className={`2xl:hidden px-3.5 py-2.5 text-[13px] font-medium flex items-center gap-2.5 whitespace-nowrap transition-colors ${isActive('/volunteer')
+                                ? 'bg-red-50 text-red-900 font-bold'
+                                : 'text-stone-700 hover:bg-stone-50 hover:text-[#D62828]'
+                              }`}
+                          >
+                            <Users className={`w-4 h-4 shrink-0 ${isActive('/volunteer') ? 'text-red-800' : 'text-stone-400'}`} />
+                            <span>{lang === 'bn' ? 'স্বেচ্ছাসেবক' : 'Volunteer'}</span>
+                          </Link>
+
                           {secondaryDesktopLinks.map((link) => {
                             const Icon = link.icon;
                             const active = isActive(link.href);
@@ -415,17 +431,14 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
 
               {/* ============ Zone 3: Actions ============ */}
               <div className="hidden sm:flex items-center gap-2 shrink-0">
-                {/* Dedicated Primary Donation CTA */}
+                {/* Donation CTA: shown on tablet only, hidden on laptop & desktop */}
                 <Link
                   href="/donate"
-                  className="whitespace-nowrap px-4 py-2 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white text-[13px] font-bold transition flex items-center gap-1.5 shadow-sm shadow-red-500/20 active:scale-95"
+                  className="flex lg:hidden whitespace-nowrap px-4 py-2 rounded-xl bg-[#D62828] hover:bg-[#B91C1C] text-white text-[13px] font-bold transition items-center gap-1.5 shadow-sm shadow-red-500/20 active:scale-95"
                 >
                   <Heart className="w-3.5 h-3.5 fill-current" />
                   <span>{lang === 'bn' ? 'অনুদান দিন' : 'Donate Now'}</span>
                 </Link>
-
-                {/* Thin divider between CTA and account area (laptop & up) */}
-                <span aria-hidden className="hidden xl:block w-px h-6 bg-stone-200 mx-0.5" />
 
                 {isUserLoggedIn ? (
                   <div ref={userMenuRef} className="relative flex items-center">
@@ -546,7 +559,7 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                   <motion.button
                     onClick={onToggleLang}
                     whileTap={{ scale: 0.95 }}
-                    className="hidden lg:flex whitespace-nowrap px-2.5 py-2 rounded-lg border border-stone-200 text-stone-700 hover:bg-stone-50 text-[13px] font-semibold transition-colors items-center gap-1.5 cursor-pointer"
+                    className="hidden xl:flex whitespace-nowrap px-2.5 py-2 rounded-lg border border-stone-200 text-stone-700 hover:bg-stone-50 text-[13px] font-semibold transition-colors items-center gap-1.5 cursor-pointer"
                     title={lang === 'bn' ? 'Switch to English' : 'বাংলায় দেখুন'}
                     aria-label="Change Language"
                   >
@@ -565,11 +578,13 @@ export default function Navbar({ lang, onToggleLang, onOpenDonation }: NavbarPro
                   </motion.button>
                 )}
 
-                <PwaInstallButton variant="navbar" lang={lang} />
+                <div className="hidden 2xl:flex">
+                  <PwaInstallButton variant="navbar" lang={lang} />
+                </div>
               </div>
 
               {/* Mobile controls */}
-              <div className="flex xl:hidden items-center gap-2">
+              <div className="flex lg:hidden items-center gap-2">
                 <button
                   onClick={() => setMobileMenuOpen((o) => !o)}
                   aria-label="Toggle mobile menu"

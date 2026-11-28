@@ -4,6 +4,10 @@ import { axiosBaseQuery } from '@/lib/axios';
 export const baseApi = createApi({
   reducerPath: 'api',
   baseQuery: axiosBaseQuery({ baseUrl: '' }),
+  refetchOnFocus: true,
+  refetchOnReconnect: true,
+  refetchOnMountOrArgChange: true,
+  keepUnusedDataFor: 15,
   tagTypes: [
     'Activities',
     'Campaigns',

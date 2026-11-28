@@ -1,10 +1,8 @@
 'use client';
 
 import React from 'react';
-import { AlertCircle, ChevronRight } from 'lucide-react';
 import { Language } from '@/types';
 import { useAppStore } from '@/store/useAppStore';
-import { useGetAnnouncementsQuery } from '@/store/api/contentApi';
 
 interface TopAnnouncementProps {
   lang?: Language;
@@ -13,69 +11,29 @@ interface TopAnnouncementProps {
   isVisible?: boolean;
 }
 
-export default function TopAnnouncement({
-  lang: propLang,
-  onOpenDetails,
-}: TopAnnouncementProps) {
+const SLIDE_TEXT_BN =
+  'রৌমারী জনকল্যাণ ফাউন্ডেশন, ভলামোড়, রৌমারী উপজেলা, রংপুর, বাংলাদেশ, ৫৬৪০';
+const SLIDE_TEXT_EN =
+  'Rowmari Jonokolyan Foundation, Volamor, Rowmari Upazila, Rangpur, Bangladesh, 5640';
+
+export default function TopAnnouncement({ lang: propLang }: TopAnnouncementProps) {
   const storeLang = useAppStore((state) => state.lang);
-  const setAnnouncementModalOpen = useAppStore((state) => state.setAnnouncementModalOpen);
   const lang = propLang || storeLang || 'bn';
-
-  const handleOpen = () => {
-    if (onOpenDetails) {
-      onOpenDetails();
-    } else {
-      setAnnouncementModalOpen(true);
-    }
-  };
-
-  const alertContentBn =
-    'জরুরি ঘোষণা: রৌমারী ও দুর্গম চরাঞ্চলে শীতবস্ত্র ও কম্বল বিতরণ কার্যক্রম চলমান • অসহায় রোগীর চিকিৎসায় জরুরি সেবা ও ওষুধ প্রদান • হটলাইন: +880 1712-345678 • রৌমারী জনকল্যাণ ফাউন্ডেশন মানুষের পাশে, মানুষের জন্য';
-
-  const alertContentEn =
-    'Urgent Notice: Winter clothing & blanket distribution ongoing across Rowmari & riverine chars • Emergency medical assistance for underprivileged patients • Hotline: +880 1712-345678 • Rowmari Jonokolyan Foundation beside humanity, for humanity';
-
-  const { data: announcements = [] } = useGetAnnouncementsQuery();
-  const activeAnnouncement = announcements[0];
-  const alertText = activeAnnouncement
-    ? activeAnnouncement.message
-    : (lang === 'bn' ? alertContentBn : alertContentEn);
+  const slideText = lang === 'bn' ? SLIDE_TEXT_BN : SLIDE_TEXT_EN;
 
   return (
     <aside
-      aria-label="Emergency Announcement"
+      aria-label="Foundation Address"
       className="bg-[#E53935] text-white text-xs md:text-sm shadow-xs border-b border-[#D32F2F] relative z-40 overflow-hidden select-none"
     >
-      <div className="w-full flex items-center h-9 sm:h-10">
-        {/* Pinned Left Badge */}
-        <div className="shrink-0 flex items-center h-full bg-[#E53935] px-2 sm:px-3.5 z-20 shadow-[4px_0_8px_rgba(229,57,53,0.95)]">
-          <span className="bg-white/20 text-white px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-wide flex items-center gap-1 sm:gap-1.5 shadow-2xs">
-            <AlertCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white animate-pulse" />
-            <span className="whitespace-nowrap">{lang === 'bn' ? 'জরুরি ঘোষণা' : 'Urgent Alert'}</span>
-          </span>
-        </div>
-
-        {/* Continuous Right-to-Left Scrolling Track */}
-        <div
-          className="flex-1 overflow-hidden relative h-full flex items-center cursor-pointer group"
-          onClick={handleOpen}
-          title={lang === 'bn' ? 'বিস্তারিত দেখতে ক্লিক করুন' : 'Click to view details'}
-        >
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center h-9 sm:h-10">
+        <div className="w-full overflow-hidden relative h-full flex items-center">
           <div className="animate-marquee-rtl flex items-center whitespace-nowrap text-xs md:text-sm font-medium text-red-50">
-            <span className="inline-block px-4 sm:px-6">{alertText}</span>
-            <span className="inline-block px-4 sm:px-6">{alertText}</span>
+            <span className="inline-block px-8">{slideText}</span>
+            <span className="inline-block px-8">{slideText}</span>
+            <span className="inline-block px-8">{slideText}</span>
+            <span className="inline-block px-8">{slideText}</span>
           </div>
-        </div>
-
-        {/* Pinned Right Action Button */}
-        <div className="shrink-0 flex items-center h-full bg-[#E53935] px-2 sm:px-3.5 z-20 shadow-[-4px_0_8px_rgba(229,57,53,0.95)]">
-          <button
-            onClick={handleOpen}
-            className="bg-white/20 hover:bg-white/30 active:scale-95 text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all flex items-center gap-0.5 sm:gap-1 cursor-pointer shadow-2xs whitespace-nowrap"
-          >
-            <span>{lang === 'bn' ? 'বিস্তারিত' : 'Details'}</span>
-            <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-          </button>
         </div>
       </div>
 
@@ -92,7 +50,7 @@ export default function TopAnnouncement({
           display: inline-flex;
           width: max-content;
           will-change: transform;
-          animation: marqueeScroll 22s linear infinite;
+          animation: marqueeScroll 24s linear infinite;
         }
         .animate-marquee-rtl:hover {
           animation-play-state: paused;

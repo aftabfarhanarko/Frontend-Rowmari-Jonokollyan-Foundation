@@ -9,6 +9,7 @@ import { Plus, X, Loader2, Eye } from "lucide-react"
 import { useGetActivitiesQuery, useCreateActivityMutation } from "@/store/api/activitiesApi"
 import { toast } from "sonner"
 import { DashboardModal } from "@/components/dashboard/DashboardModal"
+import { ImageUploader } from "@/components/ui/ImageUploader"
 
 export default function ActivitiesDashboardPage() {
   const { data: activitiesRes } = useGetActivitiesQuery()
@@ -21,6 +22,7 @@ export default function ActivitiesDashboardPage() {
   const [content, setContent] = useState("")
   const [location, setLocation] = useState("রৌমারী সদর")
   const [beneficiariesCount, setBeneficiariesCount] = useState("")
+  const [coverImageUrl, setCoverImageUrl] = useState("")
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -36,6 +38,7 @@ export default function ActivitiesDashboardPage() {
         location: location.trim(),
         activityDate: new Date().toISOString().split("T")[0],
         beneficiariesCount: beneficiariesCount ? Number(beneficiariesCount) : 0,
+        ...(coverImageUrl.trim() ? { coverImageUrl: coverImageUrl.trim() } : {}),
       }).unwrap()
       toast.success("প্রজেক্ট ও কার্যক্রম সফলভাবে রেকর্ড করা হয়েছে!")
       setModalOpen(false)
@@ -43,6 +46,7 @@ export default function ActivitiesDashboardPage() {
       setSummary("")
       setContent("")
       setBeneficiariesCount("")
+      setCoverImageUrl("")
     } catch (err: any) {
       toast.error(err?.data?.message || err?.message || "কার্যক্রম সংরক্ষণে সমস্যা হয়েছে")
     }
@@ -167,6 +171,13 @@ export default function ActivitiesDashboardPage() {
                   className="w-full rounded-xl border border-stone-200 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-red-500"
                 />
               </div>
+              <ImageUploader
+                value={coverImageUrl}
+                onChange={setCoverImageUrl}
+                label="কার্যক্রমের কভার ছবি"
+                aspectRatio="video"
+                description="JPG, PNG, WEBP"
+              />
               <div>
                 <label className="block font-bold text-stone-700 mb-1">সারসংক্ষেপ *</label>
                 <textarea

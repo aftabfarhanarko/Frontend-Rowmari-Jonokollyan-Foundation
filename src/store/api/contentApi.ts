@@ -149,7 +149,7 @@ export const contentApi = baseApi.injectEndpoints({
         method: 'POST',
         data,
       }),
-      invalidatesTags: ['News'],
+      invalidatesTags: ['News', 'Reports'],
     }),
 
     updateNewsEvent: builder.mutation<NewsEventItem, { id: string; data: Partial<NewsEventItem> }>({
@@ -158,7 +158,7 @@ export const contentApi = baseApi.injectEndpoints({
         method: 'PUT',
         data,
       }),
-      invalidatesTags: ['News'],
+      invalidatesTags: ['News', 'Reports'],
     }),
 
     deleteNewsEvent: builder.mutation<{ success: boolean }, string>({
@@ -166,7 +166,7 @@ export const contentApi = baseApi.injectEndpoints({
         url: API_ENDPOINTS.admin.newsEventById(id),
         method: 'DELETE',
       }),
-      invalidatesTags: ['News'],
+      invalidatesTags: ['News', 'Reports'],
     }),
 
     createGalleryItem: builder.mutation<GalleryItem, Partial<GalleryItem>>({
@@ -175,7 +175,7 @@ export const contentApi = baseApi.injectEndpoints({
         method: 'POST',
         data,
       }),
-      invalidatesTags: ['Gallery'],
+      invalidatesTags: ['Gallery', 'Reports'],
     }),
 
     updateGalleryItem: builder.mutation<GalleryItem, { id: string; data: Partial<GalleryItem> }>({
@@ -184,7 +184,7 @@ export const contentApi = baseApi.injectEndpoints({
         method: 'PUT',
         data,
       }),
-      invalidatesTags: ['Gallery'],
+      invalidatesTags: ['Gallery', 'Reports'],
     }),
 
     deleteGalleryItem: builder.mutation<{ success: boolean }, string>({
@@ -192,7 +192,7 @@ export const contentApi = baseApi.injectEndpoints({
         url: API_ENDPOINTS.admin.galleryById(id),
         method: 'DELETE',
       }),
-      invalidatesTags: ['Gallery'],
+      invalidatesTags: ['Gallery', 'Reports'],
     }),
 
     createAnnouncement: builder.mutation<AnnouncementItem, Partial<AnnouncementItem>>({

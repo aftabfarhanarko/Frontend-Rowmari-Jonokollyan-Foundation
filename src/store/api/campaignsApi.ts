@@ -62,7 +62,7 @@ export const campaignsApi = baseApi.injectEndpoints({
         receiptNo: result.receipt?.receiptNumber || result.receipt?.receiptNo || result.id || '',
         amount: Number(result.amount), date: result.createdAt || '', campaign: '',
       }),
-      invalidatesTags: [{ type: 'Campaigns', id: 'LIST' }],
+      invalidatesTags: [{ type: 'Campaigns', id: 'LIST' }, 'Campaigns', 'Reports'],
     }),
     createCampaign: builder.mutation<any, { title: string; description: string; targetAmount: number; startDate?: string; endDate?: string; category?: string; bannerImageUrl?: string; status?: string }>({
       query: (data) => ({
@@ -74,7 +74,7 @@ export const campaignsApi = baseApi.injectEndpoints({
           status: data.status || 'ACTIVE',
         },
       }),
-      invalidatesTags: [{ type: 'Campaigns', id: 'LIST' }],
+      invalidatesTags: [{ type: 'Campaigns', id: 'LIST' }, 'Campaigns', 'Reports'],
     }),
   }),
 });

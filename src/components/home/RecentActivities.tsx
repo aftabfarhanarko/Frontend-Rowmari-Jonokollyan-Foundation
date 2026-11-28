@@ -43,7 +43,15 @@ export default function RecentActivities({
       ? activities
       : activities.filter((act) => act.category === activeCategory);
 
-  const featuredActivity = filteredActivities[0] || activities[0];
+  const featuredActivity =
+    filteredActivities.find((act) => Boolean(act.imageUrl)) ||
+    filteredActivities[0] ||
+    activities.find((act) => Boolean(act.imageUrl)) ||
+    activities[0];
+
+  const cardActivities = filteredActivities
+    .filter((act) => act.id !== featuredActivity?.id)
+    .slice(0, 3);
 
   return (
     <section id="activities" className="py-5 md:py-7 bg-white">
@@ -125,6 +133,51 @@ export default function RecentActivities({
         ) : (
           <div className="rounded-2xl border border-stone-200 bg-stone-50 p-6 text-center text-xs text-stone-500">
             {lang === 'bn' ? 'এই ক্যাটাগরিতে কোনো কার্যক্রম পাওয়া যায়নি।' : 'No activities found in this category.'}
+          </div>
+        )}
+
+        {/* Recent Activity Cards Grid */}
+        {!isLoading && !isError && cardActivities.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+            {cardActivities.map((act) => (
+              <div
+                key={act.id}
+                onClick={() => setSelectedActivity(act)}
+                className="group rounded-2xl border border-stone-200/90 bg-white overflow-hidden shadow-2xs hover:border-red-300 hover:shadow-md transition-all cursor-pointer flex flex-col"
+              >
+                <div className="relative h-40 w-full bg-stone-100 overflow-hidden">
+                  <Image
+                    src={
+                      act.imageUrl ||
+                      '/images/activities/winter-relief.jpg'
+                    }
+                    alt={lang === 'bn' ? act.titleBn : act.titleEn}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <div className="p-4 flex-1 flex flex-col justify-between space-y-2">
+                  <div>
+                    <h4 className="text-sm font-extrabold text-stone-900 line-clamp-2 group-hover:text-[#D62828] transition-colors">
+                      {lang === 'bn' ? act.titleBn : act.titleEn}
+                    </h4>
+                    <p className="text-xs text-stone-500 line-clamp-2 mt-1">
+                      {lang === 'bn' ? act.descriptionBn : act.descriptionEn}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between pt-2 border-t border-stone-100 text-[11px] text-stone-500">
+                    <span className="inline-flex items-center gap-1 truncate max-w-[65%]">
+                      <MapPin className="w-3 h-3 text-[#D62828] shrink-0" />
+                      <span className="truncate">{lang === 'bn' ? act.locationBn : act.locationEn}</span>
+                    </span>
+                    <span className="font-bold text-[#D62828] shrink-0">
+                      {act.beneficiariesCount ? `${act.beneficiariesCount.toLocaleString('bn-BD')} জন` : ''}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
 

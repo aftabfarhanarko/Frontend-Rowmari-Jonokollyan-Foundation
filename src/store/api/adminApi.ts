@@ -45,10 +45,16 @@ export interface AdminDashboardOverview {
   recentActivityLogs: Array<{
     id: string;
     action: string;
+    actorId?: string;
     actorName?: string;
     entityType: string;
-    createdAt: string;
+    entityId?: string;
+    method?: string;
     route?: string;
+    statusCode?: number;
+    durationMs?: number;
+    ipAddress?: string;
+    createdAt: string;
   }>;
 }
 
@@ -169,7 +175,7 @@ export const adminApi = baseApi.injectEndpoints({
         method: 'POST',
         data,
       }),
-      invalidatesTags: ['Pages'],
+      invalidatesTags: ['Pages', 'Reports'],
     }),
 
     updatePage: builder.mutation<CMSPage, { id: string; data: Partial<CMSPage> }>({
@@ -178,7 +184,7 @@ export const adminApi = baseApi.injectEndpoints({
         method: 'PUT',
         data,
       }),
-      invalidatesTags: ['Pages'],
+      invalidatesTags: ['Pages', 'Reports'],
     }),
 
     deletePage: builder.mutation<{ success: boolean }, string>({
@@ -186,7 +192,7 @@ export const adminApi = baseApi.injectEndpoints({
         url: API_ENDPOINTS.admin.pageById(id),
         method: 'DELETE',
       }),
-      invalidatesTags: ['Pages'],
+      invalidatesTags: ['Pages', 'Reports'],
     }),
 
     // 3. Public CMS Reads

@@ -20,6 +20,7 @@ import {
   DesignationItem,
   MemberItem,
 } from "@/store/api/committeesApi"
+import { useGetAdminUsersQuery } from "@/store/api/dashboardApi"
 import { Button } from "@/components/ui/button"
 import { DashboardModal } from "@/components/dashboard/DashboardModal"
 import { SkeletonTable, SkeletonCard } from "@/components/ui/skeleton"
@@ -49,6 +50,7 @@ export function CommitteesTab() {
   // API Queries
   const { data: committees = [], isLoading: isLoadingComm, refetch: refetchComm } = useGetAdminCommitteesQuery()
   const { data: membersRes, isLoading: isLoadingMem, refetch: refetchMem } = useGetAdminMembersQuery({ limit: 100 })
+  const { data: adminUsersRes, isLoading: isLoadingUsers } = useGetAdminUsersQuery()
   const { data: designations = [], isLoading: isLoadingDesig, refetch: refetchDesig } = useGetPublicDesignationsQuery()
 
   // Committee Mutations
@@ -247,17 +249,23 @@ export function CommitteesTab() {
   const [memCommId, setMemCommId] = useState("")
   const [memDesigId, setMemDesigId] = useState("")
 
-  const openCreateMemModal = () => {
+  const openCreateMemModal = (prefill?: {
+    name?: string
+    phone?: string
+    email?: string
+    upazila?: string
+    district?: string
+  }) => {
     setEditingMem(null)
-    setMemNameBn("")
-    setMemNameEn("")
-    setMemPhone("")
-    setMemEmail("")
+    setMemNameBn(prefill?.name || "")
+    setMemNameEn(prefill?.name || "")
+    setMemPhone(prefill?.phone || "")
+    setMemEmail(prefill?.email || "")
     setMemBloodGroup("")
     setMemVillage("")
     setMemUnion("")
-    setMemUpazila("রৌমারী")
-    setMemDistrict("কুড়িগ্রাম")
+    setMemUpazila(prefill?.upazila || "রৌমারী")
+    setMemDistrict(prefill?.district || "কুড়িগ্রাম")
     setMemOccupation("")
     setMemBio("")
     setMemPhotoUrl("")
@@ -370,6 +378,25 @@ export function CommitteesTab() {
     return memberList.length
   }, [membersRes, memberList])
 
+  const registeredUsers: any[] = useMemo(() => {
+    if (!adminUsersRes) return []
+    if (Array.isArray(adminUsersRes)) return adminUsersRes
+    if (Array.isArray((adminUsersRes as any).items)) return (adminUsersRes as any).items
+    if (Array.isArray((adminUsersRes as any).data)) return (adminUsersRes as any).data
+    return []
+  }, [adminUsersRes])
+
+  const filteredRegisteredUsers = useMemo(() => {
+    const q = memberSearch.trim().toLowerCase()
+    if (!q) return registeredUsers
+    return registeredUsers.filter((u) => {
+      const name = (u.fullName || "").toLowerCase()
+      const email = (u.email || "").toLowerCase()
+      const phone = (u.phone || "").toLowerCase()
+      return name.includes(q) || email.includes(q) || phone.includes(q)
+    })
+  }, [registeredUsers, memberSearch])
+
   // Filtered members by search keyword
   const filteredMembers = useMemo(() => {
     if (!memberSearch.trim()) return memberList
@@ -403,7 +430,7 @@ export function CommitteesTab() {
           }`}
         >
           <Users className="size-4" />
-          <span>নিবন্ধিত সদস্য ({memberTotal})</span>
+          <span>নিবন্ধিত সদস্য ({memberTotal + registeredUsers.length})</span>
         </button>
         <button
           onClick={() => setActiveTab("designations")}
@@ -526,7 +553,7 @@ export function CommitteesTab() {
               />
             </div>
             <Button
-              onClick={openCreateMemModal}
+              onClick={() => openCreateMemModal()}
               className="bg-[#D62828] hover:bg-[#B91C1C] text-white text-xs font-bold px-4 py-2 rounded-xl shadow-xs shrink-0"
             >
               <Plus className="size-4 mr-1.5" /> নতুন সদস্য নিবন্ধন
@@ -654,6 +681,84 @@ export function CommitteesTab() {
               </div>
             </div>
           )}
+
+          {/* Website Registered Users (/admin/users from /register) */}
+          <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-2xs">
+            <div className="px-4 py-3.5 border-b border-stone-100 bg-stone-50/70 flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 className="text-sm font-extrabold text-stone-900">
+                  ওয়েবসাইটে নিবন্ধিত ইউজার ({filteredRegisteredUsers.length})
+                </h3>
+                <p className="text-[11px] text-stone-500">
+                  রেজিস্ট্রেশন (/register) ফর্মের মাধ্যমে যুক্ত হওয়া সকল অ্যাকাউন্ট — এক ক্লিকেই কমিটি সদস্য হিসেবে যুক্ত করুন
+                </p>
+              </div>
+            </div>
+
+            {isLoadingUsers ? (
+              <SkeletonTable rows={4} />
+            ) : filteredRegisteredUsers.length === 0 ? (
+              <div className="p-8 text-center text-xs text-stone-400">
+                কোনো নিবন্ধিত ইউজার পাওয়া যায়নি।
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold uppercase tracking-wider text-[11px]">
+                    <tr>
+                      <th className="p-3.5">নাম</th>
+                      <th className="p-3.5">ইমেইল</th>
+                      <th className="p-3.5">মোবাইল</th>
+                      <th className="p-3.5">এলাকা</th>
+                      <th className="p-3.5">স্ট্যাটাস</th>
+                      <th className="p-3.5 text-right">পদক্ষেপ</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-stone-100">
+                    {filteredRegisteredUsers.map((u) => (
+                      <tr key={u.id} className="hover:bg-stone-50/70 transition">
+                        <td className="p-3.5 font-bold text-stone-900">{u.fullName || "নামহীন"}</td>
+                        <td className="p-3.5 text-stone-600">{u.email || "—"}</td>
+                        <td className="p-3.5 font-mono text-stone-600">{u.phone || "—"}</td>
+                        <td className="p-3.5 text-stone-600">
+                          {[u.upazila, u.district].filter(Boolean).join(", ") || "—"}
+                        </td>
+                        <td className="p-3.5">
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                              u.status === "ACTIVE"
+                                ? "bg-emerald-50 text-emerald-700"
+                                : "bg-amber-50 text-amber-700"
+                            }`}
+                          >
+                            {u.status || "ACTIVE"}
+                          </span>
+                        </td>
+                        <td className="p-3.5 text-right">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              openCreateMemModal({
+                                name: u.fullName,
+                                phone: u.phone,
+                                email: u.email,
+                                upazila: u.upazila,
+                                district: u.district,
+                              })
+                            }
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-50 hover:bg-[#D62828] text-[#D62828] hover:text-white text-[11px] font-bold transition cursor-pointer"
+                          >
+                            <Plus className="size-3" />
+                            <span>কমিটি সদস্য করুন</span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
